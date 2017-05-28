@@ -1,4 +1,4 @@
-// Copyright 2016 Glyn Matthews.
+// Copyright 2016-2017 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -40,35 +40,35 @@ struct uri {
   }
 
   bool has_user_info() const {
-    return static_cast<bool>(parts.hier_part.user_info);
+    return static_cast<bool>(parts.user_info);
   }
 
   std::string user_info() const {
-    return (*parts.hier_part.user_info).to_string();
+    return (*parts.user_info).to_string();
   }
 
   bool has_host() const {
-    return static_cast<bool>(parts.hier_part.host);
+    return static_cast<bool>(parts.host);
   }
 
   std::string host() const {
-    return (*parts.hier_part.host).to_string();
+    return (*parts.host).to_string();
   }
 
   bool has_port() const {
-    return static_cast<bool>(parts.hier_part.port);
+    return static_cast<bool>(parts.port);
   }
 
   std::string port() const {
-    return (*parts.hier_part.port).to_string();
+    return (*parts.port).to_string();
   }
 
   bool has_path() const {
-    return static_cast<bool>(parts.hier_part.path);
+    return static_cast<bool>(parts.path);
   }
 
   std::string path() const {
-    return (*parts.hier_part.path).to_string();
+    return (*parts.path).to_string();
   }
 
   bool has_query() const {

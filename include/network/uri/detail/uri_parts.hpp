@@ -37,7 +37,9 @@ class uri_part {
 
   bool empty() const noexcept { return view_.empty(); }
 
-  string_view to_string_view() const noexcept { return view_; }
+  explicit operator string_view() const noexcept {
+    return view_;
+  }
 
   std::string to_string() const { return view_.to_string(); }
 
@@ -45,20 +47,14 @@ class uri_part {
   string_view view_;
 };
 
-struct hierarchical_part {
-  hierarchical_part() = default;
-
-  optional<uri_part> user_info;
-  optional<uri_part> host;
-  optional<uri_part> port;
-  optional<uri_part> path;
-};
-
 struct uri_parts {
   uri_parts() = default;
 
   optional<uri_part> scheme;
-  hierarchical_part hier_part;
+  optional<uri_part> user_info;
+  optional<uri_part> host;
+  optional<uri_part> port;
+  optional<uri_part> path;
   optional<uri_part> query;
   optional<uri_part> fragment;
 };
