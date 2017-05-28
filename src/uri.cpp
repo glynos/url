@@ -58,9 +58,251 @@ inline optional<std::string> make_arg(optional<string_view> view) {
   return nullopt;
 }
 
+// std::vector<uri::query_parameters::value_type> split_query_string(
+//     const uri::query_parameters &parameters) {
+//   std::vector<uri::query_parameters::value_type> result;
+//   for (const auto &parameter : parameters) {
+//     result.push_back(parameter);
+//   }
+//   return result;
+// }
+
 template <class T>
 inline void ignore(T) {}
 }  // namespace
+
+uri::query_iterator::query_iterator() : query_{}, kvp_{} {}
+
+uri::query_iterator::query_iterator(optional<detail::uri_part> query)
+  : query_(query)
+  , kvp_{} {
+  if (query_ && query_->empty()) {
+    query_ = nullopt;
+  }
+  else {
+    assign_kvp();
+  }
+}
+
+uri::query_iterator::query_iterator(const query_iterator &other)
+  : query_(other.query_)
+  , kvp_(other.kvp_) {
+
+}
+
+uri::query_iterator &uri::query_iterator::operator = (const query_iterator &other) {
+  auto tmp(other);
+  swap(tmp);
+  return *this;
+}
+
+uri::query_iterator::reference uri::query_iterator::operator ++ () noexcept {
+  increment();
+  return kvp_;
+}
+
+uri::query_iterator::value_type uri::query_iterator::operator ++ (int) noexcept {
+  auto original = kvp_;
+  increment();
+  return original;
+}
+
+uri::query_iterator::reference uri::query_iterator::operator * () const noexcept {
+  return kvp_;
+}
+
+uri::query_iterator::pointer uri::query_iterator::operator -> () const noexcept {
+  return std::addressof(kvp_);
+}
+
+bool uri::query_iterator::operator==(const query_iterator &other) const noexcept {
+  if (!query_ && !other.query_) {
+    return true;
+  }
+  else if (query_ && other.query_) {
+    // since we're comparing substrings, the address of the first
+    // element in each iterator must be the same
+    return std::addressof(kvp_.first) == std::addressof(other.kvp_.first);
+  }
+  return false;
+}
+
+void uri::query_iterator::swap(query_iterator &other) noexcept {
+  std::swap(query_, other.query_);
+  std::swap(kvp_, other.kvp_);
+}
+
+void uri::query_iterator::advance_to_next_kvp() noexcept {
+  auto first = std::begin(*query_), last = std::end(*query_);
+
+  auto sep_it = std::find_if(
+      first, last, [](char c) -> bool { return c == '&' || c == ';'; });
+
+  if (sep_it != last) {
+    ++sep_it; // skip next separator
+  }
+
+  // reassign query to the next element
+  query_ = detail::uri_part(sep_it, last);
+}
+
+void uri::query_iterator::assign_kvp() noexcept {
+  auto first = std::begin(*query_), last = std::end(*query_);
+
+  auto sep_it = std::find_if(
+      first, last, [](char c) -> bool { return c == '&' || c == ';'; });
+  auto eq_it =
+      std::find_if(first, sep_it, [](char c) -> bool { return c == '='; });
+
+  kvp_.first = string_view(std::addressof(*first), std::distance(first, eq_it));
+  if (eq_it != sep_it) {
+    ++eq_it; // skip '=' symbol
+  }
+  kvp_.second = string_view(std::addressof(*eq_it), std::distance(eq_it, sep_it));
+}
+
+void uri::query_iterator::increment() noexcept {
+  assert(query_);
+
+  if (!query_->empty()) {
+    advance_to_next_kvp();
+    assign_kvp();
+  }
+
+  if (query_->empty()) {
+    query_ = nullopt;
+  }
+}
+
+uri::query_parameters::query_parameters() {
+  update();
+}
+
+uri::query_parameters::query_parameters(const string_type &query) {
+  auto first = std::begin(query), last = std::end(query);
+
+  for (auto it = first; it != last;) {
+    auto sep_it = std::find_if(
+        it, last, [](char c) -> bool { return c == '&' || c == ';'; });
+    auto eq_it =
+        std::find_if(it, sep_it, [](char c) -> bool { return c == '='; });
+
+    auto name = string_type(it, eq_it);
+    if (eq_it != sep_it) {
+      ++eq_it; // skip '=' symbol
+    }
+    auto value = string_type(eq_it, sep_it);
+
+    parameters_.emplace_back(name, value);
+
+    it = sep_it;
+    if (*it == '&' || *it == ';') {
+      ++it;
+    }
+  }
+
+  update();
+}
+
+uri::query_parameters::query_parameters(std::initializer_list<value_type> parameters)
+  : parameters_(parameters) {
+
+}
+
+void uri::query_parameters::append(const string_type &name,
+                                   const string_type &value) {
+  parameters_.emplace_back(name, value);
+  update();
+}
+
+void uri::query_parameters::remove(const string_type &name) {
+  auto it =
+      std::remove_if(std::begin(parameters_), std::end(parameters_),
+                     [&name](const value_type &parameter) -> bool {
+                       return parameter.first == name;
+                     });
+  parameters_.erase(it, std::end(parameters_));
+
+  update();
+}
+
+optional<uri::query_parameters::string_type> uri::query_parameters::get(
+    const string_type &name) const noexcept {
+  auto it = std::find_if(std::begin(*this), std::end(*this),
+                         [&name](const value_type &parameter) -> bool {
+                           return parameter.first == name;
+                         });
+  if (it == std::end(*this)) {
+    return nullopt;
+  }
+
+  return it->second;
+}
+
+bool uri::query_parameters::contains(const string_type &name) const noexcept {
+  return std::end(*this) !=
+         std::find_if(std::begin(*this), std::end(*this),
+                      [&name](const value_type &parameter) -> bool {
+                        return parameter.first == name;
+                      });
+}
+
+void uri::query_parameters::set(const string_type &name,
+                                const string_type &value) {
+  if (contains(name)) {
+    for (auto &parameter : parameters_) {
+      if (parameter.first == name) {
+        parameter.second = value;
+      }
+    }
+  }
+  else {
+    parameters_.emplace_back(name, value);
+  }
+
+  update();
+}
+
+uri::query_parameters::const_iterator uri::query_parameters::begin() const noexcept {
+  return parameters_.begin();
+}
+
+uri::query_parameters::const_iterator uri::query_parameters::end() const noexcept {
+  return parameters_.end();
+}
+
+uri::query_parameters::string_type uri::query_parameters::to_string() const {
+  auto result = string_type{};
+
+  auto first = std::begin(parameters_), last = std::end(parameters_);
+  auto it = first;
+  while (it != last) {
+    result.append(it->first);
+    result.append("=");
+    result.append(it->second);
+
+    ++it;
+
+    if (it != last) {
+      result.append("&");
+    }
+  }
+
+  return result;
+}
+
+void uri::query_parameters::sort() {
+  std::sort(std::begin(parameters_), std::end(parameters_),
+            [](const value_type &lhs, const value_type &rhs) -> bool {
+              return lhs.first < rhs.first;
+            });
+
+  update();
+}
+
+void uri::query_parameters::update() {
+  // query_part_ = detail::uri_part{string_view{query_}};
+}
 
 void uri::initialize(optional<string_type> scheme,
                      optional<string_type> user_info,
@@ -257,109 +499,6 @@ bool uri::has_query() const noexcept {
 
 uri::string_view uri::query() const noexcept {
   return has_query() ? to_string_view(uri_, *uri_parts_.query) : string_view{};
-}
-
-uri::query_iterator::query_iterator() : query_{}, kvp_{} {}
-
-uri::query_iterator::query_iterator(optional<detail::uri_part> query)
-  : query_(query)
-  , kvp_{} {
-  if (query_ && query_->empty()) {
-    query_ = nullopt;
-  }
-  else {
-    assign_kvp();
-  }
-}
-
-uri::query_iterator::query_iterator(const query_iterator &other)
-  : query_(other.query_)
-  , kvp_(other.kvp_) {
-
-}
-
-uri::query_iterator &uri::query_iterator::operator = (const query_iterator &other) {
-  auto tmp(other);
-  swap(tmp);
-  return *this;
-}
-
-uri::query_iterator::reference uri::query_iterator::operator ++ () noexcept {
-  increment();
-  return kvp_;
-}
-
-uri::query_iterator::value_type uri::query_iterator::operator ++ (int) noexcept {
-  auto original = kvp_;
-  increment();
-  return original;
-}
-
-uri::query_iterator::reference uri::query_iterator::operator * () const noexcept {
-  return kvp_;
-}
-
-uri::query_iterator::pointer uri::query_iterator::operator -> () const noexcept {
-  return std::addressof(kvp_);
-}
-
-bool uri::query_iterator::operator==(const query_iterator &other) const noexcept {
-  if (!query_ && !other.query_) {
-    return true;
-  }
-  else if (query_ && other.query_) {
-    // since we're comparing substrings, the address of the first
-    // element in each iterator must be the same
-    return std::addressof(kvp_.first) == std::addressof(other.kvp_.first);
-  }
-  return false;
-}
-
-void uri::query_iterator::swap(query_iterator &other) noexcept {
-  std::swap(query_, other.query_);
-  std::swap(kvp_, other.kvp_);
-}
-
-void uri::query_iterator::advance_to_next_kvp() noexcept {
-  auto first = std::begin(*query_), last = std::end(*query_);
-
-  auto sep_it = std::find_if(
-      first, last, [](char c) -> bool { return c == '&' || c == ';'; });
-
-  if (sep_it != last) {
-    ++sep_it; // skip next separator
-  }
-
-  // reassign query to the next element
-  query_ = detail::uri_part(sep_it, last);
-}
-
-void uri::query_iterator::assign_kvp() noexcept {
-  auto first = std::begin(*query_), last = std::end(*query_);
-
-  auto sep_it = std::find_if(
-      first, last, [](char c) -> bool { return c == '&' || c == ';'; });
-  auto eq_it =
-      std::find_if(first, sep_it, [](char c) -> bool { return c == '='; });
-
-  kvp_.first = string_view(std::addressof(*first), std::distance(first, eq_it));
-  if (eq_it != sep_it) {
-    ++eq_it; // skip '=' symbol
-  }
-  kvp_.second = string_view(std::addressof(*eq_it), std::distance(eq_it, sep_it));
-}
-
-void uri::query_iterator::increment() noexcept {
-  assert(query_);
-
-  if (!query_->empty()) {
-    advance_to_next_kvp();
-    assign_kvp();
-  }
-
-  if (query_->empty()) {
-    query_ = nullopt;
-  }
 }
 
 uri::query_iterator uri::query_begin() const noexcept {

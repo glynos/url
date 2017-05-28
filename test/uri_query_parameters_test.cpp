@@ -22,11 +22,52 @@ TEST(uri_query_parameters_test, query_with_single_kvp) {
   EXPECT_EQ("a", it->first);
   EXPECT_EQ("b", it->second);
   ++it;
-  ASSERT_EQ(it, parameters.end());
+  EXPECT_EQ(it, parameters.end());
+}
+
+TEST(uri_query_parameters_test, query_with_single_kvp_in_initalizer_list) {
+  network::uri::query_parameters parameters{{"a", "b"}};
+
+  auto it = parameters.begin();
+  ASSERT_NE(it, parameters.end());
+  EXPECT_EQ("a", it->first);
+  EXPECT_EQ("b", it->second);
+  ++it;
+  EXPECT_EQ(it, parameters.end());
 }
 
 TEST(uri_query_parameters_test, query_with_two_kvps) {
   network::uri::query_parameters parameters{"a=b&c=d"};
+
+  auto it = parameters.begin();
+  ASSERT_NE(it, parameters.end());
+  EXPECT_EQ("a", it->first);
+  EXPECT_EQ("b", it->second);
+  ++it;
+  ASSERT_NE(it, parameters.end());
+  EXPECT_EQ("c", it->first);
+  EXPECT_EQ("d", it->second);
+  ++it;
+  EXPECT_EQ(it, parameters.end());
+}
+
+TEST(uri_query_parameters_test, query_with_two_kvps_in_initializer_list) {
+  network::uri::query_parameters parameters{{"a", "b"}, {"c", "d"}};
+
+  auto it = parameters.begin();
+  ASSERT_NE(it, parameters.end());
+  EXPECT_EQ("a", it->first);
+  EXPECT_EQ("b", it->second);
+  ++it;
+  ASSERT_NE(it, parameters.end());
+  EXPECT_EQ("c", it->first);
+  EXPECT_EQ("d", it->second);
+  ++it;
+  EXPECT_EQ(it, parameters.end());
+}
+
+TEST(uri_query_parameters_test, query_with_two_kvps_using_semicolon_separator) {
+  network::uri::query_parameters parameters{"a=b;c=d"};
 
   EXPECT_EQ("a=b&c=d", parameters.to_string());
   auto it = parameters.begin();
@@ -38,21 +79,55 @@ TEST(uri_query_parameters_test, query_with_two_kvps) {
   EXPECT_EQ("c", it->first);
   EXPECT_EQ("d", it->second);
   ++it;
-  ASSERT_EQ(it, parameters.end());
+  EXPECT_EQ(it, parameters.end());
 }
 
-TEST(uri_query_parameters_test, query_with_two_kvps_using_semicolon_separator) {
-  network::uri::query_parameters parameters{"a=b;c=d"};
+TEST(uri_query_parameters_test, query_append_one_kvp) {
+  network::uri::query_parameters parameters{};
+  parameters.append("a", "b");
 
-  EXPECT_EQ("a=b;c=d", parameters.to_string());
   auto it = parameters.begin();
   ASSERT_NE(it, parameters.end());
   EXPECT_EQ("a", it->first);
   EXPECT_EQ("b", it->second);
   ++it;
+  EXPECT_EQ(it, parameters.end());
+}
+
+TEST(uri_query_parameters_test, query_append_two_kvps) {
+  network::uri::query_parameters parameters{};
+  parameters.append("a", "b");
+  parameters.append("c", "d");
+
+  auto it = parameters.begin();
   ASSERT_NE(it, parameters.end());
+  EXPECT_EQ("a", it->first);
+  EXPECT_EQ("b", it->second);
+  ++it;
   EXPECT_EQ("c", it->first);
   EXPECT_EQ("d", it->second);
   ++it;
-  ASSERT_EQ(it, parameters.end());
+  EXPECT_EQ(it, parameters.end());
+}
+
+TEST(uri_query_parameters_test, query_append_one_kvp_to_string) {
+  network::uri::query_parameters parameters{};
+  parameters.append("a", "b");
+
+  EXPECT_EQ("a=b", parameters.to_string());
+}
+
+TEST(uri_query_parameters_test, query_append_two_kvps_to_string) {
+  network::uri::query_parameters parameters{};
+  parameters.append("a", "b");
+  parameters.append("c", "d");
+
+  EXPECT_EQ("a=b&c=d", parameters.to_string());
+}
+
+TEST(uri_query_parameters_test, query_sort_test) {
+  // https://url.spec.whatwg.org/#example-searchparams-sort
+  network::uri::query_parameters parameters{"c=d&a=b"};
+  parameters.sort();
+  EXPECT_EQ("a=b&c=d", parameters.to_string());
 }

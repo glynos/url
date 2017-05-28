@@ -16,39 +16,33 @@ namespace network {
 namespace detail {
 class uri_part {
  public:
-  typedef string_view::value_type value_type;
-  typedef string_view::iterator iterator;
-  typedef string_view::const_iterator const_iterator;
-  typedef string_view::const_pointer const_pointer;
-  typedef string_view::size_type size_type;
-  typedef string_view::difference_type difference_type;
+  using value_type = string_view::value_type;
+  using iterator = string_view::iterator;
+  using const_iterator = string_view::const_iterator;
+  using const_pointer = string_view::const_pointer;
+  using size_type = string_view::size_type;
+  using difference_type = string_view::difference_type;
 
   uri_part() noexcept = default;
 
   uri_part(const_iterator first, const_iterator last) noexcept
-      : first(first), last(last) {}
+    : view_(std::addressof(*first), std::distance(first, last)) {}
 
-  const_iterator begin() const noexcept { return first; }
+  explicit uri_part(string_view view) noexcept
+    : view_(view) {}
 
-  const_iterator end() const noexcept { return last; }
+  const_iterator begin() const noexcept { return view_.begin(); }
 
-  bool empty() const noexcept { return first == last; }
+  const_iterator end() const noexcept { return view_.end(); }
 
-  std::string to_string() const { return std::string(first, last); }
+  bool empty() const noexcept { return view_.empty(); }
 
-  const_pointer ptr() const noexcept {
-    assert(first != last);
-    return first;
-  }
+  string_view to_string_view() const noexcept { return view_; }
 
-  difference_type length() const noexcept {
-    return last - first;
-  }
-
-  string_view to_string_view() const noexcept { return string_view(ptr(), length()); }
+  std::string to_string() const { return view_.to_string(); }
 
  private:
-  const_iterator first, last;
+  string_view view_;
 };
 
 struct hierarchical_part {
