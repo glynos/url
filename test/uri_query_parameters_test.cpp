@@ -131,3 +131,65 @@ TEST(uri_query_parameters_test, query_sort_test) {
   parameters.sort();
   EXPECT_EQ("a=b&c=d", parameters.to_string());
 }
+
+TEST(uri_query_parameters_test, copy_test) {
+  network::uri::query_parameters parameters{{"a", "b"}, {"c", "d"}};
+  network::uri::query_parameters copy(parameters);
+
+  auto it = copy.begin();
+  ASSERT_NE(it, copy.end());
+  EXPECT_EQ("a", it->first);
+  EXPECT_EQ("b", it->second);
+  ++it;
+  EXPECT_EQ("c", it->first);
+  EXPECT_EQ("d", it->second);
+  ++it;
+  EXPECT_EQ(it, copy.end());
+}
+
+TEST(uri_query_parameters_test, copy_assignment_test) {
+  network::uri::query_parameters parameters{{"a", "b"}, {"c", "d"}};
+  network::uri::query_parameters copy;
+  copy = parameters;
+
+  auto it = copy.begin();
+  ASSERT_NE(it, copy.end());
+  EXPECT_EQ("a", it->first);
+  EXPECT_EQ("b", it->second);
+  ++it;
+  EXPECT_EQ("c", it->first);
+  EXPECT_EQ("d", it->second);
+  ++it;
+  EXPECT_EQ(it, copy.end());
+}
+
+TEST(uri_query_parameters_test, move_test) {
+  network::uri::query_parameters parameters{{"a", "b"}, {"c", "d"}};
+  network::uri::query_parameters copy(std::move(parameters));
+
+  auto it = copy.begin();
+  ASSERT_NE(it, copy.end());
+  EXPECT_EQ("a", it->first);
+  EXPECT_EQ("b", it->second);
+  ++it;
+  EXPECT_EQ("c", it->first);
+  EXPECT_EQ("d", it->second);
+  ++it;
+  EXPECT_EQ(it, copy.end());
+}
+
+TEST(uri_query_parameters_test, move_assignment_test) {
+  network::uri::query_parameters parameters{{"a", "b"}, {"c", "d"}};
+  network::uri::query_parameters copy;
+  copy = std::move(parameters);
+
+  auto it = copy.begin();
+  ASSERT_NE(it, copy.end());
+  EXPECT_EQ("a", it->first);
+  EXPECT_EQ("b", it->second);
+  ++it;
+  EXPECT_EQ("c", it->first);
+  EXPECT_EQ("d", it->second);
+  ++it;
+  EXPECT_EQ(it, copy.end());
+}

@@ -58,15 +58,6 @@ inline optional<std::string> make_arg(optional<string_view> view) {
   return nullopt;
 }
 
-// std::vector<uri::query_parameters::value_type> split_query_string(
-//     const uri::query_parameters &parameters) {
-//   std::vector<uri::query_parameters::value_type> result;
-//   for (const auto &parameter : parameters) {
-//     result.push_back(parameter);
-//   }
-//   return result;
-// }
-
 template <class T>
 inline void ignore(T) {}
 }  // namespace
@@ -301,7 +292,7 @@ void uri::query_parameters::sort() {
 }
 
 void uri::query_parameters::update() {
-  // query_part_ = detail::uri_part{string_view{query_}};
+
 }
 
 void uri::initialize(optional<string_type> scheme,
