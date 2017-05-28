@@ -811,11 +811,8 @@ TEST(uri_test, move_empty_uri_check_fragment) {
   EXPECT_FALSE(origin.has_fragment());
 }
 
-TEST(uri_test, DISABLED_empty_username_in_user_info) {
-  network::uri instance("ftp://:@localhost");
-  ASSERT_TRUE(instance.has_user_info());
-  EXPECT_EQ(":", instance.user_info());
-  EXPECT_EQ("localhost", instance.host());
+TEST(uri_test, empty_username_in_user_info) {
+  EXPECT_THROW(network::uri("ftp://:@localhost"), network::uri_syntax_error);
 }
 
 TEST(uri_test, uri_begins_with_a_colon) {

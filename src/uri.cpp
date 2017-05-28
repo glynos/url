@@ -598,12 +598,12 @@ uri uri::normalize(uri_comparison_level level) const {
                      [](char ch) { return std::tolower(ch, std::locale()); });
     }
 
-    // if (parts.host) {
-    //   std::string::iterator first, last;
-    //   std::tie(first, last) = mutable_part(normalized, *parts.host);
-    //   std::transform(first, last, first,
-    //                  [](char ch) { return std::tolower(ch, std::locale()); });
-    // }
+    if (parts.host) {
+      std::string::iterator first, last;
+      std::tie(first, last) = mutable_part(normalized, *parts.host);
+      std::transform(first, last, first,
+                     [](char ch) { return std::tolower(ch, std::locale()); });
+    }
 
     // ...except when used in percent encoding
     detail::for_each(normalized, detail::percent_encoded_to_upper<std::string>());
