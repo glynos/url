@@ -3,25 +3,25 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_URI_URI_QUERY_PARAMETERS_INC
-#define NETWORK_URI_URI_QUERY_PARAMETERS_INC
+#ifndef NETWORK_URI_URI_SEARCH_PARAMETERS_INC
+#define NETWORK_URI_URI_SEARCH_PARAMETERS_INC
 
 #include <string>
 #include <vector>
 #include <network/optional.hpp>
 
 namespace network {
-class query_parameters {
+class uri_search_parameters {
  public:
   using string_type = std::string;
   using value_type = std::pair<string_type, string_type>;
   using const_iterator = std::vector<value_type>::const_iterator;
 
-  query_parameters();
+  uri_search_parameters();
 
-  explicit query_parameters(const string_type &query);
+  explicit uri_search_parameters(const string_type &query);
 
-  query_parameters(std::initializer_list<value_type> parameters);
+  uri_search_parameters(std::initializer_list<value_type> parameters);
 
   void append(const string_type &name, const string_type &value);
 
@@ -48,4 +48,4 @@ class query_parameters {
 };
 };
 
-#endif  // NETWORK_URI_URI_QUERY_PARAMETERS_INC
+#endif  // NETWORK_URI_URI_SEARCH_PARAMETERS_INC

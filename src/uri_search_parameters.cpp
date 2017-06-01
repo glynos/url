@@ -3,12 +3,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "network/uri/uri_query_parameters.hpp"
+#include "network/uri/uri_search_parameters.hpp"
 
 namespace network {
-query_parameters::query_parameters() { update(); }
+uri_search_parameters::uri_search_parameters() { update(); }
 
-query_parameters::query_parameters(const string_type &query) {
+uri_search_parameters::uri_search_parameters(const string_type &query) {
   auto first = std::begin(query), last = std::end(query);
 
   for (auto it = first; it != last;) {
@@ -34,16 +34,16 @@ query_parameters::query_parameters(const string_type &query) {
   update();
 }
 
-query_parameters::query_parameters(std::initializer_list<value_type> parameters)
+uri_search_parameters::uri_search_parameters(std::initializer_list<value_type> parameters)
     : parameters_(parameters) {}
 
-void query_parameters::append(const string_type &name,
+void uri_search_parameters::append(const string_type &name,
                               const string_type &value) {
   parameters_.emplace_back(name, value);
   update();
 }
 
-void query_parameters::remove(const string_type &name) {
+void uri_search_parameters::remove(const string_type &name) {
   auto it = std::remove_if(std::begin(parameters_), std::end(parameters_),
                            [&name](const value_type &parameter) -> bool {
                              return parameter.first == name;
@@ -53,7 +53,7 @@ void query_parameters::remove(const string_type &name) {
   update();
 }
 
-optional<query_parameters::string_type> query_parameters::get(
+optional<uri_search_parameters::string_type> uri_search_parameters::get(
     const string_type &name) const noexcept {
   auto it = std::find_if(std::begin(*this), std::end(*this),
                          [&name](const value_type &parameter) -> bool {
@@ -66,7 +66,7 @@ optional<query_parameters::string_type> query_parameters::get(
   return it->second;
 }
 
-bool query_parameters::contains(const string_type &name) const noexcept {
+bool uri_search_parameters::contains(const string_type &name) const noexcept {
   return std::end(*this) !=
          std::find_if(std::begin(*this), std::end(*this),
                       [&name](const value_type &parameter) -> bool {
@@ -74,7 +74,7 @@ bool query_parameters::contains(const string_type &name) const noexcept {
                       });
 }
 
-void query_parameters::set(const string_type &name, const string_type &value) {
+void uri_search_parameters::set(const string_type &name, const string_type &value) {
   if (contains(name)) {
     for (auto &parameter : parameters_) {
       if (parameter.first == name) {
@@ -88,15 +88,15 @@ void query_parameters::set(const string_type &name, const string_type &value) {
   update();
 }
 
-query_parameters::const_iterator query_parameters::begin() const noexcept {
+uri_search_parameters::const_iterator uri_search_parameters::begin() const noexcept {
   return parameters_.begin();
 }
 
-query_parameters::const_iterator query_parameters::end() const noexcept {
+uri_search_parameters::const_iterator uri_search_parameters::end() const noexcept {
   return parameters_.end();
 }
 
-query_parameters::string_type query_parameters::to_string() const {
+uri_search_parameters::string_type uri_search_parameters::to_string() const {
   auto result = string_type{};
 
   auto first = std::begin(parameters_), last = std::end(parameters_);
@@ -116,7 +116,7 @@ query_parameters::string_type query_parameters::to_string() const {
   return result;
 }
 
-void query_parameters::sort() {
+void uri_search_parameters::sort() {
   std::sort(std::begin(parameters_), std::end(parameters_),
             [](const value_type &lhs, const value_type &rhs) -> bool {
               return lhs.first < rhs.first;
@@ -125,5 +125,5 @@ void query_parameters::sort() {
   update();
 }
 
-void query_parameters::update() {}
+void uri_search_parameters::update() {}
 }  // namespace network
