@@ -3,72 +3,49 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-
 #ifndef NETWORK_URI_URI_QUERY_PARAMETERS_INC
 #define NETWORK_URI_URI_QUERY_PARAMETERS_INC
 
+#include <string>
+#include <vector>
+#include <network/optional.hpp>
+
 namespace network {
+class query_parameters {
+ public:
+  using string_type = std::string;
+  using value_type = std::pair<string_type, string_type>;
+  using const_iterator = std::vector<value_type>::const_iterator;
 
-  class query_parameters {
-   public:
-    query_parameters() = default;
+  query_parameters();
 
-    explicit query_parameters(const string_type &query)
-        : query_(query),
-          query_view_(query_),
-          query_part_(detail::uri_part{std::begin(query_view_), std::end(query_view_)}) {}
+  explicit query_parameters(const string_type &query);
 
-    void append(const string_type &name, const string_type &value) {
-      // auto query = split_query_string(query_);
-      // query.push_back({name, value});
-      // query_ = to_query_string(query);
-    }
+  query_parameters(std::initializer_list<value_type> parameters);
 
-    void remove(const string_type &name) {
-      // auto query = split_query_string(query_);
-      // auto it = std::remove_if(std::begin(query), std::end(query),
-      //                          [&name] (const auto &param) { return
-      //                          param.first == name; });
+  void append(const string_type &name, const string_type &value);
 
-      // query.erase(it, std::end(query));
-      // query_ = to_query_string(query);
-    }
+  void remove(const string_type &name);
 
-    optional<string_view> get(const string_type &name) const { return {}; }
+  optional<string_type> get(const string_type &name) const noexcept;
 
-    bool has(const string_type &name) const {
-      auto name_view = string_view(name.c_str(), name.size());
-      return std::end(*this) != std::find_if(std::begin(*this), std::end(*this),
-                                             [&name_view](const auto &param) {
-                                               return param.first == name_view;
-                                             });
-    }
+  bool contains(const string_type &name) const noexcept;
 
-    void set(const string_type &name, const string_type &value) {}
+  void set(const string_type &name, const string_type &value);
 
-    query_iterator begin() const { return query_iterator{*query_part_}; }
+  const_iterator begin() const noexcept;
 
-    query_iterator end() const { return query_iterator{}; }
+  const_iterator end() const noexcept;
 
-    string_type to_string() const { return query_; }
+  string_type to_string() const;
 
-   private:
-    void update();
+  void sort();
 
-    void sort() {
-      // auto query = split_query_string(query_);
-      // std::sort(std::begin(query), std::end(query),
-      //           [] (const auto &lhs, const auto &rhs) {
-      //             return lhs.first < rhs.first;
-      //           });
-      // query_ = to_query_string(query);
-    }
+ private:
+  void update();
 
-    string_type query_;
-    string_view query_view_;
-    optional<detail::uri_part> query_part_;
-  };
-
+  std::vector<value_type> parameters_;
+};
 };
 
-#endif // NETWORK_URI_URI_QUERY_PARAMETERS_INC
+#endif  // NETWORK_URI_URI_QUERY_PARAMETERS_INC
