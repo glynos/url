@@ -8,6 +8,7 @@
 #include <locale>
 #include <algorithm>
 #include <functional>
+#include <vector>
 #include "network/uri/whatwg/url.hpp"
 #include "detail/uri_parse.hpp"
 #include "detail/uri_advance_parts.hpp"
@@ -17,6 +18,21 @@
 
 namespace network {
 namespace whatwg {
+namespace {
+const std::vector<std::pair<url::string_type, optional<std::uint16_t>>> &special_schemes() {
+  const static std::vector<std::pair<url::string_type, optional<std::uint16_t>>> schemes = {
+    {"ftp", 21},
+    {"file", nullopt},
+    {"gopher", 70},
+    {"http", 80},
+    {"https", 443},
+    {"ws", 80},
+    {"wss", 443},
+  };
+  return schemes;
+}
+}  // namespace
+
 url::query_iterator::query_iterator() : query_{}, kvp_{} {}
 
 url::query_iterator::query_iterator(optional<::network::detail::uri_part> query)
@@ -362,8 +378,43 @@ bool url::is_opaque() const noexcept {
 }
 
 bool url::is_special() const noexcept {
+  if (has_scheme()) {
+    auto scheme = this->scheme();
+    auto first = std::begin(special_schemes()), last = std::end(special_schemes());
+    auto it = std::find_if(
+        first, last,
+        [&scheme](const std::pair<url::string_type, optional<std::uint16_t>>
+                      &special_scheme) -> bool {
+          return scheme == url::string_view(special_scheme.first);
+        });
+    return it != last;
+  }
   return false;
 }
+
+optional<std::uint16_t> url::default_port(const string_type &scheme) {
+  auto first = std::begin(special_schemes()), last = std::end(special_schemes());
+  auto it = std::find_if(
+      first, last,
+      [&scheme](const std::pair<url::string_type, optional<std::uint16_t>>
+                    &special_scheme) -> bool {
+        return scheme == special_scheme.first;
+      });
+  if (it != last) {
+    return it->second;
+  }
+  return nullopt;
+}
+
+namespace {
+url::string_type serialize_host(url::string_view host) {
+  return url::string_type{host};
+}
+
+url::string_type serialize_port(url::string_view port) {
+  return url::string_type{port};
+}
+}  // namespace
 
 url url::serialize() const {
   // https://url.spec.whatwg.org/#url-serializing
@@ -379,18 +430,24 @@ url url::serialize() const {
       result += "@";
     }
 
-    result += string_type(host());
+    result += serialize_host(host());
 
     if (has_port()) {
       result += ":";
-      result += string_type(port());
+      result += serialize_port(port());
     }
   }
   // else if (scheme() == "file") {
   //   result += "//";
   // }
 
-  result += string_type(path());
+  auto path_it = path_begin();
+  if (cannot_be_a_base_url_) {
+    result += string_type(*path_it);
+  }
+  else {
+    result += string_type(path());
+  }
 
   if (has_query()) {
     result += "?";
@@ -405,7 +462,7 @@ url url::serialize() const {
   return url{result};
 }
 
-int url::compare(const url &other) const noexcept {
+int url::compare(const url &other) const {
   // if both URLs are empty, then we should define them as equal
   // even though they're still invalid.
   if (empty() && other.empty()) {

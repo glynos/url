@@ -432,6 +432,8 @@ class url {
 
   bool is_special() const noexcept;
 
+  static optional<std::uint16_t> default_port(const url::string_type &scheme);
+
   /**
    * \brief Serializes a url object.
    * \returns A serialize url.
@@ -446,7 +448,7 @@ class url {
    *         less than other and and 1 if this is greater than
    *         other.
    */
-  int compare(const url &other) const noexcept;
+  int compare(const url &other) const;
 
   /**
    * \brief Encodes a sequence according to the rules for encoding a
