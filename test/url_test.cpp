@@ -454,18 +454,6 @@ TEST(uri_test, swap_test) {
   EXPECT_EQ("/path/to/file.txt", instance.path());
 }
 
-TEST(uri_test, authority_test) {
-  network::whatwg::url instance("http://user@www.example.com:80/path?query#fragment");
-  ASSERT_TRUE(instance.has_authority());
-  EXPECT_EQ("user@www.example.com:80", instance.authority());
-}
-
-TEST(uri_test, partial_authority_test) {
-  network::whatwg::url instance("http://www.example.com/path?query#fragment");
-  ASSERT_TRUE(instance.has_authority());
-  EXPECT_EQ("www.example.com", instance.authority());
-}
-
 TEST(uri_test, range_test) {
   const std::string url("http://www.example.com/");
   network::whatwg::url instance(url);
@@ -553,11 +541,6 @@ TEST(uri_test, mailto_has_no_host) {
 TEST(uri_test, mailto_has_no_port) {
   network::whatwg::url instance("mailto:john.doe@example.com");
   EXPECT_FALSE(instance.has_port());
-}
-
-TEST(uri_test, mailto_has_no_authority) {
-  network::whatwg::url instance("mailto:john.doe@example.com");
-  EXPECT_FALSE(instance.has_authority());
 }
 
 TEST(uri_test, http_is_not_opaque) {
@@ -845,6 +828,60 @@ TEST(uri_test, non_opaque_path_has_double_slash) {
   ASSERT_TRUE(instance.has_path());
   EXPECT_EQ("/path/to/something/", instance.path());
   EXPECT_FALSE(instance.is_opaque());
+}
+
+TEST(uri_test, path_iterator_with_empty_path) {
+  network::whatwg::url instance("http://example.com/");
+  ASSERT_TRUE(instance.has_path());
+  EXPECT_NE(instance.path_begin(), instance.path_end());
+}
+
+TEST(uri_test, path_iterator_with_single_element) {
+  network::whatwg::url instance("http://example.com/a");
+  ASSERT_TRUE(instance.has_path());
+  auto path_it = instance.path_begin();
+  ASSERT_NE(path_it, instance.path_end());
+  EXPECT_EQ("a", *path_it);
+  ++path_it;
+  EXPECT_EQ(path_it, instance.path_end());
+}
+
+TEST(uri_test, path_iterator_with_two_elements) {
+  network::whatwg::url instance("http://example.com/a/b");
+
+  ASSERT_TRUE(instance.has_path());
+  auto path_it = instance.path_begin();
+  ASSERT_NE(path_it, instance.path_end());
+  EXPECT_EQ("a", *path_it);
+  ++path_it;
+  ASSERT_NE(path_it, instance.path_end());
+  EXPECT_EQ("b", *path_it);
+  ++path_it;
+  EXPECT_EQ(path_it, instance.path_end());
+}
+
+TEST(uri_test, path_iterator_with_query) {
+  network::whatwg::url instance("http://example.com/a/b?query");
+  ASSERT_TRUE(instance.has_path());
+  ASSERT_NE(instance.path_begin(), instance.path_end());
+  auto path_it = instance.path_begin();
+  EXPECT_EQ("a", *path_it);
+  ++path_it;
+  EXPECT_EQ("b", *path_it);
+  ++path_it;
+  EXPECT_EQ(path_it, instance.path_end());
+}
+
+TEST(uri_test, path_iterator_with_fragment) {
+  network::whatwg::url instance("http://example.com/a/b#fragment");
+  ASSERT_TRUE(instance.has_path());
+  ASSERT_NE(instance.path_begin(), instance.path_end());
+  auto path_it = instance.path_begin();
+  EXPECT_EQ("a", *path_it);
+  ++path_it;
+  EXPECT_EQ("b", *path_it);
+  ++path_it;
+  EXPECT_EQ(path_it, instance.path_end());
 }
 
 TEST(uri_test, query_iterator_with_no_query) {

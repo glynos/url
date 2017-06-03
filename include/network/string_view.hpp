@@ -156,7 +156,7 @@ class basic_string_view {
 
   template <class Allocator>
   explicit operator std::basic_string<charT, traits, Allocator>() const {
-    return to_string<charT, traits, Allocator>();
+    return to_string<Allocator>();
   }
 
   template <class Allocator = std::allocator<charT>>

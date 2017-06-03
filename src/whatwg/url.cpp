@@ -120,15 +120,120 @@ void url::query_iterator::increment() noexcept {
   }
 }
 
-url::url() : url_view_(url_), url_parts_() {}
+url::path_iterator::path_iterator() : path_{}, element_{} {}
 
-url::url(const url &other) : url_(other.url_), url_view_(url_), url_parts_() {
+url::path_iterator::path_iterator(optional<::network::detail::uri_part> query)
+  : path_(query)
+  , element_{} {
+  if (path_ && path_->empty()) {
+    path_ = nullopt;
+  }
+  else {
+    // skip past '/'
+    advance_to_next_element();
+    assign_element();
+  }
+}
+
+url::path_iterator::path_iterator(const path_iterator &other)
+  : path_(other.path_)
+  , element_(other.element_) {
+
+}
+
+url::path_iterator &url::path_iterator::operator = (const path_iterator &other) {
+  auto tmp(other);
+  swap(tmp);
+  return *this;
+}
+
+url::path_iterator::reference url::path_iterator::operator ++ () noexcept {
+  increment();
+  return element_;
+}
+
+url::path_iterator::value_type url::path_iterator::operator ++ (int) noexcept {
+  auto original = element_;
+  increment();
+  return original;
+}
+
+url::path_iterator::reference url::path_iterator::operator * () const noexcept {
+  return element_;
+}
+
+url::path_iterator::pointer url::path_iterator::operator -> () const noexcept {
+  return std::addressof(element_);
+}
+
+bool url::path_iterator::operator==(const path_iterator &other) const noexcept {
+  if (!path_ && !other.path_) {
+    return true;
+  }
+  else if (path_ && other.path_) {
+    // since we're comparing substrings, the address of the first
+    // element in each iterator must be the same
+    return std::addressof(element_) == std::addressof(other.element_);
+  }
+  return false;
+}
+
+void url::path_iterator::swap(path_iterator &other) noexcept {
+  std::swap(path_, other.path_);
+  std::swap(element_, other.element_);
+}
+
+void url::path_iterator::advance_to_next_element() noexcept {
+  auto first = std::begin(*path_), last = std::end(*path_);
+
+  auto sep_it = std::find_if(
+      first, last, [](char c) -> bool { return c == '/'; });
+
+  if (sep_it != last) {
+    ++sep_it; // skip next separator
+  }
+
+  // reassign query to the next element
+  path_ = ::network::detail::uri_part(sep_it, last);
+}
+
+void url::path_iterator::assign_element() noexcept {
+  auto first = std::begin(*path_), last = std::end(*path_);
+
+  auto sep_it = std::find_if(
+      first, last, [](char c) -> bool { return c == '/'; });
+
+  element_ = string_view(std::addressof(*first), std::distance(first, sep_it));
+}
+
+void url::path_iterator::increment() noexcept {
+  assert(path_);
+
+  if (!path_->empty()) {
+    advance_to_next_element();
+    assign_element();
+  }
+
+  if (path_->empty()) {
+    path_ = nullopt;
+  }
+}
+
+url::url() : url_view_(url_), url_parts_(), cannot_be_a_base_url_(false) {}
+
+url::url(const url &other)
+    : url_(other.url_),
+      url_view_(url_),
+      url_parts_(),
+      cannot_be_a_base_url_(other.cannot_be_a_base_url_) {
   ::network::detail::advance_parts(url_view_, url_parts_, other.url_parts_);
 }
 
-url::url(url &&other) noexcept : url_(std::move(other.url_)),
-                                 url_view_(url_),
-                                 url_parts_(std::move(other.url_parts_)) {
+url::url(url &&other) noexcept
+    : url_(std::move(other.url_)),
+      url_view_(url_),
+      url_parts_(std::move(other.url_parts_)),
+      cannot_be_a_base_url_(std::move(other.cannot_be_a_base_url_)) {
   ::network::detail::advance_parts(url_view_, url_parts_, other.url_parts_);
   other.url_.clear();
   other.url_view_ = string_view(other.url_);
@@ -148,6 +253,7 @@ void url::swap(url &other) noexcept {
   url_.swap(other.url_);
   url_view_.swap(other.url_view_);
   advance_parts(other.url_view_, other.url_parts_, parts);
+  std::swap(cannot_be_a_base_url_, other.cannot_be_a_base_url_);
 }
 
 url::const_iterator url::begin() const noexcept { return url_view_.begin(); }
@@ -199,6 +305,14 @@ url::string_view url::path() const noexcept {
                     : string_view{};
 }
 
+url::path_iterator url::path_begin() const noexcept {
+  return has_path()? url::path_iterator{url_parts_.path} : url::path_iterator{};
+}
+
+url::path_iterator url::path_end() const noexcept {
+  return url::path_iterator{};
+}
+
 bool url::has_query() const noexcept {
   return static_cast<bool>(url_parts_.query);
 }
@@ -225,57 +339,6 @@ url::string_view url::fragment() const noexcept {
                         : string_view{};
 }
 
-bool url::has_authority() const noexcept {
-  return has_host();
-}
-
-url::string_view url::authority() const noexcept {
-  if (!has_host()) {
-    return string_view{};
-  }
-
-  auto host = this->host();
-
-  auto user_info = string_view{};
-  if (has_user_info()) {
-    user_info = this->user_info();
-  }
-
-  auto port = string_view{};
-  if (has_port()) {
-    port = this->port();
-  }
-
-  auto first = std::begin(host), last = std::end(host);
-  if (has_user_info() && !user_info.empty()) {
-    first = std::begin(user_info);
-  }
-  else if (host.empty() && has_port() && !port.empty()) {
-    first = std::begin(port);
-    --first; // include ':' before port
-  }
-
-  if (host.empty()) {
-    if (has_port() && !port.empty()) {
-      last = std::end(port);
-    }
-    else if (has_user_info() && !user_info.empty()) {
-      last = std::end(user_info);
-      ++last; // include '@'
-    }
-  }
-  else if (has_port()) {
-    if (port.empty()) {
-      ++last; // include ':' after host
-    }
-    else {
-      last = std::end(port);
-    }
-  }
-
-  return string_view(first, std::distance(first, last));
-}
-
 std::string url::string() const { return url_; }
 
 std::wstring url::wstring() const {
@@ -295,7 +358,11 @@ bool url::empty() const noexcept { return url_.empty(); }
 bool url::is_absolute() const noexcept { return has_scheme(); }
 
 bool url::is_opaque() const noexcept {
-  return (is_absolute() && !has_authority());
+  return (is_absolute() && !has_host());
+}
+
+bool url::is_special() const noexcept {
+  return false;
 }
 
 url url::serialize() const {
@@ -319,9 +386,9 @@ url url::serialize() const {
       result += string_type(port());
     }
   }
-  else if (scheme() == "file") {
-    result += "//";
-  }
+  // else if (scheme() == "file") {
+  //   result += "//";
+  // }
 
   result += string_type(path());
 

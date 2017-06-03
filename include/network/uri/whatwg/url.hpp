@@ -45,7 +45,7 @@ namespace whatwg {
  * A URI has the syntax:
  *
  * \code
- * [scheme:][user_info@][host][:port][path][?query][#fragment]
+ * [scheme:][user_name@password][host][:port][path][?query][#fragment]
  * \endcode
  *
  * Example:
@@ -98,7 +98,7 @@ class url {
    *
    */
   class query_iterator {
-   public:
+  public:
     using value_type = std::pair<string_view, string_view>;
     using difference_type = std::ptrdiff_t;
     using pointer = const value_type *;
@@ -126,6 +126,38 @@ class url {
 
     optional<detail::uri_part> query_;
     value_type kvp_;
+  };
+
+  class path_iterator {
+  public:
+
+    using value_type = string_view;
+    using difference_type = std::ptrdiff_t;
+    using pointer = const value_type *;
+    using reference = const value_type &;
+    using iterator_category = std::forward_iterator_tag;
+
+    path_iterator();
+    explicit path_iterator(optional<detail::uri_part>);
+    path_iterator(const path_iterator &);
+    path_iterator &operator=(const path_iterator &);
+    reference operator++() noexcept;
+    value_type operator++(int) noexcept;
+    reference operator*() const noexcept;
+    pointer operator->() const noexcept;
+    bool operator==(const path_iterator &) const noexcept;
+    inline bool operator!=(const path_iterator &other) const noexcept {
+      return !(*this == other);
+    }
+
+   private:
+    void swap(path_iterator &) noexcept;
+    void advance_to_next_element() noexcept;
+    void assign_element() noexcept;
+    void increment() noexcept;
+
+    optional<detail::uri_part> path_;
+    value_type element_;
   };
 
   /**
@@ -299,6 +331,10 @@ class url {
    */
   string_view path() const noexcept;
 
+  path_iterator path_begin() const noexcept;
+
+  path_iterator path_end() const noexcept;
+
   /**
    * \brief Tests whether this URL has a query component.
    * \return \c true if the URL has a query, \c false otherwise.
@@ -340,18 +376,6 @@ class url {
    * \pre has_fragment()
    */
   string_view fragment() const noexcept;
-
-  /**
-   * \brief Tests whether this URL has a valid authority.
-   * \return \c true if the URL has an authority, \c false otherwise.
-   */
-  bool has_authority() const noexcept;
-
-  /**
-   * \brief Returns the URL authority.
-   * \return The authority.
-   */
-  string_view authority() const noexcept;
 
   /**
    * \brief Returns the URL as a std::basic_string object.
@@ -401,11 +425,12 @@ class url {
   bool is_absolute() const noexcept;
 
   /**
-   * \brief Checks if the url is opaque, i.e. if it doesn't have an
-   *        authority.
+   * \brief Checks if the url is opaque.
    * \returns \c true if it is opaque, \c false if it is hierarchical.
    */
   bool is_opaque() const noexcept;
+
+  bool is_special() const noexcept;
 
   /**
    * \brief Serializes a url object.
@@ -547,6 +572,8 @@ class url {
   string_type url_;
   string_view url_view_;
   detail::uri_parts url_parts_;
+  bool cannot_be_a_base_url_;
+
 };
 
 /**
