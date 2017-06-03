@@ -13,7 +13,7 @@
 #ifndef NETWORK_URI_CONFIG_INC
 #define NETWORK_URI_CONFIG_INC
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 #define NETWORK_URI_MSVC _MSC_VER
 #endif  // _MSC_VER
 

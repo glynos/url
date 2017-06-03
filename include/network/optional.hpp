@@ -15,6 +15,26 @@
 #ifndef NETWORK_OPTIONAL_INC
 #define NETWORK_OPTIONAL_INC
 
+// simple test for G++ 6 if this compiler uses the C++14 or 17 standards
+#if (__cplusplus == 201402L)
+#define NETWORK_OPTIONAL_STD14
+#elif (__cplusplus == 201500L)
+#define NETWORK_OPTIONAL_STD17
+#endif
+
+#if defined(NETWORK_OPTIONAL_STD17)
+#include <experimental/optional>
+
+namespace network {
+template <class T>
+using optional = std::experimental::optional<T>;
+using bad_optional_access = std::experimental::bad_optional_access;
+
+constexpr auto nullopt = std::experimental::nullopt;
+}  // namespace network
+
+#else
+
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -707,5 +727,7 @@ inline constexpr optional<typename std::decay<T>::type> make_optional(T&& value)
   return optional<typename std::decay<T>::type>(std::forward(value));
 }
 }  // namespace network
+
+#endif  // NETWORK_URI_STD17
 
 #endif  // NETWORK_OPTIONAL_INC

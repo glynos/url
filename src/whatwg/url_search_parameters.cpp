@@ -4,6 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include "network/uri/whatwg/url_search_parameters.hpp"
+#include <algorithm>
 
 namespace network {
 namespace whatwg {
