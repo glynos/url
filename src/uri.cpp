@@ -17,6 +17,7 @@
 #include "detail/algorithm.hpp"
 
 namespace network {
+namespace ietf {
 namespace {
 // With the parser, we use string_views, which are mutable. However,
 // there are times (e.g. during normalization), when we want a part
@@ -24,7 +25,7 @@ namespace {
 // std::string::iterators in the same range as the URI part.
 //
 inline std::pair<std::string::iterator, std::string::iterator> mutable_part(
-    std::string &str, detail::uri_part part) {
+    std::string &str, ::network::detail::uri_part part) {
   auto view = string_view(str);
 
   auto first_index = std::distance(std::begin(view), std::begin(part));
@@ -41,7 +42,7 @@ inline std::pair<std::string::iterator, std::string::iterator> mutable_part(
 // This is a convenience function that converts a part of a
 // std::string to a string_view.
 inline string_view to_string_view(const std::string &uri,
-                                  detail::uri_part part) {
+                                  ::network::detail::uri_part part) {
   if (!part.empty()) {
     const char *c_str = uri.c_str();
     const char *part_begin = &(*(std::begin(part)));
@@ -64,7 +65,7 @@ inline void ignore(T) {}
 
 uri::query_iterator::query_iterator() : query_{}, kvp_{} {}
 
-uri::query_iterator::query_iterator(optional<detail::uri_part> query)
+uri::query_iterator::query_iterator(optional<::network::detail::uri_part> query)
   : query_(query)
   , kvp_{} {
   if (query_ && query_->empty()) {
@@ -134,7 +135,7 @@ void uri::query_iterator::advance_to_next_kvp() noexcept {
   }
 
   // reassign query to the next element
-  query_ = detail::uri_part(sep_it, last);
+  query_ = ::network::detail::uri_part(sep_it, last);
 }
 
 void uri::query_iterator::assign_kvp() noexcept {
@@ -228,7 +229,7 @@ void uri::initialize(optional<string_type> scheme,
 
   auto it = std::begin(uri_view_);
   if (scheme) {
-    uri_parts_.scheme = detail::copy_part(*scheme, it);
+    uri_parts_.scheme = ::network::detail::copy_part(*scheme, it);
     // ignore : and ://
     if (*it == ':') {
       ++it;
@@ -242,38 +243,38 @@ void uri::initialize(optional<string_type> scheme,
   }
 
   if (user_info) {
-    uri_parts_.user_info = detail::copy_part(*user_info, it);
+    uri_parts_.user_info = ::network::detail::copy_part(*user_info, it);
     ++it;  // ignore @
   }
 
   if (host) {
-    uri_parts_.host = detail::copy_part(*host, it);
+    uri_parts_.host = ::network::detail::copy_part(*host, it);
   }
 
   if (port) {
     ++it;  // ignore :
-    uri_parts_.port = detail::copy_part(*port, it);
+    uri_parts_.port = ::network::detail::copy_part(*port, it);
   }
 
   if (path) {
-    uri_parts_.path =  detail::copy_part(*path, it);
+    uri_parts_.path =  ::network::detail::copy_part(*path, it);
   }
 
   if (query) {
     ++it;  // ignore ?
-    uri_parts_.query = detail::copy_part(*query, it);
+    uri_parts_.query = ::network::detail::copy_part(*query, it);
   }
 
   if (fragment) {
     ++it;  // ignore #
-    uri_parts_.fragment = detail::copy_part(*fragment, it);
+    uri_parts_.fragment = ::network::detail::copy_part(*fragment, it);
   }
 }
 
 uri::uri() : uri_view_(uri_), uri_parts_() {}
 
 uri::uri(const uri &other) : uri_(other.uri_), uri_view_(uri_), uri_parts_() {
-  detail::advance_parts(uri_view_, uri_parts_, other.uri_parts_);
+  ::network::detail::advance_parts(uri_view_, uri_parts_, other.uri_parts_);
 }
 
 uri::uri(const uri_builder &builder) : uri_parts_() {
@@ -284,10 +285,10 @@ uri::uri(const uri_builder &builder) : uri_parts_() {
 uri::uri(uri &&other) noexcept : uri_(std::move(other.uri_)),
                                  uri_view_(uri_),
                                  uri_parts_(std::move(other.uri_parts_)) {
-  detail::advance_parts(uri_view_, uri_parts_, other.uri_parts_);
+  ::network::detail::advance_parts(uri_view_, uri_parts_, other.uri_parts_);
   other.uri_.clear();
   other.uri_view_ = string_view(other.uri_);
-  other.uri_parts_ = detail::uri_parts();
+  other.uri_parts_ = ::network::detail::uri_parts();
 }
 
 uri::~uri() {}
@@ -456,8 +457,8 @@ bool uri::is_opaque() const noexcept {
 uri uri::normalize(uri_comparison_level level) const {
   string_type normalized(uri_);
   string_view normalized_view(normalized);
-  detail::uri_parts parts;
-  detail::advance_parts(normalized_view, parts, uri_parts_);
+  ::network::detail::uri_parts parts;
+  ::network::detail::advance_parts(normalized_view, parts, uri_parts_);
 
   if (uri_comparison_level::syntax_based == level) {
     // All alphabetic characters in the scheme and host are
@@ -477,24 +478,24 @@ uri uri::normalize(uri_comparison_level level) const {
     }
 
     // ...except when used in percent encoding
-    detail::for_each(normalized, detail::percent_encoded_to_upper<std::string>());
+    ::network::detail::for_each(normalized, ::network::detail::percent_encoded_to_upper<std::string>());
 
     // parts are invalidated here
     // there's got to be a better way of doing this that doesn't
     // mean parsing again (twice!)
-    normalized.erase(detail::decode_encoded_unreserved_chars(
+    normalized.erase(::network::detail::decode_encoded_unreserved_chars(
                          std::begin(normalized), std::end(normalized)),
                      std::end(normalized));
     normalized_view = string_view(normalized);
 
     // need to parse the parts again as the underlying string has changed
     const_iterator it = std::begin(normalized_view), last = std::end(normalized_view);
-    bool is_valid = detail::parse(it, last, parts);
+    bool is_valid = ::network::detail::parse(it, last, parts);
     ignore(is_valid);
     assert(is_valid);
 
     if (parts.path) {
-      uri::string_type path = detail::normalize_path_segments(
+      uri::string_type path = ::network::detail::normalize_path_segments(
           to_string_view(normalized, *parts.path));
 
       // put the normalized path back into the uri
@@ -534,12 +535,12 @@ uri uri::make_relative(const uri &other) const {
   }
 
   if ((!has_scheme() || !other.has_scheme()) ||
-      !detail::equal(scheme(), other.scheme())) {
+      !::network::detail::equal(scheme(), other.scheme())) {
     return other;
   }
 
   if ((!has_authority() || !other.has_authority()) ||
-      !detail::equal(authority(), other.authority())) {
+      !::network::detail::equal(authority(), other.authority())) {
     return other;
   }
 
@@ -548,8 +549,8 @@ uri uri::make_relative(const uri &other) const {
   }
 
   auto path =
-    detail::normalize_path(this->path(), uri_comparison_level::syntax_based);
-  auto other_path = detail::normalize_path(other.path(),
+    ::network::detail::normalize_path(this->path(), uri_comparison_level::syntax_based);
+  auto other_path = ::network::detail::normalize_path(other.path(),
                                            uri_comparison_level::syntax_based);
 
   optional<string_type> query, fragment;
@@ -561,7 +562,7 @@ uri uri::make_relative(const uri &other) const {
     fragment = other.fragment().to_string();
   }
 
-  network::uri result;
+  uri result;
   result.initialize(optional<string_type>(), optional<string_type>(),
                     optional<string_type>(), optional<string_type>(),
                     other_path, query, fragment);
@@ -570,7 +571,7 @@ uri uri::make_relative(const uri &other) const {
 
 uri uri::resolve(const uri &base) const {
   // This implementation uses the psuedo-code given in
-  // http://tools.ietf.org/html/rfc3986#section-5.2.2
+  // http://tools.ietf.org/html/ietf#section-5.2.2
 
   if (is_absolute() && !is_opaque()) {
     // throw an exception ?
@@ -599,7 +600,7 @@ uri uri::resolve(const uri &base) const {
     }
 
     if (has_path()) {
-      path = detail::remove_dot_segments(this->path());
+      path = ::network::detail::remove_dot_segments(this->path());
     }
 
     if (has_query()) {
@@ -618,9 +619,9 @@ uri uri::resolve(const uri &base) const {
       }
     } else {
       if (this->path().front() == '/') {
-        path = detail::remove_dot_segments(this->path());
+        path = ::network::detail::remove_dot_segments(this->path());
       } else {
-        path = detail::merge_paths(base, *this);
+        path = ::network::detail::merge_paths(base, *this);
       }
 
       if (has_query()) {
@@ -671,11 +672,11 @@ int uri::compare(const uri &other, uri_comparison_level level) const noexcept {
 }
 
 bool uri::initialize(const string_type &uri) {
-  uri_ = detail::trim_copy(uri);
+  uri_ = ::network::detail::trim_copy(uri);
   if (!uri_.empty()) {
     uri_view_ = string_view(uri_);
     const_iterator it = std::begin(uri_view_), last = std::end(uri_view_);
-    bool is_valid = detail::parse(it, last, uri_parts_);
+    bool is_valid = ::network::detail::parse(it, last, uri_parts_);
     return is_valid;
   }
   return true;
@@ -698,4 +699,5 @@ bool operator==(const uri &lhs, const char *rhs) noexcept {
 bool operator<(const uri &lhs, const uri &rhs) noexcept {
   return lhs.compare(rhs, uri_comparison_level::syntax_based) < 0;
 }
+}  // namespace ietf
 }  // namespace network

@@ -1,12 +1,12 @@
-// Copyright (c) Glyn Matthews 2012-2016.
+// Copyright (c) Glyn Matthews 2012-2017.
 // Copyright 2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_URI_HPP
-#define NETWORK_URI_HPP
+#ifndef NETWORK_URI_INC
+#define NETWORK_URI_INC
 
 /**
  * \defgroup uri URI
@@ -33,6 +33,6 @@
  */
 
 #include <network/uri/uri.hpp>
-#include <network/uri/uri_io.hpp>
+#include <network/uri/ietf/uri_io.hpp>
 
-#endif // NETWORK_URI_HPP
+#endif  // NETWORK_URI_INC

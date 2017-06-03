@@ -13,7 +13,7 @@ namespace network {
 namespace detail {
 std::string normalize_path_segments(string_view path);
 
-std::string normalize_path(string_view path, uri_comparison_level level);
+std::string normalize_path(string_view path, ietf::uri_comparison_level level);
 }  // namespace detail
 }  // namespace network
 

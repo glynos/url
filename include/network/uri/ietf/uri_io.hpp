@@ -1,4 +1,4 @@
-// Copyright (c) Glyn Matthews 2011-2016
+// Copyright (c) Glyn Matthews 2011-2017
 // Copyright 2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
@@ -10,14 +10,15 @@
  * \brief Defines stream overloads for the uri class.
  */
 
-#ifndef NETWORK_URI_URI_IO_INC
-#define NETWORK_URI_URI_IO_INC
+#ifndef NETWORK_URI_IETF_URI_IO_INC
+#define NETWORK_URI_IETF_URI_IO_INC
 
 #include <network/uri/config.hpp>
 #include <network/uri/uri.hpp>
 #include <iosfwd>
 
 namespace network {
+namespace ietf {
 #if !defined(NETWORK_URI_MSVC)
 template <typename CharT, class CharTraits = std::char_traits<CharT> >
 std::basic_ostream<CharT, CharTraits> &operator<<(
@@ -57,6 +58,7 @@ inline std::wistream &operator>>(std::wistream &is, uri &uri_) {
 }
 #endif  // !defined(NETWORK_URI_MSVC)
 
+}  // namespace ietf
 }  // namespace network
 
-#endif  // NETWORK_URI_URI_IO_INC
+#endif  // NETWORK_URI_IETF_URI_IO_INC

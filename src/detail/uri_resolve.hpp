@@ -15,7 +15,7 @@ namespace detail {
 std::string remove_dot_segments(string_view input);
 
 // implementation of http://tools.ietf.org/html/rfc3986#section-5.2.3
-std::string merge_paths(const uri &base, const uri &reference);
+std::string merge_paths(const ietf::uri &base, const uri &reference);
 }  // namespace detail
 }  // namespace network
 

@@ -1,16 +1,17 @@
-// Copyright (c) Glyn Matthews 2012-2016.
+// Copyright (c) Glyn Matthews 2012-2017.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <locale>
-#include "network/uri/uri_builder.hpp"
+#include "network/uri/ietf/uri_builder.hpp"
 #include "detail/uri_normalize.hpp"
 #include "detail/uri_parse_authority.hpp"
 #include "detail/algorithm.hpp"
 
 namespace network {
-uri_builder::uri_builder(const network::uri &base_uri) {
+namespace ietf {
+uri_builder::uri_builder(const ietf::uri &base_uri) {
   if (base_uri.has_scheme()) {
     set_scheme(base_uri.scheme().to_string());
   }
@@ -42,13 +43,13 @@ uri_builder::uri_builder(const network::uri &base_uri) {
 
 uri_builder::~uri_builder() noexcept {}
 
-network::uri uri_builder::uri() const { return network::uri(*this); }
+ietf::uri uri_builder::uri() const { return ietf::uri(*this); }
 
 void uri_builder::set_scheme(string_type scheme) {
   // validate scheme is valid and normalize
   scheme_ = scheme;
-  detail::transform(*scheme_, std::begin(*scheme_),
-                    [] (char ch) { return std::tolower(ch, std::locale()); });
+  ::network::detail::transform(*scheme_, std::begin(*scheme_),
+                               [] (char ch) { return std::tolower(ch, std::locale()); });
 }
 
 void uri_builder::set_user_info(string_type user_info) {
@@ -66,8 +67,8 @@ void uri_builder::set_host(string_type host) {
   host_ = string_type();
   network::uri::encode_host(std::begin(host), std::end(host),
                             std::back_inserter(*host_));
-  detail::transform(*host_, std::begin(*host_),
-                    [](char ch) { return std::tolower(ch, std::locale()); });
+  ::network::detail::transform(*host_, std::begin(*host_),
+                               [](char ch) { return std::tolower(ch, std::locale()); });
 }
 
 void uri_builder::set_port(string_type port) {
@@ -82,10 +83,10 @@ uri_builder &uri_builder::clear_port() {
 }
 
 void uri_builder::set_authority(string_type authority) {
-  optional<detail::uri_part> user_info, host, port;
+  optional<::network::detail::uri_part> user_info, host, port;
   uri::string_view view(authority);
   uri::const_iterator it = std::begin(view), last = std::end(view);
-  detail::parse_authority(it, last, user_info, host, port);
+  ::network::detail::parse_authority(it, last, user_info, host, port);
 
   if (user_info) {
     set_user_info(user_info->to_string());
@@ -137,4 +138,5 @@ uri_builder &uri_builder::clear_fragment() {
   fragment_ = network::nullopt;
   return *this;
 }
+}  // namespace ietf
 }  // namespace network

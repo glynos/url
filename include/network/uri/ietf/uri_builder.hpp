@@ -1,4 +1,4 @@
-// Copyright (c) Glyn Matthews 2012-2016.
+// Copyright (c) Glyn Matthews 2012-2017.
 // Copyright 2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
@@ -10,13 +10,13 @@
  * \brief Contains the definition of the uri_builder.
  */
 
-#ifndef NETWORK_URI_BUILDER_INC
-#define NETWORK_URI_BUILDER_INC
+#ifndef NETWORK_IETF_URI_BUILDER_INC
+#define NETWORK_IETF_URI_BUILDER_INC
 
 #include <cstdint>
 #include <utility>
 #include <type_traits>
-#include <network/uri/uri.hpp>
+#include <network/uri/ietf/uri.hpp>
 
 #ifdef NETWORK_URI_MSVC
 #pragma warning(push)
@@ -24,20 +24,21 @@
 #endif
 
 namespace network {
+namespace ietf {
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace detail {
 
 template <class T>
 struct host_converter {
   uri::string_type operator()(const T &host) const {
-    return detail::translate(host);
+    return ::network::detail::translate(host);
   }
 };
 
 template <class T, class Enable = void>
 struct port_converter {
   uri::string_type operator()(const T &port) const {
-    return detail::translate(port);
+    return ::network::detail::translate(port);
   }
 };
 
@@ -52,7 +53,7 @@ struct port_converter<T, typename std::enable_if<std::is_integral<
 template <class T>
 struct path_converter {
   uri::string_type operator()(const T &path) const {
-    return detail::translate(path);
+    return ::network::detail::translate(path);
   }
 };
 }  // namespace detail
@@ -76,7 +77,7 @@ class uri_builder {
   /**
    * \brief The uri_builder string_type.
    */
-  using string_type = network::uri::string_type;
+  using string_type = ietf::uri::string_type;
 
   /**
    * \brief Constructor.
@@ -101,7 +102,7 @@ class uri_builder {
    */
   template <typename Source>
   uri_builder &scheme(const Source &scheme) {
-    set_scheme(detail::translate(scheme));
+    set_scheme(::network::detail::translate(scheme));
     return *this;
   }
 
@@ -112,7 +113,7 @@ class uri_builder {
    */
   template <typename Source>
   uri_builder &user_info(const Source &user_info) {
-    set_user_info(detail::translate(user_info));
+    set_user_info(::network::detail::translate(user_info));
     return *this;
   }
 
@@ -159,7 +160,7 @@ class uri_builder {
    */
   template <typename Source>
   uri_builder &authority(const Source &authority) {
-    set_authority(detail::translate(authority));
+    set_authority(::network::detail::translate(authority));
     return *this;
   }
 
@@ -188,7 +189,7 @@ class uri_builder {
    */
   template <typename Source>
   uri_builder &append_query(const Source &query) {
-    append_query(detail::translate(query));
+    append_query(::network::detail::translate(query));
     return *this;
   }
 
@@ -212,8 +213,8 @@ class uri_builder {
     else {
       query_->append("&");
     }
-    string_type query_pair = detail::translate(key) + "=" + detail::translate(value);
-    network::uri::encode_query(std::begin(query_pair), std::end(query_pair),
+    string_type query_pair = ::network::detail::translate(key) + "=" + ::network::detail::translate(value);
+    ietf::uri::encode_query(std::begin(query_pair), std::end(query_pair),
                                std::back_inserter(*query_));
     return *this;
   }
@@ -225,7 +226,7 @@ class uri_builder {
    */
   template <typename Source>
   uri_builder &fragment(const Source &fragment) {
-    set_fragment(detail::translate(fragment));
+    set_fragment(::network::detail::translate(fragment));
     return *this;
   }
 
@@ -243,7 +244,7 @@ class uri_builder {
    * \throws std::bad_alloc If the underlying string cannot be
    *         allocated.
    */
-  network::uri uri() const;
+  network::ietf::uri uri() const;
 
  private:
   void set_scheme(string_type scheme);
@@ -258,10 +259,11 @@ class uri_builder {
   optional<string_type> scheme_, user_info_, host_, port_, path_, query_,
       fragment_;
 };
+}  // namespace ietf
 }  // namespace network
 
 #ifdef NETWORK_URI_MSVC
 #pragma warning(pop)
 #endif
 
-#endif  // NETWORK_URI_BUILDER_INC
+#endif  // NETWORK_IETF_URI_BUILDER_INC

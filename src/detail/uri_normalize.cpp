@@ -63,10 +63,10 @@ std::string normalize_path_segments(string_view path) {
   return result;
 }
 
-std::string normalize_path(string_view path, uri_comparison_level level) {
+std::string normalize_path(string_view path, ietf::uri_comparison_level level) {
   auto result = path.to_string();
 
-  if (uri_comparison_level::syntax_based == level) {
+  if (ietf::uri_comparison_level::syntax_based == level) {
     // case normalization
     detail::for_each(result, percent_encoded_to_upper<std::string>());
 
