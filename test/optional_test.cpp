@@ -163,6 +163,7 @@ TEST(optional_test, value_or_rvalue_reference_with_value) {
 }
 
 TEST(optional_test, assign_nullopt_to_nullopt) {
-	network::optional<std::string> opt;
-	opt = network::nullopt;
+  network::optional<std::string> opt;
+  opt = network::nullopt;
+  ASSERT_FALSE(opt);
 }
