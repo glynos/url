@@ -3,9 +3,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "network/uri/uri_search_parameters.hpp"
+#include "network/uri/whatwg/uri_search_parameters.hpp"
 
 namespace network {
+namespace whatwg {
 uri_search_parameters::uri_search_parameters() { update(); }
 
 uri_search_parameters::uri_search_parameters(const string_type &query) {
@@ -126,4 +127,5 @@ void uri_search_parameters::sort() {
 }
 
 void uri_search_parameters::update() {}
+}  // namespace whatwg
 }  // namespace network

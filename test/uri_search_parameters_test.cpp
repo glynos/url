@@ -4,17 +4,17 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include <network/uri/uri_search_parameters.hpp>
+#include <network/uri/whatwg/uri_search_parameters.hpp>
 #include "string_utility.hpp"
 
 TEST(uri_search_parameters_test, empty_query) {
-  network::uri_search_parameters parameters{};
+  network::whatwg::uri_search_parameters parameters{};
   EXPECT_EQ("", parameters.to_string());
   EXPECT_EQ(parameters.begin(), parameters.end());
 }
 
 TEST(uri_search_parameters_test, query_with_single_kvp) {
-  network::uri_search_parameters parameters{"a=b"};
+  network::whatwg::uri_search_parameters parameters{"a=b"};
 
   EXPECT_EQ("a=b", parameters.to_string());
   auto it = parameters.begin();
@@ -26,7 +26,7 @@ TEST(uri_search_parameters_test, query_with_single_kvp) {
 }
 
 TEST(uri_search_parameters_test, query_with_single_kvp_in_initalizer_list) {
-  network::uri_search_parameters parameters{{"a", "b"}};
+  network::whatwg::uri_search_parameters parameters{{"a", "b"}};
 
   auto it = parameters.begin();
   ASSERT_NE(it, parameters.end());
@@ -37,7 +37,7 @@ TEST(uri_search_parameters_test, query_with_single_kvp_in_initalizer_list) {
 }
 
 TEST(uri_search_parameters_test, query_with_two_kvps) {
-  network::uri_search_parameters parameters{"a=b&c=d"};
+  network::whatwg::uri_search_parameters parameters{"a=b&c=d"};
 
   auto it = parameters.begin();
   ASSERT_NE(it, parameters.end());
@@ -52,7 +52,7 @@ TEST(uri_search_parameters_test, query_with_two_kvps) {
 }
 
 TEST(uri_search_parameters_test, query_with_two_kvps_in_initializer_list) {
-  network::uri_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  network::whatwg::uri_search_parameters parameters{{"a", "b"}, {"c", "d"}};
 
   auto it = parameters.begin();
   ASSERT_NE(it, parameters.end());
@@ -67,7 +67,7 @@ TEST(uri_search_parameters_test, query_with_two_kvps_in_initializer_list) {
 }
 
 TEST(uri_search_parameters_test, query_with_two_kvps_using_semicolon_separator) {
-  network::uri_search_parameters parameters{"a=b;c=d"};
+  network::whatwg::uri_search_parameters parameters{"a=b;c=d"};
 
   EXPECT_EQ("a=b&c=d", parameters.to_string());
   auto it = parameters.begin();
@@ -83,7 +83,7 @@ TEST(uri_search_parameters_test, query_with_two_kvps_using_semicolon_separator) 
 }
 
 TEST(uri_search_parameters_test, query_append_one_kvp) {
-  network::uri_search_parameters parameters{};
+  network::whatwg::uri_search_parameters parameters{};
   parameters.append("a", "b");
 
   auto it = parameters.begin();
@@ -95,7 +95,7 @@ TEST(uri_search_parameters_test, query_append_one_kvp) {
 }
 
 TEST(uri_search_parameters_test, query_append_two_kvps) {
-  network::uri_search_parameters parameters{};
+  network::whatwg::uri_search_parameters parameters{};
   parameters.append("a", "b");
   parameters.append("c", "d");
 
@@ -111,14 +111,14 @@ TEST(uri_search_parameters_test, query_append_two_kvps) {
 }
 
 TEST(uri_search_parameters_test, query_append_one_kvp_to_string) {
-  network::uri_search_parameters parameters{};
+  network::whatwg::uri_search_parameters parameters{};
   parameters.append("a", "b");
 
   EXPECT_EQ("a=b", parameters.to_string());
 }
 
 TEST(uri_search_parameters_test, query_append_two_kvps_to_string) {
-  network::uri_search_parameters parameters{};
+  network::whatwg::uri_search_parameters parameters{};
   parameters.append("a", "b");
   parameters.append("c", "d");
 
@@ -127,14 +127,14 @@ TEST(uri_search_parameters_test, query_append_two_kvps_to_string) {
 
 TEST(uri_search_parameters_test, query_sort_test) {
   // https://url.spec.whatwg.org/#example-searchparams-sort
-  network::uri_search_parameters parameters{"c=d&a=b"};
+  network::whatwg::uri_search_parameters parameters{"c=d&a=b"};
   parameters.sort();
   EXPECT_EQ("a=b&c=d", parameters.to_string());
 }
 
 TEST(uri_search_parameters_test, copy_test) {
-  network::uri_search_parameters parameters{{"a", "b"}, {"c", "d"}};
-  network::uri_search_parameters copy(parameters);
+  network::whatwg::uri_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  network::whatwg::uri_search_parameters copy(parameters);
 
   auto it = copy.begin();
   ASSERT_NE(it, copy.end());
@@ -148,8 +148,8 @@ TEST(uri_search_parameters_test, copy_test) {
 }
 
 TEST(uri_search_parameters_test, copy_assignment_test) {
-  network::uri_search_parameters parameters{{"a", "b"}, {"c", "d"}};
-  network::uri_search_parameters copy;
+  network::whatwg::uri_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  network::whatwg::uri_search_parameters copy;
   copy = parameters;
 
   auto it = copy.begin();
@@ -164,8 +164,8 @@ TEST(uri_search_parameters_test, copy_assignment_test) {
 }
 
 TEST(uri_search_parameters_test, move_test) {
-  network::uri_search_parameters parameters{{"a", "b"}, {"c", "d"}};
-  network::uri_search_parameters copy(std::move(parameters));
+  network::whatwg::uri_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  network::whatwg::uri_search_parameters copy(std::move(parameters));
 
   auto it = copy.begin();
   ASSERT_NE(it, copy.end());
@@ -179,8 +179,8 @@ TEST(uri_search_parameters_test, move_test) {
 }
 
 TEST(uri_search_parameters_test, move_assignment_test) {
-  network::uri_search_parameters parameters{{"a", "b"}, {"c", "d"}};
-  network::uri_search_parameters copy;
+  network::whatwg::uri_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  network::whatwg::uri_search_parameters copy;
   copy = std::move(parameters);
 
   auto it = copy.begin();

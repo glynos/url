@@ -11,6 +11,7 @@
 #include <network/optional.hpp>
 
 namespace network {
+namespace whatwg {
 class uri_search_parameters {
  public:
   using string_type = std::string;
@@ -46,6 +47,7 @@ class uri_search_parameters {
 
   std::vector<value_type> parameters_;
 };
-};
+}  // namespace whatwg
+}  // namespace network
 
 #endif  // NETWORK_URI_URI_SEARCH_PARAMETERS_INC
