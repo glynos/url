@@ -408,12 +408,11 @@ class url {
   bool is_opaque() const noexcept;
 
   /**
-   * \brief Normalizes a url object.
-   * \returns A normalized url.
-   * \post compare(normalize(url)) == 0
+   * \brief Serializes a url object.
+   * \returns A serialize url.
    * \throws std::bad_alloc
    */
-  url normalize() const;
+  url serialize() const;
 
   /**
    * \brief Compares this URL against another.

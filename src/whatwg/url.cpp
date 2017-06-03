@@ -12,50 +12,11 @@
 #include "detail/uri_parse.hpp"
 #include "detail/uri_advance_parts.hpp"
 #include "detail/uri_percent_encode.hpp"
-#include "detail/uri_normalize.hpp"
 #include "detail/uri_resolve.hpp"
 #include "detail/algorithm.hpp"
 
 namespace network {
 namespace whatwg {
-namespace {
-// With the parser, we use string_views, which are mutable. However,
-// there are times (e.g. during normalization), when we want a part
-// to be mutable. This function returns a pair of
-// std::string::iterators in the same range as the URL part.
-//
-inline std::pair<std::string::iterator, std::string::iterator> mutable_part(
-    std::string &str, ::network::detail::uri_part part) {
-  auto view = string_view(str);
-
-  auto first_index = std::distance(std::begin(view), std::begin(part));
-  auto first = std::begin(str);
-  std::advance(first, first_index);
-
-  auto last_index = std::distance(std::begin(view), std::end(part));
-  auto last = std::begin(str);
-  std::advance(last, last_index);
-
-  return std::make_pair(first, last);
-}
-
-// This is a convenience function that converts a part of a
-// std::string to a string_view.
-inline string_view to_string_view(const std::string &url,
-                                  ::network::detail::uri_part part) {
-  if (!part.empty()) {
-    const char *c_str = url.c_str();
-    const char *part_begin = &(*(std::begin(part)));
-    std::advance(c_str, std::distance(c_str, part_begin));
-    return string_view(c_str, std::distance(std::begin(part), std::end(part)));
-  }
-  return string_view();
-}
-
-template <class T>
-inline void ignore(T) {}
-}  // namespace
-
 url::query_iterator::query_iterator() : query_{}, kvp_{} {}
 
 url::query_iterator::query_iterator(optional<::network::detail::uri_part> query)
@@ -198,7 +159,7 @@ bool url::has_scheme() const noexcept {
 }
 
 url::string_view url::scheme() const noexcept {
-  return has_scheme() ? to_string_view(url_, *url_parts_.scheme)
+  return has_scheme() ? static_cast<string_view>(*url_parts_.scheme)
                       : string_view{};
 }
 
@@ -207,9 +168,8 @@ bool url::has_user_info() const noexcept {
 }
 
 url::string_view url::user_info() const noexcept {
-  return has_user_info()
-             ? to_string_view(url_, *url_parts_.user_info)
-             : string_view{};
+  return has_user_info() ? static_cast<string_view>(*url_parts_.user_info)
+                         : string_view{};
 }
 
 bool url::has_host() const noexcept {
@@ -217,7 +177,7 @@ bool url::has_host() const noexcept {
 }
 
 url::string_view url::host() const noexcept {
-  return has_host() ? to_string_view(url_, *url_parts_.host)
+  return has_host() ? static_cast<string_view>(*url_parts_.host)
                     : string_view{};
 }
 
@@ -226,7 +186,7 @@ bool url::has_port() const noexcept {
 }
 
 url::string_view url::port() const noexcept {
-  return has_port() ? to_string_view(url_, *url_parts_.port)
+  return has_port() ? static_cast<string_view>(*url_parts_.port)
                     : string_view{};
 }
 
@@ -235,7 +195,7 @@ bool url::has_path() const noexcept {
 }
 
 url::string_view url::path() const noexcept {
-  return has_path() ? to_string_view(url_, *url_parts_.path)
+  return has_path() ? static_cast<string_view>(*url_parts_.path)
                     : string_view{};
 }
 
@@ -244,7 +204,8 @@ bool url::has_query() const noexcept {
 }
 
 url::string_view url::query() const noexcept {
-  return has_query() ? to_string_view(url_, *url_parts_.query) : string_view{};
+  return has_query() ? static_cast<string_view>(*url_parts_.query)
+                     : string_view{};
 }
 
 url::query_iterator url::query_begin() const noexcept {
@@ -260,7 +221,7 @@ bool url::has_fragment() const noexcept {
 }
 
 url::string_view url::fragment() const noexcept {
-  return has_fragment() ? to_string_view(url_, *url_parts_.fragment)
+  return has_fragment() ? static_cast<string_view>(*url_parts_.fragment)
                         : string_view{};
 }
 
@@ -337,78 +298,44 @@ bool url::is_opaque() const noexcept {
   return (is_absolute() && !has_authority());
 }
 
-url url::normalize() const {
-  string_type normalized(url_);
-  string_view normalized_view(normalized);
-  ::network::detail::uri_parts parts;
-  ::network::detail::advance_parts(normalized_view, parts, url_parts_);
+url url::serialize() const {
+  // https://url.spec.whatwg.org/#url-serializing
+  auto result = string_type{};
 
-  // All alphabetic characters in the scheme and host are
-  // lower-case...
-  if (parts.scheme) {
-    std::string::iterator first, last;
-    std::tie(first, last) = mutable_part(normalized, *parts.scheme);
-    std::transform(first, last, first,
-                   [](char ch) { return std::tolower(ch, std::locale()); });
-  }
+  result += string_type(scheme());
+  result += ":";
 
-  if (parts.host) {
-    std::string::iterator first, last;
-    std::tie(first, last) = mutable_part(normalized, *parts.host);
-    std::transform(first, last, first,
-                   [](char ch) { return std::tolower(ch, std::locale()); });
-  }
-
-  // ...except when used in percent encoding
-  ::network::detail::for_each(
-      normalized, ::network::detail::percent_encoded_to_upper<std::string>());
-
-  // parts are invalidated here
-  // there's got to be a better way of doing this that doesn't
-  // mean parsing again (twice!)
-  normalized.erase(::network::detail::decode_encoded_unreserved_chars(
-                       std::begin(normalized), std::end(normalized)),
-                   std::end(normalized));
-  normalized_view = string_view(normalized);
-
-  // need to parse the parts again as the underlying string has changed
-  const_iterator it = std::begin(normalized_view), last = std::end(normalized_view);
-  bool is_valid = ::network::detail::parse(it, last, parts);
-  ignore(is_valid);
-  assert(is_valid);
-
-  if (parts.path) {
-    url::string_type path = ::network::detail::normalize_path_segments(
-        to_string_view(normalized, *parts.path));
-
-    // put the normalized path back into the url
-    optional<string_type> query, fragment;
-    if (parts.query) {
-      query = parts.query->to_string();
+  if (has_host()) {
+    result += "//";
+    if (has_user_info()) {
+      result += string_type(user_info());
+      result += "@";
     }
 
-    if (parts.fragment) {
-      fragment = parts.fragment->to_string();
-    }
+    result += string_type(host());
 
-    auto path_begin = std::begin(normalized);
-    auto path_range = mutable_part(normalized, *parts.path);
-    std::advance(path_begin, std::distance(path_begin, path_range.first));
-    normalized.erase(path_begin, std::end(normalized));
-    normalized.append(path);
-
-    if (query) {
-      normalized.append("?");
-      normalized.append(*query);
-    }
-
-    if (fragment) {
-      normalized.append("#");
-      normalized.append(*fragment);
+    if (has_port()) {
+      result += ":";
+      result += string_type(port());
     }
   }
+  else if (scheme() == "file") {
+    result += "//";
+  }
 
-  return url(normalized);
+  result += string_type(path());
+
+  if (has_query()) {
+    result += "?";
+    result += string_type(query());
+  }
+
+  if (has_fragment()) {
+    result += "#";
+    result += string_type(fragment());
+  }
+
+  return url{result};
 }
 
 int url::compare(const url &other) const noexcept {
@@ -426,7 +353,7 @@ int url::compare(const url &other) const noexcept {
     return 1;
   }
 
-  return normalize().url_.compare(other.normalize().url_);
+  return serialize().url_.compare(other.serialize().url_);
 }
 
 bool url::initialize(const string_type &url) {
