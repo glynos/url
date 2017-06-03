@@ -11,6 +11,22 @@
  * \brief Contains an implementation of C++17 string_view (n3921).
  */
 
+// simple test for G++ 6 if this compiler uses the C++14 or 17 standards
+#if (__cplusplus == 201402L)
+#define NETWORK_STRING_VIEW_STD14
+#elif (__cplusplus == 201500L)
+#define NETWORK_STRING_VIEW_STD17
+#endif
+
+#if defined(NETWORK_STRING_VIEW_STD17)
+#include <experimental/string_view>
+
+namespace network {
+using string_view = std::experimental::basic_string_view<char>;
+}  // namespace network
+
+#else
+
 #include <string>
 #include <iterator>
 #include <cassert>
@@ -264,5 +280,7 @@ std::basic_ostream<charT, traits>& operator<<(
 
 typedef basic_string_view<char> string_view;
 }  // namespace network
+
+#endif  // defined(NETWORK_STRING_VIEW_STD17)
 
 #endif  // NETWORK_STRING_VIEW_INC

@@ -728,6 +728,6 @@ inline constexpr optional<typename std::decay<T>::type> make_optional(T&& value)
 }
 }  // namespace network
 
-#endif  // NETWORK_URI_STD17
+#endif  // defined(NETWORK_OPTIONAL_STD17)
 
 #endif  // NETWORK_OPTIONAL_INC

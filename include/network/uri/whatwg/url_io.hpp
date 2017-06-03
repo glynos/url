@@ -19,22 +19,12 @@
 
 namespace network {
 namespace whatwg {
-#if !defined(NETWORK_URI_MSVC)
 template <typename CharT, class CharTraits = std::char_traits<CharT> >
 std::basic_ostream<CharT, CharTraits> &operator<<(
     std::basic_ostream<CharT, CharTraits> &os, const uri &uri_) {
   return os << uri_.to_string<CharT, CharTraits>();
 }
 
-template <typename CharT, class CharTraits = std::char_traits<CharT> >
-std::basic_istream<CharT, CharTraits> &operator>>(
-    std::basic_istream<CharT, CharTraits> &is, uri &uri_) {
-  std::basic_string<CharT, CharTraits> uri_string;
-  is >> uri_string;
-  uri_ = uri(uri_string);
-  return is;
-}
-#else
 inline std::ostream &operator<<(std::ostream &os, const uri &uri_) {
   return os << uri_.string();
 }

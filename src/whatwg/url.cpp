@@ -52,13 +52,6 @@ inline string_view to_string_view(const std::string &url,
   return string_view();
 }
 
-inline optional<std::string> make_arg(optional<string_view> view) {
-  if (view) {
-    return view->to_string();
-  }
-  return nullopt;
-}
-
 template <class T>
 inline void ignore(T) {}
 }  // namespace

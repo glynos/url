@@ -54,11 +54,11 @@ namespace whatwg {
  * network::url instance("http://cpp-netlib.org/");
  * assert(instance.is_absolute());
  * assert(!instance.is_opaque());
- * assert(instance.scheme());
+ * assert(instance.has_scheme());
  * assert("http" == *instance.scheme());
- * assert(instance.host());
+ * assert(instance.has_host());
  * assert("cpp-netlib.org" == *instance.host());
- * assert(instance.path());
+ * assert(instance.has_path());
  * assert("/" == *instance.path());
  * \endcode
  */
