@@ -7,12 +7,12 @@ set(Uri_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/uri.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/uri_builder.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/uri_errors.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/uri_search_parameters.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_parse.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_parse_authority.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_advance_parts.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_normalize.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_resolve.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/whatwg/url_search_parameters.cpp
   )
 
 add_library(network-uri ${Uri_SRCS})

@@ -19,7 +19,7 @@ set(
   uri_resolve_test
   uri_builder_test
   uri_stream_test
-  uri_search_parameters_test
+  url_search_parameters_test
   optional_test
   )
 

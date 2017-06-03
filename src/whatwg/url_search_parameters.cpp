@@ -3,13 +3,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "network/uri/whatwg/uri_search_parameters.hpp"
+#include "network/uri/whatwg/url_search_parameters.hpp"
 
 namespace network {
 namespace whatwg {
-uri_search_parameters::uri_search_parameters() { update(); }
+url_search_parameters::url_search_parameters() { update(); }
 
-uri_search_parameters::uri_search_parameters(const string_type &query) {
+url_search_parameters::url_search_parameters(const string_type &query) {
   auto first = std::begin(query), last = std::end(query);
 
   for (auto it = first; it != last;) {
@@ -35,16 +35,16 @@ uri_search_parameters::uri_search_parameters(const string_type &query) {
   update();
 }
 
-uri_search_parameters::uri_search_parameters(std::initializer_list<value_type> parameters)
+url_search_parameters::url_search_parameters(std::initializer_list<value_type> parameters)
     : parameters_(parameters) {}
 
-void uri_search_parameters::append(const string_type &name,
+void url_search_parameters::append(const string_type &name,
                               const string_type &value) {
   parameters_.emplace_back(name, value);
   update();
 }
 
-void uri_search_parameters::remove(const string_type &name) {
+void url_search_parameters::remove(const string_type &name) {
   auto it = std::remove_if(std::begin(parameters_), std::end(parameters_),
                            [&name](const value_type &parameter) -> bool {
                              return parameter.first == name;
@@ -54,7 +54,7 @@ void uri_search_parameters::remove(const string_type &name) {
   update();
 }
 
-optional<uri_search_parameters::string_type> uri_search_parameters::get(
+optional<url_search_parameters::string_type> url_search_parameters::get(
     const string_type &name) const noexcept {
   auto it = std::find_if(std::begin(*this), std::end(*this),
                          [&name](const value_type &parameter) -> bool {
@@ -67,7 +67,7 @@ optional<uri_search_parameters::string_type> uri_search_parameters::get(
   return it->second;
 }
 
-bool uri_search_parameters::contains(const string_type &name) const noexcept {
+bool url_search_parameters::contains(const string_type &name) const noexcept {
   return std::end(*this) !=
          std::find_if(std::begin(*this), std::end(*this),
                       [&name](const value_type &parameter) -> bool {
@@ -75,7 +75,7 @@ bool uri_search_parameters::contains(const string_type &name) const noexcept {
                       });
 }
 
-void uri_search_parameters::set(const string_type &name, const string_type &value) {
+void url_search_parameters::set(const string_type &name, const string_type &value) {
   if (contains(name)) {
     for (auto &parameter : parameters_) {
       if (parameter.first == name) {
@@ -89,15 +89,15 @@ void uri_search_parameters::set(const string_type &name, const string_type &valu
   update();
 }
 
-uri_search_parameters::const_iterator uri_search_parameters::begin() const noexcept {
+url_search_parameters::const_iterator url_search_parameters::begin() const noexcept {
   return parameters_.begin();
 }
 
-uri_search_parameters::const_iterator uri_search_parameters::end() const noexcept {
+url_search_parameters::const_iterator url_search_parameters::end() const noexcept {
   return parameters_.end();
 }
 
-uri_search_parameters::string_type uri_search_parameters::to_string() const {
+url_search_parameters::string_type url_search_parameters::to_string() const {
   auto result = string_type{};
 
   auto first = std::begin(parameters_), last = std::end(parameters_);
@@ -117,7 +117,7 @@ uri_search_parameters::string_type uri_search_parameters::to_string() const {
   return result;
 }
 
-void uri_search_parameters::sort() {
+void url_search_parameters::sort() {
   std::sort(std::begin(parameters_), std::end(parameters_),
             [](const value_type &lhs, const value_type &rhs) -> bool {
               return lhs.first < rhs.first;
@@ -126,6 +126,6 @@ void uri_search_parameters::sort() {
   update();
 }
 
-void uri_search_parameters::update() {}
+void url_search_parameters::update() {}
 }  // namespace whatwg
 }  // namespace network

@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_URI_URI_SEARCH_PARAMETERS_INC
-#define NETWORK_URI_URI_SEARCH_PARAMETERS_INC
+#ifndef NETWORK_URI_URL_SEARCH_PARAMETERS_INC
+#define NETWORK_URI_URL_SEARCH_PARAMETERS_INC
 
 #include <string>
 #include <vector>
@@ -12,17 +12,17 @@
 
 namespace network {
 namespace whatwg {
-class uri_search_parameters {
+class url_search_parameters {
  public:
   using string_type = std::string;
   using value_type = std::pair<string_type, string_type>;
   using const_iterator = std::vector<value_type>::const_iterator;
 
-  uri_search_parameters();
+  url_search_parameters();
 
-  explicit uri_search_parameters(const string_type &query);
+  explicit url_search_parameters(const string_type &query);
 
-  uri_search_parameters(std::initializer_list<value_type> parameters);
+  url_search_parameters(std::initializer_list<value_type> parameters);
 
   void append(const string_type &name, const string_type &value);
 
@@ -50,4 +50,4 @@ class uri_search_parameters {
 }  // namespace whatwg
 }  // namespace network
 
-#endif  // NETWORK_URI_URI_SEARCH_PARAMETERS_INC
+#endif  // NETWORK_URI_URL_SEARCH_PARAMETERS_INC
