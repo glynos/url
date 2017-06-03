@@ -20,6 +20,7 @@ set(
   uri_builder_test
   uri_stream_test
   url_search_parameters_test
+  url_test
   optional_test
   )
 

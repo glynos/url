@@ -8,7 +8,7 @@
 #include <locale>
 #include <algorithm>
 #include <functional>
-#include "network/uri/uri.hpp"
+#include "network/uri/ietf/uri.hpp"
 #include "detail/uri_parse.hpp"
 #include "detail/uri_advance_parts.hpp"
 #include "detail/uri_percent_encode.hpp"

@@ -12,6 +12,7 @@ set(Uri_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_advance_parts.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_normalize.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_resolve.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/whatwg/url.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/whatwg/url_search_parameters.cpp
   )
 
