@@ -21,6 +21,7 @@ set(
   uri_stream_test
   url_search_parameters_test
   url_test
+  url_web_platform_tests
   optional_test
   )
 
@@ -37,5 +38,5 @@ foreach (test ${TESTS})
     ${Uri_BINARY_DIR}/tests/${test})
 endforeach (test)
 
-file(GLOB URI_LISTS *.txt)
+file(GLOB URI_LISTS *.txt *.json)
 file(COPY ${URI_LISTS} DESTINATION ${Uri_BINARY_DIR}/test)

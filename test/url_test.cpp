@@ -1134,3 +1134,11 @@ TEST(whatwg_url_test, git_default_port_is_not_given) {
   auto port = network::url::default_port("git");
   ASSERT_FALSE(port);
 }
+
+TEST(whatwg_url_test, DISABLED_file_scheme_cant_have_user_info) {
+  EXPECT_THROW(network::url("file://user@www.example.com/path"), network::uri_syntax_error);
+}
+
+TEST(whatwg_url_test, DISABLED_file_scheme_cant_have_port) {
+  EXPECT_THROW(network::url("file://www.example.com:80/path"), network::uri_syntax_error);
+}
