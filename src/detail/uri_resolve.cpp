@@ -1,4 +1,4 @@
-// Copyright 2013-2016 Glyn Matthews.
+// Copyright 2013-2017 Glyn Matthews.
 // Copyright 2013 Hannes Kamecke.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,7 @@
 #include "../boost/algorithm/string/predicate.hpp"
 
 namespace network {
+namespace ietf {
 namespace detail {
 // remove_dot_segments
 inline
@@ -78,4 +79,5 @@ std::string merge_paths(const uri& base, const uri& reference) {
   return remove_dot_segments(string_view(result));
 }
 }  // namespace detail
+}  // namespace ietf
 }  // namespace network

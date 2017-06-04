@@ -1,4 +1,4 @@
-// Copyright 2013-2016 Glyn Matthews.
+// Copyright 2013-2017 Glyn Matthews.
 // Copyright 2013 Hannes Kamecke.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -7,9 +7,10 @@
 #ifndef NETWORK_DETAIL_RESOLVE_INC
 #define NETWORK_DETAIL_RESOLVE_INC
 
-#include <network/uri/uri.hpp>
+#include <network/uri/ietf/uri.hpp>
 
 namespace network {
+namespace ietf {
 namespace detail {
 // implementation of http://tools.ietf.org/html/rfc3986#section-5.2.4
 std::string remove_dot_segments(string_view input);
@@ -17,6 +18,7 @@ std::string remove_dot_segments(string_view input);
 // implementation of http://tools.ietf.org/html/rfc3986#section-5.2.3
 std::string merge_paths(const ietf::uri &base, const uri &reference);
 }  // namespace detail
+}  // namespace ietf
 }  // namespace network
 
 #endif  // NETWORK_DETAIL_RESOLVE_INC

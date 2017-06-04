@@ -550,8 +550,8 @@ uri uri::make_relative(const uri &other) const {
 
   auto path =
     ::network::detail::normalize_path(this->path(), uri_comparison_level::syntax_based);
-  auto other_path = ::network::detail::normalize_path(other.path(),
-                                           uri_comparison_level::syntax_based);
+  auto other_path = ::network::detail::normalize_path(
+      other.path(), uri_comparison_level::syntax_based);
 
   optional<string_type> query, fragment;
   if (other.has_query()) {
@@ -600,7 +600,7 @@ uri uri::resolve(const uri &base) const {
     }
 
     if (has_path()) {
-      path = ::network::detail::remove_dot_segments(this->path());
+      path = ietf::detail::remove_dot_segments(this->path());
     }
 
     if (has_query()) {
@@ -619,9 +619,9 @@ uri uri::resolve(const uri &base) const {
       }
     } else {
       if (this->path().front() == '/') {
-        path = ::network::detail::remove_dot_segments(this->path());
+        path = ietf::detail::remove_dot_segments(this->path());
       } else {
-        path = ::network::detail::merge_paths(base, *this);
+        path = ietf::detail::merge_paths(base, *this);
       }
 
       if (has_query()) {
@@ -646,7 +646,7 @@ uri uri::resolve(const uri &base) const {
     fragment = make_arg(this->fragment());
   }
 
-  network::uri result;
+  ietf::uri result;
   result.initialize(make_arg(base.scheme()), std::move(user_info),
                     std::move(host), std::move(port), std::move(path),
                     std::move(query), std::move(fragment));

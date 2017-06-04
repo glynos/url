@@ -14,7 +14,7 @@
 #define NETWORK_URI_IETF_URI_IO_INC
 
 #include <network/uri/config.hpp>
-#include <network/uri/uri.hpp>
+#include <network/uri/ietf/uri.hpp>
 #include <iosfwd>
 
 namespace network {

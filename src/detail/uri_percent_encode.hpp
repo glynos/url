@@ -14,7 +14,6 @@
 
 namespace network {
 namespace detail {
-
 inline optional<char> percent_encode(std::string::const_iterator it) {
   try {
     char output = '\0';

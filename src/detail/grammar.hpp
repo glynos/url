@@ -119,7 +119,7 @@ inline bool is_pchar(string_view::const_iterator &it,
 }
 
 inline bool is_valid_port(string_view::const_iterator it) {
-  const char* port_first = &(*it);
+  const char* port_first = std::addressof(*it);
   char* port_last = 0;
   unsigned long value = std::strtoul(port_first, &port_last, 10);
   return (value < std::numeric_limits<unsigned short>::max());

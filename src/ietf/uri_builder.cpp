@@ -48,14 +48,15 @@ ietf::uri uri_builder::uri() const { return ietf::uri(*this); }
 void uri_builder::set_scheme(string_type scheme) {
   // validate scheme is valid and normalize
   scheme_ = scheme;
-  ::network::detail::transform(*scheme_, std::begin(*scheme_),
-                               [] (char ch) { return std::tolower(ch, std::locale()); });
+  ::network::detail::transform(*scheme_, std::begin(*scheme_), [](char ch) {
+    return std::tolower(ch, std::locale());
+  });
 }
 
 void uri_builder::set_user_info(string_type user_info) {
   user_info_ = string_type();
-  network::uri::encode_user_info(std::begin(user_info), std::end(user_info),
-                                 std::back_inserter(*user_info_));
+  ietf::uri::encode_user_info(std::begin(user_info), std::end(user_info),
+                              std::back_inserter(*user_info_));
 }
 
 uri_builder &uri_builder::clear_user_info() {
@@ -65,16 +66,17 @@ uri_builder &uri_builder::clear_user_info() {
 
 void uri_builder::set_host(string_type host) {
   host_ = string_type();
-  network::uri::encode_host(std::begin(host), std::end(host),
-                            std::back_inserter(*host_));
-  ::network::detail::transform(*host_, std::begin(*host_),
-                               [](char ch) { return std::tolower(ch, std::locale()); });
+  ietf::uri::encode_host(std::begin(host), std::end(host),
+                         std::back_inserter(*host_));
+  ::network::detail::transform(*host_, std::begin(*host_), [](char ch) {
+    return std::tolower(ch, std::locale());
+  });
 }
 
 void uri_builder::set_port(string_type port) {
   port_ = string_type();
-  network::uri::encode_port(std::begin(port), std::end(port),
-                            std::back_inserter(*port_));
+  ietf::uri::encode_port(std::begin(port), std::end(port),
+                         std::back_inserter(*port_));
 }
 
 uri_builder &uri_builder::clear_port() {
@@ -103,8 +105,8 @@ void uri_builder::set_authority(string_type authority) {
 
 void uri_builder::set_path(string_type path) {
   path_ = string_type();
-  network::uri::encode_path(std::begin(path), std::end(path),
-                            std::back_inserter(*path_));
+  ietf::uri::encode_path(std::begin(path), std::end(path),
+                         std::back_inserter(*path_));
 }
 
 uri_builder &uri_builder::clear_path() {
@@ -115,12 +117,11 @@ uri_builder &uri_builder::clear_path() {
 void uri_builder::append_query(string_type query) {
   if (!query_) {
     query_ = string_type();
-  }
-  else {
+  } else {
     query_->append("&");
   }
-  network::uri::encode_query(std::begin(query), std::end(query),
-                             std::back_inserter(*query_));
+  ietf::uri::encode_query(std::begin(query), std::end(query),
+                          std::back_inserter(*query_));
 }
 
 uri_builder &uri_builder::clear_query() {
@@ -130,8 +131,8 @@ uri_builder &uri_builder::clear_query() {
 
 void uri_builder::set_fragment(string_type fragment) {
   fragment_ = string_type();
-  network::uri::encode_fragment(std::begin(fragment), std::end(fragment),
-                                std::back_inserter(*fragment_));
+  ietf::uri::encode_fragment(std::begin(fragment), std::end(fragment),
+                             std::back_inserter(*fragment_));
 }
 
 uri_builder &uri_builder::clear_fragment() {
