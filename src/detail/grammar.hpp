@@ -1,4 +1,4 @@
-// Copyright 2016 Glyn Matthews.
+// Copyright 2016-2017 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -118,11 +118,13 @@ inline bool is_pchar(string_view::const_iterator &it,
     ;
 }
 
-inline bool is_valid_port(string_view::const_iterator it) {
+inline bool is_valid_port(string_view::const_iterator it,
+                          string_view::const_iterator last) {
   const char* port_first = std::addressof(*it);
   char* port_last = 0;
-  unsigned long value = std::strtoul(port_first, &port_last, 10);
-  return (value < std::numeric_limits<unsigned short>::max());
+  auto value = std::strtoul(port_first, &port_last, 10);
+  return (std::addressof(*last) == port_last) && (port_first != port_last) &&
+         (value < std::numeric_limits<std::uint16_t>::max());
 }
 }  // namespace detail
 }  // namespace network

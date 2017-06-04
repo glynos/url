@@ -23,8 +23,9 @@ TEST(uri_parse_test, test_hierarchical_part_valid_user_info) {
 
 TEST(uri_parse_test, test_hierarchical_part_empty_user_info) {
   test::uri uri("http://@www.example.com:80/path?query#fragment");
-  EXPECT_FALSE(uri.parse_uri());
-  ASSERT_FALSE(uri.has_user_info());
+  EXPECT_TRUE(uri.parse_uri());
+  ASSERT_TRUE(uri.has_user_info());
+  EXPECT_EQ("", uri.user_info());
 }
 
 TEST(uri_parse_test, test_hierarchical_part_unset_user_info) {
@@ -38,8 +39,6 @@ TEST(uri_parse_test, test_hierarchical_part_unset_user_info) {
 TEST(uri_parse_test, test_hierarchical_part_unset_user_info_and_host) {
   test::uri uri("http://:80/path?query#fragment");
   EXPECT_FALSE(uri.parse_uri());
-  ASSERT_FALSE(uri.has_user_info());
-  ASSERT_FALSE(uri.has_host());
 }
 
 TEST(uri_parse_test, test_hierarchical_part_valid_user_info_and_host) {

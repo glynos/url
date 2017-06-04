@@ -450,6 +450,10 @@ class url {
    */
   int compare(const url &other) const;
 
+  url origin() const;
+
+  url render() const;
+
   /**
    * \brief Encodes a sequence according to the rules for encoding a
    *        user info part.

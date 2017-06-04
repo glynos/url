@@ -63,6 +63,7 @@ bool validate_user_info(string_view::const_iterator it,
       return false;
     }
   }
+
   return true;
 }
 
@@ -71,13 +72,16 @@ bool set_host_and_port(string_view::const_iterator first,
                        string_view::const_iterator last_colon,
                        uri_parts &parts) {
   if (first >= last_colon) {
+    if (*first == ':') {
+      return false;
+    }
     parts.host = uri_part(first, last);
   }
   else {
     auto port_start = last_colon;
     ++port_start;
     parts.host = uri_part(first, last_colon);
-    if (!is_valid_port(port_start)) {
+    if ((port_start != last) && !is_valid_port(port_start, last)) {
       return false;
     }
     parts.port = uri_part(port_start, last);
@@ -100,11 +104,11 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
            uri_parts &parts) {
   auto state = uri_state::scheme;
 
-  auto first = it;
-
   if (it == last) {
     return false;
   }
+
+  auto first = it;
 
   if (validate_scheme(it, last)) {
     parts.scheme = uri_part(first, it);
@@ -147,10 +151,6 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       }
     }
     else if (hp_state == hier_part_state::authority) {
-      if (is_in(first, last, "@:")) {
-        return false;
-      }
-
       // reset the last colon
       if (first == it) {
         last_colon = first;
@@ -294,7 +294,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
     else if (hp_state == hier_part_state::port) {
       if (*first == '/') {
         // the port is empty, but valid
-        if (!is_valid_port(first)) {
+        if (!is_valid_port(first, it)) {
           return false;
         }
         parts.port = uri_part(first, it);
@@ -305,7 +305,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       }
 
       if (*it == '/') {
-        if (!is_valid_port(first)) {
+        if (!is_valid_port(first, it)) {
           return false;
         }
         parts.port = uri_part(first, it);
@@ -400,7 +400,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       parts.path = uri_part(last, last);
     }
     else if (hp_state == hier_part_state::port) {
-      if (!is_valid_port(first)) {
+      if (!is_valid_port(first, last)) {
         return false;
       }
       parts.port = uri_part(first, last);

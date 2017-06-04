@@ -28,19 +28,16 @@ struct uri_resolve_test : public ::testing::Test {
 };
 
 
-TEST_F(uri_resolve_test, is_absolute_uri__returns_other)
-{
+TEST_F(uri_resolve_test, is_absolute_uri_returns_other) {
   ASSERT_EQ("https://www.example.com/", resolved(uri("https://www.example.com/")));
 }
 
-TEST_F(uri_resolve_test, base_has_empty_path__path_is_ref_path_1)
-{
+TEST_F(uri_resolve_test, base_has_empty_path_path_is_ref_path_1) {
   uri reference = uri_builder().path("g").uri();
   ASSERT_EQ("http://a/g", resolved(uri("http://a/"), reference));
 }
 
-TEST_F(uri_resolve_test, base_has_empty_path__path_is_ref_path_2)
-{
+TEST_F(uri_resolve_test, base_has_empty_path_path_is_ref_path_2) {
   uri reference = uri_builder().path("g/x/y").append_query("q").fragment("s").uri();
   ASSERT_EQ("http://a/g/x/y?q#s", resolved(uri("http://a/"), reference));
 }

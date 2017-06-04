@@ -93,7 +93,7 @@ bool parse_authority(string_view::const_iterator &it,
       if (*first == '/') {
         // the port is empty, but valid
         port = uri_part(first, it);
-        if (!is_valid_port(std::begin(*port))) {
+        if (!is_valid_port(std::begin(*port), it)) {
           return false;
         }
 
@@ -119,7 +119,7 @@ bool parse_authority(string_view::const_iterator &it,
   }
   else if (state == authority_state::port) {
     port = uri_part(first, last);
-    if (!is_valid_port(std::begin(*port))) {
+    if (!is_valid_port(std::begin(*port), last)) {
       return false;
     }
   }

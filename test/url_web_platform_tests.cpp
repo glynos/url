@@ -7,6 +7,8 @@
 #include <fstream>
 #include <sstream>
 #include <network/url.hpp>
+#include "test_uri.hpp"
+#include "string_utility.hpp"
 #include "json.hpp"
 
 // Tests using test data from W3C
@@ -37,28 +39,32 @@ std::vector<test_case> load_test_data() {
 
   std::vector<test_case> test_data;
   for (auto &&test_case_data : tests) {
-    // std::cout << test_case_data << std::endl;
     if (!test_case_data.is_string()) {
       test_data.emplace_back(test_case_data);
-      std::cout << test_data.back().input << std::endl;
     }
   }
   return test_data;
 }
 
-class test_urls : public ::testing::TestWithParam<test_case> {};
+class test_parse_urls : public ::testing::TestWithParam<test_case> {};
 
-INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_urls,
+INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls,
                         testing::ValuesIn(load_test_data()));
 
-TEST_P(test_urls, url_web_platform_tests) {
+TEST_P(test_parse_urls, url_web_platform_tests) {
   auto test_case_data = test_case{GetParam()};
+  std::cout << test_case_data.input << std::endl;
+
+  auto url = test::uri{test_case_data.input};
 
   if (test_case_data.failure) {
     EXPECT_THROW(network::url{test_case_data.input}, network:: uri_syntax_error);
   }
   else {
-    auto instance = network::url{test_case_data.input};
-    (void)instance;
+    // auto parsed = url.parse_uri();
+    // if (!parsed) {
+    //   std::cout << " |" << url.parsed_till() << "|" << std::endl;
+    // }
+    // EXPECT_TRUE(parsed);
   }
 }
