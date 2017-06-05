@@ -61,13 +61,6 @@ inline bool is_ucschar(string_view::const_iterator &it,
     return false;
   }
 
-
-
-  return false;
-}
-
-inline bool is_private(string_view::const_iterator &it,
-                       string_view::const_iterator last) {
   return false;
 }
 

@@ -6,6 +6,7 @@
 #include "uri_parse.hpp"
 #include <iterator>
 #include <limits>
+#include <arpa/inet.h>
 #include "grammar.hpp"
 #include <network/uri/detail/uri_parts.hpp>
 
@@ -24,8 +25,6 @@ enum class hier_part_state {
   second_slash,
   authority,
   host,
-  host_ipv6,
-  port,
   path
 };
 
@@ -67,24 +66,73 @@ bool validate_user_info(string_view::const_iterator it,
   return true;
 }
 
+// bool validate_ipv4_address(string_view::const_iterator it,
+//                            string_view::const_iterator last) {
+//   std::string addr(it, last);
+//   string_view::value_type buffer[sizeof(struct in6_addr)];
+//   int rc = ::inet_pton(AF_INET, addr.data(), &buffer);
+//   return rc > 0;
+// }
+
+bool validate_ipv6_address(string_view::const_iterator it,
+                           string_view::const_iterator last) {
+  std::string addr(++it, --last);
+  string_view::value_type buffer[sizeof(struct in6_addr)];
+  int rc = ::inet_pton(AF_INET6, addr.data(), &buffer);
+  return rc > 0;
+}
+
+bool set_host(string_view::const_iterator first,
+              string_view::const_iterator last,
+              uri_parts &parts) {
+  auto valid_host = !(*first == ':');
+  if (valid_host) {
+    parts.host = uri_part(first, last);
+  }
+  return valid_host;
+}
+
+bool set_ipv6_host(string_view::const_iterator first,
+                   string_view::const_iterator last,
+                   uri_parts &parts) {
+  if (*first == '[') {
+    auto last_but_one = last;
+    --last_but_one;
+    if (*last_but_one == ']') {
+      if (!validate_ipv6_address(first, last)) {
+        return false;
+      }
+
+      parts.host = uri_part(first, last);
+    }
+    else {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool set_host_and_port(string_view::const_iterator first,
                        string_view::const_iterator last,
                        string_view::const_iterator last_colon,
                        uri_parts &parts) {
   if (first >= last_colon) {
-    if (*first == ':') {
-      return false;
-    }
-    parts.host = uri_part(first, last);
+    return set_host(first, last, parts);
   }
   else {
-    auto port_start = last_colon;
-    ++port_start;
-    parts.host = uri_part(first, last_colon);
-    if ((port_start != last) && !is_valid_port(port_start, last)) {
-      return false;
+    if (*first == '[') {
+      return set_ipv6_host(first, last, parts);
     }
-    parts.port = uri_part(port_start, last);
+    else {
+      parts.host = uri_part(first, last_colon);
+
+      auto port_start = last_colon;
+      ++port_start;
+      if ((port_start != last) && !is_valid_port(port_start, last)) {
+        return false;
+      }
+      parts.port = uri_part(port_start, last);
+    }
   }
   return true;
 }
@@ -164,18 +212,6 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
         hp_state = hier_part_state::host;
         ++it;
         first = it;
-
-        if (*first == '[') {
-          // this is an IPv6 address
-          hp_state = hier_part_state::host_ipv6;
-        }
-
-        continue;
-      }
-      else if (*it == '[') {
-        // this is an IPv6 address
-        hp_state = hier_part_state::host_ipv6;
-        first = it;
         continue;
       }
       else if (*it == ':') {
@@ -219,21 +255,23 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       }
 
       if (*it == ':') {
-        parts.host = uri_part(first, it);
-        hp_state = hier_part_state::port;
-        ++it;
-        first = it;
-        continue;
+        last_colon = it;
       }
       else if (*it == '/') {
-        parts.host = uri_part(first, it);
+        if (!set_host_and_port(first, it, last_colon, parts)) {
+          return false;
+        }
+
         hp_state = hier_part_state::path;
         first = it;
         continue;
       }
       else if (*it == '?') {
         // the path is empty, but valid, and the next part is the query
-        parts.host = uri_part(first, it);
+        if (!set_host_and_port(first, it, last_colon, parts)) {
+          return false;
+        }
+
         parts.path = uri_part(it, it);
         state = uri_state::query;
         ++it;
@@ -242,79 +280,15 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       }
       else if (*it == '#') {
         // the path is empty, but valid, and the next part is the fragment
-        parts.host = uri_part(first, it);
+        if (!set_host_and_port(first, it, last_colon, parts)) {
+          return false;
+        }
+
         parts.path = uri_part(it, it);
         state = uri_state::fragment;
         ++it;
         first = it;
         break;
-      }
-    }
-    else if (hp_state == hier_part_state::host_ipv6) {
-      if (*first != '[') {
-        return false;
-      }
-
-      if (*it == ']') {
-        ++it;
-        // Then test if the next part is a host, part, or the end of the file
-        if (it == last) {
-          break;
-        }
-        else if (*it == ':') {
-          parts.host = uri_part(first, it);
-          hp_state = hier_part_state::port;
-          ++it;
-          first = it;
-        }
-        else if (*it == '/') {
-          parts.host = uri_part(first, it);
-          hp_state = hier_part_state::path;
-          first = it;
-        }
-        else if (*it == '?') {
-          parts.host = uri_part(first, it);
-          parts.path = uri_part(it, it);
-          state = uri_state::query;
-          ++it;
-          first = it;
-          break;
-        }
-        else if (*it == '#') {
-          parts.host = uri_part(first, it);
-          parts.path = uri_part(it, it);
-          state = uri_state::fragment;
-          ++it;
-          first = it;
-          break;
-        }
-        continue;
-      }
-    }
-    else if (hp_state == hier_part_state::port) {
-      if (*first == '/') {
-        // the port is empty, but valid
-        if (!is_valid_port(first, it)) {
-          return false;
-        }
-        parts.port = uri_part(first, it);
-
-        // the port isn't set, but the path is
-        hp_state = hier_part_state::path;
-        continue;
-      }
-
-      if (*it == '/') {
-        if (!is_valid_port(first, it)) {
-          return false;
-        }
-        parts.port = uri_part(first, it);
-        hp_state = hier_part_state::path;
-        first = it;
-        continue;
-      }
-      else if (!isdigit(it, last)) {
-        return false;
       }
     }
     else if (hp_state == hier_part_state::path) {
@@ -391,19 +365,6 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       if (!set_host_and_port(first, last, last_colon, parts)) {
         return false;
       }
-      parts.path = uri_part(last, last);
-    }
-    else if (hp_state == hier_part_state::host_ipv6) {
-      if (!set_host_and_port(first, last, last_colon, parts)) {
-        return false;
-      }
-      parts.path = uri_part(last, last);
-    }
-    else if (hp_state == hier_part_state::port) {
-      if (!is_valid_port(first, last)) {
-        return false;
-      }
-      parts.port = uri_part(first, last);
       parts.path = uri_part(last, last);
     }
     else if (hp_state == hier_part_state::path) {

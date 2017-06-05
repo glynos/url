@@ -20,7 +20,7 @@ namespace network {
 namespace whatwg {
 namespace {
 const std::vector<std::pair<url::string_type, optional<std::uint16_t>>> &special_schemes() {
-  const static std::vector<std::pair<url::string_type, optional<std::uint16_t>>> schemes = {
+  static const std::vector<std::pair<url::string_type, optional<std::uint16_t>>> schemes = {
     {"ftp", 21},
     {"file", nullopt},
     {"gopher", 70},

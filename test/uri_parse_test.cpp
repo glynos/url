@@ -314,12 +314,12 @@ TEST(uri_parse_test, test_ipv6_address_with_path) {
 
 TEST(uri_parse_test, test_invalid_ipv6_address) {
   test::uri uri("http://[1080:0:0:0:8:800:200C:417A");
-  EXPECT_FALSE(!uri.parse_uri());
+  EXPECT_FALSE(uri.parse_uri());
 }
 
 TEST(uri_parse_test, test_invalid_ipv6_address_with_path) {
   test::uri uri("http://[1080:0:0:0:8:800:200C:417A/");
-  EXPECT_FALSE(!uri.parse_uri());
+  EXPECT_FALSE(uri.parse_uri());
 }
 
 TEST(uri_parse_test, test_opaque_uri_with_one_slash) {

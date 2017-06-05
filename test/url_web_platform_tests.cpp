@@ -33,7 +33,7 @@ struct test_case {
 } // namespace
 
 std::vector<test_case> load_test_data() {
-  auto fs = std::ifstream("urltestdata.json");
+  std::ifstream fs{"urltestdata.json"};
   json tests;
   fs >> tests;
 
