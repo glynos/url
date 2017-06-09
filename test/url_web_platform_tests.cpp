@@ -38,9 +38,12 @@ std::vector<test_case> load_test_data() {
   fs >> tests;
 
   std::vector<test_case> test_data;
-  for (auto &&test_case_data : tests) {
-    if (!test_case_data.is_string()) {
-      test_data.emplace_back(test_case_data);
+  for (auto &&test_case_object : tests) {
+    if (!test_case_object.is_string()) {
+      auto test_case_data = test_case{test_case_object};
+      if (test_case_data.failure) {
+        test_data.emplace_back(test_case_data);
+      }
     }
   }
   return test_data;

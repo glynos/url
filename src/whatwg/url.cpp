@@ -15,226 +15,10 @@
 #include "detail/uri_percent_encode.hpp"
 #include "detail/uri_resolve.hpp"
 #include "detail/algorithm.hpp"
+#include "detail/url_schemes.hpp"
 
 namespace network {
 namespace whatwg {
-namespace {
-const std::vector<std::pair<url::string_type, optional<std::uint16_t>>> &special_schemes() {
-  static const std::vector<std::pair<url::string_type, optional<std::uint16_t>>> schemes = {
-    {"ftp", 21},
-    {"file", nullopt},
-    {"gopher", 70},
-    {"http", 80},
-    {"https", 443},
-    {"ws", 80},
-    {"wss", 443},
-  };
-  return schemes;
-}
-}  // namespace
-
-url::query_iterator::query_iterator() : query_{}, kvp_{} {}
-
-url::query_iterator::query_iterator(optional<::network::detail::uri_part> query)
-  : query_(query)
-  , kvp_{} {
-  if (query_ && query_->empty()) {
-    query_ = nullopt;
-  }
-  else {
-    assign_kvp();
-  }
-}
-
-url::query_iterator::query_iterator(const query_iterator &other)
-  : query_(other.query_)
-  , kvp_(other.kvp_) {
-
-}
-
-url::query_iterator &url::query_iterator::operator = (const query_iterator &other) {
-  auto tmp(other);
-  swap(tmp);
-  return *this;
-}
-
-url::query_iterator::reference url::query_iterator::operator ++ () noexcept {
-  increment();
-  return kvp_;
-}
-
-url::query_iterator::value_type url::query_iterator::operator ++ (int) noexcept {
-  auto original = kvp_;
-  increment();
-  return original;
-}
-
-url::query_iterator::reference url::query_iterator::operator * () const noexcept {
-  return kvp_;
-}
-
-url::query_iterator::pointer url::query_iterator::operator -> () const noexcept {
-  return std::addressof(kvp_);
-}
-
-bool url::query_iterator::operator==(const query_iterator &other) const noexcept {
-  if (!query_ && !other.query_) {
-    return true;
-  }
-  else if (query_ && other.query_) {
-    // since we're comparing substrings, the address of the first
-    // element in each iterator must be the same
-    return std::addressof(kvp_.first) == std::addressof(other.kvp_.first);
-  }
-  return false;
-}
-
-void url::query_iterator::swap(query_iterator &other) noexcept {
-  std::swap(query_, other.query_);
-  std::swap(kvp_, other.kvp_);
-}
-
-void url::query_iterator::advance_to_next_kvp() noexcept {
-  auto first = std::begin(*query_), last = std::end(*query_);
-
-  auto sep_it = std::find_if(
-      first, last, [](char c) -> bool { return c == '&' || c == ';'; });
-
-  if (sep_it != last) {
-    ++sep_it; // skip next separator
-  }
-
-  // reassign query to the next element
-  query_ = ::network::detail::uri_part(sep_it, last);
-}
-
-void url::query_iterator::assign_kvp() noexcept {
-  auto first = std::begin(*query_), last = std::end(*query_);
-
-  auto sep_it = std::find_if(
-      first, last, [](char c) -> bool { return c == '&' || c == ';'; });
-  auto eq_it =
-      std::find_if(first, sep_it, [](char c) -> bool { return c == '='; });
-
-  kvp_.first = string_view(std::addressof(*first), std::distance(first, eq_it));
-  if (eq_it != sep_it) {
-    ++eq_it; // skip '=' symbol
-  }
-  kvp_.second = string_view(std::addressof(*eq_it), std::distance(eq_it, sep_it));
-}
-
-void url::query_iterator::increment() noexcept {
-  assert(query_);
-
-  if (!query_->empty()) {
-    advance_to_next_kvp();
-    assign_kvp();
-  }
-
-  if (query_->empty()) {
-    query_ = nullopt;
-  }
-}
-
-url::path_iterator::path_iterator() : path_{}, element_{} {}
-
-url::path_iterator::path_iterator(optional<::network::detail::uri_part> query)
-  : path_(query)
-  , element_{} {
-  if (path_ && path_->empty()) {
-    path_ = nullopt;
-  }
-  else {
-    // skip past '/'
-    advance_to_next_element();
-    assign_element();
-  }
-}
-
-url::path_iterator::path_iterator(const path_iterator &other)
-  : path_(other.path_)
-  , element_(other.element_) {
-
-}
-
-url::path_iterator &url::path_iterator::operator = (const path_iterator &other) {
-  auto tmp(other);
-  swap(tmp);
-  return *this;
-}
-
-url::path_iterator::reference url::path_iterator::operator ++ () noexcept {
-  increment();
-  return element_;
-}
-
-url::path_iterator::value_type url::path_iterator::operator ++ (int) noexcept {
-  auto original = element_;
-  increment();
-  return original;
-}
-
-url::path_iterator::reference url::path_iterator::operator * () const noexcept {
-  return element_;
-}
-
-url::path_iterator::pointer url::path_iterator::operator -> () const noexcept {
-  return std::addressof(element_);
-}
-
-bool url::path_iterator::operator==(const path_iterator &other) const noexcept {
-  if (!path_ && !other.path_) {
-    return true;
-  }
-  else if (path_ && other.path_) {
-    // since we're comparing substrings, the address of the first
-    // element in each iterator must be the same
-    return std::addressof(element_) == std::addressof(other.element_);
-  }
-  return false;
-}
-
-void url::path_iterator::swap(path_iterator &other) noexcept {
-  std::swap(path_, other.path_);
-  std::swap(element_, other.element_);
-}
-
-void url::path_iterator::advance_to_next_element() noexcept {
-  auto first = std::begin(*path_), last = std::end(*path_);
-
-  auto sep_it = std::find_if(
-      first, last, [](char c) -> bool { return c == '/'; });
-
-  if (sep_it != last) {
-    ++sep_it; // skip next separator
-  }
-
-  // reassign query to the next element
-  path_ = ::network::detail::uri_part(sep_it, last);
-}
-
-void url::path_iterator::assign_element() noexcept {
-  auto first = std::begin(*path_), last = std::end(*path_);
-
-  auto sep_it = std::find_if(
-      first, last, [](char c) -> bool { return c == '/'; });
-
-  element_ = string_view(std::addressof(*first), std::distance(first, sep_it));
-}
-
-void url::path_iterator::increment() noexcept {
-  assert(path_);
-
-  if (!path_->empty()) {
-    advance_to_next_element();
-    assign_element();
-  }
-
-  if (path_->empty()) {
-    path_ = nullopt;
-  }
-}
-
 url::url() : url_view_(url_), url_parts_(), cannot_be_a_base_url_(false) {}
 
 url::url(const url &other)
@@ -380,7 +164,8 @@ bool url::is_opaque() const noexcept {
 bool url::is_special() const noexcept {
   if (has_scheme()) {
     auto scheme = this->scheme();
-    auto first = std::begin(special_schemes()), last = std::end(special_schemes());
+    auto first = std::begin(detail::special_schemes()),
+         last = std::end(detail::special_schemes());
     auto it = std::find_if(
         first, last,
         [&scheme](const std::pair<url::string_type, optional<std::uint16_t>>
@@ -393,7 +178,8 @@ bool url::is_special() const noexcept {
 }
 
 optional<std::uint16_t> url::default_port(const string_type &scheme) {
-  auto first = std::begin(special_schemes()), last = std::end(special_schemes());
+  auto first = std::begin(detail::special_schemes()),
+       last = std::end(detail::special_schemes());
   auto it = std::find_if(
       first, last,
       [&scheme](const std::pair<url::string_type, optional<std::uint16_t>>
@@ -418,9 +204,7 @@ url::string_type serialize_port(url::string_view port) {
 
 url url::serialize() const {
   // https://url.spec.whatwg.org/#url-serializing
-  auto result = string_type{};
-
-  result += string_type(scheme());
+  auto result = string_type(scheme());
   result += ":";
 
   if (has_host()) {
@@ -437,9 +221,9 @@ url url::serialize() const {
       result += serialize_port(port());
     }
   }
-  // else if (scheme() == "file") {
-  //   result += "//";
-  // }
+  else if (scheme().compare("file") == 0) {
+    result += "//";
+  }
 
   auto path_it = path_begin();
   if (cannot_be_a_base_url_) {

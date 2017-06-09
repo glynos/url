@@ -67,65 +67,169 @@ class url {
   /**
    * \brief The URL string_type.
    */
-  typedef std::string string_type;
+  using string_type = std::string;
 
   /**
    * \brief A reference to the underlying string_type parts.
    */
-  typedef network::string_view string_view;
+  using string_view = network::string_view;
 
   /**
    * \brief The char traits.
    */
-  typedef string_view::traits_type traits_type;
+  using traits_type = string_view::traits_type;
 
   /**
    * \brief The URL const_iterator type.
    */
-  typedef string_view::const_iterator const_iterator;
+  using const_iterator = string_view::const_iterator;
 
   /**
    * \brief The URL iterator type.
    */
-  typedef const_iterator iterator;
+  using iterator = const_iterator;
 
   /**
    * \brief The URL value_type.
    */
-  typedef std::iterator_traits<iterator>::value_type value_type;
+  using value_type = std::iterator_traits<iterator>::value_type;
 
   /**
-   *
+   * \brief An iterator class that iterates through name-value pairs
+   *        in a URL query.
    */
   class query_iterator {
   public:
+
+    /**
+     * \brief The value_type is a name-value pair.
+     */
     using value_type = std::pair<string_view, string_view>;
+
+    /**
+     * \brief The iterator difference_type.
+     */
     using difference_type = std::ptrdiff_t;
+
+    /**
+     *
+     */
     using pointer = const value_type *;
+
+    /**
+     *
+     */
     using reference = const value_type &;
+
+    /**
+     *
+     */
     using iterator_category = std::forward_iterator_tag;
 
-    query_iterator();
-    explicit query_iterator(optional<detail::uri_part>);
-    query_iterator(const query_iterator &);
-    query_iterator &operator=(const query_iterator &);
-    reference operator++() noexcept;
-    value_type operator++(int) noexcept;
-    reference operator*() const noexcept;
-    pointer operator->() const noexcept;
-    bool operator==(const query_iterator &) const noexcept;
-    inline bool operator!=(const query_iterator &other) const noexcept {
+    query_iterator() = default;
+
+    explicit query_iterator(optional<detail::uri_part> query)
+      : query_(query)
+      , nvp_() {
+      if (query_ && query_->empty()) {
+        query_ = nullopt;
+      }
+      else {
+        assign_nvp();
+      }
+    }
+
+    query_iterator(const query_iterator &) = default;
+
+    query_iterator &operator=(const query_iterator &) = default;
+
+    reference operator++() noexcept {
+      increment();
+      return nvp_;
+    }
+
+    value_type operator++(int) noexcept {
+      auto original = nvp_;
+      increment();
+      return nvp_;
+    }
+
+    reference operator*() const noexcept {
+      return nvp_;
+    }
+
+    pointer operator->() const noexcept {
+      return std::addressof(nvp_);
+    }
+
+    bool operator==(const query_iterator &other) const noexcept {
+      if (!query_ && !other.query_) {
+        return true;
+      }
+      else if (query_ && other.query_) {
+        // since we're comparing substrings, the address of the first
+        // element in each iterator must be the same
+        return std::addressof(nvp_.first) == std::addressof(other.nvp_.first);
+      }
+      return false;
+    }
+
+    bool operator!=(const query_iterator &other) const noexcept {
       return !(*this == other);
     }
 
-   private:
-    void swap(query_iterator &) noexcept;
-    void advance_to_next_kvp() noexcept;
-    void assign_kvp() noexcept;
-    void increment() noexcept;
+  private:
+    void swap(query_iterator &other) noexcept {
+      std::swap(query_, other.query_);
+      std::swap(nvp_, other.nvp_);
+    }
+
+    void advance_to_next_nvp() noexcept {
+      auto first = std::begin(*query_), last = std::end(*query_);
+
+      auto sep_it = std::find_if(
+          first, last, [](char c) -> bool { return c == '&' || c == ';'; });
+
+      if (sep_it != last) {
+        ++sep_it;  // skip next separator
+      }
+
+      // reassign query to the next element
+      query_ = ::network::detail::uri_part(sep_it, last);
+    }
+
+    void assign_nvp() noexcept {
+      auto first = std::begin(*query_), last = std::end(*query_);
+
+      auto sep_it = std::find_if(
+          first, last, [](char c) -> bool { return c == '&' || c == ';'; });
+      auto eq_it =
+          std::find_if(first, sep_it, [](char c) -> bool { return c == '='; });
+
+      nvp_.first =
+          string_view(std::addressof(*first), std::distance(first, eq_it));
+      if (eq_it != sep_it) {
+        ++eq_it;  // skip '=' symbol
+      }
+      nvp_.second =
+          string_view(std::addressof(*eq_it), std::distance(eq_it, sep_it));
+    }
+
+    void increment() noexcept {
+      assert(query_);
+
+      if (!query_->empty()) {
+        advance_to_next_nvp();
+        assign_nvp();
+      }
+
+      if (query_->empty()) {
+        query_ = nullopt;
+      }
+    }
 
     optional<detail::uri_part> query_;
-    value_type kvp_;
+    value_type nvp_;
   };
 
   class path_iterator {
@@ -137,24 +241,101 @@ class url {
     using reference = const value_type &;
     using iterator_category = std::forward_iterator_tag;
 
-    path_iterator();
-    explicit path_iterator(optional<detail::uri_part>);
-    path_iterator(const path_iterator &);
-    path_iterator &operator=(const path_iterator &);
-    reference operator++() noexcept;
-    value_type operator++(int) noexcept;
-    reference operator*() const noexcept;
-    pointer operator->() const noexcept;
-    bool operator==(const path_iterator &) const noexcept;
+    path_iterator() = default;
+
+    explicit path_iterator(optional<detail::uri_part> path)
+      : path_{path}, element_{} {
+        if (path_ && path_->empty()) {
+          path_ = nullopt;
+        }
+        else {
+          // skip past '/'
+          advance_to_next_element();
+          assign_element();
+        }
+      }
+
+    path_iterator(const path_iterator &) = default;
+
+    path_iterator &operator=(const path_iterator &) = default;
+
+    reference operator++() noexcept {
+      increment();
+      return element_;
+    }
+
+    value_type operator++(int) noexcept {
+      auto original = element_;
+      increment();
+      return original;
+    }
+
+    reference operator*() const noexcept {
+      return element_;
+    }
+
+    pointer operator->() const noexcept {
+      return std::addressof(element_);
+    }
+
+    bool operator==(const path_iterator &other) const noexcept {
+      if (!path_ && !other.path_) {
+        return true;
+      }
+      else if (path_ && other.path_) {
+        // since we're comparing substrings, the address of the first
+        // element in each iterator must be the same
+        return std::addressof(element_) == std::addressof(other.element_);
+      }
+      return false;
+    }
+
     inline bool operator!=(const path_iterator &other) const noexcept {
       return !(*this == other);
     }
 
-   private:
-    void swap(path_iterator &) noexcept;
-    void advance_to_next_element() noexcept;
-    void assign_element() noexcept;
-    void increment() noexcept;
+  private:
+    void swap(path_iterator &other) noexcept {
+      std::swap(path_, other.path_);
+      std::swap(element_, other.element_);
+    }
+
+    void advance_to_next_element() noexcept {
+      auto first = std::begin(*path_), last = std::end(*path_);
+
+      auto sep_it =
+          std::find_if(first, last, [](char c) -> bool { return c == '/'; });
+
+      if (sep_it != last) {
+        ++sep_it;  // skip next separator
+      }
+
+      // reassign query to the next element
+      path_ = ::network::detail::uri_part(sep_it, last);
+    }
+
+    void assign_element() noexcept {
+      auto first = std::begin(*path_), last = std::end(*path_);
+
+      auto sep_it =
+          std::find_if(first, last, [](char c) -> bool { return c == '/'; });
+
+      element_ =
+          string_view(std::addressof(*first), std::distance(first, sep_it));
+    }
+
+    void increment() noexcept {
+      assert(path_);
+
+      if (!path_->empty()) {
+        advance_to_next_element();
+        assign_element();
+      }
+
+      if (path_->empty()) {
+        path_ = nullopt;
+      }
+    }
 
     optional<detail::uri_part> path_;
     value_type element_;

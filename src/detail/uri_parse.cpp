@@ -76,9 +76,14 @@ bool validate_user_info(string_view::const_iterator it,
 
 bool validate_ipv6_address(string_view::const_iterator it,
                            string_view::const_iterator last) {
-  std::string addr(++it, --last);
+  // the maximum ipv6 address length is 45 - choose a buffer on the
+  // stack large enough
+  char addr[64];
+  std::memset(addr, 0, sizeof(addr));
+  // copy the address with out the square braces
+  std::copy(++it, --last, std::begin(addr));
   string_view::value_type buffer[sizeof(struct in6_addr)];
-  int rc = ::inet_pton(AF_INET6, addr.data(), &buffer);
+  int rc = ::inet_pton(AF_INET6, addr, &buffer);
   return rc > 0;
 }
 
