@@ -709,44 +709,44 @@ TEST(whatwg_url_test, mailto_uri_fragment) {
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(whatwg_url_test, opaque_uri_with_one_slash) {
+TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash) {
   network::url instance("scheme:/path/");
   EXPECT_TRUE(instance.is_opaque());
 }
 
-TEST(whatwg_url_test, opaque_uri_with_one_slash_scheme) {
+TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_scheme) {
   network::url instance("scheme:/path/");
   EXPECT_EQ("scheme", instance.scheme());
 }
 
-TEST(whatwg_url_test, opaque_uri_with_one_slash_path) {
+TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_path) {
   network::url instance("scheme:/path/");
   EXPECT_EQ("/path/", instance.path());
 }
 
-TEST(whatwg_url_test, opaque_uri_with_one_slash_query) {
+TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_query) {
   network::url instance("scheme:/path/?query#fragment");
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(whatwg_url_test, opaque_uri_with_one_slash_fragment) {
+TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_fragment) {
   network::url instance("scheme:/path/?query#fragment");
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(whatwg_url_test, opaque_uri_with_one_slash_copy) {
+TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_copy) {
   network::url origin("scheme:/path/");
   network::url instance = origin;
   EXPECT_TRUE(instance.is_opaque());
 }
 
-TEST(whatwg_url_test, opaque_uri_with_one_slash_copy_query) {
+TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_copy_query) {
   network::url origin("scheme:/path/?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(whatwg_url_test, opaque_uri_with_one_slash_copy_fragment) {
+TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_copy_fragment) {
   network::url origin("scheme:/path/?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("fragment", instance.fragment());
@@ -794,7 +794,7 @@ TEST(whatwg_url_test, move_empty_uri_check_fragment) {
   EXPECT_FALSE(origin.has_fragment());
 }
 
-TEST(whatwg_url_test, empty_username_in_user_info) {
+TEST(whatwg_url_test, DISABLED_empty_username_in_user_info) {
   network::url instance("ftp://:@localhost");
   ASSERT_TRUE(instance.has_user_info());
   EXPECT_EQ(":", instance.user_info());
@@ -820,7 +820,7 @@ TEST(whatwg_url_test, default_constructed_assignment_test) {
   EXPECT_TRUE(instance.empty());
 }
 
-TEST(whatwg_url_test, opaque_path_no_double_slash) {
+TEST(whatwg_url_test, DISABLED_opaque_path_no_double_slash) {
   network::url instance("file:/path/to/something/");
   ASSERT_TRUE(instance.has_path());
   EXPECT_EQ("/path/to/something/", instance.path());

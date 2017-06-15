@@ -11,14 +11,17 @@
 #include <string>
 #include <cstdint>
 #include <network/optional.hpp>
+#include <network/string_view.hpp>
 
 namespace network {
-namespace whatwg {
 namespace detail {
 const std::vector<std::pair<std::string, optional<std::uint16_t>>>
     &special_schemes();
+
+bool is_special(string_view scheme);
+
+optional<std::uint16_t> default_port(string_view scheme);
 }  // namespace detail
-}  // namespace whatwg
 }  // namespace network
 
 

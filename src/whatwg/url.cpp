@@ -163,33 +163,13 @@ bool url::is_opaque() const noexcept {
 
 bool url::is_special() const noexcept {
   if (has_scheme()) {
-    auto scheme = this->scheme();
-    auto first = std::begin(detail::special_schemes()),
-         last = std::end(detail::special_schemes());
-    auto it = std::find_if(
-        first, last,
-        [&scheme](const std::pair<url::string_type, optional<std::uint16_t>>
-                      &special_scheme) -> bool {
-          return scheme == url::string_view(special_scheme.first);
-        });
-    return it != last;
+    return detail::is_special(scheme());
   }
   return false;
 }
 
 optional<std::uint16_t> url::default_port(const string_type &scheme) {
-  auto first = std::begin(detail::special_schemes()),
-       last = std::end(detail::special_schemes());
-  auto it = std::find_if(
-      first, last,
-      [&scheme](const std::pair<url::string_type, optional<std::uint16_t>>
-                    &special_scheme) -> bool {
-        return scheme == special_scheme.first;
-      });
-  if (it != last) {
-    return it->second;
-  }
-  return nullopt;
+  return detail::default_port(string_view(scheme));
 }
 
 namespace {

@@ -14,59 +14,109 @@
 
 namespace network {
 namespace detail {
+inline bool isalnum(string_view::value_type c) {
+  return std::isalnum(c, std::locale("C"));
+}
+
 inline bool isalnum(string_view::const_iterator &it,
                     string_view::const_iterator last) {
-  if (it != last) {
-    if (std::isalnum(*it, std::locale("C"))) {
-      ++it;
-      return true;
-    }
+  if (isalnum(*it)) {
+    ++it;
+    return true;
   }
   return false;
+}
+
+inline bool isdigit(string_view::value_type c) {
+  return std::isdigit(c, std::locale("C"));
 }
 
 inline bool isdigit(string_view::const_iterator &it,
                     string_view::const_iterator last) {
-  if (it != last) {
-    if (std::isdigit(*it, std::locale("C"))) {
-      ++it;
-      return true;
-    }
+  if (isdigit(*it)) {
+    ++it;
+    return true;
   }
   return false;
+}
+
+inline bool is_in(string_view::value_type c,
+                  string_view view) {
+  return std::end(view) != std::find(std::begin(view), std::end(view), c);
+}
+
+inline bool is_in(string_view::value_type c,
+                  const char *chars) {
+  return is_in(c, string_view{chars});
 }
 
 inline bool is_in(string_view::const_iterator &it,
                   string_view::const_iterator last, const char *chars) {
-  if (it != last) {
-    auto length = std::strlen(chars);
-    for (std::size_t i = 0; i < length; ++i) {
-      if (*it == chars[i]) {
-        ++it;
-        return true;
-      }
-    }
+  if (is_in(*it, chars)) {
+    ++it;
+    return true;
   }
   return false;
 }
 
-inline bool is_sub_delim(string_view::const_iterator &it,
-                         string_view::const_iterator last) {
-  return is_in(it, last, "!$&'()*+,;=");
+inline bool is_valid_uscschar(string_view::const_iterator &it,
+                              string_view::size_type bytes) {
+  for (decltype(bytes) i = 0; i < bytes; ++i) {
+    ++it;
+  }
+  return true;
 }
 
 inline bool is_ucschar(string_view::const_iterator &it,
                        string_view::const_iterator last) {
-  if (it == last) {
-    return false;
+  auto cp = static_cast<std::uint8_t>(*it);
+
+  // ignore ascii characters here because we already check those
+
+  if ((cp >= 0xc2) && (cp <= 0xdf)) {
+    return is_valid_uscschar(it, 2);
+  }
+
+  if ((cp >= 0xe0) && (cp <= 0xef)) {
+    return is_valid_uscschar(it, 3);
+  }
+
+  if ((cp >= 0xf0) && (cp <= 0xf4)) {
+    return is_valid_uscschar(it, 4);
   }
 
   return false;
 }
 
+inline string_view sub_delims() {
+  static const char sub_delims[] = {'!', '$', '&', '\'', '(', ')', '*', '+', ',', ';', '='};
+  return string_view(sub_delims, sizeof(sub_delims));
+}
+
+inline bool is_sub_delim(string_view::value_type c) {
+  return is_in(c, sub_delims());
+}
+
+inline bool is_sub_delim(string_view::const_iterator &it,
+                         string_view::const_iterator last) {
+  if (is_sub_delim(*it)) {
+    ++it;
+    return true;
+  }
+  return false;
+}
+
+inline bool is_unreserved(string_view::value_type c) {
+  return isalnum(c) || is_in(c, "-._~");
+}
+
 inline bool is_unreserved(string_view::const_iterator &it,
                           string_view::const_iterator last) {
-  return isalnum(it, last) || is_in(it, last, "-._~");
+  if (is_unreserved(*it)) {
+    ++it;
+    return true;
+  }
+  return false;
 }
 
 inline bool is_pct_encoded(string_view::const_iterator &it,

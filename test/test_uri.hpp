@@ -94,6 +94,38 @@ struct uri {
   uri_parts parts;
 
 };
+} // namespace test
+
+namespace network {
+namespace detail {
+inline std::ostream &operator << (std::ostream &os, const optional<uri_part> &part) {
+  if (part) {
+    os << "+ |" << (*part).to_string() << "|\n";
+  }
+  else {
+    os << "-\n";
+  }
+  return os;
+}
+
+inline std::ostream &operator << (std::ostream &os, const uri_parts &parts) {
+  return os
+    << "scheme:     " << parts.scheme
+    << "user info:  " << parts.user_info
+    << "host:       " << parts.host
+    << "port:       " << parts.port
+    << "path:       " << parts.path
+    << "query:      " << parts.query
+    << "fragment:   " << parts.fragment;
+}
+}  // namespace detail
+}  // namespace network
+
+
+namespace test {
+inline std::ostream &operator << (std::ostream &os, const uri &u) {
+  return os << u.parts;
+}
 }  // namespace test
 
 #endif //  TEST_URI_INC

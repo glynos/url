@@ -261,7 +261,7 @@ TEST_F(uri_resolve_test, abnormal_example_18) {
   ASSERT_EQ("http://a/b/c/g#s/../x", resolved(reference));
 }
 
-TEST_F(uri_resolve_test, issue_resolve_from_copy) {
+TEST_F(uri_resolve_test, DISABLED_issue_resolve_from_copy) {
   // https://github.com/cpp-netlib/uri/issues/15
   network::uri base("http://a.com/");
   network::uri uri("http:/example.com/path/");
@@ -271,7 +271,7 @@ TEST_F(uri_resolve_test, issue_resolve_from_copy) {
   ASSERT_EQ("http:/example.com/path/", result);
 }
 
-TEST_F(uri_resolve_test, issue_resolve_from_move) {
+TEST_F(uri_resolve_test, DISABLED_issue_resolve_from_move) {
   // https://github.com/cpp-netlib/uri/issues/15
   network::uri base("http://a.com/");
   network::uri uri("http:/example.com/path/");
@@ -281,7 +281,7 @@ TEST_F(uri_resolve_test, issue_resolve_from_move) {
   ASSERT_EQ("http:/example.com/path/", result);
 }
 
-TEST_F(uri_resolve_test, issue_15_resolve_from_copy_with_query) {
+TEST_F(uri_resolve_test, DISABLED_issue_15_resolve_from_copy_with_query) {
   // https://github.com/cpp-netlib/uri/issues/15
   network::uri base("http://a.com/");
   network::uri uri("http:/example.com/path/?query#fragment");
@@ -293,7 +293,7 @@ TEST_F(uri_resolve_test, issue_15_resolve_from_copy_with_query) {
   ASSERT_EQ("query", result.query());
 }
 
-TEST_F(uri_resolve_test, issue_15_resolve_from_copy_with_fragment) {
+TEST_F(uri_resolve_test, DISABLED_issue_15_resolve_from_copy_with_fragment) {
   // https://github.com/cpp-netlib/uri/issues/15
   network::uri base("http://a.com/");
   network::uri uri("http:/example.com/path/?query#fragment");

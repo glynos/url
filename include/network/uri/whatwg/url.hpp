@@ -151,7 +151,7 @@ class url {
     value_type operator++(int) noexcept {
       auto original = nvp_;
       increment();
-      return nvp_;
+      return original;
     }
 
     reference operator*() const noexcept {

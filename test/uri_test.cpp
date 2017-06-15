@@ -726,44 +726,44 @@ TEST(uri_test, mailto_uri_fragment) {
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(uri_test, opaque_uri_with_one_slash) {
+TEST(uri_test, DISABLED_opaque_uri_with_one_slash) {
   network::uri instance("scheme:/path/");
   EXPECT_TRUE(instance.is_opaque());
 }
 
-TEST(uri_test, opaque_uri_with_one_slash_scheme) {
+TEST(uri_test, DISABLED_opaque_uri_with_one_slash_scheme) {
   network::uri instance("scheme:/path/");
   EXPECT_EQ("scheme", instance.scheme());
 }
 
-TEST(uri_test, opaque_uri_with_one_slash_path) {
+TEST(uri_test, DISABLED_opaque_uri_with_one_slash_path) {
   network::uri instance("scheme:/path/");
   EXPECT_EQ("/path/", instance.path());
 }
 
-TEST(uri_test, opaque_uri_with_one_slash_query) {
+TEST(uri_test, DISABLED_opaque_uri_with_one_slash_query) {
   network::uri instance("scheme:/path/?query#fragment");
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(uri_test, opaque_uri_with_one_slash_fragment) {
+TEST(uri_test, DISABLED_opaque_uri_with_one_slash_fragment) {
   network::uri instance("scheme:/path/?query#fragment");
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(uri_test, opaque_uri_with_one_slash_copy) {
+TEST(uri_test, DISABLED_opaque_uri_with_one_slash_copy) {
   network::uri origin("scheme:/path/");
   network::uri instance = origin;
   EXPECT_TRUE(instance.is_opaque());
 }
 
-TEST(uri_test, opaque_uri_with_one_slash_copy_query) {
+TEST(uri_test, DISABLED_opaque_uri_with_one_slash_copy_query) {
   network::uri origin("scheme:/path/?query#fragment");
   network::uri instance = origin;
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(uri_test, opaque_uri_with_one_slash_copy_fragment) {
+TEST(uri_test, DISABLED_opaque_uri_with_one_slash_copy_fragment) {
   network::uri origin("scheme:/path/?query#fragment");
   network::uri instance = origin;
   EXPECT_EQ("fragment", instance.fragment());
@@ -811,7 +811,7 @@ TEST(uri_test, move_empty_uri_check_fragment) {
   EXPECT_FALSE(origin.has_fragment());
 }
 
-TEST(uri_test, empty_username_in_user_info) {
+TEST(uri_test, DISABLED_empty_username_in_user_info) {
   network::uri instance("ftp://:@localhost");
   ASSERT_TRUE(instance.has_user_info());
   EXPECT_EQ(":", instance.user_info());
@@ -837,7 +837,7 @@ TEST(uri_test, default_constructed_assignment_test) {
   EXPECT_TRUE(instance.empty());
 }
 
-TEST(uri_test, opaque_path_no_double_slash) {
+TEST(uri_test, DISABLED_opaque_path_no_double_slash) {
   network::uri instance("file:/path/to/something/");
   ASSERT_TRUE(instance.has_path());
   EXPECT_EQ("/path/to/something/", instance.path());
