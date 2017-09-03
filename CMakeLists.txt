@@ -14,7 +14,7 @@ option(Uri_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(Uri_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
 option(Uri_USE_STD14 "Use the C++ 14 standard (GCC only)" OFF)
 option(Uri_USE_STD17 "Use the C++ 17 standard (GCC only)" OFF)
-
+option(Uri_RUN_WEB_PLATFORM_TESTS "Run web platform tests" OFF)
 
 find_package(Threads REQUIRED)
 
