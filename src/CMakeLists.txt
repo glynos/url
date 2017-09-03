@@ -25,6 +25,11 @@ if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   endif()
 endif()
 
+if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU OR
+    ${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wmissing-declarations")
+endif()
+
 #propagate sources to parent scope for one-lib-build
 set(Uri_SRCS ${Uri_SRCS} PARENT_SCOPE)
 
