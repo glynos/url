@@ -1,4 +1,4 @@
-// Copyright (c) Glyn Matthews 2017.
+// Copyright (c) Glyn Matthews 2017-18.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -12,9 +12,12 @@
  */
 
 #include <network/uri/whatwg/url.hpp>
+#include <network/uri/whatwg/url_search_parameters.hpp>
 
 namespace network {
 using url = whatwg::url;
+using url_syntax_error = uri_syntax_error;
+using url_search_parameters = whatwg::url_search_parameters;
 
 /**
  * \brief \c url factory function.

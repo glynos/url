@@ -20,20 +20,6 @@ const std::vector<std::pair<std::string, optional<std::uint16_t>>> &special_sche
   return schemes;
 }
 
-bool is_special(string_view scheme) {
-  auto first = std::begin(detail::special_schemes()),
-       last = std::end(detail::special_schemes());
-  auto it = std::find_if(
-      first, last,
-      [&scheme](const std::pair<std::string, optional<std::uint16_t>>
-                    &special_scheme) -> bool {
-        // why is this a bug?
-        // return scheme == string_view(special_scheme.first);
-        return scheme.to_string() == special_scheme.first;
-      });
-  return it != last;
-}
-
 optional<std::uint16_t> default_port(string_view scheme) {
   auto first = std::begin(detail::special_schemes()),
        last = std::end(detail::special_schemes());
@@ -41,14 +27,16 @@ optional<std::uint16_t> default_port(string_view scheme) {
       first, last,
       [&scheme](const std::pair<std::string, optional<std::uint16_t>>
                     &special_scheme) -> bool {
-        // why is this a bug?
-        // return scheme == string_view(special_scheme.first);
-        return scheme.to_string() == special_scheme.first;
+         return scheme.compare(special_scheme.first) == 0;
       });
   if (it != last) {
     return it->second;
   }
   return nullopt;
 }
+
+  bool is_special(string_view scheme) {
+    return static_cast<bool>(default_port(scheme));
+  }
 }  // namespace detail
 }  // namespace network

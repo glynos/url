@@ -15,13 +15,30 @@ set(Uri_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/ietf/uri_builder.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/whatwg/url.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/whatwg/url_search_parameters.cpp
+
+  ${CMAKE_SOURCE_DIR}/include/network/optional.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/string_view.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/url.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/config.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/uri_errors.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/detail/decode.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/detail/encode.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/detail/translate.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/detail/uri_parts.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/ietf/uri.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/ietf/uri_builder.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/ietf/uri_io.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/whatwg/url.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/whatwg/url_io.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/whatwg/url_search_parameters.hpp
   )
 
-add_library(network-uri ${Uri_SRCS})
-target_link_libraries(network-uri)
+add_library(network-url ${Uri_SRCS})
+target_link_libraries(network-url)
 if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   if (NOT Uri_DISABLE_LIBCXX)
-    target_link_libraries(network-uri "c++")
+    target_link_libraries(network-url "c++")
   endif()
 endif()
 
@@ -34,7 +51,7 @@ endif()
 set(Uri_SRCS ${Uri_SRCS} PARENT_SCOPE)
 
 install(
-  TARGETS network-uri
+  TARGETS network-url
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
 )

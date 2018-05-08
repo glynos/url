@@ -556,7 +556,7 @@ std::vector<std::string> create_urls(const std::string &filename) {
 class test_valid_urls : public ::testing::TestWithParam<std::string> {};
 
 INSTANTIATE_TEST_CASE_P(uri_parse_test, test_valid_urls,
-                        testing::ValuesIn(create_urls("valid_urls.txt")));
+                        testing::ValuesIn(create_urls("../../test/valid_urls.txt")));
 
 TEST_P(test_valid_urls, urls_are_valid) {
   test::uri uri(GetParam());

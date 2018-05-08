@@ -1,5 +1,5 @@
 // Copyright 2010 Jeroen Habraken.
-// Copyright 2009-2017 Dean Michael Berris, Glyn Matthews.
+// Copyright 2009-2018 Dean Michael Berris, Glyn Matthews.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
@@ -14,111 +14,111 @@
 #include <unordered_set>
 #include "string_utility.hpp"
 
-TEST(whatwg_url_test, construct_invalid_uri) {
-  EXPECT_THROW(network::url("I am not a valid URI."), network::uri_syntax_error);
+TEST(whatwg_url_test, construct_invalid_url) {
+  EXPECT_THROW(network::url("I am not a valid url."), network::url_syntax_error);
 }
 
-TEST(whatwg_url_test, make_invalid_uri) {
+TEST(whatwg_url_test, make_invalid_url) {
   std::error_code ec;
-  network::url uri = network::make_url("I am not a valid URI.", ec);
+  network::url url = network::make_url("I am not a valid url.", ec);
   EXPECT_TRUE(static_cast<bool>(ec));
 }
 
-TEST(whatwg_url_test, construct_uri_from_char_array) {
+TEST(whatwg_url_test, construct_url_from_char_array) {
   EXPECT_NO_THROW(network::url("http://www.example.com/"));
 }
 
-TEST(whatwg_url_test, construct_uri_starting_with_ipv4_like) {
+TEST(whatwg_url_test, construct_url_starting_with_ipv4_like) {
   EXPECT_NO_THROW(network::url("http://198.51.100.0.example.com/"));
 }
 
-TEST(whatwg_url_test, construct_uri_starting_with_ipv4_like_glued) {
+TEST(whatwg_url_test, construct_url_starting_with_ipv4_like_glued) {
   ASSERT_NO_THROW(network::url("http://198.51.100.0example.com/"));
 }
 
-TEST(whatwg_url_test, construct_uri_like_short_ipv4) {
+TEST(whatwg_url_test, construct_url_like_short_ipv4) {
   EXPECT_NO_THROW(network::url("http://198.51.100/"));
 }
 
-TEST(whatwg_url_test, construct_uri_like_long_ipv4) {
+TEST(whatwg_url_test, construct_url_like_long_ipv4) {
   EXPECT_NO_THROW(network::url("http://198.51.100.0.255/"));
 }
 
-TEST(whatwg_url_test, make_uri_from_char_array) {
+TEST(whatwg_url_test, make_url_from_char_array) {
   std::error_code ec;
-  network::url uri = network::make_url("http://www.example.com/", ec);
+  network::url url = network::make_url("http://www.example.com/", ec);
   EXPECT_FALSE(ec);
 }
 
-TEST(whatwg_url_test, construct_uri_from_wchar_t_array) {
+TEST(whatwg_url_test, construct_url_from_wchar_t_array) {
   EXPECT_NO_THROW(network::url(L"http://www.example.com/"));
 }
 
-TEST(whatwg_url_test, make_uri_from_wchar_t_array) {
+TEST(whatwg_url_test, make_url_from_wchar_t_array) {
   std::error_code ec;
-  network::url uri = network::make_url(L"http://www.example.com/", ec);
+  network::url url = network::make_url(L"http://www.example.com/", ec);
   EXPECT_FALSE(ec);
 }
 
-TEST(whatwg_url_test, construct_uri_from_string) {
+TEST(whatwg_url_test, construct_url_from_string) {
   EXPECT_NO_THROW(network::url(std::string("http://www.example.com/")));
 }
 
-TEST(whatwg_url_test, make_uri_from_string) {
+TEST(whatwg_url_test, make_url_from_string) {
   std::error_code ec;
-  network::url uri = network::make_url(std::string("http://www.example.com/"), ec);
+  network::url url = network::make_url(std::string("http://www.example.com/"), ec);
   EXPECT_FALSE(ec);
 }
 
-TEST(whatwg_url_test, construct_uri_from_wstring) {
+TEST(whatwg_url_test, construct_url_from_wstring) {
   EXPECT_NO_THROW(network::url(std::wstring(L"http://www.example.com/")));
 }
 
-TEST(whatwg_url_test, make_uri_from_wstring) {
+TEST(whatwg_url_test, make_url_from_wstring) {
   std::error_code ec;
-  network::url uri = network::make_url(std::wstring(L"http://www.example.com/"), ec);
+  network::url url = network::make_url(std::wstring(L"http://www.example.com/"), ec);
   EXPECT_FALSE(ec);
 }
 
-TEST(whatwg_url_test, basic_uri_scheme_test) {
+TEST(whatwg_url_test, basic_url_scheme_test) {
   network::url instance("http://www.example.com/");
   ASSERT_TRUE(instance.has_scheme());
   EXPECT_EQ("http", instance.scheme());
 }
 
-TEST(whatwg_url_test, basic_uri_user_info_test) {
+TEST(whatwg_url_test, basic_url_user_info_test) {
   network::url instance("http://www.example.com/");
   EXPECT_FALSE(instance.has_user_info());
 }
 
-TEST(whatwg_url_test, basic_uri_host_test) {
+TEST(whatwg_url_test, basic_url_host_test) {
   network::url instance("http://www.example.com/");
   ASSERT_TRUE(instance.has_host());
   EXPECT_EQ("www.example.com", instance.host());
 }
 
-TEST(whatwg_url_test, basic_uri_port_test) {
+TEST(whatwg_url_test, basic_url_port_test) {
   network::url instance("http://www.example.com/");
   EXPECT_FALSE(instance.has_port());
 }
 
-TEST(whatwg_url_test, basic_uri_path_test) {
+TEST(whatwg_url_test, basic_url_path_test) {
   network::url instance("http://www.example.com/");
   ASSERT_TRUE(instance.has_path());
   EXPECT_EQ("/", instance.path());
 }
 
-TEST(whatwg_url_test, basic_uri_query_test) {
+TEST(whatwg_url_test, basic_url_query_test) {
   network::url instance("http://www.example.com/");
   EXPECT_FALSE(instance.has_query());
 }
 
-TEST(whatwg_url_test, basic_uri_fragment_test) {
+TEST(whatwg_url_test, basic_url_fragment_test) {
   network::url instance("http://www.example.com/");
   EXPECT_FALSE(instance.has_fragment());
 }
 
-TEST(whatwg_url_test, basic_uri_value_semantics_test) {
+TEST(whatwg_url_test, basic_url_value_semantics_test) {
   network::url original;
   network::url assigned;
   assigned = original;
@@ -129,89 +129,89 @@ TEST(whatwg_url_test, basic_uri_value_semantics_test) {
   EXPECT_EQ(copy, assigned);
 }
 
-TEST(whatwg_url_test, full_uri_scheme_test) {
+TEST(whatwg_url_test, full_url_scheme_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   EXPECT_EQ("http", instance.scheme());
 }
 
-TEST(whatwg_url_test, full_uri_user_info_test) {
+TEST(whatwg_url_test, full_url_user_info_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   EXPECT_EQ("user", instance.user_info());
 }
 
-TEST(whatwg_url_test, full_uri_host_test) {
+TEST(whatwg_url_test, full_url_host_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   EXPECT_EQ("www.example.com", instance.host());
 }
 
-TEST(whatwg_url_test, full_uri_port_test) {
+TEST(whatwg_url_test, full_url_port_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   EXPECT_EQ("80", instance.port());
 }
 
-TEST(whatwg_url_test, full_uri_port_as_int_test) {
+TEST(whatwg_url_test, full_url_port_as_int_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   EXPECT_EQ(80, instance.port<int>());
 }
 
-TEST(whatwg_url_test, full_uri_path_test) {
+TEST(whatwg_url_test, full_url_path_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   EXPECT_EQ("/path", instance.path());
 }
 
-TEST(whatwg_url_test, full_uri_query_test) {
+TEST(whatwg_url_test, full_url_query_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(whatwg_url_test, full_uri_fragment_test) {
+TEST(whatwg_url_test, full_url_fragment_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(whatwg_url_test, full_uri_range_scheme_test) {
+TEST(whatwg_url_test, full_url_range_scheme_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   ASSERT_TRUE(instance.has_scheme());
   EXPECT_EQ("http", instance.scheme());
 }
 
-TEST(whatwg_url_test, full_uri_range_user_info_test) {
+TEST(whatwg_url_test, full_url_range_user_info_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   ASSERT_TRUE(instance.has_user_info());
   EXPECT_EQ("user", instance.user_info());
 }
 
-TEST(whatwg_url_test, full_uri_range_host_test) {
+TEST(whatwg_url_test, full_url_range_host_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   ASSERT_TRUE(instance.has_host());
   EXPECT_EQ("www.example.com", instance.host());
 }
 
-TEST(whatwg_url_test, full_uri_range_port_test) {
+TEST(whatwg_url_test, full_url_range_port_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   ASSERT_TRUE(instance.has_port());
   EXPECT_EQ("80", instance.port());
 }
 
-TEST(whatwg_url_test, full_uri_range_path_test) {
+TEST(whatwg_url_test, full_url_range_path_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   ASSERT_TRUE(instance.has_path());
   EXPECT_EQ("/path", instance.path());
 }
 
-TEST(whatwg_url_test, full_uri_range_query_test) {
+TEST(whatwg_url_test, full_url_range_query_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   ASSERT_TRUE(instance.has_query());
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(whatwg_url_test, full_uri_range_fragment_test) {
+TEST(whatwg_url_test, full_url_range_fragment_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   ASSERT_TRUE(instance.has_fragment());
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(whatwg_url_test, uri_with_empty_query) {
+TEST(whatwg_url_test, url_with_empty_query) {
   network::url instance("http://example.com/?");
   ASSERT_TRUE(instance.has_query());
   EXPECT_EQ("", instance.query());
@@ -469,56 +469,56 @@ TEST(whatwg_url_test, issue_104_test) {
   EXPECT_EQ("http", copy.scheme());
 }
 
-TEST(whatwg_url_test, DISABLED_uri_set_test) {
-  std::set<network::url> uri_set;
-  uri_set.insert(network::url("http://www.example.com/"));
-  EXPECT_FALSE(uri_set.empty());
-  EXPECT_EQ(network::url("http://www.example.com/"), (*std::begin(uri_set)));
+TEST(whatwg_url_test, DISABLED_url_set_test) {
+  std::set<network::url> url_set;
+  url_set.insert(network::url("http://www.example.com/"));
+  EXPECT_FALSE(url_set.empty());
+  EXPECT_EQ(network::url("http://www.example.com/"), (*std::begin(url_set)));
 }
 
-TEST(whatwg_url_test, DISABLED_uri_unordered_set_test) {
-  std::unordered_set<network::url> uri_set;
-  uri_set.insert(network::url("http://www.example.com/"));
-  EXPECT_FALSE(uri_set.empty());
-  EXPECT_EQ(network::url("http://www.example.com/"), (*std::begin(uri_set)));
+TEST(whatwg_url_test, DISABLED_url_unordered_set_test) {
+  std::unordered_set<network::url> url_set;
+  url_set.insert(network::url("http://www.example.com/"));
+  EXPECT_FALSE(url_set.empty());
+  EXPECT_EQ(network::url("http://www.example.com/"), (*std::begin(url_set)));
 }
 
-TEST(whatwg_url_test, empty_uri) {
+TEST(whatwg_url_test, empty_url) {
   network::url instance;
   EXPECT_TRUE(instance.empty());
 }
 
-TEST(whatwg_url_test, empty_uri_has_no_scheme) {
+TEST(whatwg_url_test, empty_url_has_no_scheme) {
   network::url instance;
   EXPECT_FALSE(instance.has_scheme());
 }
 
-TEST(whatwg_url_test, empty_uri_has_no_user_info) {
+TEST(whatwg_url_test, empty_url_has_no_user_info) {
   network::url instance;
   EXPECT_FALSE(instance.has_user_info());
 }
 
-TEST(whatwg_url_test, empty_uri_has_no_host) {
+TEST(whatwg_url_test, empty_url_has_no_host) {
   network::url instance;
   EXPECT_FALSE(instance.has_host());
 }
 
-TEST(whatwg_url_test, empty_uri_has_no_port) {
+TEST(whatwg_url_test, empty_url_has_no_port) {
   network::url instance;
   EXPECT_FALSE(instance.has_port());
 }
 
-TEST(whatwg_url_test, empty_uri_has_no_path) {
+TEST(whatwg_url_test, empty_url_has_no_path) {
   network::url instance;
   EXPECT_FALSE(instance.has_path());
 }
 
-TEST(whatwg_url_test, empty_uri_has_no_query) {
+TEST(whatwg_url_test, empty_url_has_no_query) {
   network::url instance;
   EXPECT_FALSE(instance.has_query());
 }
 
-TEST(whatwg_url_test, empty_uri_has_no_fragment) {
+TEST(whatwg_url_test, empty_url_has_no_fragment) {
   network::url instance;
   EXPECT_FALSE(instance.has_fragment());
 }
@@ -594,7 +594,7 @@ TEST(whatwg_url_test, git) {
 }
 
 TEST(whatwg_url_test, invalid_port_test) {
-  EXPECT_THROW(network::url("http://123.34.23.56:6662626/"), network::uri_syntax_error);
+  EXPECT_THROW(network::url("http://123.34.23.56:6662626/"), network::url_syntax_error);
 }
 
 TEST(whatwg_url_test, valid_empty_port_test) {
@@ -607,188 +607,188 @@ TEST(whatwg_url_test, empty_port_test) {
   EXPECT_EQ("", instance.port());
 }
 
-TEST(whatwg_url_test, full_copy_uri_scheme_test) {
+TEST(whatwg_url_test, full_copy_url_scheme_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("http", instance.scheme());
 }
 
-TEST(whatwg_url_test, full_copy_uri_user_info_test) {
+TEST(whatwg_url_test, full_copy_url_user_info_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("user", instance.user_info());
 }
 
-TEST(whatwg_url_test, full_copy_uri_host_test) {
+TEST(whatwg_url_test, full_copy_url_host_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("www.example.com", instance.host());
 }
 
-TEST(whatwg_url_test, full_copy_uri_port_test) {
+TEST(whatwg_url_test, full_copy_url_port_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("80", instance.port());
 }
 
-TEST(whatwg_url_test, full_copy_uri_path_test) {
+TEST(whatwg_url_test, full_copy_url_path_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("/path", instance.path());
 }
 
-TEST(whatwg_url_test, full_copy_uri_query_test) {
+TEST(whatwg_url_test, full_copy_url_query_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(whatwg_url_test, full_copy_uri_fragment_test) {
+TEST(whatwg_url_test, full_copy_url_fragment_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(whatwg_url_test, full_move_uri_scheme_test) {
+TEST(whatwg_url_test, full_move_url_scheme_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_EQ("http", instance.scheme());
 }
 
-TEST(whatwg_url_test, full_move_uri_user_info_test) {
+TEST(whatwg_url_test, full_move_url_user_info_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_EQ("user", instance.user_info());
 }
 
-TEST(whatwg_url_test, full_move_uri_host_test) {
+TEST(whatwg_url_test, full_move_url_host_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_EQ("www.example.com", instance.host());
 }
 
-TEST(whatwg_url_test, full_move_uri_port_test) {
+TEST(whatwg_url_test, full_move_url_port_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_EQ("80", instance.port());
 }
 
-TEST(whatwg_url_test, full_move_uri_path_test) {
+TEST(whatwg_url_test, full_move_url_path_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_EQ("/path", instance.path());
 }
 
-TEST(whatwg_url_test, full_move_uri_query_test) {
+TEST(whatwg_url_test, full_move_url_query_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(whatwg_url_test, full_move_uri_fragment_test) {
+TEST(whatwg_url_test, full_move_url_fragment_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(whatwg_url_test, mailto_uri_path) {
+TEST(whatwg_url_test, mailto_url_path) {
   network::url origin("mailto:john.doe@example.com?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("john.doe@example.com", instance.path());
 }
 
-TEST(whatwg_url_test, mailto_uri_query) {
+TEST(whatwg_url_test, mailto_url_query) {
   network::url origin("mailto:john.doe@example.com?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(whatwg_url_test, mailto_uri_fragment) {
+TEST(whatwg_url_test, mailto_url_fragment) {
   network::url origin("mailto:john.doe@example.com?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash) {
+TEST(whatwg_url_test, DISABLED_opaque_url_with_one_slash) {
   network::url instance("scheme:/path/");
   EXPECT_TRUE(instance.is_opaque());
 }
 
-TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_scheme) {
+TEST(whatwg_url_test, DISABLED_opaque_url_with_one_slash_scheme) {
   network::url instance("scheme:/path/");
   EXPECT_EQ("scheme", instance.scheme());
 }
 
-TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_path) {
+TEST(whatwg_url_test, DISABLED_opaque_url_with_one_slash_path) {
   network::url instance("scheme:/path/");
   EXPECT_EQ("/path/", instance.path());
 }
 
-TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_query) {
+TEST(whatwg_url_test, DISABLED_opaque_url_with_one_slash_query) {
   network::url instance("scheme:/path/?query#fragment");
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_fragment) {
+TEST(whatwg_url_test, DISABLED_opaque_url_with_one_slash_fragment) {
   network::url instance("scheme:/path/?query#fragment");
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_copy) {
+TEST(whatwg_url_test, DISABLED_opaque_url_with_one_slash_copy) {
   network::url origin("scheme:/path/");
   network::url instance = origin;
   EXPECT_TRUE(instance.is_opaque());
 }
 
-TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_copy_query) {
+TEST(whatwg_url_test, DISABLED_opaque_url_with_one_slash_copy_query) {
   network::url origin("scheme:/path/?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("query", instance.query());
 }
 
-TEST(whatwg_url_test, DISABLED_opaque_uri_with_one_slash_copy_fragment) {
+TEST(whatwg_url_test, DISABLED_opaque_url_with_one_slash_copy_fragment) {
   network::url origin("scheme:/path/?query#fragment");
   network::url instance = origin;
   EXPECT_EQ("fragment", instance.fragment());
 }
 
-TEST(whatwg_url_test, move_empty_uri_check_scheme) {
+TEST(whatwg_url_test, move_empty_url_check_scheme) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_FALSE(origin.has_scheme());
 }
 
-TEST(whatwg_url_test, move_empty_uri_check_user_info) {
+TEST(whatwg_url_test, move_empty_url_check_user_info) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_FALSE(origin.has_user_info());
 }
 
-TEST(whatwg_url_test, move_empty_uri_check_host) {
+TEST(whatwg_url_test, move_empty_url_check_host) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_FALSE(origin.has_host());
 }
 
-TEST(whatwg_url_test, move_empty_uri_check_port) {
+TEST(whatwg_url_test, move_empty_url_check_port) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_FALSE(origin.has_port());
 }
 
-TEST(whatwg_url_test, move_empty_uri_check_path) {
+TEST(whatwg_url_test, move_empty_url_check_path) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_FALSE(origin.has_path());
 }
 
-TEST(whatwg_url_test, move_empty_uri_check_query) {
+TEST(whatwg_url_test, move_empty_url_check_query) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_FALSE(origin.has_query());
 }
 
-TEST(whatwg_url_test, move_empty_uri_check_fragment) {
+TEST(whatwg_url_test, move_empty_url_check_fragment) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
   EXPECT_FALSE(origin.has_fragment());
@@ -802,16 +802,16 @@ TEST(whatwg_url_test, DISABLED_empty_username_in_user_info) {
   EXPECT_EQ("localhost", instance.host());
 }
 
-TEST(whatwg_url_test, uri_begins_with_a_colon) {
-  EXPECT_THROW(network::url("://example.com"), network::uri_syntax_error);
+TEST(whatwg_url_test, url_begins_with_a_colon) {
+  EXPECT_THROW(network::url("://example.com"), network::url_syntax_error);
 }
 
-TEST(whatwg_url_test, uri_begins_with_a_number) {
-  EXPECT_THROW(network::url("3http://example.com"), network::uri_syntax_error);
+TEST(whatwg_url_test, url_begins_with_a_number) {
+  EXPECT_THROW(network::url("3http://example.com"), network::url_syntax_error);
 }
 
-TEST(whatwg_url_test, uri_scheme_contains_an_invalid_character) {
-  EXPECT_THROW(network::url("ht%tp://example.com"), network::uri_syntax_error);
+TEST(whatwg_url_test, url_scheme_contains_an_invalid_character) {
+  EXPECT_THROW(network::url("ht%tp://example.com"), network::url_syntax_error);
 }
 
 TEST(whatwg_url_test, default_constructed_assignment_test) {
@@ -1061,15 +1061,15 @@ TEST(whatwg_url_test, http_copy_assignment_bug_98) {
   EXPECT_EQ("/path/to/file.txt", instance.path());
 }
 
-TEST(whatwg_url_test, uri_has_host_bug_87) {
-  EXPECT_THROW(network::url("http://"), network::uri_syntax_error);
+TEST(whatwg_url_test, url_has_host_bug_87) {
+  EXPECT_THROW(network::url("http://"), network::url_syntax_error);
 }
 
-TEST(whatwg_url_test, uri_has_host_bug_87_2) {
-  EXPECT_THROW(network::url("http://user@"), network::uri_syntax_error);
+TEST(whatwg_url_test, url_has_host_bug_87_2) {
+  EXPECT_THROW(network::url("http://user@"), network::url_syntax_error);
 }
 
-TEST(whatwg_url_test, uri_has_host_bug_88) {
+TEST(whatwg_url_test, url_has_host_bug_88) {
   network::url instance("http://user@host");
 
   ASSERT_TRUE(instance.has_scheme());
@@ -1083,7 +1083,7 @@ TEST(whatwg_url_test, uri_has_host_bug_88) {
   EXPECT_EQ("host", instance.host().to_string());
 }
 
-TEST(whatwg_url_test, uri_has_host_bug_88_2) {
+TEST(whatwg_url_test, url_has_host_bug_88_2) {
   network::url instance("http://user@example.com");
 
   ASSERT_TRUE(instance.has_scheme());
@@ -1140,9 +1140,9 @@ TEST(whatwg_url_test, git_default_port_is_not_given) {
 }
 
 TEST(whatwg_url_test, DISABLED_file_scheme_cant_have_user_info) {
-  EXPECT_THROW(network::url("file://user@www.example.com/path"), network::uri_syntax_error);
+  EXPECT_THROW(network::url("file://user@www.example.com/path"), network::url_syntax_error);
 }
 
 TEST(whatwg_url_test, DISABLED_file_scheme_cant_have_port) {
-  EXPECT_THROW(network::url("file://www.example.com:80/path"), network::uri_syntax_error);
+  EXPECT_THROW(network::url("file://www.example.com:80/path"), network::url_syntax_error);
 }

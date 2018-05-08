@@ -45,7 +45,7 @@ inline string_view to_string_view(const std::string &uri,
                                   ::network::detail::uri_part part) {
   if (!part.empty()) {
     const char *c_str = uri.c_str();
-    const char *part_begin = &(*(std::begin(part)));
+    const char *part_begin = std::addressof(*std::begin(part));
     std::advance(c_str, std::distance(c_str, part_begin));
     return string_view(c_str, std::distance(std::begin(part), std::end(part)));
   }

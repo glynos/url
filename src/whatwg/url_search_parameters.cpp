@@ -51,7 +51,6 @@ void url_search_parameters::remove(const string_type &name) {
                              return parameter.first == name;
                            });
   parameters_.erase(it, std::end(parameters_));
-
   update();
 }
 

@@ -95,6 +95,118 @@ class url {
   using value_type = std::iterator_traits<iterator>::value_type;
 
   /**
+   * \class path_iterator
+   */
+  class path_iterator {
+  public:
+    
+    using value_type = string_view;
+    using difference_type = std::ptrdiff_t;
+    using pointer = const value_type *;
+    using reference = const value_type &;
+    using iterator_category = std::forward_iterator_tag;
+    
+    path_iterator() = default;
+    
+    explicit path_iterator(optional<detail::uri_part> path)
+    : path_{path}, element_{} {
+      if (path_ && path_->empty()) {
+        path_ = nullopt;
+      }
+      else {
+        // skip past '/'
+        advance_to_next_element();
+        assign_element();
+      }
+    }
+    
+    path_iterator(const path_iterator &) = default;
+    
+    path_iterator &operator=(const path_iterator &) = default;
+    
+    reference operator++() noexcept {
+      increment();
+      return element_;
+    }
+    
+    value_type operator++(int) noexcept {
+      auto original = element_;
+      increment();
+      return original;
+    }
+    
+    reference operator*() const noexcept {
+      return element_;
+    }
+    
+    pointer operator->() const noexcept {
+      return std::addressof(element_);
+    }
+    
+    bool operator==(const path_iterator &other) const noexcept {
+      if (!path_ && !other.path_) {
+        return true;
+      }
+      else if (path_ && other.path_) {
+        // since we're comparing substrings, the address of the first
+        // element in each iterator must be the same
+        return std::addressof(element_) == std::addressof(other.element_);
+      }
+      return false;
+    }
+    
+    inline bool operator!=(const path_iterator &other) const noexcept {
+      return !(*this == other);
+    }
+    
+  private:
+    void swap(path_iterator &other) noexcept {
+      std::swap(path_, other.path_);
+      std::swap(element_, other.element_);
+    }
+    
+    void advance_to_next_element() noexcept {
+      auto first = std::begin(*path_), last = std::end(*path_);
+      
+      auto sep_it =
+      std::find_if(first, last, [](char c) -> bool { return c == '/'; });
+      
+      if (sep_it != last) {
+        ++sep_it;  // skip next separator
+      }
+      
+      // reassign query to the next element
+      path_ = ::network::detail::uri_part(sep_it, last);
+    }
+    
+    void assign_element() noexcept {
+      auto first = std::begin(*path_), last = std::end(*path_);
+      
+      auto sep_it =
+      std::find_if(first, last, [](char c) -> bool { return c == '/'; });
+      
+      element_ =
+      string_view(std::addressof(*first), std::distance(first, sep_it));
+    }
+    
+    void increment() noexcept {
+      assert(path_);
+      
+      if (!path_->empty()) {
+        advance_to_next_element();
+        assign_element();
+      }
+      
+      if (path_->empty()) {
+        path_ = nullopt;
+      }
+    }
+    
+    optional<detail::uri_part> path_;
+    value_type element_;
+  };
+
+  /**
    * \brief An iterator class that iterates through name-value pairs
    *        in a URL query.
    */
@@ -126,8 +238,14 @@ class url {
      */
     using iterator_category = std::forward_iterator_tag;
 
+    /**
+     * \brief Constructor.
+     */
     query_iterator() = default;
 
+    /**
+     * \brief Constructor.
+     */
     explicit query_iterator(optional<detail::uri_part> query)
       : query_(query)
       , nvp_() {
@@ -139,8 +257,14 @@ class url {
       }
     }
 
+    /**
+     * \brief Copy constructor.
+     */
     query_iterator(const query_iterator &) = default;
 
+    /**
+     * \brief Assignment operator.
+     */
     query_iterator &operator=(const query_iterator &) = default;
 
     reference operator++() noexcept {
@@ -230,115 +354,6 @@ class url {
 
     optional<detail::uri_part> query_;
     value_type nvp_;
-  };
-
-  class path_iterator {
-  public:
-
-    using value_type = string_view;
-    using difference_type = std::ptrdiff_t;
-    using pointer = const value_type *;
-    using reference = const value_type &;
-    using iterator_category = std::forward_iterator_tag;
-
-    path_iterator() = default;
-
-    explicit path_iterator(optional<detail::uri_part> path)
-      : path_{path}, element_{} {
-        if (path_ && path_->empty()) {
-          path_ = nullopt;
-        }
-        else {
-          // skip past '/'
-          advance_to_next_element();
-          assign_element();
-        }
-      }
-
-    path_iterator(const path_iterator &) = default;
-
-    path_iterator &operator=(const path_iterator &) = default;
-
-    reference operator++() noexcept {
-      increment();
-      return element_;
-    }
-
-    value_type operator++(int) noexcept {
-      auto original = element_;
-      increment();
-      return original;
-    }
-
-    reference operator*() const noexcept {
-      return element_;
-    }
-
-    pointer operator->() const noexcept {
-      return std::addressof(element_);
-    }
-
-    bool operator==(const path_iterator &other) const noexcept {
-      if (!path_ && !other.path_) {
-        return true;
-      }
-      else if (path_ && other.path_) {
-        // since we're comparing substrings, the address of the first
-        // element in each iterator must be the same
-        return std::addressof(element_) == std::addressof(other.element_);
-      }
-      return false;
-    }
-
-    inline bool operator!=(const path_iterator &other) const noexcept {
-      return !(*this == other);
-    }
-
-  private:
-    void swap(path_iterator &other) noexcept {
-      std::swap(path_, other.path_);
-      std::swap(element_, other.element_);
-    }
-
-    void advance_to_next_element() noexcept {
-      auto first = std::begin(*path_), last = std::end(*path_);
-
-      auto sep_it =
-          std::find_if(first, last, [](char c) -> bool { return c == '/'; });
-
-      if (sep_it != last) {
-        ++sep_it;  // skip next separator
-      }
-
-      // reassign query to the next element
-      path_ = ::network::detail::uri_part(sep_it, last);
-    }
-
-    void assign_element() noexcept {
-      auto first = std::begin(*path_), last = std::end(*path_);
-
-      auto sep_it =
-          std::find_if(first, last, [](char c) -> bool { return c == '/'; });
-
-      element_ =
-          string_view(std::addressof(*first), std::distance(first, sep_it));
-    }
-
-    void increment() noexcept {
-      assert(path_);
-
-      if (!path_->empty()) {
-        advance_to_next_element();
-        assign_element();
-      }
-
-      if (path_->empty()) {
-        path_ = nullopt;
-      }
-    }
-
-    optional<detail::uri_part> path_;
-    value_type element_;
   };
 
   /**
@@ -512,8 +527,14 @@ class url {
    */
   string_view path() const noexcept;
 
+  /**
+   * \brief
+   */
   path_iterator path_begin() const noexcept;
 
+  /**
+   * \brief
+   */
   path_iterator path_end() const noexcept;
 
   /**
@@ -611,8 +632,14 @@ class url {
    */
   bool is_opaque() const noexcept;
 
+  /**
+   * \brief Checks if the url has a special scheme.
+   */
   bool is_special() const noexcept;
 
+  /**
+   * \brief Returns the default port for the given scheme.
+   */
   static optional<std::uint16_t> default_port(const url::string_type &scheme);
 
   /**
@@ -631,8 +658,14 @@ class url {
    */
   int compare(const url &other) const;
 
+  /**
+   * \brief
+   */
   url origin() const;
 
+  /**
+   * \brief
+   */
   url render() const;
 
   /**
