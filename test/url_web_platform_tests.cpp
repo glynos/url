@@ -1,4 +1,4 @@
-// Copyright 2017 Glyn Matthews.
+// Copyright 2017-18 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -86,29 +86,33 @@ INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls,
 
 TEST_P(test_parse_urls, url_web_platform_tests) {
   auto test_case_data = test_case{GetParam()};
-  std::cout << test_case_data.input << std::endl;
 
   auto url = test::uri{test_case_data.input};
 
   if (test_case_data.failure) {
-    EXPECT_THROW(network::url{test_case_data.input}, network:: uri_syntax_error);
+//    std::cout << " >" << test_case_data.input << "<" << std::endl;
+    EXPECT_THROW(network::url{test_case_data.input}, network::uri_syntax_error);
   }
   else if (test_case_data.is_absolute()) {
     auto parsed = url.parse_uri();
-    if (!parsed) {
-      std::cout << " >" << url.uri_ << "<" << std::endl;
-      std::cout << " |" << url.parsed_till() << "|" << std::endl;
-      std::cout << url << std::endl;
-    }
+//    if (!parsed) {
+//      std::cout << " >" << url.uri_ << "<" << std::endl;
+//      std::cout << " |" << url.parsed_till() << "|" << std::endl;
+//      std::cout << url << std::endl;
+//    }
+//    else {
+//      std::cout << " >" << url.uri_ << "<" << std::endl;
+//      std::cout << url << std::endl;
+//    }
     EXPECT_TRUE(parsed);
   }
-  // else {
-  //   auto parsed = url.parse_uri();
-  //   if (!parsed) {
-  //     std::cout << " >" << url.uri_ << "<" << std::endl;
-  //     std::cout << " |" << url.parsed_till() << "|" << std::endl;
-  //     std::cout << url << std::endl;
-  //   }
-  //   EXPECT_TRUE(parsed);
-  // }
+//  else {
+//   auto parsed = url.parse_uri();
+//   if (!parsed) {
+//     std::cout << " >" << url.uri_ << "<" << std::endl;
+//     std::cout << " |" << url.parsed_till() << "|" << std::endl;
+//     std::cout << url << std::endl;
+//   }
+//   EXPECT_TRUE(parsed);
+//  }
 }

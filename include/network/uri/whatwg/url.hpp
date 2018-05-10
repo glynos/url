@@ -1,5 +1,5 @@
 // Copyright 2009-2010 Jeroen Habraken.
-// Copyright 2009-2017 Dean Michael Berris, Glyn Matthews.
+// Copyright 2009-2018 Dean Michael Berris, Glyn Matthews.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -28,6 +28,7 @@
 #include <network/uri/detail/encode.hpp>
 #include <network/uri/detail/decode.hpp>
 #include <network/uri/detail/translate.hpp>
+#include <network/uri/whatwg/url_search_parameters.hpp>
 
 #ifdef NETWORK_URI_MSVC
 #pragma warning(push)
@@ -42,10 +43,32 @@ namespace whatwg {
  * \brief A class that parses a URL (Uniform Resource Locator)
  *        into its component parts.
  *
- * A URI has the syntax:
+ * According to IETF RFC 3986, a URI has the following generic syntax:
  *
  * \code
- * [scheme:][user_name@password][host][:port][path][?query][#fragment]
+ * [scheme:][username@password][host][:port][path][?query][#fragment]
+ * \endcode
+ *
+ * \code
+ * [Constructor(USVString url, optional USVString base),
+ * Exposed=(Window,Worker),
+ * LegacyWindowAlias=webkitURL]
+ * interface URL {
+ *   stringifier attribute USVString href;
+ *   readonly attribute USVString origin;
+ *   attribute USVString protocol;
+ *   attribute USVString username;
+ *   attribute USVString password;
+ *   attribute USVString host;
+ *   attribute USVString hostname;
+ *   attribute USVString port;
+ *   attribute USVString pathname;
+ *   attribute USVString search;
+ *   [SameObject] readonly attribute URLSearchParams searchParams;
+ *   attribute USVString hash;
+ *
+ *   USVString toJSON();
+ * };
  * \endcode
  *
  * Example:
@@ -115,8 +138,8 @@ class url {
       }
       else {
         // skip past '/'
-        advance_to_next_element();
-        assign_element();
+        advance();
+        assign();
       }
     }
     
@@ -165,7 +188,7 @@ class url {
       std::swap(element_, other.element_);
     }
     
-    void advance_to_next_element() noexcept {
+    void advance() noexcept {
       auto first = std::begin(*path_), last = std::end(*path_);
       
       auto sep_it =
@@ -175,11 +198,11 @@ class url {
         ++sep_it;  // skip next separator
       }
       
-      // reassign query to the next element
+      // reassign path to the next element
       path_ = ::network::detail::uri_part(sep_it, last);
     }
     
-    void assign_element() noexcept {
+    void assign() noexcept {
       auto first = std::begin(*path_), last = std::end(*path_);
       
       auto sep_it =
@@ -193,8 +216,8 @@ class url {
       assert(path_);
       
       if (!path_->empty()) {
-        advance_to_next_element();
-        assign_element();
+        advance();
+        assign();
       }
       
       if (path_->empty()) {
@@ -249,11 +272,16 @@ class url {
     explicit query_iterator(optional<detail::uri_part> query)
       : query_(query)
       , nvp_() {
+      auto first = std::begin(*query_), last = std::end(*query_);
+      // skip ?
+      ++first;
+      query_ = ::network::detail::uri_part(first, last);
+        
       if (query_ && query_->empty()) {
         query_ = nullopt;
       }
       else {
-        assign_nvp();
+        assign();
       }
     }
 
@@ -308,7 +336,7 @@ class url {
       std::swap(nvp_, other.nvp_);
     }
 
-    void advance_to_next_nvp() noexcept {
+    void advance() noexcept {
       auto first = std::begin(*query_), last = std::end(*query_);
 
       auto sep_it = std::find_if(
@@ -322,7 +350,7 @@ class url {
       query_ = ::network::detail::uri_part(sep_it, last);
     }
 
-    void assign_nvp() noexcept {
+    void assign() noexcept {
       auto first = std::begin(*query_), last = std::end(*query_);
 
       auto sep_it = std::find_if(
@@ -343,8 +371,8 @@ class url {
       assert(query_);
 
       if (!query_->empty()) {
-        advance_to_next_nvp();
-        assign_nvp();
+        advance();
+        assign();
       }
 
       if (query_->empty()) {
@@ -394,6 +422,18 @@ class url {
   explicit url(const Source &source) {
     if (!initialize(detail::translate(source))) {
       throw uri_syntax_error();
+    }
+  }
+  
+  template <class Source>
+  explicit url(const Source &source, const Source &base) {
+    if (!initialize(detail::translate(base))) {
+      throw uri_syntax_error();
+    }
+
+    url parsed_source(source);
+    if (parsed_source.has_query()) {
+      url_parts_.query = parsed_source.url_parts_.query;
     }
   }
 
@@ -461,6 +501,14 @@ class url {
    */
   string_view scheme() const noexcept;
 
+  bool has_protocol() const noexcept {
+    return has_scheme();
+  }
+  
+  string_view protocol() const noexcept {
+    return scheme();
+  }
+  
   /**
    * \brief Tests whether this URL has a user info component.
    * \return \c true if the URL has a user info, \c false otherwise.
@@ -565,6 +613,28 @@ class url {
    * \return query_iterator.
    */
   query_iterator query_end() const noexcept;
+  
+  bool has_search() const noexcept {
+    return has_query();
+  }
+  
+  string_view search() const noexcept {
+    return query();
+  }
+  
+  using search_iterator = query_iterator;
+  
+  search_iterator search_begin() const noexcept {
+    return query_begin();
+  }
+  
+  search_iterator search_end() const noexcept {
+    return query_end();
+  }
+  
+//  url_search_parameters search_parameters() const;
+  
+//  void set_search_parameters(const url_search_parameters &params);
 
   /**
    * \brief Tests whether this URL has a fragment component.
@@ -578,6 +648,14 @@ class url {
    * \pre has_fragment()
    */
   string_view fragment() const noexcept;
+  
+  bool has_hash() const noexcept {
+    return has_fragment();
+  }
+  
+  string_view hash() const noexcept {
+    return fragment();
+  }
 
   /**
    * \brief Returns the URL as a std::basic_string object.
@@ -657,16 +735,10 @@ class url {
    *         other.
    */
   int compare(const url &other) const;
-
-  /**
-   * \brief
-   */
-  url origin() const;
-
-  /**
-   * \brief
-   */
-  url render() const;
+  
+  // TODO: implement origin
+  
+  // TODO:: implement rendering
 
   /**
    * \brief Encodes a sequence according to the rules for encoding a

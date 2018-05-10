@@ -1,4 +1,4 @@
-// Copyright 2016-2017 Glyn Matthews.
+// Copyright 2016-2018 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -59,14 +59,6 @@ inline bool is_in(string_view::const_iterator &it,
   return false;
 }
 
-inline bool is_valid_uscschar(string_view::const_iterator &it,
-                              string_view::size_type bytes) {
-  for (decltype(bytes) i = 0; i < bytes; ++i) {
-    ++it;
-  }
-  return true;
-}
-
 inline bool is_ucschar(string_view::const_iterator &it,
                        string_view::const_iterator last) {
   auto cp = static_cast<std::uint8_t>(*it);
@@ -74,15 +66,18 @@ inline bool is_ucschar(string_view::const_iterator &it,
   // ignore ascii characters here because we already check those
 
   if ((cp >= 0xc2) && (cp <= 0xdf)) {
-    return is_valid_uscschar(it, 2);
+    std::advance(it, 2);
+    return true;
   }
 
   if ((cp >= 0xe0) && (cp <= 0xef)) {
-    return is_valid_uscschar(it, 3);
+    std::advance(it, 3);
+    return true;
   }
 
   if ((cp >= 0xf0) && (cp <= 0xf4)) {
-    return is_valid_uscschar(it, 4);
+    std::advance(it, 4);
+    return true;
   }
 
   return false;
@@ -154,9 +149,9 @@ inline bool is_pchar(string_view::const_iterator &it,
                      string_view::const_iterator last) {
   return
     is_unreserved(it, last) ||
-    is_pct_encoded(it, last) ||
+    // is_pct_encoded(it, last) ||
     is_sub_delim(it, last) ||
-    is_in(it, last, ":@") ||
+    is_in(it, last, ":@%") ||
     is_ucschar(it, last)
     ;
 }

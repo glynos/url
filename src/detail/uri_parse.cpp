@@ -1,4 +1,4 @@
-// Copyright 2016-2017 Glyn Matthews.
+// Copyright 2016-2018 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -39,6 +39,7 @@ bool validate_scheme(string_view::const_iterator &it,
 
   while (it != last) {
     if (*it == ':') {
+      ++it;
       break;
     }
     else if (!isalnum(*it) && !is_in(*it, "+-.")) {
@@ -50,11 +51,15 @@ bool validate_scheme(string_view::const_iterator &it,
 
   return true;
 }
+  
+bool is_special_scheme(string_view scheme) {
+  return is_special(scheme.substr(0, scheme.length() - 1));
+}
 
 bool validate_user_info(string_view::const_iterator first,
                         string_view::const_iterator last) {
   if (first == last) {
-    return false;
+    return true;
   }
 
   auto sep_it = std::find(first, last, ':');
@@ -174,7 +179,7 @@ bool set_port(string_view scheme,
               string_view::const_iterator port_last,
               uri_parts &parts) {
   if (port_first != port_last) {
-    if (scheme.compare("file") == 0) {
+    if (scheme.compare("file:") == 0) {
       return false;
     }
 
@@ -192,7 +197,7 @@ bool set_host_and_port(string_view scheme,
                        string_view::const_iterator last,
                        string_view::const_iterator last_colon,
                        uri_parts &parts) {
-  if ((scheme.compare("file") != 0) && (first == last)) {
+  if ((scheme.compare("file:") != 0) && (first == last)) {
     return false;
   }
 
@@ -218,8 +223,7 @@ bool set_host_and_port(string_view scheme,
   return true;
 }
 
-bool set_path(string_view scheme,
-              string_view::const_iterator first,
+bool set_path(string_view::const_iterator first,
               string_view::const_iterator last,
               uri_parts &parts) {
   if (first != last) {
@@ -235,8 +239,13 @@ bool set_path(string_view scheme,
 
 bool validate_fragment(string_view::const_iterator &it,
                        string_view::const_iterator last) {
+  if (*it != '#') {
+    return false;
+  }
+  ++it;
+
   while (it != last) {
-    if (!is_pchar(it, last) && !is_in(it, last, "?/")) {
+    if (!is_pchar(it, last) && !is_in(it, last, "?/\\ \t")) {
       return false;
     }
   }
@@ -256,13 +265,6 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
 
   if (validate_scheme(it, last)) {
     parts.scheme = uri_part(first, it);
-
-    if (detail::is_special(static_cast<string_view>(*parts.scheme))) {
-      //
-    }
-
-    // move past the scheme delimiter
-    ++it;
     state = uri_state::first_slash;
   }
   else {
@@ -274,33 +276,40 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
   auto last_colon = first;
   while (it != last) {
     if (state == uri_state::first_slash) {
-      if (*it == '/') {
+      if ((*it == '/') || (*it == '\\')) {
         state = uri_state::second_slash;
         // set the first iterator in case the second slash is not forthcoming
         first = it;
         ++it;
         continue;
       }
+      else if (detail::is_special_scheme(static_cast<string_view>(*parts.scheme))) {
+        // allow special schemes to handle the case where no slash is given
+        state = uri_state::authority;
+        first = it;
+        continue;
+      }
       else {
-        if (detail::is_special(static_cast<string_view>(*parts.scheme))) {
-          return false;
-        }
-
         state = uri_state::path;
         first = it;
       }
     }
     else if (state == uri_state::second_slash) {
-      if (*it == '/') {
+      if ((*it == '/') || (*it == '\\')) {
         state = uri_state::authority;
         ++it;
         first = it;
         continue;
       }
+      else if (detail::is_special_scheme(static_cast<string_view>(*parts.scheme))) {
+        // allow special schemes to handle the case where only one slash is given
+        state = uri_state::authority;
+        first = it;
+        continue;
+      }
       else {
         // it's a valid URI, and this is the beginning of the path
-        // state = uri_state::path;
-        return false;
+        state = uri_state::path;
       }
     }
     else if (state == uri_state::authority) {
@@ -322,7 +331,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       else if (*it == ':') {
         last_colon = it;
       }
-      else if (*it == '/') {
+      else if ((*it == '/') || (*it == '\\')) {
         // we skipped right past the host and port, and are at the path.
         if (!set_host_and_port(static_cast<string_view>(*parts.scheme), first, it, last_colon, parts)) {
           return false;
@@ -337,7 +346,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
           return false;
         }
 
-        if (!set_path(static_cast<string_view>(*parts.scheme), it, it, parts)) {
+        if (!set_path(it, it, parts)) {
           return false;
         }
 
@@ -352,7 +361,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
           return false;
         }
 
-        if (!set_path(static_cast<string_view>(*parts.scheme), it, it, parts)) {
+        if (!set_path(it, it, parts)) {
           return false;
         }
 
@@ -370,7 +379,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       if (*it == ':') {
         last_colon = it;
       }
-      else if (*it == '/') {
+      else if ((*it == '/') || (*it == '\\')) {
         if (!set_host_and_port(static_cast<string_view>(*parts.scheme), first, it, last_colon, parts)) {
           return false;
         }
@@ -385,7 +394,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
           return false;
         }
 
-        if (!set_path(static_cast<string_view>(*parts.scheme), it, it, parts)) {
+        if (!set_path(it, it, parts)) {
           return false;
         }
 
@@ -400,7 +409,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
           return false;
         }
 
-        if (!set_path(static_cast<string_view>(*parts.scheme), it, it, parts)) {
+        if (!set_path(it, it, parts)) {
           return false;
         }
 
@@ -412,29 +421,26 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
     }
     else if (state == uri_state::path) {
       if (*it == '?') {
-        if (!set_path(static_cast<string_view>(*parts.scheme), first, it, parts)) {
+        if (!set_path(first, it, parts)) {
           return false;
         }
 
-        // move past the query delimiter
-        ++it;
         first = it;
         state = uri_state::query;
         break;
       }
       else if (*it == '#') {
-        if (!set_path(static_cast<string_view>(*parts.scheme), first, it, parts)) {
+        if (!set_path(first, it, parts)) {
           return false;
         }
 
-        // move past the fragment delimiter
-        ++it;
+
         first = it;
         state = uri_state::fragment;
         break;
       }
 
-      if (!is_pchar(it, last) && !is_in(it, last, "/")) {
+      if (!is_pchar(it, last) && !is_in(it, last, "/\\ \t")) {
         return false;
       }
       else {
@@ -447,12 +453,10 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
 
   if (state == uri_state::query) {
     while (it != last) {
-      if (!is_pchar(it, last) && !is_in(it, last, "?/")) {
+      if (!is_pchar(it, last) && !is_in(it, last, "?/\\")) {
         // If this is a fragment, keep going
         if (*it == '#') {
           parts.query = uri_part(first, it);
-          // move past the fragment delimiter
-          ++it;
           first = it;
           state = uri_state::fragment;
           break;
@@ -485,8 +489,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       return false;
     }
 
-    if (!set_path(static_cast<string_view>(*parts.scheme), last, last,
-                  parts)) {
+    if (!set_path(last, last, parts)) {
       return false;
     }
   }
@@ -500,14 +503,12 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       return false;
     }
 
-    if (!set_path(static_cast<string_view>(*parts.scheme), last, last,
-                  parts)) {
+    if (!set_path(last, last, parts)) {
       return false;
     }
   }
   else if (state == uri_state::path) {
-    if (!set_path(static_cast<string_view>(*parts.scheme), first, last,
-                  parts)) {
+    if (!set_path(first, last, parts)) {
       return false;
     }
   }

@@ -1,4 +1,4 @@
-// Copyright 2012-2017 Glyn Matthews.
+// Copyright 2012-2018 Glyn Matthews.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -13,7 +13,6 @@
 #include "detail/uri_parse.hpp"
 #include "detail/uri_advance_parts.hpp"
 #include "detail/uri_percent_encode.hpp"
-#include "detail/uri_resolve.hpp"
 #include "detail/algorithm.hpp"
 #include "detail/url_schemes.hpp"
 
@@ -163,7 +162,7 @@ bool url::is_opaque() const noexcept {
 
 bool url::is_special() const noexcept {
   if (has_scheme()) {
-    return detail::is_special(scheme());
+    return detail::is_special(scheme().substr(0, scheme().length() - 1));
   }
   return false;
 }
@@ -185,7 +184,6 @@ url::string_type serialize_port(url::string_view port) {
 url url::serialize() const {
   // https://url.spec.whatwg.org/#url-serializing
   auto result = string_type(scheme());
-  result += ":";
 
   if (has_host()) {
     result += "//";
@@ -201,7 +199,7 @@ url url::serialize() const {
       result += serialize_port(port());
     }
   }
-  else if (scheme().compare("file") == 0) {
+  else if (scheme().compare("file:") == 0) {
     result += "//";
   }
 

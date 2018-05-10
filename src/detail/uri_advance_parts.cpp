@@ -1,4 +1,4 @@
-// Copyright 2016-2017 Glyn Matthews.
+// Copyright 2016-2018 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -32,11 +32,6 @@ void advance_parts(string_view uri_view, uri_parts &parts,
   if (auto scheme = existing_parts.scheme) {
     parts.scheme = copy_part(std::begin(*scheme), std::end(*scheme), it);
 
-    // ignore : for all URIs
-    if (*it == ':') {
-      ++it;
-    }
-
     // ignore // for hierarchical URIs
     if (existing_parts.host) {
       std::advance(it, 2);
@@ -63,12 +58,10 @@ void advance_parts(string_view uri_view, uri_parts &parts,
   }
 
   if (auto query = existing_parts.query) {
-    ++it;  // ignore ?
     parts.query = copy_part(std::begin(*query), std::end(*query), it);
   }
 
   if (auto fragment = existing_parts.fragment) {
-    ++it;  // ignore #
     parts.fragment = copy_part(std::begin(*fragment), std::end(*fragment), it);
   }
 }

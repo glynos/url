@@ -1,4 +1,4 @@
-// Copyright 2017 Glyn Matthews.
+// Copyright 2017-18 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <network/optional.hpp>
+#include <network/string_view.hpp>
 
 namespace network {
 namespace whatwg {
@@ -21,6 +22,8 @@ class url_search_parameters {
    * \brief
    */
   using string_type = std::string;
+  
+  using string_view = network::string_view;
   
   /**
    * \brief
@@ -40,8 +43,13 @@ class url_search_parameters {
   /**
    * \brief Constructor.
    */
+  explicit url_search_parameters(string_view query);
+  
+  /**
+   * \brief Constructor.
+   */
   explicit url_search_parameters(const string_type &query);
-
+  
   /**
    * \brief Constructor.
    */
@@ -61,6 +69,11 @@ class url_search_parameters {
    * \brief
    */
   optional<string_type> get(const string_type &name) const noexcept;
+  
+  /**
+   * \brief
+   */
+  std::vector<string_type> get_all(const string_type &name) const;
 
   /**
    * \brief
@@ -71,6 +84,11 @@ class url_search_parameters {
    * \brief
    */
   void set(const string_type &name, const string_type &value);
+
+  /**
+   * \brief
+   */
+  void sort();
 
   /**
    * \brief
@@ -86,11 +104,6 @@ class url_search_parameters {
    * \brief
    */
   string_type to_string() const;
-
-  /**
-   * \brief
-   */
-  void sort();
 
  private:
   void update();

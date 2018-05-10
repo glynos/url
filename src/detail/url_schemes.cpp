@@ -8,7 +8,7 @@
 namespace network {
 namespace detail {
 const std::vector<std::pair<std::string, optional<std::uint16_t>>> &special_schemes() {
-  static const std::vector<std::pair<std::string, optional<std::uint16_t>>> schemes = {
+  static const auto schemes = std::vector<std::pair<std::string, optional<std::uint16_t>>>{
     {"ftp", 21},
     {"file", nullopt},
     {"gopher", 70},
@@ -27,7 +27,7 @@ optional<std::uint16_t> default_port(string_view scheme) {
       first, last,
       [&scheme](const std::pair<std::string, optional<std::uint16_t>>
                     &special_scheme) -> bool {
-         return scheme.compare(special_scheme.first) == 0;
+        return scheme.compare(special_scheme.first) == 0;
       });
   if (it != last) {
     return it->second;
