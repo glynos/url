@@ -426,12 +426,11 @@ class url {
   }
   
   template <class Source>
-  explicit url(const Source &source, const Source &base) {
-    if (!initialize(detail::translate(base))) {
-      throw uri_syntax_error();
-    }
+  url(const Source &source, const url &base) {
+    auto tmp(base);
+    tmp.swap(*this);
 
-    url parsed_source(source);
+    auto parsed_source = url(source);
     if (parsed_source.has_query()) {
       url_parts_.query = parsed_source.url_parts_.query;
     }
@@ -439,7 +438,7 @@ class url {
 
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
   template <class Source>
-  explicit url(const Source &source, std::error_code &ec) {
+  url(const Source &source, std::error_code &ec) {
     if (!initialize(detail::translate(source))) {
       ec = make_error_code(uri_error::invalid_syntax);
     }

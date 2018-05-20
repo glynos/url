@@ -1,4 +1,4 @@
-// Copyright (c) Glyn Matthews 2012-2016.
+// Copyright (c) Glyn Matthews 2012-2018.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -7,6 +7,8 @@
 #define NETWORK_URI_DETAIL_TRANSLATE_INC
 
 #include <string>
+#include <locale>
+#include <codecvt>
 
 namespace network {
 namespace detail {
@@ -41,7 +43,8 @@ struct translate_impl<const char[N]> {
 template <>
 struct translate_impl<std::wstring> {
   std::string operator()(const std::wstring &source) const {
-    return std::string(std::begin(source), std::end(source));
+    std::wstring_convert<std::codecvt_utf8<wchar_t >> convert;
+    return convert.to_bytes(source);
   }
 };
 

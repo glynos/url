@@ -244,6 +244,11 @@ int url::compare(const url &other) const {
 
 bool url::initialize(const string_type &url) {
   url_ = ::network::detail::trim_copy(url);
+
+  auto it = std::remove_if(std::begin(url_), std::end(url_),
+                           [] (char v) -> bool { return (v == '\t') || (v == '\n') || (v == '\r'); });
+  url_.erase(std::begin(url_), it);
+
   if (!url_.empty()) {
     url_view_ = string_view(url_);
     const_iterator it = std::begin(url_view_), last = std::end(url_view_);

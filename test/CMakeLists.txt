@@ -43,4 +43,4 @@ foreach (test ${TESTS})
 endforeach (test)
 
 file(GLOB URI_LISTS *.txt *.json)
-file(COPY ${URI_LISTS} DESTINATION ${Uri_BINARY_DIR}/test)
+file(COPY ${URI_LISTS} DESTINATION ${Uri_BINARY_DIR}/tests)
