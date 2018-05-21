@@ -109,14 +109,14 @@ TEST_P(test_parse_urls, url_web_platform_tests) {
       EXPECT_TRUE(parsed);
     }
   }
-  else {
-    auto base = network::url(test_case_data.base);
-    if (test_case_data.failure) {
-      //    std::cout << " >" << test_case_data.input << "<" << std::endl;
-      EXPECT_THROW(network::url(test_case_data.input, base), network::uri_syntax_error);
-    }
-    else {
-      EXPECT_NO_THROW(network::url(test_case_data.input, base));
-    }
-  }
+//  else {
+//    auto base = network::url(test_case_data.base);
+//    if (test_case_data.failure) {
+//      //    std::cout << " >" << test_case_data.input << "<" << std::endl;
+//      EXPECT_THROW(network::url(test_case_data.input, base), network::uri_syntax_error);
+//    }
+//    else {
+//      EXPECT_NO_THROW(network::url(test_case_data.input, base));
+//    }
+//  }
 }
