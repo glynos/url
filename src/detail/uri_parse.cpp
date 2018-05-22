@@ -3,11 +3,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "uri_parse.hpp"
 #include <iterator>
 #include <limits>
 #include <arpa/inet.h>
-#include <network/uri/detail/uri_parts.hpp>
+#include "network/uri/detail/uri_parts.hpp"
+#include "network/uri/detail/uri_parse.hpp"
 #include "grammar.hpp"
 #include "detail/url_schemes.hpp"
 
@@ -178,55 +178,6 @@ bool set_host(string_view scheme,
   return true;
 }
 
-//bool set_port(string_view scheme,
-//              string_view::const_iterator port_first,
-//              string_view::const_iterator port_last,
-//              uri_parts &parts) {
-//  if (port_first != port_last) {
-//    if (scheme.compare("file:") == 0) {
-//      return false;
-//    }
-//
-//    if (!is_valid_port(port_first, port_last)) {
-//      return false;
-//    }
-//  }
-//
-//  parts.port = uri_part(port_first, port_last);
-//  return true;
-//}
-
-//bool set_host_and_port(string_view scheme,
-//                       string_view::const_iterator first,
-//                       string_view::const_iterator last,
-//                       string_view::const_iterator last_colon,
-//                       uri_parts &parts) {
-//  if ((scheme.compare("file:") != 0) && (first == last)) {
-//    return false;
-//  }
-//
-//  if (first >= last_colon) {
-//    return set_ipv4_host(first, last, parts);
-//  }
-//  else {
-//    if (*first == '[') {
-//      return set_ipv6_host(first, last, parts);
-//    }
-//    else {
-//      if (!set_ipv4_host(first, last_colon, parts)) {
-//        return false;
-//      }
-//
-//      auto port_first = last_colon;
-//      ++port_first;
-//      if (!set_port(scheme, port_first, last, parts)) {
-//        return false;
-//      }
-//    }
-//  }
-//  return true;
-//}
-
 bool set_path(string_view::const_iterator first,
               string_view::const_iterator last,
               uri_parts &parts) {
@@ -257,13 +208,15 @@ bool validate_fragment(string_view::const_iterator &it,
 }
 } // namespace
 
-bool parse(string_view::const_iterator &it, string_view::const_iterator last,
-           uri_parts &parts, url_state state_override) {
-  if (it == last) {
-    return false;
+url_result parse(string_view input, uri_parts &parts, url_state state_override) {
+  auto result = url_result{};
+
+  if (input.empty()) {
+    return result;
   }
 
-  auto first = it;
+  auto first = std::begin(input), last = std::end(input);
+  auto it = first;
 
   auto state = url_state::scheme_start;
 
@@ -281,7 +234,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
     state = url_state::no_scheme;
   }
   else {
-    return false;
+    return result;
   }
 
   if (state == url_state::scheme) {
@@ -296,12 +249,12 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
         for (auto i = 0; i < 2; ++i) {
           if ((*slash_it == '/') || (*slash_it == '\\')) {
             if (*slash_it == '\\') {
-              // validation error
+              result.validation_error = true;
               break;
             }
             ++slash_it;
           } else {
-            // validation error
+            result.validation_error = true;
             break;
           }
         }
@@ -329,7 +282,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       state = url_state::no_scheme;
     }
     else {
-      return false;
+      return result;
     }
   }
 
@@ -349,13 +302,13 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
           state = url_state::special_authority_ignore_slashes;
         }
         else {
-          // validation error
+          result.validation_error = true;
           --it;
           state = url_state::relative;
         }
       }
       else {
-        // validation error
+        result.validation_error = true;
         --it;
         state = url_state::relative;
       }
@@ -369,13 +322,13 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
           state = url_state::special_authority_ignore_slashes;
         }
         else {
-          // validation error
+          result.validation_error = true;
           --it;
           state = url_state::special_authority_ignore_slashes;
         }
       }
       else {
-        // validation error
+        result.validation_error = true;
         --it;
         state = url_state::special_authority_ignore_slashes;
       }
@@ -387,13 +340,13 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
         state = url_state::authority;
       }
       else {
-        // validation error
+        result.validation_error = true;
       }
     }
     else if (state == url_state::authority) {
       if (*it == '@') {
         if (!validate_user_info(first, it)) {
-          return false;
+          return result;
         }
         parts.user_info = uri_part(first, it);
         state = url_state::host;
@@ -409,7 +362,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
     }
     else if (state == url_state::host) {
       if (*first == ':') {
-        return false;
+        return result;
       }
 
       if (*it == ':') {
@@ -419,7 +372,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       }
       else if ((*it == '/') || (*it == '\\') || (*it == '?') || (*it == '#')) {
         if (!set_host(static_cast<string_view>(*parts.scheme), first, it, parts)) {
-          return false;
+          return result;
         }
 
         state = url_state::path;
@@ -438,21 +391,21 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
             parts.port = uri_part(first, it);
           }
           else {
-            return false;
+            return result;
           }
           state = url_state::path;
           first = it;
           continue;
         }
         else {
-          return false;
+          return result;
         }
       }
     }
     else if (state == url_state::file) {
       if ((*it == '/') || (*it == '\\')) {
         if (*it == '\\') {
-          return false;
+          return result;
         }
         state = url_state::file_slash;
       }
@@ -464,7 +417,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
     else if (state == url_state::file_slash) {
       if ((*it == '/') || (*it == '\\')) {
         if (*it == '\\') {
-          return false;
+          return result;
         }
         state = url_state::file_host;
       }
@@ -481,7 +434,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       }
 
       if (!set_host(static_cast<string_view>(*parts.scheme), host_first, it, parts)) {
-        return false;
+        return result;
       }
       --it;
       state = url_state::path_start;
@@ -489,7 +442,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
     else if (state == url_state::path_start) {
       if (is_special_scheme(static_cast<string_view>(*parts.scheme))) {
         if (*it == '\\') {
-          return false;
+          return result;
         }
         else {
           state = url_state::path;
@@ -507,7 +460,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
     else if (state == url_state::path) {
       if (*it == '?') {
         if (!set_path(first, it, parts)) {
-          return false;
+          return result;
         }
 
         first = it;
@@ -516,7 +469,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       }
       else if (*it == '#') {
         if (!set_path(first, it, parts)) {
-          return false;
+          return result;
         }
 
 
@@ -526,7 +479,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
       }
 
       if (!is_pchar(it, last) && !is_in(it, last, "/\\ \t")) {
-        return false;
+        return result;
       }
       else {
         continue;
@@ -547,7 +500,7 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
           break;
         }
         else {
-          return false;
+          return result;
         }
       }
     }
@@ -555,46 +508,42 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
 
   if (state == url_state::fragment) {
     if (!validate_fragment(it, last)) {
-      return false;
+      return result;
     }
   }
 
   // we're done!
-//  if ((state == url_state::first_slash) ||
-//      (state == url_state::second_slash)) {
-//    return false;
-//  }
   if (state == url_state::authority) {
     if (first == last) {
-      return false;
+      return result;
     }
 
     if (!set_host(static_cast<string_view>(*parts.scheme), first,
                            last, parts)) {
-      return false;
+      return result;
     }
 
     if (!set_path(last, last, parts)) {
-      return false;
+      return result;
     }
   }
   else if (state == url_state::host) {
     if (first == last) {
-      return false;
+      return result;
     }
 
     if (!set_host(static_cast<string_view>(*parts.scheme), first,
                            last, parts)) {
-      return false;
+      return result;
     }
 
     if (!set_path(last, last, parts)) {
-      return false;
+      return result;
     }
   }
   else if (state == url_state::path) {
     if (!set_path(first, last, parts)) {
-      return false;
+      return result;
     }
   }
   else if (state == url_state::query) {
@@ -604,7 +553,8 @@ bool parse(string_view::const_iterator &it, string_view::const_iterator last,
     parts.fragment = uri_part(first, last);
   }
 
-  return true;
+  result.success = true;
+  return result;
 }
 }  // namespace detail
 }  // namespace network

@@ -38,7 +38,7 @@
 namespace network {
 namespace whatwg {
 /**
- * \ingroup uri
+ * \ingroup url
  * \class url network/uri/url.hpp network/url.hpp
  * \brief A class that parses a URL (Uniform Resource Locator)
  *        into its component parts.
@@ -183,11 +183,7 @@ class url {
     }
     
   private:
-    void swap(path_iterator &other) noexcept {
-      std::swap(path_, other.path_);
-      std::swap(element_, other.element_);
-    }
-    
+
     void advance() noexcept {
       auto first = std::begin(*path_), last = std::end(*path_);
       
@@ -331,10 +327,6 @@ class url {
     }
 
   private:
-    void swap(query_iterator &other) noexcept {
-      std::swap(query_, other.query_);
-      std::swap(nvp_, other.nvp_);
-    }
 
     void advance() noexcept {
       auto first = std::begin(*query_), last = std::end(*query_);
@@ -520,6 +512,10 @@ class url {
    * \pre has_user_info()
    */
   string_view user_info() const noexcept;
+
+  string_view user_name() const noexcept;
+
+  string_view password() const noexcept;
 
   /**
    * \brief Tests whether this URL has a host component.

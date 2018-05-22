@@ -8,7 +8,7 @@
 
 #include <iterator>
 #include <network/uri/detail/uri_parts.hpp>
-#include "../src/detail/uri_parse.hpp"
+#include "network/uri/detail/uri_parse.hpp"
 
 using network::detail::parse;
 using network::detail::uri_part;
@@ -24,7 +24,7 @@ struct uri {
   }
 
   bool parse_uri() {
-    return parse(it, last, parts);
+    return parse(view, parts).success;
   }
 
   std::string parsed_till() const {

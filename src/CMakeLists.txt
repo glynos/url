@@ -8,7 +8,6 @@ set(Uri_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/algorithm.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/grammar.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_parse.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_parse.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_advance_parts.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_advance_parts.hpp
   ${CMAKE_CURRENT_SOURCE_DIR}/detail/url_schemes.cpp
@@ -26,6 +25,7 @@ set(Uri_SRCS
   ${CMAKE_SOURCE_DIR}/include/network/uri/detail/encode.hpp
   ${CMAKE_SOURCE_DIR}/include/network/uri/detail/translate.hpp
   ${CMAKE_SOURCE_DIR}/include/network/uri/detail/uri_parts.hpp
+  ${CMAKE_SOURCE_DIR}/include/network/uri/detail/uri_parse.hpp
   ${CMAKE_SOURCE_DIR}/include/network/uri/whatwg/url.hpp
   ${CMAKE_SOURCE_DIR}/include/network/uri/whatwg/url_io.hpp
   ${CMAKE_SOURCE_DIR}/include/network/uri/whatwg/url_search_parameters.hpp

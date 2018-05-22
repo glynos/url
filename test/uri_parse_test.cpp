@@ -176,7 +176,7 @@ TEST(uri_parse_test, test_hierarchical_part_valid_host_path_and_query) {
   ASSERT_TRUE(uri.has_path());
   EXPECT_EQ("/path", uri.path());
   ASSERT_TRUE(uri.has_query());
-  EXPECT_EQ("query", uri.query());
+  EXPECT_EQ("?query", uri.query());
   ASSERT_FALSE(uri.has_fragment());
 }
 
@@ -190,9 +190,9 @@ TEST(uri_parse_test, test_hierarchical_part_valid_host_path_query_and_fragment) 
   ASSERT_TRUE(uri.has_path());
   EXPECT_EQ("/path", uri.path());
   ASSERT_TRUE(uri.has_query());
-  EXPECT_EQ("query", uri.query());
+  EXPECT_EQ("?query", uri.query());
   ASSERT_TRUE(uri.has_fragment());
-  EXPECT_EQ("fragment", uri.fragment());
+  EXPECT_EQ("#fragment", uri.fragment());
 }
 
 TEST(uri_parse_test, test_hierarchical_part_valid_host_path_and_fragment) {
@@ -206,7 +206,7 @@ TEST(uri_parse_test, test_hierarchical_part_valid_host_path_and_fragment) {
   EXPECT_EQ("/path", uri.path());
   ASSERT_FALSE(uri.has_query());
   ASSERT_TRUE(uri.has_fragment());
-  EXPECT_EQ("fragment", uri.fragment());
+  EXPECT_EQ("#fragment", uri.fragment());
 }
 
 TEST(uri_parse_test, test_invalid_fragment) {
@@ -218,7 +218,7 @@ TEST(uri_parse_test, test_valid_fragment_with_pct_encoded_char) {
   test::uri uri("http://www.example.com/path#%ffragment");
   EXPECT_TRUE(uri.parse_uri());
   ASSERT_TRUE(uri.has_fragment());
-  EXPECT_EQ("%ffragment", uri.fragment());
+  EXPECT_EQ("#%ffragment", uri.fragment());
 }
 
 TEST(uri_parse_test, test_valid_fragment_with_unreserved_char) {
@@ -226,7 +226,7 @@ TEST(uri_parse_test, test_valid_fragment_with_unreserved_char) {
   EXPECT_TRUE(uri.parse_uri());
   ASSERT_FALSE(uri.has_query());
   ASSERT_TRUE(uri.has_fragment());
-  EXPECT_EQ("fragment-", uri.fragment());
+  EXPECT_EQ("#fragment-", uri.fragment());
 }
 
 TEST(uri_parse_test, test_invalid_fragment_with_gen_delim) {
@@ -239,7 +239,7 @@ TEST(uri_parse_test, test_valid_fragment_with_sub_delim) {
   EXPECT_TRUE(uri.parse_uri());
   ASSERT_FALSE(uri.has_query());
   ASSERT_TRUE(uri.has_fragment());
-  EXPECT_EQ("frag$ment", uri.fragment());
+  EXPECT_EQ("#frag$ment", uri.fragment());
 }
 
 TEST(uri_parse_test, test_valid_fragment_with_forward_slash_and_question_mark) {
@@ -247,7 +247,7 @@ TEST(uri_parse_test, test_valid_fragment_with_forward_slash_and_question_mark) {
   EXPECT_TRUE(uri.parse_uri());
   ASSERT_FALSE(uri.has_query());
   ASSERT_TRUE(uri.has_fragment());
-  EXPECT_EQ("frag/ment?", uri.fragment());
+  EXPECT_EQ("#frag/ment?", uri.fragment());
 }
 
 TEST(uri_parse_test, test_invalid_query) {
@@ -259,7 +259,7 @@ TEST(uri_parse_test, test_valid_query_with_pct_encoded_char) {
   test::uri uri("http://www.example.com/path?%00query");
   EXPECT_TRUE(uri.parse_uri());
   ASSERT_TRUE(uri.has_query());
-  EXPECT_EQ("%00query", uri.query());
+  EXPECT_EQ("?%00query", uri.query());
   ASSERT_FALSE(uri.has_fragment());
 }
 
@@ -267,7 +267,7 @@ TEST(uri_parse_test, test_valid_query_with_unreserved_char) {
   test::uri uri("http://www.example.com/path?query-");
   EXPECT_TRUE(uri.parse_uri());
   ASSERT_TRUE(uri.has_query());
-  EXPECT_EQ("query-", uri.query());
+  EXPECT_EQ("?query-", uri.query());
   ASSERT_FALSE(uri.has_fragment());
 }
 
@@ -275,7 +275,7 @@ TEST(uri_parse_test, test_valid_query_with_sub_delim) {
   test::uri uri("http://www.example.com/path?qu$ery");
   EXPECT_TRUE(uri.parse_uri());
   ASSERT_TRUE(uri.has_query());
-  EXPECT_EQ("qu$ery", uri.query());
+  EXPECT_EQ("?qu$ery", uri.query());
   ASSERT_FALSE(uri.has_fragment());
 }
 
@@ -382,7 +382,7 @@ TEST(uri_parse_test, test_fragment_with_empty_path) {
   test::uri uri("http://www.example.com#fragment");
   EXPECT_TRUE(uri.parse_uri());
   ASSERT_TRUE(uri.has_scheme());
-  EXPECT_EQ("http", uri.scheme());
+  EXPECT_EQ("http:", uri.scheme());
   ASSERT_FALSE(uri.has_user_info());
   ASSERT_TRUE(uri.has_host());
   EXPECT_EQ("www.example.com", uri.host());
@@ -391,14 +391,14 @@ TEST(uri_parse_test, test_fragment_with_empty_path) {
   EXPECT_EQ("", uri.path());
   ASSERT_FALSE(uri.has_query());
   ASSERT_TRUE(uri.has_fragment());
-  EXPECT_EQ("fragment", uri.fragment());
+  EXPECT_EQ("#fragment", uri.fragment());
 }
 
 TEST(uri_parse_test, test_fragment_with_user_info_and_empty_path) {
   test::uri uri("http://user@www.example.com#fragment");
   EXPECT_TRUE(uri.parse_uri());
   ASSERT_TRUE(uri.has_scheme());
-  EXPECT_EQ("http", uri.scheme());
+  EXPECT_EQ("http:", uri.scheme());
   ASSERT_TRUE(uri.has_user_info());
   EXPECT_EQ("user", uri.user_info());
   ASSERT_TRUE(uri.has_host());
@@ -408,7 +408,7 @@ TEST(uri_parse_test, test_fragment_with_user_info_and_empty_path) {
   EXPECT_EQ("", uri.path());
   ASSERT_FALSE(uri.has_query());
   ASSERT_TRUE(uri.has_fragment());
-  EXPECT_EQ("fragment", uri.fragment());
+  EXPECT_EQ("#fragment", uri.fragment());
 }
 
 TEST(uri_parse_test, test_query_with_empty_path_and_ipv6_address) {

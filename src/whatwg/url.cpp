@@ -6,11 +6,12 @@
 
 #include <cassert>
 #include <locale>
+#include <codecvt>
 #include <algorithm>
 #include <functional>
 #include <vector>
 #include "network/uri/whatwg/url.hpp"
-#include "detail/uri_parse.hpp"
+#include "network/uri/detail/uri_parse.hpp"
 #include "detail/uri_advance_parts.hpp"
 #include "detail/uri_percent_encode.hpp"
 #include "detail/algorithm.hpp"
@@ -251,9 +252,8 @@ bool url::initialize(const string_type &url) {
 
   if (!url_.empty()) {
     url_view_ = string_view(url_);
-    const_iterator it = std::begin(url_view_), last = std::end(url_view_);
-    bool is_valid = ::network::detail::parse(it, last, url_parts_);
-    return is_valid;
+    auto result = ::network::detail::parse(url_view_, url_parts_);
+    return result.success;
   }
   return true;
 }
