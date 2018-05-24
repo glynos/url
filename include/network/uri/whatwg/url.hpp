@@ -78,7 +78,7 @@ namespace whatwg {
  * assert(instance.is_absolute());
  * assert(!instance.is_opaque());
  * assert(instance.has_scheme());
- * assert("http" == *instance.scheme());
+ * assert("http:" == *instance.scheme());
  * assert(instance.has_host());
  * assert("cpp-netlib.org" == *instance.host());
  * assert(instance.has_path());
@@ -734,124 +734,6 @@ class url {
   // TODO: implement origin
   
   // TODO:: implement rendering
-
-  /**
-   * \brief Encodes a sequence according to the rules for encoding a
-   *        user info part.
-   * \param first The iterator at first element in the input
-   *        sequence.
-   * \param last The iterator at end + 1th element in the input
-   *        sequence.
-   * \param out The iterator at the first element in the output
-   *        sequence.
-   * \returns The iterator at the end + 1th in the output sequence.
-   */
-  template <typename InputIter, typename OutputIter>
-  static OutputIter encode_user_info(InputIter first, InputIter last,
-                                     OutputIter out) {
-    return detail::encode_user_info(first, last, out);
-  }
-
-  /**
-   * \brief Encodes a sequence according to the rules for encoding a
-   *        host part.
-   * \param first The iterator at first element in the input
-   *        sequence.
-   * \param last The iterator at end + 1th element in the input
-   *        sequence.
-   * \param out The iterator at the first element in the output
-   *        sequence.
-   * \returns The iterator at the end + 1th in the output sequence.
-   */
-  template <typename InputIter, typename OutputIter>
-  static OutputIter encode_host(InputIter first, InputIter last,
-                                OutputIter out) {
-    return detail::encode_host(first, last, out);
-  }
-
-  /**
-   * \brief Encodes a sequence according to the rules for encoding a
-   *        port part.
-   * \param first The iterator at first element in the input
-   *        sequence.
-   * \param last The iterator at end + 1th element in the input
-   *        sequence.
-   * \param out The iterator at the first element in the output
-   *        sequence.
-   * \returns The iterator at the end + 1th in the output sequence.
-   */
-  template <typename InputIter, typename OutputIter>
-  static OutputIter encode_port(InputIter first, InputIter last,
-                                OutputIter out) {
-    return detail::encode_port(first, last, out);
-  }
-
-  /**
-   * \brief Encodes a sequence according to the rules for encoding a
-   *        path part.
-   * \param first The iterator at first element in the input
-   *        sequence.
-   * \param last The iterator at end + 1th element in the input
-   *        sequence.
-   * \param out The iterator at the first element in the output
-   *        sequence.
-   * \returns The iterator at the end + 1th in the output sequence.
-   */
-  template <typename InputIter, typename OutputIter>
-  static OutputIter encode_path(InputIter first, InputIter last,
-                                OutputIter out) {
-    return detail::encode_path(first, last, out);
-  }
-
-  /**
-   * \brief Encodes a sequence according to the rules for encoding a
-   *        query part.
-   * \param first The iterator at first element in the input
-   *        sequence.
-   * \param last The iterator at end + 1th element in the input
-   *        sequence.
-   * \param out The iterator at the first element in the output
-   *        sequence.
-   * \returns The iterator at the end + 1th in the output sequence.
-   */
-  template <typename InputIter, typename OutputIter>
-  static OutputIter encode_query(InputIter first, InputIter last,
-                                 OutputIter out) {
-    return detail::encode_query(first, last, out);
-  }
-
-  /**
-   * \brief Encodes a sequence according to the rules for encoding a
-   *        fragment part.
-   * \param first The iterator at first element in the input
-   *        sequence.
-   * \param last The iterator at end + 1th element in the input
-   *        sequence.
-   * \param out The iterator at the first element in the output
-   *        sequence.
-   * \returns The iterator at the end + 1th in the output sequence.
-   */
-  template <typename InputIter, typename OutputIter>
-  static OutputIter encode_fragment(InputIter first, InputIter last,
-                                    OutputIter out) {
-    return detail::encode_fragment(first, last, out);
-  }
-
-  /**
-   * \brief Decodes a sequence according to the percent decoding
-   *        rules.
-   * \param first The iterator at first element in the input
-   *        sequence.
-   * \param last The iterator at end + 1th element in the input
-   *        sequence.
-   * \param out The iterator at the first element in the output
-   *        sequence.
-   * \returns The iterator at the end + 1th in the output sequence.
-   */
-  template <typename InputIter, typename OutputIter>
-  static OutputIter decode(InputIter first, InputIter last, OutputIter out) {
-    return detail::decode(first, last, out);
-  }
 
  private:
   bool initialize(const string_type &url);

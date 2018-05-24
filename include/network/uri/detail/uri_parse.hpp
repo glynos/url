@@ -6,7 +6,7 @@
 #ifndef NETWORK_DETAIL_URI_PARSE_INC
 #define NETWORK_DETAIL_URI_PARSE_INC
 
-#include <network/string_view.hpp>
+#include "network/uri/detail/uri_parts.hpp"
 
 namespace network {
 namespace detail {
@@ -40,14 +40,30 @@ enum class url_state {
 
 struct url_result {
   std::string url;
+
+  std::string scheme;
+  std::string username;
+  std::string password;
+  std::string hostname;
+  std::string port;
+  std::string path;
+  std::string query;
+  std::string fragment;
+
   bool success;
   bool validation_error;
+  // uri_parts parts;
 
   url_result()
       : url{}, success{false}, validation_error{false} {}
+
+  explicit operator bool () const {
+    return success;
+  }
 };
 
-url_result parse(string_view input, uri_parts &parts, url_state state_override = url_state::null);
+url_result parse(string_view::const_iterator &it, string_view::const_iterator last,
+                 url_state state_override = url_state::null);
 }  // namespace detail
 }  // namespace network
 

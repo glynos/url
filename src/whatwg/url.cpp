@@ -251,8 +251,14 @@ bool url::initialize(const string_type &url) {
 //  url_.erase(std::begin(url_), it);
 
   if (!url_.empty()) {
-    url_view_ = string_view(url_);
-    auto result = ::network::detail::parse(url_view_, url_parts_);
+    auto view = string_view(url);
+    auto it = std::begin(view), last = std::end(view);
+    auto result = ::network::detail::parse(it, last);
+    if (result.success) {
+      url_ = result.url;
+      url_view_ = string_view(url_);
+      // detail::advance_parts(url_view_, url_parts_, result.parts);
+    }
     return result.success;
   }
   return true;

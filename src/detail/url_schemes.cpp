@@ -38,5 +38,10 @@ optional<std::uint16_t> default_port(string_view scheme) {
   bool is_special(string_view scheme) {
     return static_cast<bool>(default_port(scheme));
   }
+
+  bool is_default_port(string_view scheme, std::uint16_t port) {
+    auto dport = default_port(scheme);
+    return dport && (*dport == port);
+  }
 }  // namespace detail
 }  // namespace network

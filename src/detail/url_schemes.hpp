@@ -21,6 +21,8 @@ const std::vector<std::pair<std::string, optional<std::uint16_t>>>
 bool is_special(string_view scheme);
 
 optional<std::uint16_t> default_port(string_view scheme);
+
+bool is_default_port(string_view scheme, std::uint16_t port);
 }  // namespace detail
 }  // namespace network
 

@@ -6,7 +6,6 @@
 #include <iterator>
 #include <limits>
 #include <arpa/inet.h>
-#include "network/uri/detail/uri_parts.hpp"
 #include "network/uri/detail/uri_parse.hpp"
 #include "grammar.hpp"
 #include "detail/url_schemes.hpp"
@@ -16,66 +15,8 @@
 namespace network {
 namespace detail {
 namespace {
-bool validate_scheme(string_view::const_iterator &it,
-                     string_view::const_iterator last,
-                     url_state state_override) {
-  if (it == last) {
-    return false;
-  }
-
-  while (it != last) {
-    if (*it == ':') {
-      ++it;
-      break;
-    }
-    else if (!isalnum(*it) && !is_in(*it, "+-.")) {
-      return false;
-    }
-
-//    *it = static_cast<char>(std::tolower(static_cast<int>(*it)));
-    ++it;
-  }
-
-  return true;
-}
-  
-bool is_special_scheme(string_view scheme) {
-  return is_special(scheme.substr(0, scheme.length() - 1));
-}
-
-bool validate_user_info(string_view::const_iterator first,
-                        string_view::const_iterator last) {
-  if (first == last) {
-    return true;
-  }
-
-  auto sep_it = std::find(first, last, ':');
-
-  auto it = first;
-
-  while (it != sep_it) {
-    if (!is_unreserved(it, sep_it) &&
-        !is_pct_encoded(it, sep_it) &&
-        !is_sub_delim(it, sep_it) &&
-        !is_ucschar(it, sep_it)) {
-      return false;
-    }
-  }
-
-  if (sep_it != last) {
-    ++it;
-
-    while (it != last) {
-      if (!is_unreserved(it, last) &&
-          !is_pct_encoded(it, last) &&
-          !is_sub_delim(it, last) &&
-          !is_ucschar(it, last)) {
-        return false;
-      }
-    }
-  }
-
-  return true;
+inline bool is_special_scheme(const std::string &scheme) {
+  return is_special(string_view(scheme.data(), scheme.length() - 1));
 }
 
 inline bool is_forbidden_host_point(string_view::value_type c) {
@@ -123,7 +64,7 @@ inline bool validate_ipv6_address(string_view::const_iterator first,
 
 bool set_ipv4_host(string_view::const_iterator first,
                    string_view::const_iterator last,
-                   uri_parts &parts) {
+                   std::string &hostname) {
   auto valid_host = (last == std::find_if(first, last, is_forbidden_host_point));
   if (valid_host) {
     valid_host =
@@ -132,7 +73,7 @@ bool set_ipv4_host(string_view::const_iterator first,
       ;
 
     if (valid_host) {
-      parts.host = uri_part(first, last);
+      hostname.assign(first, last);
     }
   }
   return valid_host;
@@ -140,7 +81,7 @@ bool set_ipv4_host(string_view::const_iterator first,
 
 bool set_ipv6_host(string_view::const_iterator first,
                    string_view::const_iterator last,
-                   uri_parts &parts) {
+                   std::string &hostname) {
   if (*first != '[') {
     return false;
   }
@@ -155,23 +96,24 @@ bool set_ipv6_host(string_view::const_iterator first,
     return false;
   }
 
-  parts.host = uri_part(first, last);
+  hostname.assign(first, last);
   return true;
 }
 
-bool set_host(string_view scheme,
-              string_view::const_iterator first,
-              string_view::const_iterator last,
-              uri_parts &parts) {
+bool set_host(
+    const std::string &scheme,
+    string_view::const_iterator first,
+    string_view::const_iterator last,
+    std::string &hostname) {
   if ((scheme.compare("file:") != 0) && (first == last)) {
     return false;
   }
 
   if (*first == '[') {
-    return set_ipv6_host(first, last, parts);
+    return set_ipv6_host(first, last, hostname);
   }
   else {
-    if (!set_ipv4_host(first, last, parts)) {
+    if (!set_ipv4_host(first, last, hostname)) {
       return false;
     }
   }
@@ -180,7 +122,7 @@ bool set_host(string_view scheme,
 
 bool set_path(string_view::const_iterator first,
               string_view::const_iterator last,
-              uri_parts &parts) {
+              std::string &path) {
   if (first != last) {
     if ((*first == '@') ||
         (*first == ':')) {
@@ -188,7 +130,7 @@ bool set_path(string_view::const_iterator first,
     }
   }
 
-  parts.path = uri_part(first, last);
+  path.assign(first, last);
   return true;
 }
 
@@ -206,94 +148,100 @@ bool validate_fragment(string_view::const_iterator &it,
   }
   return true;
 }
+
+bool is_double_slash(
+    string_view::const_iterator it,
+    string_view::const_iterator last) {
+  if (std::distance(it, last) < 2) {
+    return false;
+  }
+
+  auto slash_it = it;
+  for (auto i = 0; i < 2; ++i) {
+    if (*slash_it == '/') {
+      ++slash_it;
+    }
+    else {
+      return false;
+    }
+  }
+  return true;
+}
 } // namespace
 
-url_result parse(string_view input, uri_parts &parts, url_state state_override) {
+url_result parse(string_view::const_iterator &it, string_view::const_iterator last,
+                 url_state state_override) {
   auto result = url_result{};
 
-  if (input.empty()) {
+  if (it == last) {
     return result;
   }
 
-  auto first = std::begin(input), last = std::end(input);
-  auto it = first;
+  auto first = it;
+
+  auto buffer = std::string();
+
+  auto at_flag = false;
+  auto square_brace_flag = false;
+  auto password_token_seen_flag = false;
 
   auto state = url_state::scheme_start;
 
-  std::cout << "URL: " << std::string(first, last) << "\r\n" << std::endl;
-  if (std::string(first, last) == "https://[0::0::0]") {
+  // std::cout << "URL: " << std::string(first, last) << "\r\n" << std::endl;
+  if (std::string(it, last) == "httpa://foo:80/") {
     std::cout << "OK!" << "\r\n" << std::endl;
   }
 
-  // The first character must be a letter
-  if (std::isalpha(*it) != 0) {
-    state = url_state::scheme;
-    ++it;
-  }
-  else if (state_override == url_state::null) {
-    state = url_state::no_scheme;
-  }
-  else {
-    return result;
-  }
-
-  if (state == url_state::scheme) {
-    if (validate_scheme(it, last, state_override)) {
-      parts.scheme = uri_part(first, it);
-      if (state_override != url_state::null) {
-
+  while (it != last) {
+    if (state == url_state::scheme_start) {
+      if (std::isalpha(*it) != 0) {
+        buffer.push_back(static_cast<char>(std::tolower(static_cast<int>(*it))));
+        state = url_state::scheme;
       }
-
-      if (string_view(*parts.scheme).substr(0, 4).compare("file") == 0) {
-        auto slash_it = it;
-        for (auto i = 0; i < 2; ++i) {
-          if ((*slash_it == '/') || (*slash_it == '\\')) {
-            if (*slash_it == '\\') {
-              result.validation_error = true;
-              break;
-            }
-            ++slash_it;
-          } else {
-            result.validation_error = true;
-            break;
-          }
-        }
-
-        state = url_state::file;
-      }
-//      else if (is_special_scheme(static_cast<string_view>(*parts.scheme)) &&
-//               (state_override == url_state::null)) {
-//        state = url_state::special_relative_or_authority;
-//      }
-      else if (is_special_scheme(static_cast<string_view>(*parts.scheme))) {
-        // if base is non-null, base's scheme is equal to this, else
-        state = url_state::special_authority_slashes;
-      }
-      else if (string_view(std::addressof(*it), std::distance(it, last)).compare("/") == 0) {
-        state = url_state::path_or_authority;
+      else if (state_override == url_state::null) {
+        state = url_state::no_scheme;
       }
       else {
-        state = url_state::cannot_be_a_base_url_path;
+        result.validation_error = true;
+        return result;
       }
     }
-    else if (state_override == url_state::null) {
-      it = first;
-      ++it;
-      state = url_state::no_scheme;
+    else if (state == url_state::scheme) {
+      if ((std::isalnum(static_cast<int>(*it)) != 0) || is_in(*it, "+-.")) {
+        buffer.push_back(static_cast<char>(std::tolower(static_cast<int>(*it))));
+      }
+      else if (*it == ':') {
+        buffer.push_back(*it);
+        result.scheme = buffer;
+        buffer.clear();
+
+        if (result.scheme.compare("file:") == 0) {
+          if (!is_double_slash(it, last)) {
+            result.validation_error = true;
+          }
+          state = url_state::file;
+        }
+        else if (is_special_scheme(result.scheme)) {
+          // if base is non-null, base's scheme is equal to this, else
+          state = url_state::special_authority_slashes;
+        }
+        else {
+          auto next = it;
+          ++next;
+          if ((next != last) && (*next == '/')) {
+            state = url_state::path_or_authority;
+            ++it;
+          }
+          else {
+            state = url_state::cannot_be_a_base_url_path;
+          }
+        }
+      }
     }
-    else {
-      return result;
+    else if (state == url_state::no_scheme) {
+
     }
-  }
-
-  if (state == url_state::no_scheme) {
-
-  }
-
-  // Hierarchical part
-  // this is used by the user_info/port
-  while (it != last) {
-    if (state == url_state::special_relative_or_authority) {
+    else if (state == url_state::special_relative_or_authority) {
       if (*it == '/') {
         auto slash_it = it;
         ++slash_it;
@@ -312,6 +260,19 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
         --it;
         state = url_state::relative;
       }
+    }
+    else if (state == url_state::path_or_authority) {
+      if (*it == '/') {
+        state = url_state::authority;
+        first = it;
+      }
+      else {
+        state = url_state::path;
+        --it;
+      }
+    }
+    else if (state == url_state::relative) {
+
     }
     else if (state == url_state::special_authority_slashes) {
       if (*it == '/') {
@@ -345,33 +306,77 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
     }
     else if (state == url_state::authority) {
       if (*it == '@') {
-        if (!validate_user_info(first, it)) {
-          return result;
+        result.validation_error = true;
+        if (at_flag) {
+          buffer = "%40" + buffer;
         }
-        parts.user_info = uri_part(first, it);
+        at_flag = true;
+
+        for (auto c : buffer) {
+          if (c == ':' && !password_token_seen_flag) {
+            password_token_seen_flag = true;
+            continue;
+          }
+
+          if (password_token_seen_flag) {
+            result.password += c;
+          }
+          else {
+            result.username += c;
+          }
+        }
+        buffer.clear();
+
         state = url_state::host;
         ++it;
         first = it;
         continue;
+
       }
-      else if ((*it == '/') || (*it == '\\') || (*it == '?') || (*it == '#')) {
-        state = url_state::host;
+      else if ((*it == '/') || (*it == '?') || (*it == '#') ||
+               (is_special_scheme(result.scheme) && (*it == '\\'))) {
+        if (at_flag && buffer.empty()) {
+          result.validation_error = true;
+        }
         it = first;
+        state = url_state::host;
         continue;
+      }
+      else {
+        buffer.push_back(*it);
       }
     }
     else if (state == url_state::host) {
-      if (*first == ':') {
-        return result;
+      if (state_override != url_state::null) {
+        if (result.scheme.compare("file:") == 0) {
+          --it;
+          state = url_state::file_host;
+        }
       }
 
-      if (*it == ':') {
+      if ((*it == ':') && !square_brace_flag) {
+        if (buffer.empty()) {
+          result.validation_error = true;
+          return result;
+        }
+
+        if (!set_host(result.scheme, first, it, result.hostname)) {
+          return result;
+        }
+        buffer.clear();
+
         state = url_state::port;
         first = it;
         ++first;
+
+        if (state_override == url_state::hostname) {
+          result.success = true;
+          return result;
+        }
       }
-      else if ((*it == '/') || (*it == '\\') || (*it == '?') || (*it == '#')) {
-        if (!set_host(static_cast<string_view>(*parts.scheme), first, it, parts)) {
+      else if ((*it == '/') || (*it == '?') || (*it == '#') ||
+               (is_special_scheme(result.scheme) && (*it == '\\'))) {
+        if (!set_host(result.scheme, first, it, result.hostname)) {
           return result;
         }
 
@@ -379,33 +384,51 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
         first = it;
         continue;
       }
+      else {
+        if (*it == '[') {
+          square_brace_flag = true;
+        }
+        else if (*it == ']') {
+          square_brace_flag = false;
+        }
+        buffer += *it;
+      }
     }
     else if (state == url_state::port) {
-      if (std::isdigit(static_cast<int>(*it)) == 0) {
-        if ((*it == '/') || (*it == '\\') || (*it == '?') || (*it == '#')) {
-          if (first == it) {
-            // set default port for scheme
-            parts.port = uri_part(first, it);
+      if (std::isdigit(static_cast<int>(*it)) != 0) {
+        buffer += *it;
+      }
+      else if ((*it == '/') || (*it == '?') || (*it == '#') ||
+               (is_special_scheme(result.scheme) && (*it == '\\')) ||
+               (state_override != url_state::null)) {
+        if (!buffer.empty()) {
+          if (is_valid_port(first, it)) {
+            if (!is_default_port(string_view(result.scheme.data(), result.scheme.length() - 1),
+                                 std::atoi(buffer.c_str()))) {
+              result.port = buffer;
+            }
           }
-          else if (is_valid_port(first, it)) {
-            parts.port = uri_part(first, it);
-          }
-          else {
-            return result;
-          }
-          state = url_state::path;
-          first = it;
-          continue;
         }
-        else {
+        buffer.clear();
+
+        if (state_override != url_state::null) {
+          result.success = true;
           return result;
         }
+
+        first = it;
+        --it;
+        state = url_state::path_start;
+      }
+      else {
+        result.validation_error = true;
+        return result;
       }
     }
     else if (state == url_state::file) {
       if ((*it == '/') || (*it == '\\')) {
         if (*it == '\\') {
-          return result;
+          result.validation_error = true;
         }
         state = url_state::file_slash;
       }
@@ -417,7 +440,7 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
     else if (state == url_state::file_slash) {
       if ((*it == '/') || (*it == '\\')) {
         if (*it == '\\') {
-          return result;
+          result.validation_error = true;
         }
         state = url_state::file_host;
       }
@@ -433,14 +456,14 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
         ++it;
       }
 
-      if (!set_host(static_cast<string_view>(*parts.scheme), host_first, it, parts)) {
+      if (!set_host(result.scheme, host_first, it, result.hostname)) {
         return result;
       }
       --it;
       state = url_state::path_start;
     }
     else if (state == url_state::path_start) {
-      if (is_special_scheme(static_cast<string_view>(*parts.scheme))) {
+      if (is_special_scheme(result.scheme)) {
         if (*it == '\\') {
           return result;
         }
@@ -459,7 +482,7 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
     }
     else if (state == url_state::path) {
       if (*it == '?') {
-        if (!set_path(first, it, parts)) {
+        if (!set_path(first, it, result.path)) {
           return result;
         }
 
@@ -468,10 +491,9 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
         break;
       }
       else if (*it == '#') {
-        if (!set_path(first, it, parts)) {
+        if (!set_path(first, it, result.path)) {
           return result;
         }
-
 
         first = it;
         state = url_state::fragment;
@@ -494,14 +516,19 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
       if (!is_pchar(it, last) && !is_in(it, last, "?/\\")) {
         // If this is a fragment, keep going
         if (*it == '#') {
-          parts.query = uri_part(first, it);
-          first = it;
+          result.query = buffer;
+//          result.parts.query = uri_part(first, it);
+          // first = it;
+          buffer.clear();
           state = url_state::fragment;
           break;
         }
         else {
           return result;
         }
+      }
+      else {
+        buffer += *it;
       }
     }
   }
@@ -510,6 +537,8 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
     if (!validate_fragment(it, last)) {
       return result;
     }
+
+    buffer.assign(it, last);
   }
 
   // we're done!
@@ -518,12 +547,11 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
       return result;
     }
 
-    if (!set_host(static_cast<string_view>(*parts.scheme), first,
-                           last, parts)) {
+    if (!set_host(result.scheme, first, last, result.hostname)) {
       return result;
     }
 
-    if (!set_path(last, last, parts)) {
+    if (!set_path(last, last, result.path)) {
       return result;
     }
   }
@@ -532,25 +560,24 @@ url_result parse(string_view input, uri_parts &parts, url_state state_override) 
       return result;
     }
 
-    if (!set_host(static_cast<string_view>(*parts.scheme), first,
-                           last, parts)) {
+    if (!set_host(result.scheme, first, last, result.hostname)) {
       return result;
     }
 
-    if (!set_path(last, last, parts)) {
+    if (!set_path(last, last, result.path)) {
       return result;
     }
   }
   else if (state == url_state::path) {
-    if (!set_path(first, last, parts)) {
+    if (!set_path(first, last, result.path)) {
       return result;
     }
   }
   else if (state == url_state::query) {
-    parts.query = uri_part(first, last);
+    result.query = buffer;
   }
   else if (state == url_state::fragment) {
-    parts.fragment = uri_part(first, last);
+    result.query = buffer;
   }
 
   result.success = true;
