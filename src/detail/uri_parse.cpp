@@ -16,39 +16,41 @@
 namespace network {
 namespace detail {
 namespace {
-void remove_trailing_and_leading_whitespace(std::string &input, url_result &result) {
-//  {
-//    auto first = std::begin(input), last = std::end(input);
-//    auto it = std::find_if(first, last, [](char ch) -> bool {
-//      return !std::isspace(ch, std::locale()) || ch == '\0' || ch == '\x1b';
-//    });
-//    if (it != first) {
-//      result.validation_error = true;
-//      input = std::string(it, last);
-//    }
-//  }
-//
-//  {
-//    using reverse_iterator = std::reverse_iterator<std::string::const_iterator>;
-//
-//    auto first = reverse_iterator(std::end(input)),
-//        last = reverse_iterator(std::begin(input));
-//    auto it = std::find_if(first, last, [](char ch) -> bool {
-//      return !std::isspace(ch, std::locale());
-//    });
-//    if (it != first) {
-//      result.validation_error = true;
-//      input = std::string(it, last);
-//      std::reverse(std::begin(input), std::end(input));
-//    }
-//  }
+void remove_leading_whitespace(std::string &input, url_result &result) {
+  auto first = begin(input), last = end(input);
+  auto it = std::find_if(first, last, [](char ch) -> bool {
+    return
+        !(std::isspace(ch, std::locale()) ||
+        ch == '\0' || ch == '\x1b' || ch == '\x04' || ch == '\x12' || ch == '\x1f');
+  });
+  if (it != first) {
+    result.validation_error = true;
+    input = std::string(it, last);
+  }
+}
+
+void remove_trailing_whitespace(std::string &input, url_result &result) {
+  using reverse_iterator = std::reverse_iterator<std::string::const_iterator>;
+
+  auto first = reverse_iterator(end(input)),
+      last = reverse_iterator(begin(input));
+  auto it = std::find_if(first, last, [](char ch) -> bool {
+    return
+        !(std::isspace(ch, std::locale()) ||
+        ch == '\0' || ch == '\x1b' || ch == '\x04' || ch == '\x12' || ch == '\x1f');
+  });
+  if (it != first) {
+    result.validation_error = true;
+    input = std::string(it, last);
+    std::reverse(begin(input), end(input));
+  }
 }
 
 void remove_tabs_and_newlines(std::string &input, url_result &result) {
-  auto it = std::remove_if(std::begin(input), std::end(input),
+  auto it = std::remove_if(begin(input), end(input),
                            [] (char c) -> bool { return (c == '\t') || (c == '\n'); });
-  result.validation_error = (it != std::end(input));
-  input.erase(it, std::end(input));
+  result.validation_error = (it != end(input));
+  input.erase(it, end(input));
 }
 
 inline bool is_special_scheme(const std::string &scheme) {
@@ -85,7 +87,7 @@ bool remaining_starts_with(string_view::const_iterator first,
 
 bool validate_domain(const std::string &buffer) {
   auto view = string_view(buffer);
-  auto first = std::begin(view), last = std::end(view);
+  auto first = begin(view), last = end(view);
 
   auto it = first;
   while (it != last) {
@@ -114,20 +116,20 @@ bool validate_ip_address(string_view::const_iterator first,
 
 inline bool validate_ipv4_address(const std::string &buffer) {
   auto view = string_view(buffer);
-  auto first = std::begin(view), last = std::end(view);
+  auto first = begin(view), last = end(view);
   return validate_ip_address(first, last, AF_INET);
 }
 
 inline bool validate_ipv6_address(const std::string &buffer) {
   auto view = string_view(buffer);
-  auto first = std::begin(view), last = std::end(view);
+  auto first = begin(view), last = end(view);
   return validate_ip_address(++first, --last, AF_INET6);
 }
 
 bool set_ipv4_host(const std::string &buffer,
                    std::string &hostname) {
   auto view = string_view(buffer);
-  auto first = std::begin(view), last = std::end(view);
+  auto first = begin(view), last = end(view);
   auto valid_host = (last == std::find_if(first, last, is_forbidden_host_point));
   if (valid_host) {
     valid_host =
@@ -145,7 +147,7 @@ bool set_ipv4_host(const std::string &buffer,
 bool set_ipv6_host(const std::string &buffer,
                    std::string &hostname) {
   auto view = string_view(buffer);
-  auto first = std::begin(view), last = std::end(view);
+  auto first = begin(view), last = end(view);
 
   if (*first != '[') {
     return false;
@@ -169,22 +171,24 @@ bool set_host(
     const std::string &scheme,
     const std::string &buffer,
     std::string &hostname) {
-  if ((scheme.compare("file:") != 0) && buffer.empty()) {
+  if (buffer.front() == '[') {
+    if (buffer.back() != ']') {
+      // result.validation_error = true;
+      return false;
+    }
+    return set_ipv6_host(buffer, hostname);
+  }
+
+
+  auto domain = std::string();
+  encode_host(begin(buffer), end(buffer), std::back_inserter(domain));
+  auto it = std::find_if(begin(domain), end(domain), is_forbidden_host_point);
+  if (it != end(domain)) {
+    // result.validation_error = true;
     return false;
   }
 
-  auto tmp = std::string();
-  encode_host(std::begin(buffer), std::end(buffer), std::back_inserter(tmp));
-
-  if (buffer.front() == '[') {
-    return set_ipv6_host(tmp, hostname);
-  }
-  else {
-    if (!set_ipv4_host(tmp, hostname)) {
-      return false;
-    }
-  }
-  return true;
+  return set_ipv4_host(domain, hostname);
 }
 
 bool is_double_slash(
@@ -227,7 +231,7 @@ bool is_windows_drive_letter(
 
 inline bool is_windows_drive_letter(const std::string &el) {
   auto view = string_view(el);
-  return is_windows_drive_letter(std::begin(view), std::end(view));
+  return is_windows_drive_letter(begin(view), end(view));
 }
 
 void shorten_path(std::vector<std::string> &path, url_result &result) {
@@ -257,22 +261,32 @@ void set_fragment(const std::string &buffer, std::string &fragment) {
     return;
   }
 
-  auto first = std::begin(buffer), last = std::end(buffer);
+  auto first = begin(buffer), last = end(buffer);
   fragment += '#';
   encode_fragment(first, last, std::back_inserter(fragment));
 }
 } // namespace
 
-url_result parse(const std::string &url, url_state state_override) {
-  auto result = url_result{};
+url_result parse(
+    std::string input,
+    const optional<url_result> &base,
+    const optional<url_result> &url,
+    url_state state_override) {
+  auto result = url? url.value() : url_result{};
 
-  if (url.empty()) {
+
+//   std::cout << "URL: " << input << "\r\n" << std::endl;
+  if (input == "lolscheme:x x#x x") {
+    std::cout << "OK!" << "\r\n" << std::endl;
+  }
+
+
+  if (input.empty()) {
     return result;
   }
 
-  auto input = url;
-
-  remove_trailing_and_leading_whitespace(input, result);
+  remove_leading_whitespace(input, result);
+  remove_trailing_whitespace(input, result);
   remove_tabs_and_newlines(input, result);
 
   auto state = (state_override == url_state::null)? url_state::scheme_start : state_override;
@@ -283,13 +297,8 @@ url_result parse(const std::string &url, url_state state_override) {
   auto square_brace_flag = false;
   auto password_token_seen_flag = false;
 
-  // std::cout << "URL: " << std::string(first, last) << "\r\n" << std::endl;
-  if (url == "lolscheme:x x#x x") {
-    std::cout << "OK!" << "\r\n" << std::endl;
-  }
-
   auto view = string_view(input);
-  auto first = std::begin(view), last = std::end(view);
+  auto first = begin(view), last = end(view);
   auto it = first;
 
   while (it != last) {
@@ -394,7 +403,6 @@ url_result parse(const std::string &url, url_state state_override) {
     }
     else if (state == url_state::special_authority_ignore_slashes) {
       if ((*it != '/') && (*it != '\\')) {
-        first = it;
         --it;
         state = url_state::authority;
       }
@@ -429,9 +437,7 @@ url_result parse(const std::string &url, url_state state_override) {
 
         state = url_state::host;
         ++it;
-        first = it;
         continue;
-
       }
       else if ((*it == '/') || (*it == '?') || (*it == '#') ||
                (is_special_scheme(result.scheme) && (*it == '\\'))) {
@@ -439,7 +445,6 @@ url_result parse(const std::string &url, url_state state_override) {
           result.validation_error = true;
           return result;
         }
-        // it = first;
         it = it - buffer.size();
         state = url_state::host;
         buffer.clear();
@@ -466,8 +471,6 @@ url_result parse(const std::string &url, url_state state_override) {
         buffer.clear();
 
         state = url_state::port;
-        first = it;
-        ++first;
 
         if (state_override == url_state::hostname) {
           result.success = true;
@@ -478,13 +481,17 @@ url_result parse(const std::string &url, url_state state_override) {
                (is_special_scheme(result.scheme) && (*it == '\\'))) {
         --it;
 
+        if (is_special_scheme(result.scheme) && buffer.empty()) {
+          result.validation_error = true;
+          return result;
+        }
+
         if (!set_host(result.scheme, buffer, result.hostname)) {
           return result;
         }
         buffer.clear();
 
         state = url_state::path;
-        first = it;
       }
       else {
         if (*it == '[') {
@@ -519,7 +526,6 @@ url_result parse(const std::string &url, url_state state_override) {
           return result;
         }
 
-        first = it;
         --it;
         state = url_state::path_start;
       }
@@ -555,7 +561,7 @@ url_result parse(const std::string &url, url_state state_override) {
       }
     }
     else if (state == url_state::file_host) {
-      if (!((*it == '/') || (*it == '\\') || (*it == '?') || (*it == '#'))) {
+      if ((*it == '/') || (*it == '\\') || (*it == '?') || (*it == '#')) {
         --it;
 
         if ((state_override != url_state::null) && (is_windows_drive_letter(it, last))) {
@@ -710,7 +716,8 @@ url_result parse(const std::string &url, url_state state_override) {
   }
 
   if (state == url_state::host) {
-    if (buffer.empty()) {
+    if (is_special_scheme(result.scheme) && buffer.empty()) {
+      result.validation_error = true;
       return result;
     }
 

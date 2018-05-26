@@ -7,7 +7,11 @@
 #define NETWORK_DETAIL_URI_PARSE_INC
 
 #include <vector>
-#include "network/uri/detail/uri_parts.hpp"
+#include <string>
+#include <utility>
+#include <iterator>
+#include <network/optional.hpp>
+#include <network/string_view.hpp>
 
 namespace network {
 namespace detail {
@@ -47,14 +51,12 @@ struct url_result {
   std::string password;
   std::string hostname;
   std::string port;
-  // std::string path;
   std::vector<std::string> path;
   std::string query;
   std::string fragment;
 
   bool success;
   bool validation_error;
-  // uri_parts parts;
 
   url_result()
       : url{}, success{false}, validation_error{false} {}
@@ -64,7 +66,11 @@ struct url_result {
   }
 };
 
-url_result parse(const std::string &url, url_state state_override = url_state::null);
+url_result parse(
+    std::string input,
+    const optional<url_result> &base = nullopt,
+    const optional<url_result> &url = nullopt,
+    url_state state_override = url_state::null);
 }  // namespace detail
 }  // namespace network
 
