@@ -6,6 +6,7 @@
 #ifndef NETWORK_DETAIL_URI_PARSE_INC
 #define NETWORK_DETAIL_URI_PARSE_INC
 
+#include <vector>
 #include "network/uri/detail/uri_parts.hpp"
 
 namespace network {
@@ -46,7 +47,8 @@ struct url_result {
   std::string password;
   std::string hostname;
   std::string port;
-  std::string path;
+  // std::string path;
+  std::vector<std::string> path;
   std::string query;
   std::string fragment;
 
@@ -62,8 +64,7 @@ struct url_result {
   }
 };
 
-url_result parse(string_view::const_iterator &it, string_view::const_iterator last,
-                 url_state state_override = url_state::null);
+url_result parse(const std::string &url, url_state state_override = url_state::null);
 }  // namespace detail
 }  // namespace network
 

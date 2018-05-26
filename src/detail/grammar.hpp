@@ -144,17 +144,17 @@ inline bool is_pct_encoded(string_view::const_iterator &it,
 
   return false;
 }
-
-inline bool is_pchar(string_view::const_iterator &it,
-                     string_view::const_iterator last) {
-  return
-    is_unreserved(it, last) ||
-    // is_pct_encoded(it, last) ||
-    is_sub_delim(it, last) ||
-    is_in(it, last, ":@%") ||
-    is_ucschar(it, last)
-    ;
-}
+//
+//inline bool is_pchar(string_view::const_iterator &it,
+//                     string_view::const_iterator last) {
+//  return
+//    is_unreserved(it, last) ||
+//    // is_pct_encoded(it, last) ||
+//    is_sub_delim(it, last) ||
+//    is_in(it, last, ":@%") ||
+//    is_ucschar(it, last)
+//    ;
+//}
 
 inline bool is_valid_port(string_view::const_iterator it,
                           string_view::const_iterator last) {
@@ -163,6 +163,11 @@ inline bool is_valid_port(string_view::const_iterator it,
   auto value = std::strtoul(port_first, &port_last, 10);
   return (std::addressof(*last) == port_last) && (port_first != port_last) &&
          (value < std::numeric_limits<std::uint16_t>::max());
+}
+
+inline bool is_valid_port(const std::string &port) {
+  auto view = string_view(port);
+  return is_valid_port(std::begin(view), std::end(view));
 }
 }  // namespace detail
 }  // namespace network

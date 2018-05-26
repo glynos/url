@@ -251,9 +251,9 @@ bool url::initialize(const string_type &url) {
 //  url_.erase(std::begin(url_), it);
 
   if (!url_.empty()) {
-    auto view = string_view(url);
-    auto it = std::begin(view), last = std::end(view);
-    auto result = ::network::detail::parse(it, last);
+//    auto view = string_view(url);
+//    auto it = std::begin(view), last = std::end(view);
+    auto result = ::network::detail::parse(url);
     if (result.success) {
       url_ = result.url;
       url_view_ = string_view(url_);
