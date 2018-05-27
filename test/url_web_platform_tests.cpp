@@ -95,7 +95,7 @@ struct test_case {
 //}
 } // namespace
 
-std::vector<test_case> load_test_data() {
+std::vector<test_case> load_absolute_test_data() {
   std::ifstream fs{"urltestdata.json"};
   json tests;
   fs >> tests;
@@ -104,7 +104,9 @@ std::vector<test_case> load_test_data() {
   for (auto &&test_case_object : tests) {
     if (!test_case_object.is_string()) {
       auto test_case_data = test_case{test_case_object};
-      test_data.emplace_back(test_case_data);
+      if (test_case_data.is_absolute()) {
+        test_data.emplace_back(test_case_data);
+      }
     }
   }
   return test_data;
@@ -113,67 +115,85 @@ std::vector<test_case> load_test_data() {
 class test_parse_urls : public ::testing::TestWithParam<test_case> {};
 
 INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls,
-                        testing::ValuesIn(load_test_data()));
+                        testing::ValuesIn(load_absolute_test_data()));
 
 TEST_P(test_parse_urls, url_web_platform_tests) {
   auto test_case_data = test_case{GetParam()};
 
   std::cout << " >" << test_case_data.input << "<" << std::endl;
 
-  if (test_case_data.is_absolute()) {
-    auto result = network::detail::parse(test_case_data.input);
+  auto result = network::detail::parse(test_case_data.input);
 
-    if (test_case_data.failure) {
-      if (result.success) {
-        std::cout << " >" << test_case_data.input << "<" << std::endl;
-      }
-
-      EXPECT_FALSE(result.success);
+  if (test_case_data.failure) {
+    if (result.success) {
+      std::cout << " >" << test_case_data.input << "<" << std::endl;
     }
-    else {
-      if (!result.success) {
-        std::cout << " >" << test_case_data.input << "<" << std::endl;
-        return;
-      }
 
-      EXPECT_TRUE(result.success);
-      EXPECT_EQ(test_case_data.protocol, result.scheme);
-      EXPECT_EQ(test_case_data.username, result.username);
-      EXPECT_EQ(test_case_data.password, result.password);
-      EXPECT_EQ(test_case_data.hostname, result.hostname);
-      EXPECT_EQ(test_case_data.port, result.port);
-//      EXPECT_EQ(test_case_data.pathname, join(result.path));
-      EXPECT_EQ(test_case_data.search, result.query);
-      EXPECT_EQ(test_case_data.hash, result.fragment);
-    }
+    EXPECT_FALSE(result.success);
   }
   else {
-    auto base = network::detail::parse(test_case_data.base);
-    ASSERT_TRUE(base.success);
-    auto result = network::detail::parse(test_case_data.input, base);
-
-    if (test_case_data.failure) {
-      if (result.success) {
-        std::cout << " >" << test_case_data.input << "<" << std::endl;
-      }
-
-      EXPECT_FALSE(result.success);
+    if (!result.success) {
+      std::cout << " >" << test_case_data.input << "<" << std::endl;
+      return;
     }
-    else {
-      if (!result.success) {
-        std::cout << " >" << test_case_data.input << "<" << std::endl;
-        return;
-      }
 
-      EXPECT_TRUE(result.success);
-      EXPECT_EQ(test_case_data.protocol, result.scheme);
-      EXPECT_EQ(test_case_data.username, result.username);
-      EXPECT_EQ(test_case_data.password, result.password);
-      EXPECT_EQ(test_case_data.hostname, result.hostname);
-      EXPECT_EQ(test_case_data.port, result.port);
-//      EXPECT_EQ(test_case_data.pathname, join(result.path));
-      EXPECT_EQ(test_case_data.search, result.query);
-      EXPECT_EQ(test_case_data.hash, result.fragment);
+    EXPECT_TRUE(result.success);
+    EXPECT_EQ(test_case_data.protocol, result.scheme + ":");
+    EXPECT_EQ(test_case_data.username, result.username);
+    EXPECT_EQ(test_case_data.password, result.password);
+    EXPECT_EQ(test_case_data.hostname.empty(), (!result.host || result.host.value().empty()));
+    if (result.host) {
+      EXPECT_EQ(test_case_data.hostname, result.host.value());
     }
+//    EXPECT_EQ(test_case_data.pathname, join(result.path));
+    EXPECT_EQ(test_case_data.port.empty(), !result.port);
+    if (result.port) {
+      EXPECT_EQ(test_case_data.port, std::to_string(result.port.value()));
+    }
+    EXPECT_EQ(test_case_data.search.empty(), !result.query);
+    if (result.query) {
+      auto query = result.query.value().empty()? "" : "?" + result.query.value();
+      EXPECT_EQ(test_case_data.search, query);
+    }
+    EXPECT_EQ(test_case_data.hash.empty(), (!result.fragment || result.fragment.value().empty()));
+    if (result.fragment) {
+      auto fragment = result.fragment.value().empty()? "" : "#" + result.fragment.value();
+      EXPECT_EQ(test_case_data.hash, fragment);
+    }
+//    EXPECT_EQ(test_case_data.port, result.port);
+//    EXPECT_EQ(test_case_data.search, result.query);
+//    EXPECT_EQ(test_case_data.hash, result.fragment);
   }
 }
+
+
+//  else {
+//    auto base = network::detail::parse(test_case_data.base);
+//    ASSERT_TRUE(base.success);
+//    auto result = network::detail::parse(test_case_data.input, base);
+//
+//    if (test_case_data.failure) {
+//      if (result.success) {
+//        std::cout << " >" << test_case_data.input << "<" << std::endl;
+//      }
+//
+//      EXPECT_FALSE(result.success);
+//    }
+//    else {
+//      if (!result.success) {
+//        std::cout << " >" << test_case_data.input << "<" << std::endl;
+//        return;
+//      }
+//
+//      EXPECT_TRUE(result.success);
+//      EXPECT_EQ(test_case_data.protocol, result.scheme);
+//      EXPECT_EQ(test_case_data.username, result.username);
+//      EXPECT_EQ(test_case_data.password, result.password);
+//      EXPECT_EQ(test_case_data.hostname, result.hostname);
+//      EXPECT_EQ(test_case_data.port, result.port);
+////      EXPECT_EQ(test_case_data.pathname, join(result.path));
+//      EXPECT_EQ(test_case_data.search, result.query);
+//      EXPECT_EQ(test_case_data.hash, result.fragment);
+//    }
+//  }
+//}

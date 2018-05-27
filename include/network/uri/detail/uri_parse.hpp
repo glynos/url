@@ -43,34 +43,39 @@ enum class url_state {
   fragment,
 };
 
-struct url_result {
+struct url_record {
   std::string url;
 
   std::string scheme;
   std::string username;
   std::string password;
-  std::string hostname;
-  std::string port;
+  optional<std::string> host;
+  optional<std::uint16_t > port;
   std::vector<std::string> path;
-  std::string query;
-  std::string fragment;
+  optional<std::string> query;
+  optional<std::string> fragment;
 
+  bool cannot_be_a_base_url;
   bool success;
   bool validation_error;
 
-  url_result()
-      : url{}, success{false}, validation_error{false} {}
+  url_record()
+      : url{}, cannot_be_a_base_url{false}, success{false}, validation_error{false} {}
 
   explicit operator bool () const {
     return success;
   }
 };
 
-url_result parse(
+url_record basic_parse(
     std::string input,
-    const optional<url_result> &base = nullopt,
-    const optional<url_result> &url = nullopt,
+    const optional<url_record> &base = nullopt,
+    const optional<url_record> &url = nullopt,
     url_state state_override = url_state::null);
+
+url_record parse(
+    std::string input,
+    const optional<url_record> &base = nullopt);
 }  // namespace detail
 }  // namespace network
 

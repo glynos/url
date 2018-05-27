@@ -21,8 +21,8 @@ const std::vector<std::pair<std::string, optional<std::uint16_t>>> &special_sche
 }
 
 optional<std::uint16_t> default_port(string_view scheme) {
-  auto first = std::begin(detail::special_schemes()),
-       last = std::end(detail::special_schemes());
+  auto schemes = detail::special_schemes();
+  auto first = begin(schemes), last = end(schemes);
   auto it = std::find_if(
       first, last,
       [&scheme](const std::pair<std::string, optional<std::uint16_t>>
@@ -36,7 +36,15 @@ optional<std::uint16_t> default_port(string_view scheme) {
 }
 
   bool is_special(string_view scheme) {
-    return static_cast<bool>(default_port(scheme));
+    auto schemes = detail::special_schemes();
+    auto first = begin(schemes), last = end(schemes);
+    auto it = std::find_if(
+        first, last,
+        [&scheme](const std::pair<std::string, optional<std::uint16_t>>
+                  &special_scheme) -> bool {
+          return scheme.compare(special_scheme.first) == 0;
+        });
+    return (it != last);
   }
 
   bool is_default_port(string_view scheme, std::uint16_t port) {

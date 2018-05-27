@@ -29,8 +29,8 @@ inline CharT hex_to_letter(CharT in) {
   return in;
 }
 
-template <class charT, class OutputIterator>
-void encode_char(charT in, OutputIterator &out, const char *ignore = "") {
+template <class OutputIterator>
+OutputIterator encode_char(char in, OutputIterator out, const char *ignore = "") {
   if (((in >= 'a') && (in <= 'z')) ||
       ((in >= 'A') && (in <= 'Z')) ||
       ((in >= '0') && (in <= '9')) ||
@@ -49,6 +49,7 @@ void encode_char(charT in, OutputIterator &out, const char *ignore = "") {
       out++ = hex_to_letter(in & 0x0f);
     }
   }
+  return out;
 }
 
 template <typename InputIterator, typename OutputIterator>
