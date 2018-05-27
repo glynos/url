@@ -83,7 +83,7 @@ TEST(whatwg_url_test, make_url_from_wstring) {
 TEST(whatwg_url_test, basic_url_scheme_test) {
   network::url instance("http://www.example.com/");
   ASSERT_TRUE(instance.has_scheme());
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
 }
 
 TEST(whatwg_url_test, basic_url_user_info_test) {
@@ -131,7 +131,7 @@ TEST(whatwg_url_test, DISABLED_basic_url_value_semantics_test) {
 
 TEST(whatwg_url_test, full_url_scheme_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
 }
 
 TEST(whatwg_url_test, full_url_user_info_test) {
@@ -172,7 +172,7 @@ TEST(whatwg_url_test, full_url_fragment_test) {
 TEST(whatwg_url_test, full_url_range_scheme_test) {
   network::url instance("http://user@www.example.com:80/path?query#fragment");
   ASSERT_TRUE(instance.has_scheme());
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
 }
 
 TEST(whatwg_url_test, full_url_range_user_info_test) {
@@ -249,133 +249,133 @@ TEST(whatwg_url_test, xmpp_test) {
 
 TEST(whatwg_url_test, ipv4_address_test) {
   network::url instance("http://129.79.245.252/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("129.79.245.252", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv4_loopback_test) {
   network::url instance("http://127.0.0.1/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("127.0.0.1", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_1) {
   network::url instance("http://[1080:0:0:0:8:800:200C:417A]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[1080:0:0:0:8:800:200C:417A]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_2) {
   network::url instance("http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[2001:db8:85a3:8d3:1319:8a2e:370:7348]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_3) {
   network::url instance("http://[2001:db8:85a3:0:0:8a2e:370:7334]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[2001:db8:85a3:0:0:8a2e:370:7334]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_4) {
   network::url instance("http://[2001:db8:85a3::8a2e:370:7334]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[2001:db8:85a3::8a2e:370:7334]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_5) {
   network::url instance("http://[2001:0db8:0000:0000:0000:0000:1428:57ab]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[2001:0db8:0000:0000:0000:0000:1428:57ab]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_6) {
   network::url instance("http://[2001:0db8:0000:0000:0000::1428:57ab]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[2001:0db8:0000:0000:0000::1428:57ab]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_7) {
   network::url instance("http://[2001:0db8:0:0:0:0:1428:57ab]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[2001:0db8:0:0:0:0:1428:57ab]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_8) {
   network::url instance("http://[2001:0db8:0:0::1428:57ab]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[2001:0db8:0:0::1428:57ab]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_9) {
   network::url instance("http://[2001:0db8::1428:57ab]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[2001:0db8::1428:57ab]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_10) {
   network::url instance("http://[2001:db8::1428:57ab]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[2001:db8::1428:57ab]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_11) {
   network::url instance("http://[::ffff:0c22:384e]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[::ffff:0c22:384e]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_12) {
   network::url instance("http://[fe80::]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[fe80::]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_address_test_13) {
   network::url instance("http://[::ffff:c000:280]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[::ffff:c000:280]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_loopback_test) {
   network::url instance("http://[::1]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[::1]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_loopback_test_1) {
   network::url instance("http://[0000:0000:0000:0000:0000:0000:0000:0001]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[0000:0000:0000:0000:0000:0000:0000:0001]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_v4inv6_test_1) {
   network::url instance("http://[::ffff:12.34.56.78]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[::ffff:12.34.56.78]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
 
 TEST(whatwg_url_test, ipv6_v4inv6_test_2) {
   network::url instance("http://[::ffff:192.0.2.128]/");
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("[::ffff:192.0.2.128]", instance.host());
   EXPECT_EQ("/", instance.path());
 }
@@ -449,7 +449,7 @@ TEST(whatwg_url_test, swap_test) {
   ASSERT_TRUE(instance.has_scheme());
   ASSERT_TRUE(instance.has_host());
   ASSERT_TRUE(instance.has_path());
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("example.com", instance.host());
   EXPECT_EQ("/path/to/file.txt", instance.path());
 }
@@ -466,7 +466,7 @@ TEST(whatwg_url_test, issue_104_test) {
   std::unique_ptr<network::url> instance(new network::url("http://www.example.com/"));
   network::url copy = *instance;
   instance.reset();
-  EXPECT_EQ("http:", copy.scheme());
+  EXPECT_EQ("http", copy.scheme());
 }
 
 TEST(whatwg_url_test, DISABLED_url_set_test) {
@@ -612,7 +612,7 @@ TEST(whatwg_url_test, full_copy_url_scheme_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   std::cout << "GADZOOKS" << std::endl;
   network::url instance = origin;
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
 }
 
 TEST(whatwg_url_test, full_copy_url_user_info_test) {
@@ -654,7 +654,7 @@ TEST(whatwg_url_test, full_copy_url_fragment_test) {
 TEST(whatwg_url_test, full_move_url_scheme_test) {
   network::url origin("http://user@www.example.com:80/path?query#fragment");
   network::url instance = std::move(origin);
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
 }
 
 TEST(whatwg_url_test, full_move_url_user_info_test) {
@@ -1059,7 +1059,7 @@ TEST(whatwg_url_test, http_copy_assignment_bug_98) {
 
   ASSERT_TRUE(instance.has_scheme());
   ASSERT_TRUE(instance.has_path());
-  EXPECT_EQ("http:", instance.scheme());
+  EXPECT_EQ("http", instance.scheme());
   EXPECT_EQ("/path/to/file.txt", instance.path());
 }
 

@@ -43,6 +43,14 @@ enum class url_state {
   fragment,
 };
 
+struct blob {
+
+};
+
+struct media_source {
+
+};
+
 struct url_record {
   std::string url;
 
@@ -56,6 +64,8 @@ struct url_record {
   optional<std::string> fragment;
 
   bool cannot_be_a_base_url;
+  optional<std::string> object;
+
   bool success;
   bool validation_error;
 
