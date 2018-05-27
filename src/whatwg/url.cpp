@@ -6,7 +6,6 @@
 
 #include <cassert>
 #include <locale>
-#include <codecvt>
 #include <algorithm>
 #include <functional>
 #include <vector>
