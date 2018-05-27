@@ -383,7 +383,7 @@ bool parse_ipv4_address(
   auto ipv4 = std::uint64_t(numbers.back());
   numbers.pop_back();
 
-  for (auto i = 0; i < numbers.size(); ++i) {
+  for (auto i = 0UL; i < numbers.size(); ++i) {
     ipv4 += numbers[i] * std::pow(256, 3 - i);
   }
 
