@@ -8,8 +8,9 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <skyr/url/url_parse.hpp>
+#include <skyr.hpp>
 #include "json.hpp"
+#include "string_utility.hpp"
 
 // Tests using test data from W3C
 // https://github.com/w3c/web-platform-tests/tree/master/url
@@ -61,36 +62,6 @@ struct test_case {
   std::string search;
   std::string hash;
 };
-
-//std::string join(const std::vector<std::string> &path) {
-//  auto result = std::string();
-//
-//  if (path.empty()) {
-//    return result;
-//  }
-//
-//  if ((path.size() == 1) && (path.front().empty())) {
-//    result = "/";
-//  }
-//  else {
-//    auto first = std::begin(path), last = std::end(path);
-//    auto it = first;
-//    ++it;
-//    for (; it != last; ++it) {
-//      result += "/";
-//      result += *it;
-//      // std::cout << "[" << *it << "]" << std::endl;
-//    }
-//  }
-//
-//  return result;
-//
-//  auto first = std::begin(result), last = std::end(result);
-//  if (result.length() > 1) {
-//    ++first;
-//  }
-//  return std::string(first, last);
-//}
 } // namespace
 
 std::vector<test_case> load_absolute_test_data() {
@@ -160,7 +131,22 @@ TEST_P(test_parse_urls_absolute, parse) {
     if (result.host) {
       EXPECT_EQ(test_case_data.hostname, result.host.value());
     }
-//    EXPECT_EQ(test_case_data.pathname, join(result.path));
+
+//    auto view = skyr::string_view(test_case_data.pathname);
+//    std::cout << test_case_data.pathname << std::endl;
+//    std::copy(
+//        begin(result.path), end(result.path),
+//        std::ostream_iterator<std::string>(std::cout, ">"));
+//    std::cout << std::endl;
+//
+//    ASSERT_EQ(std::distance(skyr::path_iterator(view), skyr::path_iterator()), result.path.size());
+//    EXPECT_TRUE(std::equal(
+//        skyr::path_iterator(view), skyr::path_iterator(),
+//        std::begin(result.path),
+//        [](skyr::string_view lhs, const std::string &rhs) -> bool {
+//          return lhs.compare(rhs.c_str()) == 0;
+//        }));
+
     EXPECT_EQ(test_case_data.port.empty(), !result.port);
     if (result.port) {
       EXPECT_EQ(test_case_data.port, std::to_string(result.port.value()));

@@ -480,7 +480,7 @@ url_record basic_parse(
     std::string input,
     const optional<url_record> &base,
     const optional<url_record> &url,
-    url_state state_override) {
+    optional<url_state> state_override) {
   auto result = url? url.value() : url_record{};
   result.url = input;
 
@@ -500,7 +500,7 @@ url_record basic_parse(
   remove_trailing_whitespace(input, result);
   remove_tabs_and_newlines(input, result);
 
-  auto state = (state_override == url_state::null)? url_state::scheme_start : state_override;
+  auto state = state_override? state_override.value() : url_state::scheme_start;
 
   auto buffer = std::string();
 
@@ -518,7 +518,7 @@ url_record basic_parse(
         auto lower = std::tolower(*it);
         buffer.push_back(static_cast<char>(lower));
         state = url_state::scheme;
-      } else if (state_override == url_state::null) {
+      } else if (!state_override) {
         state = url_state::no_scheme;
         it = first;
         continue;
@@ -531,7 +531,7 @@ url_record basic_parse(
         auto lower = std::tolower(*it, std::locale("C"));
         buffer.push_back(lower);
       } else if (*it == ':') {
-        if (state_override != url_state::null) {
+        if (state_override) {
           // TODO
         }
 
@@ -557,7 +557,7 @@ url_record basic_parse(
           result.path.push_back(std::string());
           state = url_state::cannot_be_a_base_url_path;
         }
-      } else if (state_override == url_state::null) {
+      } else if (!state_override) {
         buffer.clear();
         state = url_state::no_scheme;
         it = first;
@@ -729,7 +729,7 @@ url_record basic_parse(
         buffer.push_back(*it);
       }
     } else if (state == url_state::host) {
-      if ((state_override != url_state::null) && (result.scheme.compare("file") == 0)) {
+      if (state_override && (result.scheme.compare("file") == 0)) {
         --it;
         state = url_state::file_host;
       } else if ((*it == ':') && !square_brace_flag) {
@@ -746,7 +746,7 @@ url_record basic_parse(
         buffer.clear();
         state = url_state::port;
 
-        if (state_override == url_state::hostname) {
+        if (state_override && (state_override.value() == url_state::hostname)) {
           result.success = true;
           return result;
         }
@@ -779,7 +779,7 @@ url_record basic_parse(
         buffer += *it;
       } else if ((it == last) || (*it == '/') || (*it == '?') || (*it == '#') ||
           (is_special_scheme(result.scheme) && (*it == '\\')) ||
-          (state_override != url_state::null)) {
+          state_override) {
         if (!buffer.empty()) {
           if (!detail::is_valid_port(buffer)) {
             result.validation_error = true;
@@ -797,7 +797,7 @@ url_record basic_parse(
           buffer.clear();
         }
 
-        if (state_override != url_state::null) {
+        if (state_override) {
           result.success = true;
           return result;
         }
@@ -868,13 +868,13 @@ url_record basic_parse(
       if ((it == last) || (*it == '/') || (*it == '\\') || (*it == '?') || (*it == '#')) {
         --it;
 
-        if ((state_override == url_state::null) && (is_windows_drive_letter(buffer))) {
+        if (!state_override && (is_windows_drive_letter(buffer))) {
           result.validation_error = true;
           state = url_state::path;
         } else if (buffer.empty()) {
           result.host = std::string();
 
-          if (state_override != url_state::null) {
+          if (state_override) {
             result.success = true;
             return result;
           }
@@ -891,7 +891,7 @@ url_record basic_parse(
           }
           result.host = host;
 
-          if (state_override != url_state::null) {
+          if (state_override) {
             result.success = true;
             return result;
           }
@@ -909,7 +909,7 @@ url_record basic_parse(
           result.validation_error = true;
         }
         state = url_state::path;
-      } else if (state_override == url_state::null) {
+      } else if (!state_override) {
         if (*it == '?') {
           result.query = std::string();
           state = url_state::query;
@@ -926,7 +926,7 @@ url_record basic_parse(
     } else if (state == url_state::path) {
       if ((*it == '/') ||
           (is_special_scheme(result.scheme) && (*it == '\\')) ||
-          ((state_override == url_state::null) && ((*it == '?') || (*it == '#')))) {
+          (!state_override && ((*it == '?') || (*it == '#')))) {
         if (is_special_scheme(result.scheme) && (*it == '\\')) {
           result.validation_error = true;
         } else if (buffer == "..") {

@@ -38,7 +38,7 @@
 namespace skyr {
 /**
  * \ingroup url
- * \class url network/uri/url.hpp network/url.hpp
+ * \class url skyr/url/url.hpp skyr.hpp
  * \brief A class that parses a URL (Uniform Resource Locator)
  *        into its component parts.
  *

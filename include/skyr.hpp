@@ -12,6 +12,7 @@
  */
 
 #include <skyr/url/url.hpp>
+#include <skyr/url/url_parse.hpp>
 #include <skyr/url/url_search_parameters.hpp>
 
 #endif  // NETWORK_URL_INC

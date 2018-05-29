@@ -8,9 +8,13 @@
 
 #include <skyr/string_view.hpp>
 
-namespace whatwg {
-inline bool operator==(const char *lhs, string_view rhs) {
-  return string_view(lhs) == rhs;
+namespace skyr {
+inline bool operator==(string_view lhs, const std::string &rhs) {
+  return lhs.compare(rhs.c_str()) == 0;
+}
+
+inline bool operator==(const std::string &lhs, string_view rhs) {
+  return rhs == lhs;
 }
 }  // namespace skyr
 
