@@ -12,7 +12,7 @@
  */
 
 #include <system_error>
-#include <network/uri/config.hpp>
+#include <skyr/url/config.hpp>
 
 #ifdef NETWORK_URI_MSVC
 #pragma warning(push)
@@ -23,23 +23,17 @@
 #pragma warning(disable : 4275)
 #endif
 
-namespace network {
+namespace skyr {
 
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
-enum class uri_error {
+enum class url_error {
+
+  success = 0,
+
+  validation_error = 1,
 
   // parser errors
-  invalid_syntax = 1,
-
-  // builder errors
-  invalid_uri,
-  invalid_scheme,
-  invalid_user_info,
-  invalid_host,
-  invalid_port,
-  invalid_path,
-  invalid_query,
-  invalid_fragment,
+  invalid_syntax,
 
   // encoding errors
   not_enough_input,
@@ -49,7 +43,7 @@ enum class uri_error {
 
 const std::error_category &uri_category();
 
-std::error_code make_error_code(uri_error e);
+std::error_code make_error_code(url_error e);
 #endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
 
 /**
@@ -71,24 +65,6 @@ class uri_syntax_error : public std::system_error {
 };
 
 /**
- * \class uri_builder_error uri.hpp network/uri.hpp
- * \brief An exception thrown when the \c uri_builder cannot build a
- *        valid URI.
- */
-class uri_builder_error : public std::system_error {
- public:
-  /**
-   * \brief Constructor.
-   */
-  uri_builder_error();
-
-  /**
-   * \brief Destructor.
-   */
-  virtual ~uri_builder_error() noexcept;
-};
-
-/**
  * \class percent_decoding_error uri.hpp network/uri.hpp
  * \brief An exception thrown when during percent decoding.
  */
@@ -97,14 +73,14 @@ class percent_decoding_error : public std::system_error {
   /**
    * \brief Constructor.
    */
-  explicit percent_decoding_error(uri_error error);
+  explicit percent_decoding_error(url_error error);
 
   /**
    * \brief Destructor.
    */
   virtual ~percent_decoding_error() noexcept;
 };
-}  // namespace network
+}  // namespace skyr
 
 #ifdef NETWORK_URI_MSVC
 #pragma warning(pop)

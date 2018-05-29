@@ -20,23 +20,22 @@
 #include <string>
 #include <cstdlib>
 #include <vector>
-#include <network/string_view.hpp>
-#include <network/optional.hpp>
-#include <network/uri/config.hpp>
-#include <network/uri/uri_errors.hpp>
-#include <network/uri/detail/uri_parts.hpp>
-#include <network/uri/detail/encode.hpp>
-#include <network/uri/detail/decode.hpp>
-#include <network/uri/detail/translate.hpp>
-#include <network/uri/whatwg/url_search_parameters.hpp>
+#include <skyr/string_view.hpp>
+#include <skyr/optional.hpp>
+#include <skyr/url/config.hpp>
+#include <skyr/url/url_errors.hpp>
+#include <skyr/url/detail/uri_parts.hpp>
+#include <skyr/url/detail/encode.hpp>
+#include <skyr/url/detail/decode.hpp>
+#include <skyr/url/detail/translate.hpp>
+#include <skyr/url/url_search_parameters.hpp>
 
 #ifdef NETWORK_URI_MSVC
 #pragma warning(push)
 #pragma warning(disable : 4251 4231 4660)
 #endif
 
-namespace network {
-namespace whatwg {
+namespace skyr {
 /**
  * \ingroup url
  * \class url network/uri/url.hpp network/url.hpp
@@ -95,7 +94,7 @@ class url {
   /**
    * \brief A reference to the underlying string_type parts.
    */
-  using string_view = network::string_view;
+  using string_view = skyr::string_view;
 
   /**
    * \brief The char traits.
@@ -195,7 +194,7 @@ class url {
       }
       
       // reassign path to the next element
-      path_ = ::network::detail::uri_part(sep_it, last);
+      path_ = ::skyr::detail::uri_part(sep_it, last);
     }
     
     void assign() noexcept {
@@ -271,7 +270,7 @@ class url {
       auto first = std::begin(*query_), last = std::end(*query_);
       // skip ?
       ++first;
-      query_ = ::network::detail::uri_part(first, last);
+      query_ = ::skyr::detail::uri_part(first, last);
         
       if (query_ && query_->empty()) {
         query_ = nullopt;
@@ -339,7 +338,7 @@ class url {
       }
 
       // reassign query to the next element
-      query_ = ::network::detail::uri_part(sep_it, last);
+      query_ = ::skyr::detail::uri_part(sep_it, last);
     }
 
     void assign() noexcept {
@@ -399,7 +398,7 @@ class url {
   template <class InputIter>
   explicit url(InputIter first, InputIter last, std::error_code &ec) {
     if (!initialize(string_type(first, last))) {
-      ec = make_error_code(uri_error::invalid_syntax);
+      ec = make_error_code(url_error::invalid_syntax);
     }
   }
 #endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
@@ -432,7 +431,7 @@ class url {
   template <class Source>
   url(const Source &source, std::error_code &ec) {
     if (!initialize(detail::translate(source))) {
-      ec = make_error_code(uri_error::invalid_syntax);
+      ec = make_error_code(url_error::invalid_syntax);
     }
   }
 #endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
@@ -820,18 +819,17 @@ inline bool operator<=(const url &lhs, const url &rhs) noexcept {
 inline bool operator>=(const url &lhs, const url &rhs) noexcept {
   return !(lhs < rhs);
 }
-}  // namespace whatwg
-}  // namespace network
+}  // namespace skyr
 
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace std {
 template <>
-struct hash<::network::whatwg::url> {
-  std::size_t operator()(const ::network::whatwg::url &url_) const {
+struct hash<::skyr::url> {
+  std::size_t operator()(const ::skyr::url &url_) const {
     std::size_t seed = 0;
     std::for_each(std::begin(url_), std::end(url_),
-                  [&seed](network::whatwg::url::value_type v) {
-                    std::hash<::network::whatwg::url::value_type> hasher;
+                  [&seed](skyr::url::value_type v) {
+                    std::hash<::skyr::url::value_type> hasher;
                     seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
                   });
     return seed;

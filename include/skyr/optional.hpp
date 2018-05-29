@@ -25,13 +25,13 @@
 #if defined(NETWORK_OPTIONAL_STD17)
 #include <experimental/optional>
 
-namespace network {
+namespace skyr {
 template <class T>
 using optional = std::experimental::optional<T>;
 using bad_optional_access = std::experimental::bad_optional_access;
 
 constexpr auto nullopt = std::experimental::nullopt;
-}  // namespace network
+}  // namespace skyr
 
 #else
 
@@ -51,7 +51,7 @@ inline void fail(const char*, const char*, unsigned) {}
 #endif  // NDEBUG
 #endif // !defined(DOXYGEN_SHOULD_SKIP_THIS)
 
-namespace network {
+namespace skyr {
 /**
  * \ingroup optional
  * \class nullopt_t optional.hpp network/uri.hpp
@@ -726,7 +726,7 @@ template <class T>
 inline constexpr optional<typename std::decay<T>::type> make_optional(T&& value) {
   return optional<typename std::decay<T>::type>(std::forward(value));
 }
-}  // namespace network
+}  // namespace skyr
 
 #endif  // defined(NETWORK_OPTIONAL_STD17)
 

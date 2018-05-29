@@ -21,9 +21,9 @@
 #if defined(NETWORK_STRING_VIEW_STD17)
 #include <experimental/string_view>
 
-namespace network {
+namespace skyr {
 using string_view = std::experimental::basic_string_view<char>;
-}  // namespace network
+}  // namespace skyr
 
 #else
 
@@ -33,7 +33,7 @@ using string_view = std::experimental::basic_string_view<char>;
 #include <stdexcept>
 #include <algorithm>
 
-namespace network {
+namespace skyr {
 /**
  * \class basic_string_view string_view.hpp network/uri/string_view.hpp
  * \brief An implementation of C++17 string_view (n3921)
@@ -279,7 +279,7 @@ std::basic_ostream<charT, traits>& operator<<(
 }
 
 typedef basic_string_view<char> string_view;
-}  // namespace network
+}  // namespace skyr
 
 #endif  // defined(NETWORK_STRING_VIEW_STD17)
 

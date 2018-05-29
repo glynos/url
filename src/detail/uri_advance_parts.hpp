@@ -6,9 +6,9 @@
 #ifndef NETWORK_DETAIL_URI_ADVANCE_INC
 #define NETWORK_DETAIL_URI_ADVANCE_INC
 
-#include <network/uri/detail/uri_parts.hpp>
+#include <skyr/url/detail/uri_parts.hpp>
 
-namespace network {
+namespace skyr {
 namespace detail {
 uri_part copy_part(const std::string &part,
                    string_view::const_iterator &it);
@@ -16,6 +16,6 @@ uri_part copy_part(const std::string &part,
 void advance_parts(string_view uri_view, uri_parts &parts,
                    const uri_parts &existing_parts);
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr
 
 #endif  // NETWORK_DETAIL_URI_ADVANCE_INC

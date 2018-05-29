@@ -18,7 +18,7 @@ http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n3975.html
 
 This package provides:
 
-    * A ``network::uri`` class that implements a generic URI parser,
+    * A ``skyr::uri`` class that implements a generic URI parser,
       compatible with `RFC 3986`_ and `RFC 3987`_
     * Accessors to the underlying URI parts
     * A range-compatible interface

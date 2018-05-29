@@ -8,7 +8,7 @@
 #include <utility>
 #include <limits>
 
-namespace network {
+namespace skyr {
 namespace detail {
 namespace {
 template <class Iterator>
@@ -66,4 +66,4 @@ void advance_parts(string_view uri_view, uri_parts &parts,
   }
 }
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr

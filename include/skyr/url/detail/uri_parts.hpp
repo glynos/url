@@ -9,10 +9,10 @@
 #include <string>
 #include <utility>
 #include <iterator>
-#include <network/optional.hpp>
-#include <network/string_view.hpp>
+#include <skyr/optional.hpp>
+#include <skyr/string_view.hpp>
 
-namespace network {
+namespace skyr {
 namespace detail {
 class uri_part {
  public:
@@ -59,6 +59,6 @@ struct uri_parts {
   optional<uri_part> fragment;
 };
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr
 
 #endif  // NETWORK_DETAIL_URI_PARTS_INC

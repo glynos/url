@@ -9837,7 +9837,7 @@ class basic_json
         @return number of type @a T
 
         @note This function needs to respect the system's endianess, because
-              bytes in CBOR and MessagePack are stored in network order (big
+              bytes in CBOR and MessagePack are stored in skyr order (big
               endian) and therefore need reordering on little endian systems.
 
         @throw parse_error.110 if input has less than `sizeof(T)` bytes
@@ -10597,7 +10597,7 @@ class basic_json
         @tparam T the type of the number
 
         @note This function needs to respect the system's endianess, because
-              bytes in CBOR and MessagePack are stored in network order (big
+              bytes in CBOR and MessagePack are stored in skyr order (big
               endian) and therefore need reordering on little endian systems.
         */
         template<typename T>

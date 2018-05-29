@@ -9,15 +9,14 @@
 #include <algorithm>
 #include <functional>
 #include <vector>
-#include "network/uri/whatwg/url.hpp"
-#include "network/uri/detail/uri_parse.hpp"
+#include "skyr/url/url.hpp"
+#include "skyr/url/url_parse.hpp"
 #include "detail/uri_advance_parts.hpp"
 #include "detail/uri_percent_encode.hpp"
 #include "detail/algorithm.hpp"
 #include "detail/url_schemes.hpp"
 
-namespace network {
-namespace whatwg {
+namespace skyr {
 url::url() : url_view_(url_), url_parts_(), cannot_be_a_base_url_(false) {}
 
 url::url(const url &other)
@@ -25,7 +24,7 @@ url::url(const url &other)
       url_view_(url_),
       url_parts_(),
       cannot_be_a_base_url_(other.cannot_be_a_base_url_) {
-  ::network::detail::advance_parts(url_view_, url_parts_, other.url_parts_);
+  ::skyr::detail::advance_parts(url_view_, url_parts_, other.url_parts_);
 }
 
 url::url(url &&other) noexcept
@@ -33,10 +32,10 @@ url::url(url &&other) noexcept
       url_view_(url_),
       url_parts_(std::move(other.url_parts_)),
       cannot_be_a_base_url_(std::move(other.cannot_be_a_base_url_)) {
-  ::network::detail::advance_parts(url_view_, url_parts_, other.url_parts_);
+  ::skyr::detail::advance_parts(url_view_, url_parts_, other.url_parts_);
   other.url_.clear();
   other.url_view_ = string_view(other.url_);
-  other.url_parts_ = ::network::detail::uri_parts();
+  other.url_parts_ = ::skyr::detail::uri_parts();
 }
 
 url::~url() {}
@@ -243,7 +242,7 @@ int url::compare(const url &other) const {
 }
 
 bool url::initialize(const string_type &url) {
-  url_ = ::network::detail::trim_copy(url);
+  url_ = ::skyr::detail::trim_copy(url);
 
 //  auto it = std::remove_if(std::begin(url_), std::end(url_),
 //                           [] (char v) -> bool { return (v == '\t') || (v == '\n') || (v == '\r'); });
@@ -252,8 +251,8 @@ bool url::initialize(const string_type &url) {
   if (!url_.empty()) {
 //    auto view = string_view(url);
 //    auto it = std::begin(view), last = std::end(view);
-    auto result = ::network::detail::parse(url);
-    if (result.success) {
+    auto result = ::skyr::parse(url);
+    if (result) {
       url_ = result.url;
       url_view_ = string_view(url_);
       // detail::advance_parts(url_view_, url_parts_, result.parts);
@@ -280,5 +279,4 @@ bool operator==(const url &lhs, const char *rhs) noexcept {
 bool operator<(const url &lhs, const url &rhs) noexcept {
   return lhs.compare(rhs) < 0;
 }
-}  // namespace whatwg
-}  // namespace network
+}  // namespace skyr

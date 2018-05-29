@@ -1,4 +1,4 @@
-// Copyright 2013-2016 Glyn Matthews.
+// Copyright 2013-2018 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -9,10 +9,10 @@
 #include <string>
 #include <vector>
 #include <locale>
-#include <network/optional.hpp>
-#include <network/uri/detail/decode.hpp>
+#include <skyr/optional.hpp>
+#include <skyr/url/detail/decode.hpp>
 
-namespace network {
+namespace skyr {
 namespace detail {
 inline optional<char> percent_encode(std::string::const_iterator it) {
   try {
@@ -74,6 +74,6 @@ Iter decode_encoded_unreserved_chars(Iter first, Iter last) {
   return it2;
 }
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr
 
 #endif  // NETWORK_DETAIL_URI_PERCENT_ENCODE_INC

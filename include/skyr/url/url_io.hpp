@@ -17,7 +17,7 @@
 #include <network/uri/whatwg/url.hpp>
 #include <iosfwd>
 
-namespace network {
+namespace skyr {
 namespace whatwg {
 template <typename CharT, class CharTraits = std::char_traits<CharT> >
 std::basic_ostream<CharT, CharTraits> &operator<<(
@@ -48,7 +48,7 @@ inline std::wistream &operator>>(std::wistream &is, uri &uri_) {
 }
 #endif  // !defined(NETWORK_URI_MSVC)
 
-}  // namespace whatwg
-}  // namespace network
+}  // namespace skyr
+}  // namespace skyr
 
 #endif  // NETWORK_URI_WHATWG_URI_IO_INC

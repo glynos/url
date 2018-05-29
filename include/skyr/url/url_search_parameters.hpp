@@ -8,11 +8,10 @@
 
 #include <string>
 #include <vector>
-#include <network/optional.hpp>
-#include <network/string_view.hpp>
+#include <skyr/optional.hpp>
+#include <skyr/string_view.hpp>
 
-namespace network {
-namespace whatwg {
+namespace skyr {
 /**
  * \class uri_search_parameters
  */
@@ -23,7 +22,7 @@ class url_search_parameters {
    */
   using string_type = std::string;
   
-  using string_view = network::string_view;
+  using string_view = skyr::string_view;
   
   /**
    * \brief
@@ -110,7 +109,6 @@ class url_search_parameters {
 
   std::vector<value_type> parameters_;
 };
-}  // namespace whatwg
-}  // namespace network
+}  // namespace skyr
 
 #endif  // NETWORK_URI_URL_SEARCH_PARAMETERS_INC

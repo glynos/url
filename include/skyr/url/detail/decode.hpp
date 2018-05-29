@@ -1,4 +1,4 @@
-// Copyright (c) Glyn Matthews 2011-2017.
+// Copyright (c) Glyn Matthews 2011-2018.
 // Copyright 2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
@@ -8,11 +8,11 @@
 #ifndef NETWORK_URI_DECODE_INC
 #define NETWORK_URI_DECODE_INC
 
-#include <network/uri/uri_errors.hpp>
+#include <skyr/url/url_errors.hpp>
 #include <iterator>
 #include <cassert>
 
-namespace network {
+namespace skyr {
 namespace detail {
 template <typename CharT>
 CharT letter_to_hex(CharT in) {
@@ -28,7 +28,7 @@ CharT letter_to_hex(CharT in) {
     return in + 10 - 'A';
   }
 
-  throw percent_decoding_error(uri_error::non_hex_input);
+  throw percent_decoding_error(url_error::non_hex_input);
 }
 
 template <class InputIterator, class charT>
@@ -42,7 +42,7 @@ InputIterator decode_char(InputIterator it, charT *out) {
   auto v1 = detail::letter_to_hex(h1);
   if (h0 >= '8') {
     // unable to decode characters outside the ASCII character set.
-    throw percent_decoding_error(uri_error::conversion_failed);
+    throw percent_decoding_error(url_error::conversion_failed);
   }
   ++it;
   *out = static_cast<charT>((0x10 * v0) + v1);
@@ -57,7 +57,7 @@ OutputIterator decode(InputIterator in_begin, InputIterator in_end,
   while (it != in_end) {
     if (*it == '%') {
       if (std::distance(it, in_end) < 3) {
-        throw percent_decoding_error(uri_error::not_enough_input);
+        throw percent_decoding_error(url_error::not_enough_input);
       }
       char c = '\0';
       it = decode_char(it, &c);
@@ -77,6 +77,6 @@ String decode(const String &source) {
   return unencoded;
 }
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr
 
 #endif  // NETWORK_URI_DECODE_INC

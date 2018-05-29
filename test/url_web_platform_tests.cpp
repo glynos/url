@@ -8,9 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <network/url.hpp>
-#include <network/uri/detail/uri_parse.hpp>
-#include "string_utility.hpp"
+#include <skyr/url/url_parse.hpp>
 #include "json.hpp"
 
 // Tests using test data from W3C
@@ -139,22 +137,22 @@ TEST_P(test_parse_urls_absolute, parse) {
 
   std::cout << " >" << test_case_data.input << "<" << std::endl;
 
-  auto result = network::detail::parse(test_case_data.input);
+  auto result = skyr::parse(test_case_data.input);
 
   if (test_case_data.failure) {
-    if (result.success) {
+    if (result) {
       std::cout << " >" << test_case_data.input << "<" << std::endl;
     }
 
-    EXPECT_FALSE(result.success);
+    EXPECT_FALSE(result);
   }
   else {
-    if (!result.success) {
+    if (!result) {
       std::cout << " >" << test_case_data.input << "<" << std::endl;
       return;
     }
 
-    EXPECT_TRUE(result.success);
+    EXPECT_TRUE(result);
     EXPECT_EQ(test_case_data.protocol, result.scheme + ":");
     EXPECT_EQ(test_case_data.username, result.username);
     EXPECT_EQ(test_case_data.password, result.password);
@@ -195,24 +193,24 @@ TEST_P(test_parse_urls_using_base_urls, parse) {
 //    FAIL();
 //  }
 
-  auto base = network::detail::parse(test_case_data.base);
-  ASSERT_TRUE(base.success);
-  auto result = network::detail::parse(test_case_data.input, base);
+  auto base = skyr::parse(test_case_data.base);
+  ASSERT_TRUE(base);
+  auto result = skyr::parse(test_case_data.input, base);
 
   if (test_case_data.failure) {
-    if (result.success) {
+    if (result) {
       std::cout << " >" << test_case_data.input << "<" << std::endl;
     }
 
-    EXPECT_FALSE(result.success);
+    EXPECT_FALSE(result);
   }
   else {
-    if (!result.success) {
+    if (!result) {
       std::cout << " >" << test_case_data.input << "<" << std::endl;
       return;
     }
 
-    EXPECT_TRUE(result.success);
+    EXPECT_TRUE(result);
     EXPECT_EQ(test_case_data.protocol, result.scheme + ":");
     EXPECT_EQ(test_case_data.username, result.username);
     EXPECT_EQ(test_case_data.password, result.password);

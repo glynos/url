@@ -6,12 +6,12 @@
 #ifndef URI_TEST_STRING_UTILITY_INC
 #define URI_TEST_STRING_UTILITY_INC
 
-#include <network/string_view.hpp>
+#include <skyr/string_view.hpp>
 
-namespace network {
+namespace whatwg {
 inline bool operator==(const char *lhs, string_view rhs) {
   return string_view(lhs) == rhs;
 }
-}  // namespace network
+}  // namespace skyr
 
 #endif  // URI_TEST_STRING_UTILITY_INC

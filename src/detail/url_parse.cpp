@@ -7,16 +7,14 @@
 #include <limits>
 #include <cmath>
 #include <sstream>
-#include <arpa/inet.h>
-#include "network/uri/detail/uri_parse.hpp"
-#include "network/uri/detail/encode.hpp"
+#include "skyr/url/url_parse.hpp"
+#include "skyr/url/detail/encode.hpp"
 #include "grammar.hpp"
 #include "detail/url_schemes.hpp"
 
-#include <iostream>
+//#include <iostream>
 
-namespace network {
-namespace detail {
+namespace skyr {
 namespace {
 void remove_leading_whitespace(std::string &input, url_record &result) {
   auto first = begin(input), last = end(input);
@@ -56,7 +54,7 @@ void remove_tabs_and_newlines(std::string &input, url_record &result) {
 }
 
 inline bool is_special_scheme(const std::string &scheme) {
-  return is_special(string_view(scheme.data(), scheme.length()));
+  return detail::is_special(string_view(scheme.data(), scheme.length()));
 }
 
 inline bool is_forbidden_host_point(string_view::value_type c) {
@@ -406,7 +404,7 @@ bool parse_host(
   }
   else {
     auto domain = std::string();
-    encode_host(begin(buffer), end(buffer), std::back_inserter(domain));
+    detail::encode_host(begin(buffer), end(buffer), std::back_inserter(domain));
     auto it = std::find_if(begin(domain), end(domain), is_forbidden_host_point);
     if (it != end(domain)) {
       // result.validation_error = true;
@@ -468,7 +466,9 @@ void shorten_path(std::vector<std::string> &path, url_record &result) {
     return;
   }
 
-  if ((result.scheme.compare("file") == 0) && (path.size() == 1) && is_windows_drive_letter(path.front())) {
+  if ((result.scheme.compare("file") == 0) &&
+      (path.size() == 1) &&
+      is_windows_drive_letter(path.front())) {
     return;
   }
 
@@ -484,13 +484,13 @@ url_record basic_parse(
   auto result = url? url.value() : url_record{};
   result.url = input;
 
-
-  if (input == "/..//localhost//pig") {
-    std::cout << "URL:  " << input << std::endl;
-    if (base) {
-      std::cout << "BASE: " << base.value().url << std::endl;
-    }
-  }
+//
+//  if (input == "/..//localhost//pig") {
+//    std::cout << "URL:  " << input << std::endl;
+//    if (base) {
+//      std::cout << "BASE: " << base.value().url << std::endl;
+//    }
+//  }
 
   if (input.empty()) {
     return result;
@@ -527,7 +527,7 @@ url_record basic_parse(
         return result;
       }
     } else if (state == url_state::scheme) {
-      if (std::isalnum(*it, std::locale("C")) || is_in(*it, "+-.")) {
+      if (std::isalnum(*it, std::locale("C")) || detail::is_in(*it, "+-.")) {
         auto lower = std::tolower(*it, std::locale("C"));
         buffer.push_back(lower);
       } else if (*it == ':') {
@@ -781,14 +781,14 @@ url_record basic_parse(
           (is_special_scheme(result.scheme) && (*it == '\\')) ||
           (state_override != url_state::null)) {
         if (!buffer.empty()) {
-          if (!is_valid_port(buffer)) {
+          if (!detail::is_valid_port(buffer)) {
             result.validation_error = true;
             return result;
           }
 
           auto view = string_view(result.scheme.data(), result.scheme.length());
           auto port = std::atoi(buffer.c_str());
-          if (is_default_port(view, port)) {
+          if (detail::is_default_port(view, port)) {
             result.port = nullopt;
           }
           else {
@@ -978,7 +978,7 @@ url_record basic_parse(
     } else if (state == url_state::query) {
       if ((it == last) || (*it == '#')) {
         for (auto && ch : buffer) {
-          encode_char(ch, std::back_inserter(*result.query), "/.@&%;=");
+          detail::encode_char(ch, std::back_inserter(*result.query), "/.@&%;=");
         }
         buffer.clear();
 
@@ -993,7 +993,7 @@ url_record basic_parse(
       if (*it == '\0') {
         result.validation_error = true;
       } else {
-        encode_char(*it, std::back_inserter(*result.fragment), "/.@&l;=%");
+        detail::encode_char(*it, std::back_inserter(*result.fragment), "/.@&l;=%");
       }
     }
 
@@ -1030,5 +1030,4 @@ url_record parse(
 
   return result;
 }
-}  // namespace detail
-}  // namespace network
+}  // namespace skyr

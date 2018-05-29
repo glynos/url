@@ -10,10 +10,10 @@
 #include <utility>
 #include <string>
 #include <cstdint>
-#include <network/optional.hpp>
-#include <network/string_view.hpp>
+#include <skyr/optional.hpp>
+#include <skyr/string_view.hpp>
 
-namespace network {
+namespace skyr {
 namespace detail {
 const std::vector<std::pair<std::string, optional<std::uint16_t>>>
     &special_schemes();
@@ -24,7 +24,7 @@ optional<std::uint16_t> default_port(string_view scheme);
 
 bool is_default_port(string_view scheme, std::uint16_t port);
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr
 
 
 #endif  // NETWORK_DETAIL_URL_DEFAULT_PORT_INC

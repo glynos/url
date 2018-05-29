@@ -13,7 +13,7 @@
 #include <cctype>
 #include <locale>
 
-namespace network {
+namespace skyr {
 namespace detail {
 template <class Rng, class Pred>
 inline void for_each(Rng& rng, Pred&& pred) {
@@ -68,6 +68,6 @@ std::string trim_copy(const std::string &str) {
   return trim_back(trim_front(str));
 }
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr
 
 #endif  // NETWORK_DETAIL_RANGE_INC

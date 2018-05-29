@@ -10,13 +10,11 @@
 #include <string>
 #include <utility>
 #include <iterator>
-#include <network/optional.hpp>
-#include <network/string_view.hpp>
+#include <skyr/optional.hpp>
+#include <skyr/string_view.hpp>
+#include <skyr/url/url_errors.hpp>
 
-namespace network {
-namespace detail {
-struct uri_parts;
-
+namespace skyr {
 // https://url.spec.whatwg.org/#concept-basic-url-parser
 enum class url_state {
   null,
@@ -43,14 +41,6 @@ enum class url_state {
   fragment,
 };
 
-struct blob {
-
-};
-
-struct media_source {
-
-};
-
 struct url_record {
   std::string url;
 
@@ -67,6 +57,7 @@ struct url_record {
   optional<std::string> object;
 
   bool success;
+//  url_error error;
   bool validation_error;
 
   url_record()
@@ -83,10 +74,27 @@ url_record basic_parse(
     const optional<url_record> &url = nullopt,
     url_state state_override = url_state::null);
 
+//url_record basic_parse(
+//    std::string &input);
+//url_record basic_parse(
+//    std::string input,
+//    const optional<url_record> &base);
+//url_record basic_parse(
+//    std::string input,
+//    const optional<url_record> &base,
+//    const optional<url_record> &url,
+//    url_state state_override);
+
 url_record parse(
     std::string input,
     const optional<url_record> &base = nullopt);
-}  // namespace detail
-}  // namespace network
+//
+//url_record parse(
+//    std::string input);
+//
+//url_record parse(
+//    std::string input,
+//    const optional<url_record> &base);
+}  // namespace skyr
 
 #endif  // NETWORK_DETAIL_URI_PARSE_INC

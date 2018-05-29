@@ -9,7 +9,7 @@
 #include <string>
 #include <locale>
 
-namespace network {
+namespace skyr {
 namespace detail {
 template <typename Source>
 struct translate_impl;
@@ -87,6 +87,6 @@ inline std::string translate(const Source &source) {
 }
 
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr
 
 #endif  // NETWORK_URI_DETAIL_TRANSLATE_INC

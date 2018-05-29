@@ -5,7 +5,7 @@
 
 #include "url_schemes.hpp"
 
-namespace network {
+namespace skyr {
 namespace detail {
 const std::vector<std::pair<std::string, optional<std::uint16_t>>> &special_schemes() {
   static const auto schemes = std::vector<std::pair<std::string, optional<std::uint16_t>>>{
@@ -52,4 +52,4 @@ optional<std::uint16_t> default_port(string_view scheme) {
     return dport && (*dport == port);
   }
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr

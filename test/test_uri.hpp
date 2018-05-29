@@ -125,7 +125,7 @@ inline std::ostream &operator << (std::ostream &os, const uri_parts &parts) {
     << "fragment:   " << parts.fragment;
 }
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr
 
 
 namespace test {

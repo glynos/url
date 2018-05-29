@@ -1,4 +1,4 @@
-// Copyright (c) Glyn Matthews 2011-2017.
+// Copyright (c) Glyn Matthews 2011-2018.
 // Copyright 2012 Dean Michael Berris <dberris@google.com>
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
@@ -8,13 +8,13 @@
 #ifndef NETWORK_URI_ENCODE_INC
 #define NETWORK_URI_ENCODE_INC
 
-#include <network/uri/uri_errors.hpp>
+#include <skyr/url/url_errors.hpp>
 #include <iterator>
 #include <cstring>
 #include <cassert>
 #include <algorithm>
 
-namespace network {
+namespace skyr {
 namespace detail {
 template <typename CharT>
 inline CharT hex_to_letter(CharT in) {
@@ -162,6 +162,6 @@ String encode_fragment(const String &fragment) {
   return encoded;
 }
 }  // namespace detail
-}  // namespace network
+}  // namespace skyr
 
 #endif  // NETWORK_URI_ENCODE_INC

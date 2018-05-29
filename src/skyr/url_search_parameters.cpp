@@ -3,11 +3,10 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "network/uri/whatwg/url_search_parameters.hpp"
+#include "skyr/url/url_search_parameters.hpp"
 #include <algorithm>
 
-namespace network {
-namespace whatwg {
+namespace skyr {
 url_search_parameters::url_search_parameters() { update(); }
 
 url_search_parameters::url_search_parameters(string_view query) {
@@ -142,5 +141,4 @@ void url_search_parameters::sort() {
 }
 
 void url_search_parameters::update() {}
-}  // namespace whatwg
-}  // namespace network
+}  // namespace skyr
