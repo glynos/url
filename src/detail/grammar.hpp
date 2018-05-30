@@ -64,7 +64,7 @@ inline bool is_unreserved(string_view::const_iterator &it,
   return false;
 }
 
-inline bool is_pct_encoded(string_view::const_iterator &it,
+inline bool is_pct_encoded(string_view::const_iterator it,
                            string_view::const_iterator last) {
   if (it == last) {
     return false;

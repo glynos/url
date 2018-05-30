@@ -1,4 +1,4 @@
-# Copyright (c) Glyn Matthews 2012-2017.
+# Copyright (c) Glyn Matthews 2012-2018.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -8,10 +8,11 @@ include_directories( ${gtest_SOURCE_DIR}/include)
 
 set(
   TESTS
-  url_test
-  url_parse_tests
-  url_web_platform_tests
   optional_test
+  path_iterator_test
+#  url_test
+#  url_parse_tests
+  url_web_platform_tests
   )
 
 if (Uri_RUN_WEB_PLATFORM_TESTS)

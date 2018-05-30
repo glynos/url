@@ -12,7 +12,7 @@
 #include "grammar.hpp"
 #include "detail/url_schemes.hpp"
 
-//#include <iostream>
+#include <iostream>
 
 namespace skyr {
 namespace {
@@ -62,10 +62,20 @@ inline bool is_forbidden_host_point(string_view::value_type c) {
   const char *first = forbidden, *last = forbidden + sizeof(forbidden);
   return last != std::find(first, last, c);
 }
+//
+//struct chars {
+//  std::string chars_;
+//
+//  explicit chars(std::string chars) : chars_(chars) {}
+//  bool operator (string_view::const_iterator first, string_view last) const {
+//
+//  }
+//};
 
-bool remaining_starts_with(string_view::const_iterator first,
-                           string_view::const_iterator last,
-                           const char *chars) {
+bool remaining_starts_with(
+    string_view::const_iterator first,
+    string_view::const_iterator last,
+    const char *chars) {
   auto chars_first = chars, chars_last = chars + std::strlen(chars);
   auto chars_it = chars_first;
   auto it = first;
@@ -84,6 +94,26 @@ bool remaining_starts_with(string_view::const_iterator first,
   }
   return true;
 }
+
+//bool remaining_starts_with_hex_digits(
+//    string_view::const_iterator first,
+//    string_view::const_iterator last) {
+//  auto it = first;
+//  ++it;
+//  while (chars_it != chars_last) {
+//    if (*it != *chars_it) {
+//      return false;
+//    }
+//
+//    ++it;
+//    ++chars_it;
+//
+//    if (it == last) {
+//      return false;
+//    }
+//  }
+//  return true;
+//}
 
 //bool validate_domain(const std::string &buffer) {
 //  auto view = string_view(buffer);
@@ -422,23 +452,11 @@ bool parse_host(
   return true;
 }
 
-bool is_double_slash(
-    string_view::const_iterator it,
-    string_view::const_iterator last) {
-  if (std::distance(it, last) < 2) {
-    return false;
-  }
-
-  auto slash_it = it;
-  for (auto i = 0; i < 2; ++i) {
-    if (*slash_it == '/') {
-      ++slash_it;
-    }
-    else {
-      return false;
-    }
-  }
-  return true;
+bool is_url_code_point(char c) {
+  return
+      std::isalnum(c, std::locale("C")) ||
+      detail::is_in(c, "!$&'()*+,-./:/=?@_~")
+          ;
 }
 
 bool is_windows_drive_letter(
@@ -459,6 +477,32 @@ bool is_windows_drive_letter(
 inline bool is_windows_drive_letter(const std::string &el) {
   auto view = string_view(el);
   return is_windows_drive_letter(begin(view), end(view));
+}
+
+bool is_single_dot_path_segment(const std::string &el) {
+  if (el == ".") {
+    return true;
+  }
+  else if ((el == "%2e") || (el == "%2E")) {
+    return true;
+  }
+  return false;
+}
+
+bool is_double_dot_path_segment(const std::string &el) {
+  if (el == "..") {
+    return true;
+  }
+  else if ((el == ".%2e") || (el == ".%2E")) {
+    return true;
+  }
+  else if ((el == "%2e.") || (el == "%2E.")) {
+    return true;
+  }
+  else if ((el == "%2e%2e") || (el == "%2E%2e") || (el == "%2e%2E") || (el == "%2E%2E")) {
+    return true;
+  }
+  return false;
 }
 
 void shorten_path(std::vector<std::string> &path, url_record &result) {
@@ -484,13 +528,13 @@ url_record basic_parse(
   auto result = url? url.value() : url_record{};
   result.url = input;
 
-//
-//  if (input == "/..//localhost//pig") {
-//    std::cout << "URL:  " << input << std::endl;
-//    if (base) {
-//      std::cout << "BASE: " << base.value().url << std::endl;
-//    }
-//  }
+
+  if (input == "lolscheme:x x#x x") {
+    std::cout << "URL:  " << input << std::endl;
+    if (base) {
+      std::cout << "BASE: " << base.value().url << std::endl;
+    }
+  }
 
   if (input.empty()) {
     return result;
@@ -536,14 +580,23 @@ url_record basic_parse(
         }
 
         result.scheme = buffer;
+//        if (url && url.value().port) {
+//          auto port = url.value().port.value();
+//          if (default_port(result.scheme).value() == port) {
+//            return result;
+//          }
+//        }
         buffer.clear();
 
         if (result.scheme.compare("file") == 0) {
-          auto next = it;
-          ++next;
-          if (!is_double_slash(next, last)) {
+          if (!remaining_starts_with(it, last, "//")) {
             result.validation_error = true;
           }
+//          auto next = it;
+//          ++next;
+//          if (!is_double_slash(next, last)) {
+//            result.validation_error = true;
+//          }
           state = url_state::file;
         } else if (is_special_scheme(result.scheme) && base && (base.value().scheme == result.scheme)) {
           state = url_state::special_relative_or_authority;
@@ -924,19 +977,21 @@ url_record basic_parse(
         }
       }
     } else if (state == url_state::path) {
-      if ((*it == '/') ||
+      if (((it == last) || (*it == '/')) ||
           (is_special_scheme(result.scheme) && (*it == '\\')) ||
           (!state_override && ((*it == '?') || (*it == '#')))) {
         if (is_special_scheme(result.scheme) && (*it == '\\')) {
           result.validation_error = true;
-        } else if (buffer == "..") {
+        } else if (is_double_dot_path_segment(buffer)) {
           shorten_path(result.path, result);
-          if ((*it != '/') && (is_special_scheme(result.scheme) && (*it == '\\'))) {
+          if ((*it != '/') && !(is_special_scheme(result.scheme) && (*it == '\\'))) {
             result.path.push_back(std::string());
           }
-        } else if ((buffer == ".") && ((*it != '/') && (is_special_scheme(result.scheme) && (*it == '\\')))) {
+        } else if (
+            is_single_dot_path_segment(buffer) &&
+            ((*it != '/') && (is_special_scheme(result.scheme) && (*it == '\\')))) {
           result.path.push_back(std::string());
-        } else if (buffer != ".") {
+        } else if (!is_single_dot_path_segment(buffer)) {
           if ((result.scheme.compare("file") == 0) && result.path.empty() && is_windows_drive_letter(buffer)) {
             if (!result.host || !result.host.value().empty()) {
               result.validation_error = true;
@@ -961,6 +1016,7 @@ url_record basic_parse(
         }
       } else {
         buffer += *it;
+//        detail::encode_char(*it, std::back_inserter(buffer));
       }
     } else if (state == url_state::cannot_be_a_base_url_path) {
       if (*it == '?') {
@@ -969,12 +1025,19 @@ url_record basic_parse(
       } else if (*it == '#') {
         result.fragment = std::string();
         state = url_state::fragment;
-      } else if (*it != '%') {
-        result.validation_error = true;
+      } else {
+        if ((it != last) && !is_url_code_point(*it) && (*it != '%')) {
+          result.validation_error = true;
+        }
+        else if (detail::is_pct_encoded(it, last)) {
+          result.validation_error = true;
+        }
+        if (it != last) {
+          auto el = std::string();
+          detail::encode_char(*it, std::back_inserter(el), " ");
+          result.path[0] += el;
+        }
       }
-//      else {
-//        result.path[0].push_back(*it);
-//      }
     } else if (state == url_state::query) {
       if ((it == last) || (*it == '#')) {
         for (auto && ch : buffer) {

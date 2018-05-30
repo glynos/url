@@ -96,10 +96,7 @@ class path_iterator {
       : path_{path}, element_{} {
     if (path_ && path_.value().empty()) {
       path_ = nullopt;
-    }
-    else {
-      // skip past '/'
-      advance();
+    } else {
       assign();
     }
   }
