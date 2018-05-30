@@ -7,8 +7,10 @@
 #include <limits>
 #include <cmath>
 #include <sstream>
+#include <deque>
 #include "skyr/url/url_parse.hpp"
 #include "skyr/url/detail/encode.hpp"
+#include "skyr/url/detail/decode.hpp"
 #include "grammar.hpp"
 #include "detail/url_schemes.hpp"
 
@@ -62,15 +64,6 @@ inline bool is_forbidden_host_point(string_view::value_type c) {
   const char *first = forbidden, *last = forbidden + sizeof(forbidden);
   return last != std::find(first, last, c);
 }
-//
-//struct chars {
-//  std::string chars_;
-//
-//  explicit chars(std::string chars) : chars_(chars) {}
-//  bool operator (string_view::const_iterator first, string_view last) const {
-//
-//  }
-//};
 
 bool remaining_starts_with(
     string_view::const_iterator first,
@@ -115,21 +108,6 @@ bool remaining_starts_with(
 //  return true;
 //}
 
-//bool validate_domain(const std::string &buffer) {
-//  auto view = string_view(buffer);
-//  auto first = begin(view), last = end(view);
-//
-//  auto it = first;
-//  while (it != last) {
-//    if (!is_unreserved(it, last) &&
-//        !is_pct_encoded(it, last) &&
-//        !is_sub_delim(it, last)) {
-//      return false;
-//    }
-//  }
-//  return true;
-//}
-//
 //bool validate_ip_address(string_view::const_iterator first,
 //                         string_view::const_iterator last,
 //                         int family) {
@@ -419,35 +397,53 @@ bool parse_ipv4_address(
 }
 
 bool parse_host(
-    const std::string &scheme,
     const std::string &buffer,
-    std::string &host) {
+    std::string &host,
+    bool is_not_special = false) {
   if (buffer.front() == '[') {
     if (buffer.back() != ']') {
       // result.validation_error = true;
       return false;
     }
-
-    if (!parse_ipv6_address(buffer, host)) {
-      return false;
-    }
+    return parse_ipv6_address(buffer, host);
   }
-  else {
-    auto domain = std::string();
-    detail::encode_host(begin(buffer), end(buffer), std::back_inserter(domain));
-    auto it = std::find_if(begin(domain), end(domain), is_forbidden_host_point);
-    if (it != end(domain)) {
+
+  if (is_not_special) {
+    auto it = std::find_if(
+        begin(buffer), end(buffer),
+        [] (char c) -> bool {
+          static const char forbidden[] = "\0\t\n\r #/:?@[\\]";
+          const char *first = forbidden, *last = forbidden + sizeof(forbidden);
+          return last != std::find(first, last, c);
+        });
+    if (it != std::end(buffer)) {
       // result.validation_error = true;
       return false;
     }
 
-    auto ipv4_host = std::string();
-    if (parse_ipv4_address(domain, ipv4_host)) {
-      host = ipv4_host;
+    auto output = std::string();
+    for (auto c : buffer) {
+      detail::encode_char_2(c, std::back_inserter(output));
     }
-    else {
-      host = domain;
-    }
+
+    host = output;
+    return true;
+  }
+
+  auto domain = std::string{};
+  detail::decode(begin(buffer), end(buffer), std::back_inserter(domain));
+  auto it = std::find_if(begin(domain), end(domain), is_forbidden_host_point);
+  if (it != end(domain)) {
+    // result.validation_error = true;
+    return false;
+  }
+
+  auto ipv4_host = std::string();
+  if (parse_ipv4_address(domain, ipv4_host)) {
+    host = ipv4_host;
+  }
+  else {
+    host = domain;
   }
   return true;
 }
@@ -792,7 +788,7 @@ url_record basic_parse(
         }
 
         auto host = std::string();
-        if (!parse_host(result.scheme, buffer, host)) {
+        if (!parse_host(buffer, host, is_special_scheme(result.scheme))) {
           return result;
         }
         result.host = host;
@@ -813,7 +809,7 @@ url_record basic_parse(
         }
 
         auto host = std::string();
-        if (!parse_host(result.scheme, buffer, host)) {
+        if (!parse_host(buffer, host, is_special_scheme(result.scheme))) {
           return result;
         }
         result.host = host;
@@ -935,7 +931,7 @@ url_record basic_parse(
           state = url_state::path_start;
         } else {
           auto host = std::string();
-          if (!parse_host(result.scheme, buffer, host)) {
+          if (!parse_host(buffer, host, is_special_scheme(result.scheme))) {
             return result;
           }
 
@@ -989,7 +985,7 @@ url_record basic_parse(
           }
         } else if (
             is_single_dot_path_segment(buffer) &&
-            ((*it != '/') && (is_special_scheme(result.scheme) && (*it == '\\')))) {
+            !((*it == '/') || (is_special_scheme(result.scheme) && (*it == '\\')))) {
           result.path.push_back(std::string());
         } else if (!is_single_dot_path_segment(buffer)) {
           if ((result.scheme.compare("file") == 0) && result.path.empty() && is_windows_drive_letter(buffer)) {
@@ -1005,6 +1001,15 @@ url_record basic_parse(
 
         buffer.clear();
 
+        if ((result.scheme.compare("file") == 0) && ((it == last) || (*it == '?') || (*it == '#'))) {
+          auto path = std::deque<std::string>(begin(result.path), end(result.path));
+          while ((path.size() > 1) && path[0].empty()) {
+            result.validation_error = true;
+            path.pop_front();
+          }
+          result.path.assign(begin(path), end(path));
+        }
+
         if (*it == '?') {
           result.query = std::string();
           state = url_state::query;
@@ -1015,8 +1020,7 @@ url_record basic_parse(
           state = url_state::fragment;
         }
       } else {
-        buffer += *it;
-//        detail::encode_char(*it, std::back_inserter(buffer));
+        detail::encode_char_2(*it, std::back_inserter(buffer), " \"<>`#?{}");
       }
     } else if (state == url_state::cannot_be_a_base_url_path) {
       if (*it == '?') {
@@ -1029,34 +1033,27 @@ url_record basic_parse(
         if ((it != last) && !is_url_code_point(*it) && (*it != '%')) {
           result.validation_error = true;
         }
-        else if (detail::is_pct_encoded(it, last)) {
+        else if ((*it == '%') && !detail::is_pct_encoded(it, last)) {
           result.validation_error = true;
         }
         if (it != last) {
           auto el = std::string();
-          detail::encode_char(*it, std::back_inserter(el), " ");
+          detail::encode_char_2(*it, std::back_inserter(el));
           result.path[0] += el;
         }
       }
     } else if (state == url_state::query) {
-      if ((it == last) || (*it == '#')) {
-        for (auto && ch : buffer) {
-          detail::encode_char(ch, std::back_inserter(*result.query), "/.@&%;=");
-        }
-        buffer.clear();
-
-        if (*it == '#') {
-          result.fragment = std::string();
-          state = url_state::fragment;
-        }
-      } else {
-        buffer += *it;
+      if (!state_override && (*it == '#')) {
+        result.fragment = std::string();
+        state = url_state::fragment;
+      } else if (it != last) {
+        detail::encode_char_2(*it, std::back_inserter(*result.query), " \"#<>");
       }
     } else if (state == url_state::fragment) {
       if (*it == '\0') {
         result.validation_error = true;
       } else {
-        detail::encode_char(*it, std::back_inserter(*result.fragment), "/.@&l;=%");
+        detail::encode_char_2(*it, std::back_inserter(*result.fragment), " \"<>`");
       }
     }
 

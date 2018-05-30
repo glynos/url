@@ -30,7 +30,15 @@ inline CharT hex_to_letter(CharT in) {
 }
 
 template <class OutputIterator>
-OutputIterator encode_char(char in, OutputIterator out, const char *ignore = "") {
+OutputIterator encode_char(char in, OutputIterator out) {
+  out++ = '%';
+  out++ = hex_to_letter((in >> 4) & 0x0f);
+  out++ = hex_to_letter(in & 0x0f);
+  return out;
+}
+
+template <class OutputIterator>
+OutputIterator encode_char_2(char in, OutputIterator out, const char *includes = "") {
   if (((in >= 'a') && (in <= 'z')) ||
       ((in >= 'A') && (in <= 'Z')) ||
       ((in >= '0') && (in <= '9')) ||
@@ -40,8 +48,8 @@ OutputIterator encode_char(char in, OutputIterator out, const char *ignore = "")
       (in == '~')) {
     out++ = in;
   } else {
-    auto first = ignore, last = ignore + std::strlen(ignore);
-    if (std::find(first, last, in) != last) {
+    auto first = includes, last = includes + std::strlen(includes);
+    if (std::find(first, last, in) == last) {
       out++ = in;
     } else {
       out++ = '%';
@@ -52,115 +60,115 @@ OutputIterator encode_char(char in, OutputIterator out, const char *ignore = "")
   return out;
 }
 
-template <typename InputIterator, typename OutputIterator>
-OutputIterator encode_user_info(InputIterator first, InputIterator last,
-                                OutputIterator out) {
-  auto it = first;
-  while (it != last) {
-    detail::encode_char(*it, out, ":");
-    ++it;
-  }
-  return out;
-}
-
-template <typename InputIterator, typename OutputIterator>
-OutputIterator encode_host(InputIterator first, InputIterator last,
-                           OutputIterator out) {
-  auto it = first;
-  while (it != last) {
-    detail::encode_char(*it, out, "[:]");
-    ++it;
-  }
-  return out;
-}
-
-template <typename InputIterator, typename OutputIterator>
-OutputIterator encode_port(InputIterator first, InputIterator last,
-                           OutputIterator out) {
-  auto it = first;
-  while (it != last) {
-    detail::encode_char(*it, out);
-    ++it;
-  }
-  return out;
-}
-
-template <typename InputIterator, typename OutputIterator>
-OutputIterator encode_path(InputIterator first, InputIterator last,
-                           OutputIterator out) {
-  auto it = first;
-  while (it != last) {
-    detail::encode_char(*it, out, "/.@%;=");
-    ++it;
-  }
-  return out;
-}
-
-template <typename InputIterator, typename OutputIterator>
-OutputIterator encode_query(InputIterator first, InputIterator last,
-                            OutputIterator out) {
-  auto it = first;
-  while (it != last) {
-    detail::encode_char(*it, out, "/.@&%;=");
-    ++it;
-  }
-  return out;
-}
-
-template <typename InputIterator, typename OutputIterator>
-OutputIterator encode_fragment(InputIterator first, InputIterator last,
-                               OutputIterator out) {
-  auto it = first;
-  while (it != last) {
-    detail::encode_char(*it, out, "/.@&l;=%");
-    ++it;
-  }
-  return out;
-}
-
-template <class String>
-String encode_user_info(const String &user_info) {
-  String encoded;
-  encode_user_info(std::begin(user_info), std::end(user_info),
-                   std::back_inserter(encoded));
-  return encoded;
-}
-
-template <class String>
-String encode_host(const String &host) {
-  String encoded;
-  encode_host(std::begin(host), std::end(host), std::back_inserter(encoded));
-  return encoded;
-}
-
-template <class String>
-String encode_port(const String &port) {
-  String encoded;
-  encode_port(std::begin(port), std::end(port), std::back_inserter(encoded));
-  return encoded;
-}
-
-template <class String>
-String encode_path(const String &path) {
-  String encoded;
-  encode_path(std::begin(path), std::end(path), std::back_inserter(encoded));
-  return encoded;
-}
-
-template <class String>
-String encode_query(const String &query) {
-  String encoded;
-  encode_query(std::begin(query), std::end(query), std::back_inserter(encoded));
-  return encoded;
-}
-
-template <class String>
-String encode_fragment(const String &fragment) {
-  String encoded;
-  encode_fragment(std::begin(fragment), std::end(fragment),
-                  std::back_inserter(encoded));
-  return encoded;
-}
+//template <typename InputIterator, typename OutputIterator>
+//OutputIterator encode_user_info(InputIterator first, InputIterator last,
+//                                OutputIterator out) {
+//  auto it = first;
+//  while (it != last) {
+//    detail::encode_char(*it, out, ":");
+//    ++it;
+//  }
+//  return out;
+//}
+//
+//template <typename InputIterator, typename OutputIterator>
+//OutputIterator encode_host(InputIterator first, InputIterator last,
+//                           OutputIterator out) {
+//  auto it = first;
+//  while (it != last) {
+//    detail::encode_char(*it, out, "[:]");
+//    ++it;
+//  }
+//  return out;
+//}
+//
+//template <typename InputIterator, typename OutputIterator>
+//OutputIterator encode_port(InputIterator first, InputIterator last,
+//                           OutputIterator out) {
+//  auto it = first;
+//  while (it != last) {
+//    detail::encode_char(*it, out);
+//    ++it;
+//  }
+//  return out;
+//}
+//
+//template <typename InputIterator, typename OutputIterator>
+//OutputIterator encode_path(InputIterator first, InputIterator last,
+//                           OutputIterator out) {
+//  auto it = first;
+//  while (it != last) {
+//    detail::encode_char(*it, out, "/.@%;=");
+//    ++it;
+//  }
+//  return out;
+//}
+//
+//template <typename InputIterator, typename OutputIterator>
+//OutputIterator encode_query(InputIterator first, InputIterator last,
+//                            OutputIterator out) {
+//  auto it = first;
+//  while (it != last) {
+//    detail::encode_char(*it, out, "/.@&%;=");
+//    ++it;
+//  }
+//  return out;
+//}
+//
+//template <typename InputIterator, typename OutputIterator>
+//OutputIterator encode_fragment(InputIterator first, InputIterator last,
+//                               OutputIterator out) {
+//  auto it = first;
+//  while (it != last) {
+//    detail::encode_char(*it, out, "/.@&l;=%");
+//    ++it;
+//  }
+//  return out;
+//}
+//
+//template <class String>
+//String encode_user_info(const String &user_info) {
+//  String encoded;
+//  encode_user_info(std::begin(user_info), std::end(user_info),
+//                   std::back_inserter(encoded));
+//  return encoded;
+//}
+//
+//template <class String>
+//String encode_host(const String &host) {
+//  String encoded;
+//  encode_host(std::begin(host), std::end(host), std::back_inserter(encoded));
+//  return encoded;
+//}
+//
+//template <class String>
+//String encode_port(const String &port) {
+//  String encoded;
+//  encode_port(std::begin(port), std::end(port), std::back_inserter(encoded));
+//  return encoded;
+//}
+//
+//template <class String>
+//String encode_path(const String &path) {
+//  String encoded;
+//  encode_path(std::begin(path), std::end(path), std::back_inserter(encoded));
+//  return encoded;
+//}
+//
+//template <class String>
+//String encode_query(const String &query) {
+//  String encoded;
+//  encode_query(std::begin(query), std::end(query), std::back_inserter(encoded));
+//  return encoded;
+//}
+//
+//template <class String>
+//String encode_fragment(const String &fragment) {
+//  String encoded;
+//  encode_fragment(std::begin(fragment), std::end(fragment),
+//                  std::back_inserter(encoded));
+//  return encoded;
+//}
 }  // namespace detail
 }  // namespace skyr
 

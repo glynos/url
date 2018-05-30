@@ -57,7 +57,9 @@ OutputIterator decode(InputIterator in_begin, InputIterator in_end,
   while (it != in_end) {
     if (*it == '%') {
       if (std::distance(it, in_end) < 3) {
-        throw percent_decoding_error(url_error::not_enough_input);
+        out++ = *it;
+        return out;
+//        throw percent_decoding_error(url_error::not_enough_input);
       }
       char c = '\0';
       it = decode_char(it, &c);

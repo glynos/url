@@ -8,8 +8,9 @@ include_directories( ${gtest_SOURCE_DIR}/include)
 
 set(
   TESTS
-  optional_test
-  path_iterator_test
+  optional_tests
+  encoding_tests
+  path_iterator_tests
 #  url_test
 #  url_parse_tests
   url_web_platform_tests
