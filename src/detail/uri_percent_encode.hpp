@@ -15,13 +15,7 @@
 namespace skyr {
 namespace detail {
 inline optional<char> percent_encode(std::string::const_iterator it) {
-  try {
-    char output = '\0';
-    detail::decode_char(it, &output);
-    return output;
-  } catch (percent_decoding_error &) {
-    return optional<char>();
-  }
+  return detail::decode_char(it);
 }
 
 template <class String>

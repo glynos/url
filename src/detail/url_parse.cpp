@@ -88,45 +88,6 @@ bool remaining_starts_with(
   return true;
 }
 
-//bool remaining_starts_with_hex_digits(
-//    string_view::const_iterator first,
-//    string_view::const_iterator last) {
-//  auto it = first;
-//  ++it;
-//  while (chars_it != chars_last) {
-//    if (*it != *chars_it) {
-//      return false;
-//    }
-//
-//    ++it;
-//    ++chars_it;
-//
-//    if (it == last) {
-//      return false;
-//    }
-//  }
-//  return true;
-//}
-
-//bool validate_ip_address(string_view::const_iterator first,
-//                         string_view::const_iterator last,
-//                         int family) {
-//  // the maximum ipv6 address length is 45 - choose a buffer on the
-//  // stack large enough
-//  char addr[64];
-//  std::memset(addr, 0, sizeof(addr));
-//  std::copy(first, last, std::begin(addr));
-//  string_view::value_type buffer[sizeof(struct in6_addr)];
-//  int rc = ::inet_pton(family, addr, &buffer);
-//  return rc > 0;
-//}
-//
-//inline bool validate_ipv4_address(const std::string &buffer) {
-//  auto view = string_view(buffer);
-//  auto first = begin(view), last = end(view);
-//  return validate_ip_address(first, last, AF_INET);
-//}
-
 bool parse_ipv6_address(
     const std::string &buffer,
     std::string &host) {
@@ -304,6 +265,7 @@ bool parse_ipv4_number(
     return true;
   }
 
+  // TODO: this totally sucks
   std::stringstream ss(input);
   ss >> number;
   return !!ss;
@@ -395,6 +357,22 @@ bool parse_ipv4_address(
 
   return true;
 }
+//
+//enum class processing_options {
+//  transitional,
+//  nontransational,
+//};
+//
+//void domain_to_host(const std::string &domain, bool be_strict = false) {
+//  auto check_hyphens = false;
+//  auto check_bidi = false;
+//  auto check_joiners = false;
+//  auto use_std3_ascii_rules = false;
+//  auto processing_option = processing_options::transitional;
+//  bool verify_dns_length = false;
+//
+//
+//}
 
 bool parse_host(
     const std::string &buffer,
@@ -423,7 +401,7 @@ bool parse_host(
 
     auto output = std::string();
     for (auto c : buffer) {
-      detail::encode_char_2(c, std::back_inserter(output));
+      detail::encode_char(c, std::back_inserter(output));
     }
 
     host = output;
@@ -431,7 +409,13 @@ bool parse_host(
   }
 
   auto domain = std::string{};
-  detail::decode(begin(buffer), end(buffer), std::back_inserter(domain));
+  try {
+    detail::decode(begin(buffer), end(buffer), std::back_inserter(domain));
+  }
+  catch (percent_decoding_error &) {
+    // result.validation_error = true;
+    return false;
+  }
   auto it = std::find_if(begin(domain), end(domain), is_forbidden_host_point);
   if (it != end(domain)) {
     // result.validation_error = true;
@@ -447,6 +431,21 @@ bool parse_host(
   }
   return true;
 }
+
+//bool is_surrogate(char c) {
+//  return ((static_cast<int>(c) >= 0xd800) && static_cast<int>(c) <= 0xdfff);
+//}
+//
+//bool is_scalar(char c) {
+//  return !is_surrogate(c);
+//}
+
+//bool is_ascii_hex_digit(char c) {
+//  return
+//      ((static_cast<int>(c) >= 0x41) && static_cast<int>(c) <= 0x46) ||
+//      ((static_cast<int>(c) >= 0x61) && static_cast<int>(c) <= 0x66)
+//          ;
+//}
 
 bool is_url_code_point(char c) {
   return
@@ -525,7 +524,7 @@ url_record basic_parse(
   result.url = input;
 
 
-  if (input == "lolscheme:x x#x x") {
+  if (input == "sc://?") {
     std::cout << "URL:  " << input << std::endl;
     if (base) {
       std::cout << "BASE: " << base.value().url << std::endl;
@@ -555,8 +554,7 @@ url_record basic_parse(
   while (true) {
     if (state == url_state::scheme_start) {
       if (std::isalpha(*it, std::locale("C"))) {
-        auto lower = std::tolower(*it);
-        buffer.push_back(static_cast<char>(lower));
+        buffer.push_back(std::tolower(*it, std::locale("C")));
         state = url_state::scheme;
       } else if (!state_override) {
         state = url_state::no_scheme;
@@ -764,7 +762,8 @@ url_record basic_parse(
         state = url_state::host;
         ++it;
         continue;
-      } else if ((it == last) || (*it == '/') || (*it == '?') || (*it == '#') ||
+      } else if (
+          ((it == last) || (*it == '/') || (*it == '?') || (*it == '#')) ||
           (is_special_scheme(result.scheme) && (*it == '\\'))) {
         if (at_flag && buffer.empty()) {
           result.validation_error = true;
@@ -788,7 +787,7 @@ url_record basic_parse(
         }
 
         auto host = std::string();
-        if (!parse_host(buffer, host, is_special_scheme(result.scheme))) {
+        if (!parse_host(buffer, host, false)) {
           return result;
         }
         result.host = host;
@@ -799,7 +798,8 @@ url_record basic_parse(
           result.success = true;
           return result;
         }
-      } else if ((it == last) || (*it == '/') || (*it == '?') || (*it == '#') ||
+      } else if (
+          ((it == last) || (*it == '/') || (*it == '?') || (*it == '#')) ||
           (is_special_scheme(result.scheme) && (*it == '\\'))) {
         --it;
 
@@ -809,7 +809,7 @@ url_record basic_parse(
         }
 
         auto host = std::string();
-        if (!parse_host(buffer, host, is_special_scheme(result.scheme))) {
+        if (!parse_host(buffer, host, false)) {
           return result;
         }
         result.host = host;
@@ -826,7 +826,8 @@ url_record basic_parse(
     } else if (state == url_state::port) {
       if (std::isdigit(*it, std::locale("C"))) {
         buffer += *it;
-      } else if ((it == last) || (*it == '/') || (*it == '?') || (*it == '#') ||
+      } else if (
+          ((it == last) || (*it == '/') || (*it == '?') || (*it == '#')) ||
           (is_special_scheme(result.scheme) && (*it == '\\')) ||
           state_override) {
         if (!buffer.empty()) {
@@ -1020,7 +1021,7 @@ url_record basic_parse(
           state = url_state::fragment;
         }
       } else {
-        detail::encode_char_2(*it, std::back_inserter(buffer), " \"<>`#?{}");
+        detail::encode_char(*it, std::back_inserter(buffer), " \"<>`#?{}");
       }
     } else if (state == url_state::cannot_be_a_base_url_path) {
       if (*it == '?') {
@@ -1038,7 +1039,7 @@ url_record basic_parse(
         }
         if (it != last) {
           auto el = std::string();
-          detail::encode_char_2(*it, std::back_inserter(el));
+          detail::encode_char(*it, std::back_inserter(el));
           result.path[0] += el;
         }
       }
@@ -1047,13 +1048,13 @@ url_record basic_parse(
         result.fragment = std::string();
         state = url_state::fragment;
       } else if (it != last) {
-        detail::encode_char_2(*it, std::back_inserter(*result.query), " \"#<>");
+        detail::encode_char(*it, std::back_inserter(*result.query), " \"#<>`");
       }
     } else if (state == url_state::fragment) {
       if (*it == '\0') {
         result.validation_error = true;
       } else {
-        detail::encode_char_2(*it, std::back_inserter(*result.fragment), " \"<>`");
+        detail::encode_char(*it, std::back_inserter(*result.fragment), " \"<>`");
       }
     }
 
@@ -1063,7 +1064,6 @@ url_record basic_parse(
 
     ++it;
   }
-
 
   result.success = true;
   return result;

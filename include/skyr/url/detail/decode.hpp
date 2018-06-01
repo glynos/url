@@ -8,6 +8,7 @@
 #ifndef NETWORK_URI_DECODE_INC
 #define NETWORK_URI_DECODE_INC
 
+#include <skyr/optional.hpp>
 #include <skyr/url/url_errors.hpp>
 #include <iterator>
 #include <cassert>
@@ -15,7 +16,7 @@
 namespace skyr {
 namespace detail {
 template <typename CharT>
-CharT letter_to_hex(CharT in) {
+optional<CharT> letter_to_hex(CharT in) {
   if ((in >= '0') && (in <= '9')) {
     return in - '0';
   }
@@ -28,25 +29,37 @@ CharT letter_to_hex(CharT in) {
     return in + 10 - 'A';
   }
 
-  throw percent_decoding_error(url_error::non_hex_input);
+  return nullopt;
 }
 
-template <class InputIterator, class charT>
-InputIterator decode_char(InputIterator it, charT *out) {
+template <class InputIterator>
+optional<char> decode_char(InputIterator &it) {
   assert(*it == '%');
+
   ++it;
   auto h0 = *it;
+  if (h0 >= '8') {
+    // unable to decode characters outside the ASCII character set.
+//    throw percent_decoding_error(url_error::conversion_failed);
+    return nullopt;
+  }
+
   auto v0 = detail::letter_to_hex(h0);
+  if (!v0) {
+//    throw percent_decoding_error(url_error::non_hex_input);
+    return nullopt;
+  }
+
   ++it;
   auto h1 = *it;
   auto v1 = detail::letter_to_hex(h1);
-  if (h0 >= '8') {
-    // unable to decode characters outside the ASCII character set.
-    throw percent_decoding_error(url_error::conversion_failed);
+  if (!v1) {
+//    throw percent_decoding_error(url_error::non_hex_input);
+    return nullopt;
   }
+
   ++it;
-  *out = static_cast<charT>((0x10 * v0) + v1);
-  return it;
+  return static_cast<char>((0x10 * v0.value()) + v1.value());
 }
 
 template <class InputIterator, class OutputIterator>
@@ -61,9 +74,12 @@ OutputIterator decode(InputIterator in_begin, InputIterator in_end,
         return out;
 //        throw percent_decoding_error(url_error::not_enough_input);
       }
-      char c = '\0';
-      it = decode_char(it, &c);
-      out = c;
+//      char c = '\0';
+      auto c = decode_char(it);
+      if (!c) {
+        throw percent_decoding_error(url_error::non_hex_input);
+      }
+      out = c.value();
       ++out;
     } else {
       *out++ = *it++;
@@ -72,12 +88,12 @@ OutputIterator decode(InputIterator in_begin, InputIterator in_end,
   return out;
 }
 
-template <class String>
-String decode(const String &source) {
-  String unencoded;
-  decode(std::begin(source), std::end(source), std::back_inserter(unencoded));
-  return unencoded;
-}
+//template <class String>
+//String decode(const String &source) {
+//  String unencoded;
+//  decode(std::begin(source), std::end(source), std::back_inserter(unencoded));
+//  return unencoded;
+//}
 }  // namespace detail
 }  // namespace skyr
 
