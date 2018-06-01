@@ -18,7 +18,7 @@
 
 namespace skyr {
 namespace {
-void remove_leading_whitespace(std::string &input, url_record &result) {
+void remove_leading_whitespace(std::string &input, url_record &url) {
   auto first = begin(input), last = end(input);
   auto it = std::find_if(first, last, [](char ch) -> bool {
     return
@@ -26,12 +26,12 @@ void remove_leading_whitespace(std::string &input, url_record &result) {
         ch == '\0' || ch == '\x1b' || ch == '\x04' || ch == '\x12' || ch == '\x1f');
   });
   if (it != first) {
-    result.validation_error = true;
+    url.validation_error = true;
     input = std::string(it, last);
   }
 }
 
-void remove_trailing_whitespace(std::string &input, url_record &result) {
+void remove_trailing_whitespace(std::string &input, url_record &url) {
   using reverse_iterator = std::reverse_iterator<std::string::const_iterator>;
 
   auto first = reverse_iterator(end(input)),
@@ -42,21 +42,17 @@ void remove_trailing_whitespace(std::string &input, url_record &result) {
         ch == '\0' || ch == '\x1b' || ch == '\x04' || ch == '\x12' || ch == '\x1f');
   });
   if (it != first) {
-    result.validation_error = true;
+    url.validation_error = true;
     input = std::string(it, last);
     std::reverse(begin(input), end(input));
   }
 }
 
-void remove_tabs_and_newlines(std::string &input, url_record &result) {
+void remove_tabs_and_newlines(std::string &input, url_record &url) {
   auto it = std::remove_if(begin(input), end(input),
                            [] (char c) -> bool { return (c == '\t') || (c == '\n'); });
-  result.validation_error = (it != end(input));
+  url.validation_error = (it != end(input));
   input.erase(it, end(input));
-}
-
-inline bool is_special_scheme(const std::string &scheme) {
-  return detail::is_special(string_view(scheme.data(), scheme.length()));
 }
 
 inline bool is_forbidden_host_point(string_view::value_type c) {
@@ -469,43 +465,45 @@ bool is_windows_drive_letter(
   return ((*it == ':') || (*it == '|'));
 }
 
-inline bool is_windows_drive_letter(const std::string &el) {
-  auto view = string_view(el);
+inline bool is_windows_drive_letter(const std::string &segment) {
+  auto view = string_view(segment);
   return is_windows_drive_letter(begin(view), end(view));
 }
 
-bool is_single_dot_path_segment(const std::string &el) {
-  if (el == ".") {
+bool is_single_dot_path_segment(const std::string &segment) {
+  if (segment == ".") {
     return true;
   }
-  else if ((el == "%2e") || (el == "%2E")) {
-    return true;
-  }
-  return false;
-}
-
-bool is_double_dot_path_segment(const std::string &el) {
-  if (el == "..") {
-    return true;
-  }
-  else if ((el == ".%2e") || (el == ".%2E")) {
-    return true;
-  }
-  else if ((el == "%2e.") || (el == "%2E.")) {
-    return true;
-  }
-  else if ((el == "%2e%2e") || (el == "%2E%2e") || (el == "%2e%2E") || (el == "%2E%2E")) {
+  else if ((segment == "%2e") || (segment == "%2E")) {
     return true;
   }
   return false;
 }
 
-void shorten_path(std::vector<std::string> &path, url_record &result) {
+bool is_double_dot_path_segment(const std::string &segment) {
+  if (segment == "..") {
+    return true;
+  }
+  else if ((segment == ".%2e") || (segment == ".%2E")) {
+    return true;
+  }
+  else if ((segment == "%2e.") || (segment == "%2E.")) {
+    return true;
+  }
+  else if ((segment == "%2e%2e") || (segment == "%2E%2e") || (segment == "%2e%2E") || (segment == "%2E%2E")) {
+    return true;
+  }
+  return false;
+}
+
+void shorten_path(url_record &url) {
+  auto &path = url.path;
+
   if (path.empty()) {
     return;
   }
 
-  if ((result.scheme.compare("file") == 0) &&
+  if ((url.scheme.compare("file") == 0) &&
       (path.size() == 1) &&
       is_windows_drive_letter(path.front())) {
     return;
@@ -515,16 +513,20 @@ void shorten_path(std::vector<std::string> &path, url_record &result) {
 }
 } // namespace
 
+bool url_record::is_special() const {
+  return detail::is_special(string_view(scheme.data(), scheme.length()));
+}
+
 url_record basic_parse(
     std::string input,
     const optional<url_record> &base,
-    const optional<url_record> &url,
+    const optional<url_record> &url_,
     optional<url_state> state_override) {
-  auto result = url? url.value() : url_record{};
-  result.url = input;
+  auto url = url_? url_.value() : url_record{};
+  url.url = input;
 
 
-  if (input == "sc://?") {
+  if (input == "madeupscheme:/example.com/") {
     std::cout << "URL:  " << input << std::endl;
     if (base) {
       std::cout << "BASE: " << base.value().url << std::endl;
@@ -532,12 +534,12 @@ url_record basic_parse(
   }
 
   if (input.empty()) {
-    return result;
+    return url;
   }
 
-  remove_leading_whitespace(input, result);
-  remove_trailing_whitespace(input, result);
-  remove_tabs_and_newlines(input, result);
+  remove_leading_whitespace(input, url);
+  remove_trailing_whitespace(input, url);
+  remove_tabs_and_newlines(input, url);
 
   auto state = state_override? state_override.value() : url_state::scheme_start;
 
@@ -561,8 +563,8 @@ url_record basic_parse(
         it = first;
         continue;
       } else {
-        result.validation_error = true;
-        return result;
+        url.validation_error = true;
+        return url;
       }
     } else if (state == url_state::scheme) {
       if (std::isalnum(*it, std::locale("C")) || detail::is_in(*it, "+-.")) {
@@ -573,7 +575,7 @@ url_record basic_parse(
           // TODO
         }
 
-        result.scheme = buffer;
+        url.scheme = buffer;
 //        if (url && url.value().port) {
 //          auto port = url.value().port.value();
 //          if (default_port(result.scheme).value() == port) {
@@ -582,9 +584,9 @@ url_record basic_parse(
 //        }
         buffer.clear();
 
-        if (result.scheme.compare("file") == 0) {
+        if (url.scheme.compare("file") == 0) {
           if (!remaining_starts_with(it, last, "//")) {
-            result.validation_error = true;
+            url.validation_error = true;
           }
 //          auto next = it;
 //          ++next;
@@ -592,16 +594,16 @@ url_record basic_parse(
 //            result.validation_error = true;
 //          }
           state = url_state::file;
-        } else if (is_special_scheme(result.scheme) && base && (base.value().scheme == result.scheme)) {
+        } else if (url.is_special() && base && (base.value().scheme == url.scheme)) {
           state = url_state::special_relative_or_authority;
-        } else if (is_special_scheme(result.scheme)) {
+        } else if (url.is_special()) {
           state = url_state::special_authority_slashes;
         } else if (remaining_starts_with(it, last, "/")) {
           state = url_state::path_or_authority;
           ++it;
         } else {
-          result.cannot_be_a_base_url = true;
-          result.path.push_back(std::string());
+          url.cannot_be_a_base_url = true;
+          url.path.emplace_back();
           state = url_state::cannot_be_a_base_url_path;
         }
       } else if (!state_override) {
@@ -612,15 +614,15 @@ url_record basic_parse(
       }
     } else if (state == url_state::no_scheme) {
       if (!base || (base.value().cannot_be_a_base_url && (*it != '#'))) {
-        result.validation_error = true;
-        return result;
+        url.validation_error = true;
+        return url;
       } else if (base.value().cannot_be_a_base_url && (*it == '#')) {
-        result.scheme = base.value().scheme;
-        result.path = base.value().path;
-        result.query = base.value().query;
-        result.fragment = std::string();
+        url.scheme = base.value().scheme;
+        url.path = base.value().path;
+        url.query = base.value().query;
+        url.fragment = std::string();
 
-        result.cannot_be_a_base_url = true;
+        url.cannot_be_a_base_url = true;
         state = url_state::fragment;
       } else if (base.value().scheme.compare("file") != 0) {
         state = url_state::relative;
@@ -636,7 +638,7 @@ url_record basic_parse(
         ++it;
         state = url_state::special_authority_ignore_slashes;
       } else {
-        result.validation_error = true;
+        url.validation_error = true;
         --it;
         state = url_state::relative;
       }
@@ -648,46 +650,46 @@ url_record basic_parse(
         --it;
       }
     } else if (state == url_state::relative) {
-      result.scheme = base.value().scheme;
+      url.scheme = base.value().scheme;
       if (it == last) {
-        result.username = base.value().username;
-        result.password = base.value().password;
-        result.host = base.value().host;
-        result.port = base.value().port;
-        result.path = base.value().path;
-        result.query = base.value().query;
+        url.username = base.value().username;
+        url.password = base.value().password;
+        url.host = base.value().host;
+        url.port = base.value().port;
+        url.path = base.value().path;
+        url.query = base.value().query;
       }
       else if (*it == '/') {
         state = url_state::relative_slash;
       } else if (*it == '?') {
-        result.username = base.value().username;
-        result.password = base.value().password;
-        result.host = base.value().host;
-        result.port = base.value().port;
-        result.path = base.value().path;
-        result.query = std::string();
+        url.username = base.value().username;
+        url.password = base.value().password;
+        url.host = base.value().host;
+        url.port = base.value().port;
+        url.path = base.value().path;
+        url.query = std::string();
         state = url_state::query;
       } else if (*it == '#') {
-        result.username = base.value().username;
-        result.password = base.value().password;
-        result.host = base.value().host;
-        result.port = base.value().port;
-        result.path = base.value().path;
-        result.query = base.value().query;
-        result.fragment = std::string();
+        url.username = base.value().username;
+        url.password = base.value().password;
+        url.host = base.value().host;
+        url.port = base.value().port;
+        url.path = base.value().path;
+        url.query = base.value().query;
+        url.fragment = std::string();
         state = url_state::fragment;
       } else {
-        if (is_special_scheme(result.scheme) && (*it == '\\')) {
-          result.validation_error = true;
+        if (url.is_special() && (*it == '\\')) {
+          url.validation_error = true;
           state = url_state::relative_slash;
         } else {
-          result.username = base.value().username;
-          result.password = base.value().password;
-          result.host = base.value().host;
-          result.port = base.value().port;
-          result.path = base.value().path;
-          if (!result.path.empty()) {
-            result.path.pop_back();
+          url.username = base.value().username;
+          url.password = base.value().password;
+          url.host = base.value().host;
+          url.port = base.value().port;
+          url.path = base.value().path;
+          if (!url.path.empty()) {
+            url.path.pop_back();
           }
           state = url_state::path;
           --it;
@@ -695,16 +697,16 @@ url_record basic_parse(
       }
     } else if (state == url_state::relative_slash) {
       if (it == last) {
-        result.username = base.value().username;
-        result.password = base.value().password;
-        result.host = base.value().host;
-        result.port = base.value().port;
+        url.username = base.value().username;
+        url.password = base.value().password;
+        url.host = base.value().host;
+        url.port = base.value().port;
         state = url_state::path;
         --it;
       }
-      else if (is_special_scheme(result.scheme) && ((*it == '/') || (*it == '\\'))) {
+      else if (url.is_special() && ((*it == '/') || (*it == '\\'))) {
         if (*it == '\\') {
-          result.validation_error = true;
+          url.validation_error = true;
           state = url_state::special_authority_ignore_slashes;
         }
       }
@@ -712,10 +714,10 @@ url_record basic_parse(
         state = url_state::authority;
       }
       else {
-        result.username = base.value().username;
-        result.password = base.value().password;
-        result.host = base.value().host;
-        result.port = base.value().port;
+        url.username = base.value().username;
+        url.password = base.value().password;
+        url.host = base.value().host;
+        url.port = base.value().port;
         state = url_state::path;
         --it;
       }
@@ -724,7 +726,7 @@ url_record basic_parse(
         ++it;
         state = url_state::special_authority_ignore_slashes;
       } else {
-        result.validation_error = true;
+        url.validation_error = true;
         --it;
         state = url_state::special_authority_ignore_slashes;
       }
@@ -733,11 +735,11 @@ url_record basic_parse(
         --it;
         state = url_state::authority;
       } else {
-        result.validation_error = true;
+        url.validation_error = true;
       }
     } else if (state == url_state::authority) {
       if (*it == '@') {
-        result.validation_error = true;
+        url.validation_error = true;
         if (at_flag) {
           buffer = "%40" + buffer;
         }
@@ -752,9 +754,9 @@ url_record basic_parse(
           // TODO: percent encode
 
           if (password_token_seen_flag) {
-            result.password += c;
+            url.password += c;
           } else {
-            result.username += c;
+            url.username += c;
           }
         }
         buffer.clear();
@@ -764,10 +766,10 @@ url_record basic_parse(
         continue;
       } else if (
           ((it == last) || (*it == '/') || (*it == '?') || (*it == '#')) ||
-          (is_special_scheme(result.scheme) && (*it == '\\'))) {
+          (url.is_special() && (*it == '\\'))) {
         if (at_flag && buffer.empty()) {
-          result.validation_error = true;
-          return result;
+          url.validation_error = true;
+          return url;
         }
         it = it - buffer.size();
         state = url_state::host;
@@ -777,42 +779,42 @@ url_record basic_parse(
         buffer.push_back(*it);
       }
     } else if (state == url_state::host) {
-      if (state_override && (result.scheme.compare("file") == 0)) {
+      if (state_override && (url.scheme.compare("file") == 0)) {
         --it;
         state = url_state::file_host;
       } else if ((*it == ':') && !square_brace_flag) {
         if (buffer.empty()) {
-          result.validation_error = true;
-          return result;
+          url.validation_error = true;
+          return url;
         }
 
         auto host = std::string();
         if (!parse_host(buffer, host, false)) {
-          return result;
+          return url;
         }
-        result.host = host;
+        url.host = host;
         buffer.clear();
         state = url_state::port;
 
         if (state_override && (state_override.value() == url_state::hostname)) {
-          result.success = true;
-          return result;
+          url.success = true;
+          return url;
         }
       } else if (
           ((it == last) || (*it == '/') || (*it == '?') || (*it == '#')) ||
-          (is_special_scheme(result.scheme) && (*it == '\\'))) {
+          (url.is_special() && (*it == '\\'))) {
         --it;
 
-        if (is_special_scheme(result.scheme) && buffer.empty()) {
-          result.validation_error = true;
-          return result;
+        if (url.is_special() && buffer.empty()) {
+          url.validation_error = true;
+          return url;
         }
 
         auto host = std::string();
         if (!parse_host(buffer, host, false)) {
-          return result;
+          return url;
         }
-        result.host = host;
+        url.host = host;
         buffer.clear();
         state = url_state::path;
       } else {
@@ -828,66 +830,66 @@ url_record basic_parse(
         buffer += *it;
       } else if (
           ((it == last) || (*it == '/') || (*it == '?') || (*it == '#')) ||
-          (is_special_scheme(result.scheme) && (*it == '\\')) ||
+          (url.is_special() && (*it == '\\')) ||
           state_override) {
         if (!buffer.empty()) {
           if (!detail::is_valid_port(buffer)) {
-            result.validation_error = true;
-            return result;
+            url.validation_error = true;
+            return url;
           }
 
-          auto view = string_view(result.scheme.data(), result.scheme.length());
+          auto view = string_view(url.scheme.data(), url.scheme.length());
           auto port = std::atoi(buffer.c_str());
           if (detail::is_default_port(view, port)) {
-            result.port = nullopt;
+            url.port = nullopt;
           }
           else {
-            result.port = port;
+            url.port = port;
           }
           buffer.clear();
         }
 
         if (state_override) {
-          result.success = true;
-          return result;
+          url.success = true;
+          return url;
         }
 
         --it;
         state = url_state::path_start;
       } else {
-        result.validation_error = true;
-        return result;
+        url.validation_error = true;
+        return url;
       }
     } else if (state == url_state::file) {
-      result.scheme = "file";
+      url.scheme = "file";
 
       if ((*it == '/') || (*it == '\\')) {
         if (*it == '\\') {
-          result.validation_error = true;
+          url.validation_error = true;
         }
         state = url_state::file_slash;
       } else if (base && (base.value().scheme.compare("file") == 0)) {
         if (it == last) {
-          result.host = base.value().host;
-          result.path = base.value().path;
-          result.query = base.value().query;
+          url.host = base.value().host;
+          url.path = base.value().path;
+          url.query = base.value().query;
         }
         else if (*it == '?') {
-          result.host = base.value().host;
-          result.path = base.value().path;
-          result.query = std::string();
+          url.host = base.value().host;
+          url.path = base.value().path;
+          url.query = std::string();
           state = url_state::query;
         } else if (*it == '#') {
-          result.host = base.value().host;
-          result.path = base.value().path;
-          result.query = base.value().query;
-          result.fragment = std::string();
+          url.host = base.value().host;
+          url.path = base.value().path;
+          url.query = base.value().query;
+          url.fragment = std::string();
           state = url_state::fragment;
         } else {
           if (!is_windows_drive_letter(it, last)) {
-            result.host = base.value().host;
-            result.path = base.value().path;
-            shorten_path(result.path, result);
+            url.host = base.value().host;
+            url.path = base.value().path;
+            shorten_path(url);
           }
         }
       } else {
@@ -901,14 +903,14 @@ url_record basic_parse(
       }
       else if ((*it == '/') || (*it == '\\')) {
         if (*it == '\\') {
-          result.validation_error = true;
+          url.validation_error = true;
         }
         state = url_state::file_host;
       } else if (base && ((base.value().scheme.compare("file") == 0) && !is_windows_drive_letter(it, last))) {
         if (!base.value().path.empty() && is_windows_drive_letter(base.value().path[0])) {
-          result.path.push_back(base.value().path[0]);
+          url.path.push_back(base.value().path[0]);
         } else {
-          result.host = base.value().host;
+          url.host = base.value().host;
         }
 
         --it;
@@ -919,31 +921,31 @@ url_record basic_parse(
         --it;
 
         if (!state_override && (is_windows_drive_letter(buffer))) {
-          result.validation_error = true;
+          url.validation_error = true;
           state = url_state::path;
         } else if (buffer.empty()) {
-          result.host = std::string();
+          url.host = std::string();
 
           if (state_override) {
-            result.success = true;
-            return result;
+            url.success = true;
+            return url;
           }
 
           state = url_state::path_start;
         } else {
           auto host = std::string();
-          if (!parse_host(buffer, host, is_special_scheme(result.scheme))) {
-            return result;
+          if (!parse_host(buffer, host, url.is_special())) {
+            return url;
           }
 
           if (host == "localhost") {
             host.clear();
           }
-          result.host = host;
+          url.host = host;
 
           if (state_override) {
-            result.success = true;
-            return result;
+            url.success = true;
+            return url;
           }
 
           buffer.clear();
@@ -954,19 +956,20 @@ url_record basic_parse(
         buffer.push_back(*it);
       }
     } else if (state == url_state::path_start) {
-      if (is_special_scheme(result.scheme)) {
+      if (url.is_special()) {
         if (*it == '\\') {
-          result.validation_error = true;
+          url.validation_error = true;
         }
         state = url_state::path;
-      } else if (!state_override) {
-        if (*it == '?') {
-          result.query = std::string();
-          state = url_state::query;
-        } else if (*it == '#') {
-          result.fragment = std::string();
-          state = url_state::fragment;
+        if ((*it != '/') && (*it != '\\')) {
+          --it;
         }
+      } else if (!state_override && (*it == '?')) {
+        url.query = std::string();
+        state = url_state::query;
+      } else if (!state_override && (*it == '#')) {
+        url.fragment = std::string();
+        state = url_state::fragment;
       } else {
         state = url_state::path;
         if (*it != '/') {
@@ -975,49 +978,49 @@ url_record basic_parse(
       }
     } else if (state == url_state::path) {
       if (((it == last) || (*it == '/')) ||
-          (is_special_scheme(result.scheme) && (*it == '\\')) ||
+          (url.is_special() && (*it == '\\')) ||
           (!state_override && ((*it == '?') || (*it == '#')))) {
-        if (is_special_scheme(result.scheme) && (*it == '\\')) {
-          result.validation_error = true;
+        if (url.is_special() && (*it == '\\')) {
+          url.validation_error = true;
         } else if (is_double_dot_path_segment(buffer)) {
-          shorten_path(result.path, result);
-          if ((*it != '/') && !(is_special_scheme(result.scheme) && (*it == '\\'))) {
-            result.path.push_back(std::string());
+          shorten_path(url);
+          if (!((*it == '/') || (url.is_special() && (*it == '\\')))) {
+            url.path.emplace_back();
           }
         } else if (
             is_single_dot_path_segment(buffer) &&
-            !((*it == '/') || (is_special_scheme(result.scheme) && (*it == '\\')))) {
-          result.path.push_back(std::string());
+            !((*it == '/') || (url.is_special() && (*it == '\\')))) {
+          url.path.emplace_back();
         } else if (!is_single_dot_path_segment(buffer)) {
-          if ((result.scheme.compare("file") == 0) && result.path.empty() && is_windows_drive_letter(buffer)) {
-            if (!result.host || !result.host.value().empty()) {
-              result.validation_error = true;
-              result.host = std::string();
+          if ((url.scheme.compare("file") == 0) && url.path.empty() && is_windows_drive_letter(buffer)) {
+            if (!url.host || !url.host.value().empty()) {
+              url.validation_error = true;
+              url.host = std::string();
             }
             buffer[1] = ':';
           } else {
-            result.path.push_back(buffer);
+            url.path.push_back(buffer);
           }
         }
 
         buffer.clear();
 
-        if ((result.scheme.compare("file") == 0) && ((it == last) || (*it == '?') || (*it == '#'))) {
-          auto path = std::deque<std::string>(begin(result.path), end(result.path));
+        if ((url.scheme.compare("file") == 0) && ((it == last) || (*it == '?') || (*it == '#'))) {
+          auto path = std::deque<std::string>(begin(url.path), end(url.path));
           while ((path.size() > 1) && path[0].empty()) {
-            result.validation_error = true;
+            url.validation_error = true;
             path.pop_front();
           }
-          result.path.assign(begin(path), end(path));
+          url.path.assign(begin(path), end(path));
         }
 
         if (*it == '?') {
-          result.query = std::string();
+          url.query = std::string();
           state = url_state::query;
         }
 
         if (*it == '#') {
-          result.fragment = std::string();
+          url.fragment = std::string();
           state = url_state::fragment;
         }
       } else {
@@ -1025,36 +1028,36 @@ url_record basic_parse(
       }
     } else if (state == url_state::cannot_be_a_base_url_path) {
       if (*it == '?') {
-        result.query = std::string();
+        url.query = std::string();
         state = url_state::query;
       } else if (*it == '#') {
-        result.fragment = std::string();
+        url.fragment = std::string();
         state = url_state::fragment;
       } else {
         if ((it != last) && !is_url_code_point(*it) && (*it != '%')) {
-          result.validation_error = true;
+          url.validation_error = true;
         }
         else if ((*it == '%') && !detail::is_pct_encoded(it, last)) {
-          result.validation_error = true;
+          url.validation_error = true;
         }
         if (it != last) {
           auto el = std::string();
           detail::encode_char(*it, std::back_inserter(el));
-          result.path[0] += el;
+          url.path[0] += el;
         }
       }
     } else if (state == url_state::query) {
       if (!state_override && (*it == '#')) {
-        result.fragment = std::string();
+        url.fragment = std::string();
         state = url_state::fragment;
       } else if (it != last) {
-        detail::encode_char(*it, std::back_inserter(*result.query), " \"#<>`");
+        detail::encode_char(*it, std::back_inserter(*url.query), " \"#<>`");
       }
     } else if (state == url_state::fragment) {
       if (*it == '\0') {
-        result.validation_error = true;
+        url.validation_error = true;
       } else {
-        detail::encode_char(*it, std::back_inserter(*result.fragment), " \"<>`");
+        detail::encode_char(*it, std::back_inserter(*url.fragment), " \"<>`");
       }
     }
 
@@ -1065,8 +1068,8 @@ url_record basic_parse(
     ++it;
   }
 
-  result.success = true;
-  return result;
+  url.success = true;
+  return url;
 }
 
 url_record parse(

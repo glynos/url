@@ -65,6 +65,8 @@ struct url_record {
   explicit operator bool () const {
     return success;
   }
+
+  bool is_special() const;
 };
 
 url_record basic_parse(
@@ -143,44 +145,47 @@ class path_iterator {
  private:
 
   void advance() noexcept {
-    assert(path_);
+    assert(path_ && "Invalid path");
 
-    auto first = std::begin(path_.value()), last = std::end(path_.value());
+    if (!path_.value().empty()) {
+      auto first = std::begin(path_.value()), last = std::end(path_.value());
 
-    auto sep_it =
-        std::find_if(first, last, [](char c) -> bool { return c == '/'; });
+      auto sep_it =
+          std::find_if(first, last, [](char c) -> bool {
+            return (c == '/') || (c == '\\');
+          });
 
-    if (sep_it != last) {
-      ++sep_it;  // skip next separator
+      if (sep_it != last) {
+        ++sep_it;  // skip next separator
+      }
+
+      // reassign path to the next element
+      path_ = string_view(std::addressof(*sep_it), std::distance(sep_it, last));
     }
-
-    // reassign path to the next element
-    path_ = string_view(std::addressof(*sep_it), std::distance(sep_it, last));
+    else {
+      path_ = nullopt;
+    }
   }
 
+
+
   void assign() noexcept {
-    assert(path_);
+    if (path_) {
+      auto first = std::begin(path_.value()), last = std::end(path_.value());
 
-    auto first = std::begin(path_.value()), last = std::end(path_.value());
+      auto sep_it =
+          std::find_if(first, last, [](char c) -> bool {
+            return (c == '/') || (c == '\\');
+          });
 
-    auto sep_it =
-        std::find_if(first, last, [](char c) -> bool { return c == '/'; });
-
-    element_ =
-        string_view(std::addressof(*first), std::distance(first, sep_it));
+      element_ =
+          string_view(std::addressof(*first), std::distance(first, sep_it));
+    }
   }
 
   void increment() noexcept {
-    assert(path_);
-
-    if (!path_.value().empty()) {
-      advance();
-      assign();
-    }
-
-    if (path_.value().empty()) {
-      path_ = nullopt;
-    }
+    advance();
+    assign();
   }
 
   optional<string_view> path_;
