@@ -14,8 +14,6 @@
 #include "grammar.hpp"
 #include "detail/url_schemes.hpp"
 
-#include <iostream>
-
 namespace skyr {
 namespace {
 void remove_leading_whitespace(std::string &input, url_record &url) {
@@ -50,7 +48,9 @@ void remove_trailing_whitespace(std::string &input, url_record &url) {
 
 void remove_tabs_and_newlines(std::string &input, url_record &url) {
   auto it = std::remove_if(begin(input), end(input),
-                           [] (char c) -> bool { return (c == '\t') || (c == '\n'); });
+                           [] (char c) -> bool {
+    return (c == '\t') || (c == '\r') || (c == '\n');
+  });
   url.validation_error = (it != end(input));
   input.erase(it, end(input));
 }
@@ -471,29 +471,23 @@ inline bool is_windows_drive_letter(const std::string &segment) {
 }
 
 bool is_single_dot_path_segment(const std::string &segment) {
-  if (segment == ".") {
-    return true;
-  }
-  else if ((segment == "%2e") || (segment == "%2E")) {
-    return true;
-  }
-  return false;
+  auto segment_lower = segment;
+  std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
+                 [] (char ch) -> char { return std::tolower(ch, std::locale("C")); });
+
+  return ((segment == ".") || (segment == "%2e"));
 }
 
 bool is_double_dot_path_segment(const std::string &segment) {
-  if (segment == "..") {
-    return true;
-  }
-  else if ((segment == ".%2e") || (segment == ".%2E")) {
-    return true;
-  }
-  else if ((segment == "%2e.") || (segment == "%2E.")) {
-    return true;
-  }
-  else if ((segment == "%2e%2e") || (segment == "%2E%2e") || (segment == "%2e%2E") || (segment == "%2E%2E")) {
-    return true;
-  }
-  return false;
+  auto segment_lower = segment;
+  std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
+                 [] (char ch) -> char { return std::tolower(ch, std::locale("C")); });
+
+  return (
+      (segment_lower == "..") ||
+      (segment_lower == ".%2e") ||
+      (segment_lower == "%2e.") ||
+      (segment_lower == "%2e%2e"));
 }
 
 void shorten_path(url_record &url) {
@@ -514,7 +508,15 @@ void shorten_path(url_record &url) {
 } // namespace
 
 bool url_record::is_special() const {
-  return detail::is_special(string_view(scheme.data(), scheme.length()));
+  return detail::is_special(string_view(scheme));
+}
+
+bool url_record::includes_credentials() const {
+  return !username.empty() || !password.empty();
+}
+
+void url_record::parse_scheme_start(char c) {
+
 }
 
 url_record basic_parse(
@@ -524,14 +526,6 @@ url_record basic_parse(
     optional<url_state> state_override) {
   auto url = url_? url_.value() : url_record{};
   url.url = input;
-
-
-  if (input == "madeupscheme:/example.com/") {
-    std::cout << "URL:  " << input << std::endl;
-    if (base) {
-      std::cout << "BASE: " << base.value().url << std::endl;
-    }
-  }
 
   if (input.empty()) {
     return url;
@@ -556,7 +550,8 @@ url_record basic_parse(
   while (true) {
     if (state == url_state::scheme_start) {
       if (std::isalpha(*it, std::locale("C"))) {
-        buffer.push_back(std::tolower(*it, std::locale("C")));
+        auto lower = std::tolower(*it, std::locale("C"));
+        buffer.push_back(lower);
         state = url_state::scheme;
       } else if (!state_override) {
         state = url_state::no_scheme;
@@ -572,27 +567,34 @@ url_record basic_parse(
         buffer.push_back(lower);
       } else if (*it == ':') {
         if (state_override) {
-          // TODO
+          if (url.is_special() && !detail::is_special(string_view(buffer))) {
+            return url;
+          }
+
+          if (!url.is_special() && detail::is_special(string_view(buffer))) {
+            return url;
+          }
+
+          if ((url.includes_credentials() || url.port) &&(buffer.compare("file") == 0)) {
+            return url;
+          }
+
+          if ((url.scheme.compare("file") == 0) && (!url.host || url.host.value().empty())) {
+            return url;
+          }
         }
 
         url.scheme = buffer;
-//        if (url && url.value().port) {
-//          auto port = url.value().port.value();
-//          if (default_port(result.scheme).value() == port) {
-//            return result;
-//          }
-//        }
+
+        if (state_override) {
+          // TODO: check default port
+        }
         buffer.clear();
 
         if (url.scheme.compare("file") == 0) {
           if (!remaining_starts_with(it, last, "//")) {
             url.validation_error = true;
           }
-//          auto next = it;
-//          ++next;
-//          if (!is_double_slash(next, last)) {
-//            result.validation_error = true;
-//          }
           state = url_state::file;
         } else if (url.is_special() && base && (base.value().scheme == url.scheme)) {
           state = url_state::special_relative_or_authority;
@@ -648,6 +650,11 @@ url_record basic_parse(
       } else {
         state = url_state::path;
         --it;
+
+        // TODO: check that this isn't a temporary fix for e.g. mailto:/example.com/
+        if (*it == '/') {
+          --it;
+        }
       }
     } else if (state == url_state::relative) {
       url.scheme = base.value().scheme;
@@ -1075,22 +1082,72 @@ url_record basic_parse(
 url_record parse(
     std::string input,
     const optional<url_record> &base) {
-  auto result = basic_parse(input, base);
+  auto url = basic_parse(input, base);
 
-  if (!result.success) {
-    return result;
+  if (!url.success) {
+    return url;
   }
 
-  if (result.scheme.compare("blob") != 0) {
-    return result;
+  if (url.scheme.compare("blob") != 0) {
+    return url;
   }
 
-  if (result.path.empty()) {
-    return result;
+  if (url.path.empty()) {
+    return url;
   }
 
   // TODO: check Blob URL store
 
-  return result;
+  return url;
+}
+
+std::string serialize(
+    const url_record &url,
+    bool exclude_fragment) {
+  auto output = url.scheme + ":";
+
+  if (url.host) {
+    if (url.includes_credentials()) {
+      output += url.username;
+      if (!url.password.empty()) {
+        output += ":";
+        output += url.password;
+      }
+      output += "@";
+
+      // TODO: serialize host
+      output += url.host.value();
+
+      if (url.port) {
+        output += ":";
+        output += std::to_string(url.port.value());
+      }
+    }
+  }
+  else if (!url.host && (url.scheme.compare("file") == 0)) {
+    output += "//";
+  }
+
+  if (url.cannot_be_a_base_url) {
+    output += url.path.front();
+  }
+  else {
+    for (const auto &segment : url.path) {
+      output += "/";
+      output += segment;
+    }
+  }
+
+  if (url.query) {
+    output += "?";
+    output += url.query.value();
+  }
+
+  if (!exclude_fragment && url.fragment) {
+    output += "#";
+    output += url.fragment.value();
+  }
+
+  return output;
 }
 }  // namespace skyr

@@ -62,11 +62,18 @@ struct url_record {
   url_record()
       : url{}, cannot_be_a_base_url{false}, success{false}, validation_error{false} {}
 
-  explicit operator bool () const {
+  explicit operator bool () const noexcept {
     return success;
   }
 
   bool is_special() const;
+
+  bool includes_credentials() const;
+
+ private:
+
+  void parse_scheme_start(char c);
+
 };
 
 url_record basic_parse(
@@ -79,6 +86,9 @@ url_record parse(
     std::string input,
     const optional<url_record> &base = nullopt);
 
+std::string serialize(
+    const url_record &url,
+    bool exclude_fragment = false);
 
 /**
  * \class path_iterator
