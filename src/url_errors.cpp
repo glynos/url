@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <string>
-#include <skyr/url/url_errors.hpp>
+#include <url_errors.hpp>
 
 namespace skyr {
 class uri_category_impl : public std::error_category {

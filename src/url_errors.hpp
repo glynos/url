@@ -12,7 +12,7 @@
  */
 
 #include <system_error>
-#include <skyr/url/config.hpp>
+#include <skyr/config.hpp>
 
 #ifdef NETWORK_URI_MSVC
 #pragma warning(push)

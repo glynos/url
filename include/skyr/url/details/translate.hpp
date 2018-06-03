@@ -8,9 +8,10 @@
 
 #include <string>
 #include <locale>
+#include <codecvt>
 
 namespace skyr {
-namespace detail {
+namespace details {
 template <typename Source>
 struct translate_impl;
 
@@ -42,9 +43,8 @@ struct translate_impl<const char[N]> {
 template <>
 struct translate_impl<std::wstring> {
   std::string operator()(const std::wstring &source) const {
-//    std::wstring_convert<std::codecvt_utf8<wchar_t >> convert;
-//    return convert.to_bytes(source);
-    return std::string(begin(source), end(source));
+    std::wstring_convert<std::codecvt_utf8<wchar_t >> convert;
+    return convert.to_bytes(source);
   }
 };
 
@@ -86,7 +86,7 @@ inline std::string translate(const Source &source) {
   return impl(source);
 }
 
-}  // namespace detail
+}  // namespace details
 }  // namespace skyr
 
 #endif  // NETWORK_URI_DETAIL_TRANSLATE_INC

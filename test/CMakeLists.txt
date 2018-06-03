@@ -11,9 +11,10 @@ set(
   optional_tests
   encoding_tests
   path_iterator_tests
-#  url_test
+  url_tests
 #  url_parse_tests
   url_web_platform_tests
+  url_search_parameters_tests
   )
 
 if (Uri_RUN_WEB_PLATFORM_TESTS)

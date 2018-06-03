@@ -1,4 +1,4 @@
-// Copyright 2016 Glyn Matthews.
+// Copyright 2016-18 Glyn Matthews.
 // Copyright (C) 2011 - 2012 Andrzej Krzemienski.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at

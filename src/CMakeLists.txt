@@ -4,32 +4,30 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 set(Uri_SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/url_errors.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/detail/algorithm.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/detail/grammar.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/detail/url_parse.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_advance_parts.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_advance_parts.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/detail/url_schemes.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/detail/url_schemes.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/detail/uri_percent_encode.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/skyr/url.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/skyr/url_search_parameters.cpp
+        url_schemes.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_errors.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_errors.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_parser_context.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_parser_context.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_record.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_parse.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_schemes.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_search_parameters.cpp
 
-  ${CMAKE_SOURCE_DIR}/include/skyr/optional.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/string_view.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/url/config.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/url/url_errors.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/url/detail/decode.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/url/detail/encode.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/url/detail/translate.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/url/detail/uri_parts.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/url/url_parse.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/url/url.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/url/url_io.hpp
-  ${CMAKE_SOURCE_DIR}/include/skyr/url/url_search_parameters.hpp
-  )
+        ${CMAKE_SOURCE_DIR}/include/skyr/optional.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/string_view.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/config.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url/details/decode.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url/details/encode.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url/details/translate.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url_state.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url_record.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url_parse.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url_search_parameters.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url_path_iterator.hpp)
 
 add_library(skyr ${Uri_SRCS})
 target_link_libraries(skyr)

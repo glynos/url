@@ -9,14 +9,12 @@
 #define NETWORK_URI_DECODE_INC
 
 #include <skyr/optional.hpp>
-#include <skyr/url/url_errors.hpp>
 #include <iterator>
 #include <cassert>
 
 namespace skyr {
-namespace detail {
-template <typename CharT>
-optional<CharT> letter_to_hex(CharT in) {
+namespace details {
+inline optional<char> letter_to_hex(char in) {
   if ((in >= '0') && (in <= '9')) {
     return in - '0';
   }
@@ -40,21 +38,18 @@ optional<char> decode_char(InputIterator &it) {
   auto h0 = *it;
   if (h0 >= '8') {
     // unable to decode characters outside the ASCII character set.
-//    throw percent_decoding_error(url_error::conversion_failed);
     return nullopt;
   }
 
-  auto v0 = detail::letter_to_hex(h0);
+  auto v0 = letter_to_hex(h0);
   if (!v0) {
-//    throw percent_decoding_error(url_error::non_hex_input);
     return nullopt;
   }
 
   ++it;
   auto h1 = *it;
-  auto v1 = detail::letter_to_hex(h1);
+  auto v1 = letter_to_hex(h1);
   if (!v1) {
-//    throw percent_decoding_error(url_error::non_hex_input);
     return nullopt;
   }
 
@@ -72,9 +67,7 @@ OutputIterator decode(InputIterator in_begin, InputIterator in_end,
       if (std::distance(it, in_end) < 3) {
         out++ = *it;
         return out;
-//        throw percent_decoding_error(url_error::not_enough_input);
       }
-//      char c = '\0';
       auto c = decode_char(it);
       if (!c) {
         throw percent_decoding_error(url_error::non_hex_input);
@@ -87,14 +80,7 @@ OutputIterator decode(InputIterator in_begin, InputIterator in_end,
   }
   return out;
 }
-
-//template <class String>
-//String decode(const String &source) {
-//  String unencoded;
-//  decode(std::begin(source), std::end(source), std::back_inserter(unencoded));
-//  return unencoded;
-//}
-}  // namespace detail
+}  // namespace details
 }  // namespace skyr
 
 #endif  // NETWORK_URI_DECODE_INC

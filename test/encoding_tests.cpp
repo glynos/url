@@ -5,13 +5,9 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include <skyr.hpp>
+#include <skyr/url/detail/encode.hpp>
 #include "../src/detail/grammar.hpp"
 
-
-//TEST(encoding_tests, encode_c0_control_set) {
-//  FAIL();
-//}
 
 class encode_fragment_tests : public ::testing::TestWithParam<char> {
 
@@ -24,14 +20,12 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST_P(encode_fragment_tests, encode_fragment_set) {
   auto str = std::string();
-  skyr::detail::encode_char_2(GetParam(), std::back_inserter(str), " \"<>`");
+  skyr::details::encode_char(GetParam(), std::back_inserter(str), " \"<>`");
   auto view = skyr::string_view(str);
-  ASSERT_TRUE(skyr::detail::is_pct_encoded(begin(view), end(view)));
+  ASSERT_TRUE(skyr::details::is_pct_encoded(begin(view), end(view)));
 }
 
-class encode_path_tests : public ::testing::TestWithParam<char> {
-
-};
+class encode_path_tests : public ::testing::TestWithParam<char> {};
 
 INSTANTIATE_TEST_CASE_P(
     encode_path,
@@ -40,14 +34,12 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST_P(encode_path_tests, encode_path_set) {
   auto str = std::string();
-  skyr::detail::encode_char_2(GetParam(), std::back_inserter(str), " \"<>`#?{}");
+  skyr::details::encode_char(GetParam(), std::back_inserter(str), " \"<>`#?{}");
   auto view = skyr::string_view(str);
-  ASSERT_TRUE(skyr::detail::is_pct_encoded(begin(view), end(view)));
+  ASSERT_TRUE(skyr::details::is_pct_encoded(begin(view), end(view)));
 }
 
-class encode_userinfo_tests : public ::testing::TestWithParam<char> {
-
-};
+class encode_userinfo_tests : public ::testing::TestWithParam<char> {};
 
 INSTANTIATE_TEST_CASE_P(
     encode_userinfo,
@@ -56,7 +48,7 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST_P(encode_userinfo_tests, encode_userinfo_set) {
   auto str = std::string();
-  skyr::detail::encode_char_2(GetParam(), std::back_inserter(str), " \"<>`#?{}/:;=@[\\]^|");
+  skyr::details::encode_char(GetParam(), std::back_inserter(str), " \"<>`#?{}/:;=@[\\]^|");
   auto view = skyr::string_view(str);
-  ASSERT_TRUE(skyr::detail::is_pct_encoded(begin(view), end(view)));
+  ASSERT_TRUE(skyr::details::is_pct_encoded(begin(view), end(view)));
 }

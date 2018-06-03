@@ -4,17 +4,17 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include <network/uri/whatwg/url_search_parameters.hpp>
+#include <skyr/url_search_parameters.hpp>
 #include "string_utility.hpp"
 
 TEST(url_search_parameters_test, empty_query) {
-  network::whatwg::url_search_parameters parameters{};
+  skyr::url_search_parameters parameters{};
   EXPECT_EQ("", parameters.to_string());
   EXPECT_EQ(parameters.begin(), parameters.end());
 }
 
 TEST(url_search_parameters_test, query_with_single_kvp) {
-  network::whatwg::url_search_parameters parameters{"a=b"};
+  skyr::url_search_parameters parameters{"a=b"};
 
   EXPECT_EQ("a=b", parameters.to_string());
   auto it = parameters.begin();
@@ -26,7 +26,7 @@ TEST(url_search_parameters_test, query_with_single_kvp) {
 }
 
 TEST(url_search_parameters_test, query_with_single_kvp_in_initalizer_list) {
-  network::whatwg::url_search_parameters parameters{{"a", "b"}};
+  skyr::url_search_parameters parameters{{"a", "b"}};
 
   auto it = parameters.begin();
   ASSERT_NE(it, parameters.end());
@@ -37,7 +37,7 @@ TEST(url_search_parameters_test, query_with_single_kvp_in_initalizer_list) {
 }
 
 TEST(url_search_parameters_test, query_with_two_kvps) {
-  network::whatwg::url_search_parameters parameters{"a=b&c=d"};
+  skyr::url_search_parameters parameters{"a=b&c=d"};
 
   auto it = parameters.begin();
   ASSERT_NE(it, parameters.end());
@@ -52,7 +52,7 @@ TEST(url_search_parameters_test, query_with_two_kvps) {
 }
 
 TEST(url_search_parameters_test, query_with_two_kvps_in_initializer_list) {
-  network::whatwg::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  skyr::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
 
   auto it = parameters.begin();
   ASSERT_NE(it, parameters.end());
@@ -67,7 +67,7 @@ TEST(url_search_parameters_test, query_with_two_kvps_in_initializer_list) {
 }
 
 TEST(url_search_parameters_test, query_with_two_kvps_using_semicolon_separator) {
-  network::whatwg::url_search_parameters parameters{"a=b;c=d"};
+  skyr::url_search_parameters parameters{"a=b;c=d"};
 
   EXPECT_EQ("a=b&c=d", parameters.to_string());
   auto it = parameters.begin();
@@ -83,7 +83,7 @@ TEST(url_search_parameters_test, query_with_two_kvps_using_semicolon_separator) 
 }
 
 TEST(url_search_parameters_test, query_append_one_kvp) {
-  network::whatwg::url_search_parameters parameters{};
+  skyr::url_search_parameters parameters{};
   parameters.append("a", "b");
 
   auto it = parameters.begin();
@@ -95,7 +95,7 @@ TEST(url_search_parameters_test, query_append_one_kvp) {
 }
 
 TEST(url_search_parameters_test, query_append_two_kvps) {
-  network::whatwg::url_search_parameters parameters{};
+  skyr::url_search_parameters parameters{};
   parameters.append("a", "b");
   parameters.append("c", "d");
 
@@ -111,14 +111,14 @@ TEST(url_search_parameters_test, query_append_two_kvps) {
 }
 
 TEST(url_search_parameters_test, query_append_one_kvp_to_string) {
-  network::whatwg::url_search_parameters parameters{};
+  skyr::url_search_parameters parameters{};
   parameters.append("a", "b");
 
   EXPECT_EQ("a=b", parameters.to_string());
 }
 
 TEST(url_search_parameters_test, query_append_two_kvps_to_string) {
-  network::whatwg::url_search_parameters parameters{};
+  skyr::url_search_parameters parameters{};
   parameters.append("a", "b");
   parameters.append("c", "d");
 
@@ -127,14 +127,14 @@ TEST(url_search_parameters_test, query_append_two_kvps_to_string) {
 
 TEST(url_search_parameters_test, query_sort_test) {
   // https://url.spec.whatwg.org/#example-searchparams-sort
-  network::whatwg::url_search_parameters parameters{"c=d&a=b"};
+  skyr::url_search_parameters parameters{"c=d&a=b"};
   parameters.sort();
   EXPECT_EQ("a=b&c=d", parameters.to_string());
 }
 
 TEST(url_search_parameters_test, copy_test) {
-  network::whatwg::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
-  network::whatwg::url_search_parameters copy(parameters);
+  skyr::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  skyr::url_search_parameters copy(parameters);
 
   auto it = copy.begin();
   ASSERT_NE(it, copy.end());
@@ -148,8 +148,8 @@ TEST(url_search_parameters_test, copy_test) {
 }
 
 TEST(url_search_parameters_test, copy_assignment_test) {
-  network::whatwg::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
-  network::whatwg::url_search_parameters copy;
+  skyr::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  skyr::url_search_parameters copy;
   copy = parameters;
 
   auto it = copy.begin();
@@ -164,8 +164,8 @@ TEST(url_search_parameters_test, copy_assignment_test) {
 }
 
 TEST(url_search_parameters_test, move_test) {
-  network::whatwg::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
-  network::whatwg::url_search_parameters copy(std::move(parameters));
+  skyr::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  skyr::url_search_parameters copy(std::move(parameters));
 
   auto it = copy.begin();
   ASSERT_NE(it, copy.end());
@@ -179,8 +179,8 @@ TEST(url_search_parameters_test, move_test) {
 }
 
 TEST(url_search_parameters_test, move_assignment_test) {
-  network::whatwg::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
-  network::whatwg::url_search_parameters copy;
+  skyr::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  skyr::url_search_parameters copy;
   copy = std::move(parameters);
 
   auto it = copy.begin();

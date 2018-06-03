@@ -9,40 +9,36 @@
 #include <algorithm>
 #include <functional>
 #include <vector>
-#include "skyr/url/url.hpp"
-#include "skyr/url/url_parse.hpp"
-#include "detail/uri_advance_parts.hpp"
-#include "detail/uri_percent_encode.hpp"
-#include "detail/algorithm.hpp"
-#include "detail/url_schemes.hpp"
+#include "skyr/url.hpp"
+#include "skyr/url_parse.hpp"
 
 namespace skyr {
   url::url(const std::string &input) {
     auto parsed_url = parse(input);
-    if (!parsed_url.success) {
+    if (!parsed_url) {
       throw type_error();
     }
 
-    url_ = parsed_url;
+    url_ = parsed_url.value();
 
-    auto query = parsed_url.query? parsed_url.query.value() : std::string();
+    auto query = url_.query? url_.query.value() : std::string();
     // TODO: set query object
   }
 
   url::url(const std::string &input, const std::string &base) {
     auto parsed_base = parse(base);
-    if (!parsed_base.success) {
+    if (!parsed_base) {
       throw type_error();
     }
 
-    auto parsed_url = parse(input, parsed_base);
-    if (!parsed_url.success) {
+    auto parsed_url = parse(input, parsed_base.value());
+    if (!parsed_url) {
       throw type_error();
     }
 
-    url_ = parsed_url;
+    url_ = parsed_url.value();
 
-    auto query = parsed_url.query? parsed_url.query.value() : std::string();
+    auto query = url_.query? url_.query.value() : std::string();
     // TODO: set query object
   }
 
@@ -137,5 +133,9 @@ namespace skyr {
     }
 
     return "#" + url_.fragment.value();
+  }
+
+  bool url::is_special() const {
+    return url_.is_special();
   }
 }

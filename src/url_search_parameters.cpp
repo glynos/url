@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "skyr/url/url_search_parameters.hpp"
+#include "skyr/url_search_parameters.hpp"
 #include <algorithm>
 
 namespace skyr {
@@ -11,32 +11,29 @@ url_search_parameters::url_search_parameters() { update(); }
 
 url_search_parameters::url_search_parameters(string_view query) {
   auto first = std::begin(query), last = std::end(query);
-  
+
   for (auto it = first; it != last;) {
     auto sep_it = std::find_if(
-                               it, last, [](char c) -> bool { return c == '&' || c == ';'; });
+        it, last, [](char c) -> bool { return c == '&' || c == ';'; });
     auto eq_it =
     std::find_if(it, sep_it, [](char c) -> bool { return c == '='; });
-    
+
     auto name = string_type(it, eq_it);
     if (eq_it != sep_it) {
       ++eq_it;  // skip '=' symbol
     }
     auto value = string_type(eq_it, sep_it);
-    
+
     parameters_.emplace_back(name, value);
-    
+
     it = sep_it;
     if (*it == '&' || *it == ';') {
       ++it;
     }
   }
-  
+
   update();
 }
-  
-url_search_parameters::url_search_parameters(const string_type &query)
-  : url_search_parameters(string_view(query)) {}
 
 url_search_parameters::url_search_parameters(std::initializer_list<value_type> parameters)
   : parameters_(parameters) {}
@@ -48,21 +45,23 @@ void url_search_parameters::append(const string_type &name,
 }
 
 void url_search_parameters::remove(const string_type &name) {
-  auto it = std::remove_if(std::begin(parameters_), std::end(parameters_),
+  auto first = std::begin(parameters_), last = std::end(parameters_);
+  auto it = std::remove_if(first, last,
                            [&name](const value_type &parameter) -> bool {
                              return name.compare(parameter.first) == 0;
                            });
-  parameters_.erase(it, std::end(parameters_));
+  parameters_.erase(it, last);
   update();
 }
 
 optional<url_search_parameters::string_type> url_search_parameters::get(
     const string_type &name) const noexcept {
-  auto it = std::find_if(std::begin(parameters_), std::end(parameters_),
+  auto first = std::begin(parameters_), last = std::end(parameters_);
+  auto it = std::find_if(first, last,
                          [&name](const value_type &parameter) -> bool {
                            return name.compare(parameter.first) == 0;
                          });
-  if (it == std::end(*this)) {
+  if (it == last) {
     return nullopt;
   }
 
@@ -81,19 +80,21 @@ std::vector<url_search_parameters::string_type> url_search_parameters::get_all(
 }
 
 bool url_search_parameters::contains(const string_type &name) const noexcept {
-  return std::end(*this) !=
-         std::find_if(std::begin(parameters_), std::end(parameters_),
-                      [&name](const value_type &parameter) -> bool {
-                        return name.compare(parameter.first) == 0;
-                      });
+  auto first = std::begin(parameters_), last = std::end(parameters_);
+  auto it = std::find_if(first, last,
+      [&name](const value_type &parameter) -> bool {
+    return name.compare(parameter.first) == 0;
+  });
+  return it != last;
 }
 
 void url_search_parameters::set(const string_type &name, const string_type &value) {
-  auto it = std::find_if(std::begin(parameters_), std::end(parameters_),
+  auto first = std::begin(parameters_), last = std::end(parameters_);
+  auto it = std::find_if(first, last,
                          [&name](const value_type &parameter) -> bool {
                            return name.compare(parameter.first) == 0;
                          });
-  if (it != std::end(*this)) {
+  if (it != last) {
     it->second = value;
   }
   else {
@@ -132,7 +133,8 @@ url_search_parameters::string_type url_search_parameters::to_string() const {
 }
 
 void url_search_parameters::sort() {
-  std::sort(std::begin(parameters_), std::end(parameters_),
+  auto first = std::begin(parameters_), last = std::end(parameters_);
+  std::sort(first, last,
             [](const value_type &lhs, const value_type &rhs) -> bool {
               return lhs.first < rhs.first;
             });

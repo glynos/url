@@ -43,12 +43,7 @@ class url_search_parameters {
    * \brief Constructor.
    */
   explicit url_search_parameters(string_view query);
-  
-  /**
-   * \brief Constructor.
-   */
-  explicit url_search_parameters(const string_type &query);
-  
+
   /**
    * \brief Constructor.
    */

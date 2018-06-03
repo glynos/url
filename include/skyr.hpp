@@ -1,4 +1,4 @@
-// Copyright (c) Glyn Matthews 2017-18.
+// Copyright (c) Glyn Matthews 2018.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -11,8 +11,6 @@
  *       specification.
  */
 
-#include <skyr/url/url.hpp>
-#include <skyr/url/url_parse.hpp>
-#include <skyr/url/url_search_parameters.hpp>
+#include <skyr/url.hpp>
 
 #endif  // NETWORK_URL_INC
