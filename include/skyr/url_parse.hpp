@@ -7,6 +7,8 @@
 #define NETWORK_DETAIL_URI_PARSE_INC
 
 #include <string>
+#include <cstdint>
+#include <array>
 #include <skyr/optional.hpp>
 #include <skyr/url_state.hpp>
 #include <skyr/url_record.hpp>

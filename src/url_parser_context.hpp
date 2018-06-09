@@ -25,10 +25,7 @@ class url_parser_context {
  private:
 
   std::string input;
-
   skyr::string_view view;
-//  skyr::string_view::const_iterator first;
-//  skyr::string_view::const_iterator last;
 
  public:
 
@@ -49,7 +46,7 @@ class url_parser_context {
   bool validation_error;
 
   url_parser_context(
-      std::__1::string input,
+      std::string input,
       const skyr::optional<url_record> &base,
       const skyr::optional<url_record> &url,
       skyr::optional<skyr::url_state> state_override = skyr::nullopt);

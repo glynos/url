@@ -31,13 +31,13 @@ inline optional<char> letter_to_hex(char in) {
 }
 
 template <class InputIterator>
-optional<char> decode_char(InputIterator &it) {
+optional<char> pct_decode_char(InputIterator &it) {
   assert(*it == '%');
 
   ++it;
   auto h0 = *it;
   if (h0 >= '8') {
-    // unable to decode characters outside the ASCII character set.
+    // unable to pct_decode characters outside the ASCII character set.
     return nullopt;
   }
 
@@ -58,8 +58,8 @@ optional<char> decode_char(InputIterator &it) {
 }
 
 template <class InputIterator, class OutputIterator>
-OutputIterator decode(InputIterator in_begin, InputIterator in_end,
-                      OutputIterator out_begin) {
+OutputIterator pct_decode(InputIterator in_begin, InputIterator in_end,
+                          OutputIterator out_begin) {
   auto it = in_begin;
   auto out = out_begin;
   while (it != in_end) {
@@ -68,7 +68,7 @@ OutputIterator decode(InputIterator in_begin, InputIterator in_end,
         out++ = *it;
         return out;
       }
-      auto c = decode_char(it);
+      auto c = pct_decode_char(it);
       if (!c) {
         throw std::runtime_error("Invalid character");
       }

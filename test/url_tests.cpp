@@ -195,121 +195,121 @@ TEST(url_tests, ipv4_loopback_test) {
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_1) {
+TEST(url_tests, ipv6_address_test_1) {
   skyr::url instance("http://[1080:0:0:0:8:800:200C:417A]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[1080:0:0:0:8:800:200C:417A]", instance.host());
+  EXPECT_EQ("[1080::8:800:200C:417A]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_2) {
+TEST(url_tests, ipv6_address_test_2) {
   skyr::url instance("http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[2001:db8:85a3:8d3:1319:8a2e:370:7348]", instance.host());
+  EXPECT_EQ("[2001:DB8:85A3:8D3:1319:8A2E:370:7348]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_3) {
+TEST(url_tests, ipv6_address_test_3) {
   skyr::url instance("http://[2001:db8:85a3:0:0:8a2e:370:7334]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[2001:db8:85a3:0:0:8a2e:370:7334]", instance.host());
+  EXPECT_EQ("[2001:DB8:85A3::8A2E:370:7334]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_4) {
+TEST(url_tests, ipv6_address_test_4) {
   skyr::url instance("http://[2001:db8:85a3::8a2e:370:7334]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[2001:db8:85a3::8a2e:370:7334]", instance.host());
+  EXPECT_EQ("[2001:DB8:85A3::8A2E:370:7334]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_5) {
+TEST(url_tests, ipv6_address_test_5) {
   skyr::url instance("http://[2001:0db8:0000:0000:0000:0000:1428:57ab]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[2001:0db8:0000:0000:0000:0000:1428:57ab]", instance.host());
+  EXPECT_EQ("[2001:DB8::1428:57AB]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_6) {
+TEST(url_tests, ipv6_address_test_6) {
   skyr::url instance("http://[2001:0db8:0000:0000:0000::1428:57ab]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[2001:0db8:0000:0000:0000::1428:57ab]", instance.host());
+  EXPECT_EQ("[2001:DB8::1428:57AB]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_7) {
+TEST(url_tests, ipv6_address_test_7) {
   skyr::url instance("http://[2001:0db8:0:0:0:0:1428:57ab]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[2001:0db8:0:0:0:0:1428:57ab]", instance.host());
+  EXPECT_EQ("[2001:DB8::1428:57AB]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_8) {
+TEST(url_tests, ipv6_address_test_8) {
   skyr::url instance("http://[2001:0db8:0:0::1428:57ab]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[2001:0db8:0:0::1428:57ab]", instance.host());
+  EXPECT_EQ("[2001:DB8::1428:57AB]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_9) {
+TEST(url_tests, ipv6_address_test_9) {
   skyr::url instance("http://[2001:0db8::1428:57ab]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[2001:0db8::1428:57ab]", instance.host());
+  EXPECT_EQ("[2001:DB8::1428:57AB]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_10) {
+TEST(url_tests, ipv6_address_test_10) {
   skyr::url instance("http://[2001:db8::1428:57ab]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[2001:db8::1428:57ab]", instance.host());
+  EXPECT_EQ("[2001:DB8::1428:57AB]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_11) {
+TEST(url_tests, ipv6_address_test_11) {
   skyr::url instance("http://[::ffff:0c22:384e]/");
-  EXPECT_EQ("http", instance.protocol());
-  EXPECT_EQ("[::ffff:0c22:384e]", instance.host());
+  EXPECT_EQ("http:", instance.protocol());
+  EXPECT_EQ("[::FFFF:C22:384E]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_12) {
+TEST(url_tests, ipv6_address_test_12) {
   skyr::url instance("http://[fe80::]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[fe80::]", instance.host());
+  EXPECT_EQ("[FE80::]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_address_test_13) {
+TEST(url_tests, ipv6_address_test_13) {
   skyr::url instance("http://[::ffff:c000:280]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[::ffff:c000:280]", instance.host());
+  EXPECT_EQ("[::FFFF:C000:280]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_loopback_test) {
+TEST(url_tests, ipv6_loopback_test) {
   skyr::url instance("http://[::1]/");
   EXPECT_EQ("http:", instance.protocol());
   EXPECT_EQ("[::1]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_loopback_test_1) {
+TEST(url_tests, ipv6_loopback_test_1) {
   skyr::url instance("http://[0000:0000:0000:0000:0000:0000:0000:0001]/");
   EXPECT_EQ("http:", instance.protocol());
-  EXPECT_EQ("[0000:0000:0000:0000:0000:0000:0000:0001]", instance.host());
+  EXPECT_EQ("[::1]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_v4inv6_test_1) {
+TEST(url_tests, ipv6_v4inv6_test_1) {
   skyr::url instance("http://[::ffff:12.34.56.78]/");
-  EXPECT_EQ("http", instance.protocol());
-  EXPECT_EQ("[::ffff:12.34.56.78]", instance.host());
+  EXPECT_EQ("http:", instance.protocol());
+  EXPECT_EQ("[::FFFF:12.34.56.78]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ipv6_v4inv6_test_2) {
+TEST(url_tests, ipv6_v4inv6_test_2) {
   skyr::url instance("http://[::ffff:192.0.2.128]/");
-  EXPECT_EQ("http", instance.protocol());
+  EXPECT_EQ("http:", instance.protocol());
   EXPECT_EQ("[::ffff:192.0.2.128]", instance.host());
   EXPECT_EQ("/", instance.pathname());
 }
@@ -334,10 +334,10 @@ TEST(url_tests, tel_test) {
   EXPECT_EQ("+1-816-555-1212", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_ldap_test) {
+TEST(url_tests, ldap_test) {
   skyr::url instance("ldap://[2001:db8::7]/c=GB?objectClass?one");
   EXPECT_EQ("ldap:", instance.protocol());
-  EXPECT_EQ("[2001:db8::7]", instance.host());
+  EXPECT_EQ("[2001:DB8::7]", instance.host());
   EXPECT_EQ("/c=GB", instance.pathname());
   EXPECT_EQ("?objectClass?one", instance.search());
 }
@@ -407,14 +407,9 @@ TEST(url_tests, empty_url) {
   EXPECT_TRUE(instance.empty());
 }
 
-TEST(url_tests, DISABLED_whitespace_no_throw) {
+TEST(url_tests, whitespace_no_throw) {
   EXPECT_NO_THROW(skyr::url(" http://www.example.com/ "));
 }
-
-//TEST(url_tests, whitespace_is_trimmed) {
-//  skyr::url instance(" http://www.example.com/ ");
-//  EXPECT_EQ("http://www.example.com/", instance);
-//}
 
 TEST(url_tests, git) {
   skyr::url instance("git://github.com/cpp-netlib/cpp-netlib.git");
@@ -556,7 +551,7 @@ TEST(url_tests, url_scheme_contains_an_invalid_character) {
   EXPECT_THROW(skyr::url("ht%tp://example.com"), skyr::type_error);
 }
 
-TEST(url_tests, DISABLED_path_no_double_slash) {
+TEST(url_tests, path_no_double_slash) {
   skyr::url instance("file:/path/to/something/");
   EXPECT_EQ("/path/to/something/", instance.pathname());
 }

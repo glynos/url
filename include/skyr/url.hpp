@@ -13,6 +13,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <array>
 #include "skyr/url_record.hpp"
 
 #ifdef NETWORK_URI_MSVC

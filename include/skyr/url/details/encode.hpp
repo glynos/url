@@ -28,7 +28,7 @@ inline char hex_to_letter(char in) {
 }
 
 template <class OutputIterator>
-OutputIterator encode_char(char in, OutputIterator out, const char *includes = "") {
+OutputIterator pct_encode_char(char in, OutputIterator out, const char *includes = "") {
   if ((static_cast<std::uint32_t>(in) <= 0x1f) ||
       (static_cast<std::uint32_t>(in) > 0x7e)) {
     out++ = '%';

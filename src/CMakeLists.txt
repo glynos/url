@@ -25,6 +25,7 @@ set(Uri_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/url_state.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_record.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_parse.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url_serialize.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_search_parameters.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_path_iterator.hpp)
