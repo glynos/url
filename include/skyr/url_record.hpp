@@ -14,6 +14,9 @@
 #include <skyr/string_view.hpp>
 
 namespace skyr {
+/**
+ * @class url_record
+ */
 struct url_record {
   std::string url;
 
@@ -29,11 +32,22 @@ struct url_record {
   bool cannot_be_a_base_url;
   skyr::optional<std::string> object;
 
+  /**
+   * @brief Constructor.
+   */
   url_record()
       : url{}, cannot_be_a_base_url{false} {}
 
+  /**
+   *
+   * @return
+   */
   bool is_special() const;
 
+  /**
+   *
+   * @return
+   */
   bool includes_credentials() const;
 
 };

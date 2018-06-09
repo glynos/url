@@ -19,12 +19,12 @@ optional<url_record> basic_parse(
     const optional<url_record> &base,
     const optional<url_record> &url,
     optional<url_state> state_override) {
-  if (input.empty()) {
-    return url_record();
-  }
-
+//  if (input.empty()) {
+//    return url_record();
+//  }
+//
   using url_parse_func = std::function<url_parse_action (url_parser_context &, char)>;
-  using url_parse_funcs = std::map<url_state , url_parse_func>;
+  using url_parse_funcs = std::map<url_state, url_parse_func>;
 
   auto parse_funcs = url_parse_funcs{
       {url_state::scheme_start,

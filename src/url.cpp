@@ -11,21 +11,23 @@
 #include <vector>
 #include "skyr/url.hpp"
 #include "skyr/url_parse.hpp"
+#include "url_schemes.hpp"
 
 namespace skyr {
-  url::url(const std::string &input) {
+  url::url(std::string input) {
     auto parsed_url = parse(input);
     if (!parsed_url) {
       throw type_error();
     }
 
     url_ = parsed_url.value();
+    view_ = string_view(url_.url);
 
     auto query = url_.query? url_.query.value() : std::string();
     // TODO: set query object
   }
 
-  url::url(const std::string &input, const std::string &base) {
+  url::url(std::string input, std::string base) {
     auto parsed_base = parse(base);
     if (!parsed_base) {
       throw type_error();
@@ -37,6 +39,7 @@ namespace skyr {
     }
 
     url_ = parsed_url.value();
+    view_ = string_view(url_.url);
 
     auto query = url_.query? url_.query.value() : std::string();
     // TODO: set query object
@@ -99,22 +102,20 @@ namespace skyr {
       return std::string("");
     }
 
+    if ((url_.path.size() == 1) && url_.path[0].empty()) {
+      return std::string("/");
+    }
+
     auto pathname = std::string("");
-  //  std::cout << "!!! " << url_.path[0] << "|||" << std::endl;
-  //  if (!url_.path[0].empty()) {
-  //    pathname += "/";
-  //  }
+    if (!url_.path[0].empty()) {
+      pathname += "/";
+    }
 
     for (const auto &segment : url_.path) {
       pathname += segment;
       pathname += "/";
     }
     pathname = pathname.substr(0, pathname.length() - 1);
-
-  //  auto view = string_view(pathname);
-  //  if (remaining_starts_with(begin(view), end(view), "//")) {
-  //    pathname = pathname.substr(1, std::string::npos);
-  //  }
 
     return pathname;
   }
@@ -137,5 +138,13 @@ namespace skyr {
 
   bool url::is_special() const {
     return url_.is_special();
+  }
+
+  bool url::validation_error() const {
+    return false;
+  }
+
+  optional<std::uint16_t> url::default_port(const std::string &scheme) {
+    return details::default_port(string_view(scheme));
   }
 }

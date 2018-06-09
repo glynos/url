@@ -70,7 +70,7 @@ OutputIterator decode(InputIterator in_begin, InputIterator in_end,
       }
       auto c = decode_char(it);
       if (!c) {
-        throw percent_decoding_error(url_error::non_hex_input);
+        throw std::runtime_error("Invalid character");
       }
       out = c.value();
       ++out;

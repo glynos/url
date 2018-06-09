@@ -27,8 +27,8 @@ class url_parser_context {
   std::string input;
 
   skyr::string_view view;
-  skyr::string_view::const_iterator first;
-  skyr::string_view::const_iterator last;
+//  skyr::string_view::const_iterator first;
+//  skyr::string_view::const_iterator last;
 
  public:
 
@@ -54,8 +54,10 @@ class url_parser_context {
       const skyr::optional<url_record> &url,
       skyr::optional<skyr::url_state> state_override = skyr::nullopt);
 
+  //url_parse_action parse_part(char c);
+
   bool is_eof() const {
-    return it == last;
+    return it == end(view);
   }
 
   void increment() {
@@ -67,11 +69,11 @@ class url_parser_context {
   }
 
   void reset() {
-    it = first;
+    it = begin(view);
   }
 
   void restart_from_buffer() {
-    it = it - buffer.size();
+    it = it - buffer.size() - 1;
   }
 
   url_parse_action parse_scheme_start(char c);

@@ -13,89 +13,89 @@
 
 namespace skyr {
 /**
- * \class uri_search_parameters
+ * @class uri_search_parameters
  */
 class url_search_parameters {
  public:
   /**
-   * \brief
+   * @brief
    */
   using string_type = std::string;
   
   using string_view = skyr::string_view;
   
   /**
-   * \brief
+   * @brief
    */
   using value_type = std::pair<string_type, string_type>;
   
   /**
-   * \brief
+   * @brief
    */
   using const_iterator = std::vector<value_type>::const_iterator;
 
   /**
-   * \brief Constructor.
+   * @brief Constructor.
    */
   url_search_parameters();
 
   /**
-   * \brief Constructor.
+   * @brief Constructor.
    */
   explicit url_search_parameters(string_view query);
 
   /**
-   * \brief Constructor.
+   * @brief Constructor.
    */
   url_search_parameters(std::initializer_list<value_type> parameters);
 
   /**
-   * \brief
+   * @brief
    */
   void append(const string_type &name, const string_type &value);
 
   /**
-   * \brief
+   * @brief
    */
   void remove(const string_type &name);
 
   /**
-   * \brief
+   * @brief
    */
   optional<string_type> get(const string_type &name) const noexcept;
   
   /**
-   * \brief
+   * @brief
    */
   std::vector<string_type> get_all(const string_type &name) const;
 
   /**
-   * \brief
+   * @brief
    */
   bool contains(const string_type &name) const noexcept;
 
   /**
-   * \brief
+   * @brief
    */
   void set(const string_type &name, const string_type &value);
 
   /**
-   * \brief
+   * @brief
    */
   void sort();
 
   /**
-   * \brief
+   * @brief
    */
   const_iterator begin() const noexcept;
 
   /**
-   * \brief
+   * @brief
    */
   const_iterator end() const noexcept;
 
   /**
-   * \brief
+   * @brief
    */
   string_type to_string() const;
 
