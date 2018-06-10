@@ -14,22 +14,35 @@
 #include <skyr/string_view.hpp>
 
 namespace skyr {
-///**
-// *
-// */
-//class ipv4_address {
-//
-//  std::uint32_t repr;
-//
-// public:
-//
-//  ipv4_address()
-//    : repr(0) {}
-//
-//  explicit ipv4_address(std::uint32_t address)
-//    : repr(address) {}
-//
-//};
+/**
+ * @class ipv4_address
+ */
+class ipv4_address {
+
+  std::uint32_t repr;
+
+ public:
+
+  /**
+   * @brief Constructor.
+   */
+  ipv4_address()
+    : repr(0) {}
+
+  /**
+   * @brief Constructor.
+   * @param address
+   */
+  explicit ipv4_address(std::uint32_t address)
+    : repr(address) {}
+
+  /**
+   *
+   * @return
+   */
+  std::string to_string() const;
+
+};
 
 /**
  *
@@ -56,33 +69,69 @@ class ipv6_address {
     std::fill(std::begin(repr), std::end(repr), 0);
   }
 
+  /**
+   *
+   * @return
+   */
   iterator begin() {
     return repr.begin();
   }
 
+  /**
+   *
+   * @return
+   */
   iterator end() {
     return repr.end();
   }
 
+  /**
+   *
+   * @return
+   */
   const_iterator begin() const {
     return repr.begin();
   }
 
+  /**
+   *
+   * @return
+   */
   const_iterator end() const {
     return repr.end();
   }
 
-  reference operator [] (size_type i) {
-    return repr[i];
+  /**
+   *
+   * @param index
+   * @return
+   */
+  reference operator [] (size_type index) {
+    return repr[index];
   }
 
-  value_type operator [] (size_type i) const {
-    return repr[i];
+  /**
+   *
+   * @param index
+   * @return
+   */
+  value_type operator [] (size_type index) const {
+    return repr[index];
   }
 
+  /**
+   *
+   * @return
+   */
   size_type size() const {
     return repr.size();
   }
+
+  /**
+   *
+   * @return
+   */
+  std::string to_string() const;
 
 };
 

@@ -1,4 +1,4 @@
-# Copyright (c) Glyn Matthews 2012-2017.
+# Copyright (c) Glyn Matthews 2012-2018.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -12,7 +12,6 @@ option(Uri_BUILD_DOCS "Build the URI documentation." ON)
 option(Uri_FULL_WARNINGS "Build the library with all warnings turned on." ON)
 option(Uri_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(Uri_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
-option(Uri_USE_STD14 "Use the C++ 14 standard (GCC only)" OFF)
 option(Uri_USE_STD17 "Use the C++ 17 standard (GCC only)" OFF)
 option(Uri_RUN_WEB_PLATFORM_TESTS "Run web platform tests" OFF)
 
@@ -23,14 +22,7 @@ set(CMAKE_VERBOSE_MAKEFILE true)
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   INCLUDE(CheckCXXCompilerFlag)
 
-  if (Uri_USE_STD14)
-    CHECK_CXX_COMPILER_FLAG(-std=c++14 HAVE_STD14)
-    if (HAVE_STD14)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-    else()
-      message(FATAL_ERROR "No C++ 14 support (Compiler does not define -std=c++14).")
-    endif()
-  elseif(Uri_USE_STD17)
+  if(Uri_USE_STD17)
     CHECK_CXX_COMPILER_FLAG(-std=c++17 HAVE_STD17)
     if (HAVE_STD17)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
@@ -38,12 +30,7 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
       message(FATAL_ERROR "No C++ 17 support (Compiler does not define -std=c++17).")
     endif()
   else()
-    CHECK_CXX_COMPILER_FLAG(-std=c++11 HAVE_STD11)
-    if (HAVE_STD11)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    else()
-      message(FATAL_ERROR "No C++ 11 support (Compiler does not define -std=c++11).")
-    endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
   endif()
 
   if (Uri_FULL_WARNINGS)
@@ -56,7 +43,7 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
 
   message("C++ Flags: ${CMAKE_CXX_FLAGS} link flags: ${CMAKE_CXX_LINK_FLAGS}")
 elseif(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
   if (NOT Uri_DISABLE_LIBCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")

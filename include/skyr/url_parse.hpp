@@ -37,16 +37,6 @@ optional<url_record> basic_parse(
 optional<url_record> parse(
     std::string input,
     const optional<url_record> &base = nullopt);
-
-/**
- *
- * @param url
- * @param exclude_fragment
- * @return
- */
-std::string serialize(
-    const url_record &url,
-    bool exclude_fragment = false);
 }  // namespace skyr
 
 #endif  // NETWORK_DETAIL_URI_PARSE_INC

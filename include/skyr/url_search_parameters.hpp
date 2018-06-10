@@ -21,7 +21,10 @@ class url_search_parameters {
    * @brief
    */
   using string_type = std::string;
-  
+
+  /**
+   * @brief
+   */
   using string_view = skyr::string_view;
   
   /**

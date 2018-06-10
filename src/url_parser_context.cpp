@@ -11,7 +11,6 @@
 #include <deque>
 #include <map>
 #include <array>
-//#include "skyr/url_parse.hpp"
 #include "skyr/url/details/encode.hpp"
 #include "skyr/url/details/decode.hpp"
 #include "url_schemes.hpp"
@@ -25,17 +24,18 @@ inline bool is_in(string_view::value_type c,
   return last != std::find(first, last, c);
 }
 
-inline bool is_in(string_view::value_type c,
-                  const char *chars) {
-  return is_in(c, string_view{chars});
+inline bool is_whitespace(char ch) {
+  const char whitespace[] = "\0\x1b\x04\x12\x1f";
+
+  return
+      !(std::isspace(ch, std::locale("C")) ||
+          is_in(ch, string_view(whitespace, sizeof(whitespace))));
 }
 
 bool remove_leading_whitespace(std::string &input) {
-  auto first = begin(input), last = end(input);
-  auto it = std::find_if(first, last, [](char ch) -> bool {
-    return
-        !(std::isspace(ch, std::locale()) || is_in(ch, "\0\x1b\x04\x12\x1f"));
-  });
+  auto view = string_view(input);
+  auto first = begin(view), last = end(view);
+  auto it = std::find_if(first, last, is_whitespace);
   if (it != first) {
     input = std::string(it, last);
   }
@@ -48,10 +48,7 @@ bool remove_trailing_whitespace(std::string &input) {
 
   auto first = reverse_iterator(end(input)),
       last = reverse_iterator(begin(input));
-  auto it = std::find_if(first, last, [](char ch) -> bool {
-    return
-        !(std::isspace(ch, std::locale()) || is_in(ch, "\0\x1b\x04\x12\x1f"));
-  });
+  auto it = std::find_if(first, last, is_whitespace);
   if (it != first) {
     input = std::string(it, last);
     std::reverse(begin(input), end(input));
@@ -91,27 +88,23 @@ bool remaining_starts_with(
     ++chars_it;
 
     if (it == last) {
-      return false;
+      return (chars_it == chars_last);
     }
   }
+
   return true;
 }
 
-inline bool is_hex_digit(char c) {
-  auto c_upper = std::toupper(c, std::locale("C"));
-  return std::isdigit(c_upper, std::locale("C")) || ((c_upper >= 'A') && (c_upper <= 'F'));
-}
-
 inline std::uint16_t hex_to_dec(char c) {
-  assert(is_hex_digit(c));
+  assert(std::isxdigit(c, std::locale("C")));
 
-  auto c_upper = std::toupper(c, std::locale("C"));
+  auto c_lower = std::tolower(c, std::locale("C"));
 
-  if (std::isdigit(c_upper, std::locale("C"))) {
-    return static_cast<std::uint16_t>(c_upper - '0');
+  if (std::isdigit(c_lower, std::locale("C"))) {
+    return static_cast<std::uint16_t>(c_lower - '0');
   }
 
-  return static_cast<std::uint16_t>(c_upper - 'A') + 10;
+  return static_cast<std::uint16_t>(c_lower - 'a') + 10;
 }
 
 optional<ipv6_address> parse_ipv6_address(string_view input) {
@@ -155,7 +148,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
     auto value = 0;
     auto length = 0;
 
-    while ((length < 4) && is_hex_digit(*it)) {
+    while ((length < 4) && std::isxdigit(*it, std::locale("C"))) {
       value = value * 0x10 + hex_to_dec(*it);
       ++it;
       ++length;
@@ -194,14 +187,15 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
         }
 
         while (std::isdigit(*it, std::locale("C"))) {
-          auto number = hex_to_dec(*it);
+          //auto number = hex_to_dec(*it);
+          auto number = static_cast<std::uint32_t>(*it - '0');
           if (!ipv4_piece) {
             ipv4_piece = number;
           } else if (ipv4_piece.value() == 0) {
             // validation error
             return nullopt;
           } else {
-            ipv4_piece = ipv4_piece.value() * 0x10 + number;
+            ipv4_piece = ipv4_piece.value() * 10 + number;
           }
 
           if (ipv4_piece.value() > 255) {
@@ -256,12 +250,12 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
   return address;
 }
 
-optional<std::uint32_t> parse_ipv4_number(
+optional<std::uint64_t> parse_ipv4_number(
     string_view input,
     bool &validation_error_flag) {
   auto R = 10;
 
-  if ((input.size() >= 2) && (input[0] == '0') && (std::toupper(input[1], std::locale("C")) == 'X')) {
+  if ((input.size() >= 2) && (input[0] == '0') && (std::tolower(input[1], std::locale("C")) == 'x')) {
     input = input.substr(2);
     R = 16;
   }
@@ -283,25 +277,6 @@ optional<std::uint32_t> parse_ipv4_number(
   }
 }
 
-std::string serialize_ipv4_address(std::uint32_t ipv4) {
-  auto output = std::string();
-
-  auto n = ipv4;
-
-  for (auto i = 1U; i <= 4U; ++i) {
-    std::ostringstream oss;
-    oss << (n % 256);
-    output = oss.str() + output;
-
-    if (i != 4) {
-      output = "." + output;
-    }
-
-    n = static_cast<std::uint32_t>(std::floor(n / 256.));
-  }
-
-  return output;
-}
 optional<std::string> parse_ipv4_address(string_view input) {
   auto validation_error_flag = false;
 
@@ -327,7 +302,7 @@ optional<std::string> parse_ipv4_address(string_view input) {
     return input.to_string();
   }
 
-  auto numbers = std::vector<std::uint32_t>();
+  auto numbers = std::vector<std::uint64_t>();
 
   for (const auto &part : parts) {
     if (part.empty()) {
@@ -349,7 +324,7 @@ optional<std::string> parse_ipv4_address(string_view input) {
   auto numbers_first = begin(numbers), numbers_last = end(numbers);
 
   auto numbers_it = std::find_if(numbers_first, numbers_last,
-      [] (std::uint32_t number) -> bool {
+      [] (auto number) -> bool {
     return number > 255;
   });
   if (numbers_it != numbers_last) {
@@ -360,14 +335,14 @@ optional<std::string> parse_ipv4_address(string_view input) {
   --numbers_last_but_one;
 
   numbers_it = std::find_if(numbers_first, numbers_last_but_one,
-      [] (std::uint32_t number) -> bool {
+      [] (auto number) -> bool {
     return number > 255;
   });
   if (numbers_it != numbers_last_but_one) {
     return nullopt;
   }
 
-  if (numbers.back() > std::pow(256, 5 - numbers.size())) {
+  if (numbers.back() >= static_cast<std::uint64_t>(std::pow(256, 5 - numbers.size()))) {
     // validation_error = true;
     return nullopt;
   }
@@ -381,62 +356,7 @@ optional<std::string> parse_ipv4_address(string_view input) {
     ++counter;
   }
 
-  return serialize_ipv4_address(ipv4);
-}
-
-std::string serialize_ipv6_address(ipv6_address &address) {
-  auto output = std::string();
-  auto compress = optional<int>();
-
-  // TODO: this isn't doing what it should be doing
-  // https://url.spec.whatwg.org/#concept-ipv6-serializer
-  auto first = std::begin(address), last = std::end(address);
-  auto it = first;
-  while (it != last) {
-    if (*it == 0) {
-      auto index = std::distance(first, it);
-      ++it;
-      if ((it != last) && (*it == 0)) {
-        compress = index;
-        break;
-      }
-    }
-    else {
-      ++it;
-    }
-  }
-
-  auto ignore0 = false;
-  for (auto i = 0; i <= 7; ++i) {
-    auto piece = address[i];
-
-    if (ignore0 && (piece == 0)) {
-      continue;
-    }
-    else if (ignore0) {
-      ignore0 = false;
-    }
-
-    if (compress == i) {
-      auto separator = std::string(":");
-      if (i == 0) {
-        separator = std::string("::");
-      }
-      output += separator;
-      ignore0 = true;
-      continue;
-    }
-
-    std::ostringstream oss;
-    oss << std::hex << std::uppercase << piece;
-    output += oss.str();
-
-    if (i != 7) {
-      output += ":";
-    }
-  }
-
-  return std::string("[") + output + "]";
+  return ipv4_address(ipv4).to_string();
 }
 
 optional<std::string> parse_opaque_host(string_view input) {
@@ -464,14 +384,14 @@ template <class InputIter, class OutputIter>
 OutputIter domain_to_ascii(InputIter first, InputIter last, OutputIter it_out) {
   auto it = first;
   while (it != last) {
-//    it_out++ = std::tolower(*it, std::locale("C"));
-    it_out++ = *it;
+    it_out++ = std::tolower(*it, std::locale("C"));
+//    it_out++ = *it;
     ++it;
   }
   return it_out;
 };
 
-optional<std::string> parse_host(const std::string &input, bool is_not_special = false) {
+optional<std::string> parse_host(string_view input, bool is_not_special = false) {
   if (input.front() == '[') {
     if (input.back() != ']') {
       // result.validation_error = true;
@@ -483,7 +403,7 @@ optional<std::string> parse_host(const std::string &input, bool is_not_special =
     view.remove_suffix(1);
     auto ipv6_address = parse_ipv6_address(view);
     if (ipv6_address) {
-      return serialize_ipv6_address(ipv6_address.value());
+      return ipv6_address.value().to_string();
     }
     else {
       return nullopt;
@@ -491,7 +411,7 @@ optional<std::string> parse_host(const std::string &input, bool is_not_special =
   }
 
   if (is_not_special) {
-    return parse_opaque_host(string_view(input));
+    return parse_opaque_host(input);
   }
 
   auto domain = std::string{};
@@ -513,12 +433,7 @@ optional<std::string> parse_host(const std::string &input, bool is_not_special =
   }
 
   auto ipv4_host = parse_ipv4_address(string_view(ascii_domain));
-  if (ipv4_host) {
-    return ipv4_host;
-  }
-  else {
-    return ascii_domain;
-  }
+  return ipv4_host;
 }
 
 bool is_valid_port(const std::string &port) {
@@ -566,31 +481,24 @@ bool is_single_dot_path_segment(const std::string &segment) {
 }
 
 bool is_pct_encoded(string_view::const_iterator it,
-                    string_view::const_iterator last) {
+                    string_view::const_iterator last,
+                    const std::locale &locale) {
   if (it == last) {
     return false;
   }
 
-  string_view::const_iterator it_copy = it;
-
-  if (*it_copy == '%') {
-    ++it_copy;
-    if (it_copy == last) {
-      return false;
+  if (*it == '%') {
+    ++it;
+    if (it != last) {
+      if (std::isxdigit(*it, locale)) {
+        ++it;
+        if (it != last) {
+          if (std::isxdigit(*it, locale)) {
+            return true;
+          }
+        }
+      }
     }
-  }
-
-  if (std::isxdigit(*it_copy, std::locale("C"))) {
-    ++it_copy;
-    if (it_copy == last) {
-      return false;
-    }
-  }
-
-  if (std::isxdigit(*it_copy, std::locale("C"))) {
-    ++it_copy;
-    it = it_copy;
-    return true;
   }
 
   return false;
@@ -608,14 +516,12 @@ bool is_double_dot_path_segment(const std::string &segment) {
           (segment_lower == "%2e%2e"));
 }
 
-void shorten_path(url_record &url) {
-  auto &path = url.path;
-
+void shorten_path(const std::string &scheme, std::vector<std::string> &path) {
   if (path.empty()) {
     return;
   }
 
-  if ((url.scheme.compare("file") == 0) &&
+  if ((scheme.compare("file") == 0) &&
       (path.size() == 1) &&
       is_windows_drive_letter(path.front())) {
     return;
@@ -623,6 +529,10 @@ void shorten_path(url_record &url) {
 
   path.pop_back();
 }
+//
+//void shorten_path(url_record &url) {
+//  shorten_path(url.scheme, url.path);
+//}
 } // namespace
 
 url_parser_context::url_parser_context(
@@ -887,10 +797,6 @@ url_parse_action url_parser_context::parse_authority(char c) {
       }
     }
     buffer.clear();
-
-    state = url_state::host;
-    increment();
-    return url_parse_action::continue_;
   } else if (
       ((is_eof()) || (c == '/') || (c == '?') || (c == '#')) ||
           (url.is_special() && (c == '\\'))) {
@@ -919,7 +825,7 @@ url_parse_action url_parser_context::parse_hostname(char c) {
       return url_parse_action::fail;
     }
 
-    auto host = parse_host(buffer, false);
+    auto host = parse_host(string_view(buffer), false);
     if (!host) {
       return url_parse_action::fail;
     }
@@ -940,7 +846,7 @@ url_parse_action url_parser_context::parse_hostname(char c) {
       return url_parse_action::fail;
     }
 
-    auto host = parse_host(buffer, false);
+    auto host = parse_host(string_view(buffer), false);
     if (!host) {
       return url_parse_action::fail;
     }
@@ -1025,7 +931,7 @@ url_parse_action url_parser_context::parse_file(char c) {
       if (!is_windows_drive_letter(it, end(view))) {
         url.host = base.value().host;
         url.path = base.value().path;
-        shorten_path(url);
+        shorten_path(url.scheme, url.path);
       }
       else {
         validation_error = true;
@@ -1080,7 +986,7 @@ url_parse_action url_parser_context::parse_file_host(char c) {
 
       state = url_state::path_start;
     } else {
-      auto host = parse_host(buffer, !url.is_special());
+      auto host = parse_host(string_view(buffer), !url.is_special());
       if (!host) {
         return url_parse_action::fail;
       }
@@ -1114,9 +1020,9 @@ url_parse_action url_parser_context::parse_path_start(char c) {
     if ((c != '/') && (c != '\\')) {
       decrement();
     }
-    else {
-      url.path.push_back(buffer);
-    }
+//    else {
+//      url.path.push_back(buffer);
+//    }
   } else if (!state_override && (c == '?')) {
     url.query = std::string();
     state = url_state::query;
@@ -1145,7 +1051,7 @@ url_parse_action url_parser_context::parse_path(char c) {
     }
 
     if (is_double_dot_path_segment(buffer)) {
-      shorten_path(url);
+      shorten_path(url.scheme, url.path);
       if (!((c == '/') || (url.is_special() && (c == '\\')))) {
         url.path.emplace_back();
       }
@@ -1203,7 +1109,7 @@ url_parse_action url_parser_context::parse_cannot_be_a_base_url(char c) {
     if (!is_eof() && !is_url_code_point(c) && (c != '%')) {
       validation_error = true;
     }
-    else if ((c == '%') && !is_pct_encoded(it, end(view))) {
+    else if ((c == '%') && !is_pct_encoded(it, end(view), std::locale("C"))) {
       validation_error = true;
     }
     if (!is_eof()) {
