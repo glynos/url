@@ -7,6 +7,7 @@
 #include <cmath>
 #include <locale>
 #include <vector>
+#include <sstream>
 #include <skyr/optional.hpp>
 #include "skyr/ipv4_address.hpp"
 
@@ -117,5 +118,25 @@ std::tuple<bool, optional<ipv4_address>> parse_ipv4_address(string_view input) {
   }
 
   return {true, ipv4_address(ipv4)};
+}
+
+std::string ipv4_address::to_string() const {
+  auto output = std::string();
+
+  auto n = repr;
+
+  for (auto i = 1U; i <= 4U; ++i) {
+    std::ostringstream oss;
+    oss << (n % 256);
+    output = oss.str() + output;
+
+    if (i != 4) {
+      output = "." + output;
+    }
+
+    n = static_cast<std::uint32_t>(std::floor(n / 256.));
+  }
+
+  return output;
 }
 }  // namespace skyr
