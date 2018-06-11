@@ -15,6 +15,7 @@
 #include "skyr/url/details/decode.hpp"
 #include "url_schemes.hpp"
 #include "skyr/url_state.hpp"
+#include "skyr/ipv6_address.hpp"
 
 namespace skyr {
 namespace {
@@ -95,269 +96,114 @@ bool remaining_starts_with(
   return true;
 }
 
-inline std::uint16_t hex_to_dec(char c) {
-  assert(std::isxdigit(c, std::locale("C")));
-
-  auto c_lower = std::tolower(c, std::locale("C"));
-
-  if (std::isdigit(c_lower, std::locale("C"))) {
-    return static_cast<std::uint16_t>(c_lower - '0');
-  }
-
-  return static_cast<std::uint16_t>(c_lower - 'a') + 10;
-}
-
-optional<ipv6_address> parse_ipv6_address(string_view input) {
-  auto address = ipv6_address{};
-
-  auto piece_index = 0;
-  auto compress = optional<decltype(piece_index)>();
-
-  auto first = begin(input), last = end(input);
-  auto it = first;
-
-  if (*it == ':') {
-    if (!remaining_starts_with(it, last, ":")) {
-      // validation error
-      return nullopt;
-    }
-
-    it += 2;
-    ++piece_index;
-    compress = piece_index;
-  }
-
-  while (it != last) {
-    if (piece_index == 8) {
-      // validation error
-      return nullopt;
-    }
-
-    if (*it == ':') {
-      if (compress) {
-        // validation error
-        return nullopt;
-      }
-
-      ++it;
-      ++piece_index;
-      compress = piece_index;
-      continue;
-    }
-
-    auto value = 0;
-    auto length = 0;
-
-    while ((length < 4) && std::isxdigit(*it, std::locale("C"))) {
-      value = value * 0x10 + hex_to_dec(*it);
-      ++it;
-      ++length;
-    }
-
-    if (*it == '.') {
-      if (length == 0) {
-        // validation error
-        return nullopt;
-      }
-
-      it -= length;
-
-      if (piece_index > 6) {
-        // validation error
-        return nullopt;
-      }
-
-      auto numbers_seen = 0;
-
-      while (it != last) {
-        auto ipv4_piece = optional<std::uint16_t>();
-
-        if (numbers_seen > 0) {
-          if ((*it == '.') && (numbers_seen < 4)) {
-            ++it;
-          } else {
-            // validation error
-            return nullopt;
-          }
-        }
-
-        if (!std::isdigit(*it, std::locale("C"))) {
-          // validation error
-          return nullopt;
-        }
-
-        while (std::isdigit(*it, std::locale("C"))) {
-          //auto number = hex_to_dec(*it);
-          auto number = static_cast<std::uint32_t>(*it - '0');
-          if (!ipv4_piece) {
-            ipv4_piece = number;
-          } else if (ipv4_piece.value() == 0) {
-            // validation error
-            return nullopt;
-          } else {
-            ipv4_piece = ipv4_piece.value() * 10 + number;
-          }
-
-          if (ipv4_piece.value() > 255) {
-            // validation error
-            return nullopt;
-          }
-
-          ++it;
-        }
-
-        address[piece_index] = address[piece_index] * 0x100 + ipv4_piece.value();
-        ++numbers_seen;
-
-        if ((numbers_seen == 2) || (numbers_seen == 4)) {
-          ++piece_index;
-        }
-      }
-
-      if (numbers_seen != 4) {
-        // validation error
-        return nullopt;
-      }
-
-      break;
-    } else if (*it == ':') {
-      ++it;
-      if (it == last) {
-        // validation error
-        return nullopt;
-      }
-    } else if (it != last) {
-      // validation error
-      return nullopt;
-    }
-    address[piece_index] = value;
-    ++piece_index;
-  }
-
-  if (compress) {
-    auto swaps = piece_index - compress.value();
-    piece_index = 7;
-    while ((piece_index != 0) && (swaps > 0)) {
-      std::swap(address[piece_index], address[compress.value() + swaps - 1]);
-      --piece_index;
-      --swaps;
-    }
-  } else if (!compress && (piece_index != 8)) {
-    // validation error
-    return nullopt;
-  }
-
-  return address;
-}
-
-optional<std::uint64_t> parse_ipv4_number(
-    string_view input,
-    bool &validation_error_flag) {
-  auto R = 10;
-
-  if ((input.size() >= 2) && (input[0] == '0') && (std::tolower(input[1], std::locale("C")) == 'x')) {
-    input = input.substr(2);
-    R = 16;
-  }
-  else if ((input.size() >= 2) && (input[0] == '0')) {
-    input = input.substr(1);
-    R = 8;
-  }
-
-  if (input.empty()) {
-    return 0;
-  }
-
-  try {
-    auto number = std::stoul(input.to_string(), nullptr, R);
-    return number;
-  }
-  catch (std::exception &) {
-    return nullopt;
-  }
-}
-
-optional<std::string> parse_ipv4_address(string_view input) {
-  auto validation_error_flag = false;
-
-  std::vector<std::string> parts;
-  parts.push_back(std::string());
-  for (auto ch : input) {
-    if (ch == '.') {
-      parts.emplace_back();
-    }
-    else {
-      parts.back().push_back(ch);
-    }
-  }
-
-  if (parts.back().empty()) {
-    validation_error_flag = true;
-    if (parts.size() > 1) {
-      parts.pop_back();
-    }
-  }
-
-  if (parts.size() > 4) {
-    return input.to_string();
-  }
-
-  auto numbers = std::vector<std::uint64_t>();
-
-  for (const auto &part : parts) {
-    if (part.empty()) {
-      return input.to_string();
-    }
-
-    auto number = parse_ipv4_number(string_view(part), validation_error_flag);
-    if (!number) {
-      return input.to_string();
-    }
-
-    numbers.push_back(number.value());
-  }
-
-  if (validation_error_flag) {
-    // validation_error = true;
-  }
-
-  auto numbers_first = begin(numbers), numbers_last = end(numbers);
-
-  auto numbers_it = std::find_if(numbers_first, numbers_last,
-      [] (auto number) -> bool {
-    return number > 255;
-  });
-  if (numbers_it != numbers_last) {
-    // validation_error = true;
-  }
-
-  auto numbers_last_but_one = numbers_last;
-  --numbers_last_but_one;
-
-  numbers_it = std::find_if(numbers_first, numbers_last_but_one,
-      [] (auto number) -> bool {
-    return number > 255;
-  });
-  if (numbers_it != numbers_last_but_one) {
-    return nullopt;
-  }
-
-  if (numbers.back() >= static_cast<std::uint64_t>(std::pow(256, 5 - numbers.size()))) {
-    // validation_error = true;
-    return nullopt;
-  }
-
-  auto ipv4 = numbers.back();
-  numbers.pop_back();
-
-  auto counter = 0UL;
-  for (auto number : numbers) {
-    ipv4 += number * std::pow(256, 3 - counter);
-    ++counter;
-  }
-
-  return ipv4_address(ipv4).to_string();
-}
+//optional<std::uint64_t> parse_ipv4_number(
+//    string_view input,
+//    bool &validation_error_flag) {
+//  auto R = 10;
+//
+//  if ((input.size() >= 2) && (input[0] == '0') && (std::tolower(input[1], std::locale("C")) == 'x')) {
+//    input = input.substr(2);
+//    R = 16;
+//  }
+//  else if ((input.size() >= 2) && (input[0] == '0')) {
+//    input = input.substr(1);
+//    R = 8;
+//  }
+//
+//  if (input.empty()) {
+//    return 0;
+//  }
+//
+//  try {
+//    auto number = std::stoul(input.to_string(), nullptr, R);
+//    return number;
+//  }
+//  catch (std::exception &) {
+//    return nullopt;
+//  }
+//}
+//
+//optional<std::string> parse_ipv4_address(string_view input) {
+//  auto validation_error_flag = false;
+//
+//  std::vector<std::string> parts;
+//  parts.push_back(std::string());
+//  for (auto ch : input) {
+//    if (ch == '.') {
+//      parts.emplace_back();
+//    }
+//    else {
+//      parts.back().push_back(ch);
+//    }
+//  }
+//
+//  if (parts.back().empty()) {
+//    validation_error_flag = true;
+//    if (parts.size() > 1) {
+//      parts.pop_back();
+//    }
+//  }
+//
+//  if (parts.size() > 4) {
+//    return input.to_string();
+//  }
+//
+//  auto numbers = std::vector<std::uint64_t>();
+//
+//  for (const auto &part : parts) {
+//    if (part.empty()) {
+//      return input.to_string();
+//    }
+//
+//    auto number = parse_ipv4_number(string_view(part), validation_error_flag);
+//    if (!number) {
+//      return input.to_string();
+//    }
+//
+//    numbers.push_back(number.value());
+//  }
+//
+//  if (validation_error_flag) {
+//    // validation_error = true;
+//  }
+//
+//  auto numbers_first = begin(numbers), numbers_last = end(numbers);
+//
+//  auto numbers_it = std::find_if(numbers_first, numbers_last,
+//      [] (auto number) -> bool {
+//    return number > 255;
+//  });
+//  if (numbers_it != numbers_last) {
+//    // validation_error = true;
+//  }
+//
+//  auto numbers_last_but_one = numbers_last;
+//  --numbers_last_but_one;
+//
+//  numbers_it = std::find_if(numbers_first, numbers_last_but_one,
+//      [] (auto number) -> bool {
+//    return number > 255;
+//  });
+//  if (numbers_it != numbers_last_but_one) {
+//    return nullopt;
+//  }
+//
+//  if (numbers.back() >= static_cast<std::uint64_t>(std::pow(256, 5 - numbers.size()))) {
+//    // validation_error = true;
+//    return nullopt;
+//  }
+//
+//  auto ipv4 = numbers.back();
+//  numbers.pop_back();
+//
+//  auto counter = 0UL;
+//  for (auto number : numbers) {
+//    ipv4 += number * std::pow(256, 3 - counter);
+//    ++counter;
+//  }
+//
+//  return ipv4_address(ipv4).to_string();
+//}
 
 optional<std::string> parse_opaque_host(string_view input) {
   auto it = std::find_if(
@@ -433,7 +279,16 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
   }
 
   auto ipv4_host = parse_ipv4_address(string_view(ascii_domain));
-  return ipv4_host;
+
+  auto ok = false;
+  auto host = optional<ipv4_address>();
+
+  std::tie(ok, host) = ipv4_host;
+
+  if (!ok) {
+    return nullopt;
+  }
+  return host? host.value().to_string() : ascii_domain;
 }
 
 bool is_valid_port(const std::string &port) {
@@ -480,30 +335,6 @@ bool is_single_dot_path_segment(const std::string &segment) {
   return ((segment_lower == ".") || (segment_lower == "%2e"));
 }
 
-bool is_pct_encoded(string_view::const_iterator it,
-                    string_view::const_iterator last,
-                    const std::locale &locale) {
-  if (it == last) {
-    return false;
-  }
-
-  if (*it == '%') {
-    ++it;
-    if (it != last) {
-      if (std::isxdigit(*it, locale)) {
-        ++it;
-        if (it != last) {
-          if (std::isxdigit(*it, locale)) {
-            return true;
-          }
-        }
-      }
-    }
-  }
-
-  return false;
-}
-
 bool is_double_dot_path_segment(const std::string &segment) {
   auto segment_lower = segment;
   std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
@@ -529,10 +360,6 @@ void shorten_path(const std::string &scheme, std::vector<std::string> &path) {
 
   path.pop_back();
 }
-//
-//void shorten_path(url_record &url) {
-//  shorten_path(url.scheme, url.path);
-//}
 } // namespace
 
 url_parser_context::url_parser_context(
@@ -1109,7 +936,7 @@ url_parse_action url_parser_context::parse_cannot_be_a_base_url(char c) {
     if (!is_eof() && !is_url_code_point(c) && (c != '%')) {
       validation_error = true;
     }
-    else if ((c == '%') && !is_pct_encoded(it, end(view), std::locale("C"))) {
+    else if ((c == '%') && !details::is_pct_encoded(it, end(view), std::locale("C"))) {
       validation_error = true;
     }
     if (!is_eof()) {

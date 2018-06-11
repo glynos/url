@@ -85,15 +85,14 @@ INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls,
 TEST_P(test_parse_urls_using_base_urls, parse) {
   auto test_case_data = test_case{GetParam()};
 
-  std::cout << ">>>" << test_case_data.input << "<<<" << std::endl;
-//  std::cout << ">>>" << test_case_data.base << "<<<" << std::endl;
-  try {
-    auto url = skyr::url(test_case_data.input, test_case_data.base);
-  }
-  catch (skyr::type_error &) {
-    std::cout << ">>>" << test_case_data.input << "<<<" << std::endl;
-  }
-
+//  std::cout << ">>>" << test_case_data.input << "<<<" << std::endl;
+//  try {
+//    auto url = skyr::url(test_case_data.input, test_case_data.base);
+//  }
+//  catch (skyr::type_error &) {
+//    std::cout << ">>>" << test_case_data.input << "<<<" << std::endl;
+//  }
+//
   auto instance = skyr::url(test_case_data.input, test_case_data.base);
 
   EXPECT_EQ(test_case_data.protocol, instance.protocol());
@@ -114,10 +113,10 @@ INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls_
 
 TEST_P(test_parse_urls_using_base_urls_failing, parse) {
   auto test_case_data = test_case{GetParam()};
-  try {
-    auto url = skyr::url(test_case_data.input);
-    std::cout << "|||" << test_case_data.input << "|||" << std::endl;
-  }
-  catch (skyr::type_error &) {}
+//  try {
+//    auto url = skyr::url(test_case_data.input);
+//    std::cout << "|||" << test_case_data.input << "|||" << std::endl;
+//  }
+//  catch (skyr::type_error &) {}
   ASSERT_THROW(skyr::url(test_case_data.input, test_case_data.base), skyr::type_error);
 }

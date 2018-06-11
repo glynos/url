@@ -5,8 +5,8 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include <skyr/url/detail/encode.hpp>
-#include "../src/detail/grammar.hpp"
+#include <skyr/string_view.hpp>
+#include <skyr/url/details/encode.hpp>
 
 
 class encode_fragment_tests : public ::testing::TestWithParam<char> {
@@ -20,7 +20,7 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST_P(encode_fragment_tests, encode_fragment_set) {
   auto str = std::string();
-  skyr::details::encode_char(GetParam(), std::back_inserter(str), " \"<>`");
+  skyr::details::pct_encode_char(GetParam(), std::back_inserter(str), " \"<>`");
   auto view = skyr::string_view(str);
   ASSERT_TRUE(skyr::details::is_pct_encoded(begin(view), end(view)));
 }
@@ -34,7 +34,7 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST_P(encode_path_tests, encode_path_set) {
   auto str = std::string();
-  skyr::details::encode_char(GetParam(), std::back_inserter(str), " \"<>`#?{}");
+  skyr::details::pct_encode_char(GetParam(), std::back_inserter(str), " \"<>`#?{}");
   auto view = skyr::string_view(str);
   ASSERT_TRUE(skyr::details::is_pct_encoded(begin(view), end(view)));
 }
@@ -48,7 +48,7 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST_P(encode_userinfo_tests, encode_userinfo_set) {
   auto str = std::string();
-  skyr::details::encode_char(GetParam(), std::back_inserter(str), " \"<>`#?{}/:;=@[\\]^|");
+  skyr::details::pct_encode_char(GetParam(), std::back_inserter(str), " \"<>`#?{}/:;=@[\\]^|");
   auto view = skyr::string_view(str);
   ASSERT_TRUE(skyr::details::is_pct_encoded(begin(view), end(view)));
 }

@@ -35,9 +35,6 @@ url_search_parameters::url_search_parameters(string_view query) {
   update();
 }
 
-url_search_parameters::url_search_parameters(std::initializer_list<value_type> parameters)
-  : parameters_(parameters) {}
-
 void url_search_parameters::append(const string_type &name,
                               const string_type &value) {
   parameters_.emplace_back(name, value);

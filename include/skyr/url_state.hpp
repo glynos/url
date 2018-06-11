@@ -9,7 +9,7 @@
 namespace skyr {
 // https://url.spec.whatwg.org/#concept-basic-url-parser
 /**
- *
+ * @class url_state
  */
 enum class url_state {
   scheme_start,

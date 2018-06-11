@@ -3,13 +3,15 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-set(Uri_SRCS
+set(Skyr_SRCS
         url_schemes.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_errors.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_errors.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_parser_context.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_parser_context.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_record.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ipv4_address.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ipv6_address.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_parse.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_schemes.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url.cpp
@@ -24,16 +26,18 @@ set(Uri_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/url/details/translate.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_state.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_record.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/ipv4_address.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/ipv6_address.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_parse.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_serialize.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_search_parameters.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_path_iterator.hpp)
 
-add_library(skyr ${Uri_SRCS})
+add_library(skyr ${Skyr_SRCS})
 target_link_libraries(skyr)
 if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-  if (NOT Uri_DISABLE_LIBCXX)
+  if (NOT Skyr_DISABLE_LIBCXX)
     target_link_libraries(skyr "c++")
   endif()
 endif()
@@ -44,7 +48,7 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU OR
 endif()
 
 #propagate sources to parent scope for one-lib-build
-set(Uri_SRCS ${Uri_SRCS} PARENT_SCOPE)
+set(Skyr_SRCS ${Skyr_SRCS} PARENT_SCOPE)
 
 install(
   TARGETS skyr

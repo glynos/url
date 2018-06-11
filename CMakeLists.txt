@@ -5,15 +5,15 @@
 
 
 cmake_minimum_required(VERSION 3.8)
-project(Uri)
+project(Skyr)
 
-option(Uri_BUILD_TESTS "Build the URI tests." ON)
-option(Uri_BUILD_DOCS "Build the URI documentation." ON)
-option(Uri_FULL_WARNINGS "Build the library with all warnings turned on." ON)
-option(Uri_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
-option(Uri_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
-option(Uri_USE_STD17 "Use the C++ 17 standard (GCC only)" OFF)
-option(Uri_RUN_WEB_PLATFORM_TESTS "Run web platform tests" OFF)
+option(Skyr_BUILD_TESTS "Build the URI tests." ON)
+option(Skyr_BUILD_DOCS "Build the URI documentation." ON)
+option(Skyr_FULL_WARNINGS "Build the library with all warnings turned on." ON)
+option(Skyr_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
+option(Skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
+option(Skyr_USE_STD17 "Use the C++ 17 standard (GCC only)" OFF)
+option(Skyr_RUN_WEB_PLATFORM_TESTS "Run web platform tests" OFF)
 
 find_package(Threads REQUIRED)
 
@@ -22,7 +22,7 @@ set(CMAKE_VERBOSE_MAKEFILE true)
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
   INCLUDE(CheckCXXCompilerFlag)
 
-  if(Uri_USE_STD17)
+  if(Skyr_USE_STD17)
     CHECK_CXX_COMPILER_FLAG(-std=c++17 HAVE_STD17)
     if (HAVE_STD17)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
@@ -33,11 +33,11 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
   endif()
 
-  if (Uri_FULL_WARNINGS)
+  if (Skyr_FULL_WARNINGS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
   endif()
 
-  if (Uri_WARNINGS_AS_ERRORS)
+  if (Skyr_WARNINGS_AS_ERRORS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   endif()
 
@@ -45,15 +45,15 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
 elseif(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
-  if (NOT Uri_DISABLE_LIBCXX)
+  if (NOT Skyr_DISABLE_LIBCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
   endif()
 
-  if (Uri_FULL_WARNINGS)
+  if (Skyr_FULL_WARNINGS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
   endif()
 
-  if (Uri_WARNINGS_AS_ERRORS)
+  if (Skyr_WARNINGS_AS_ERRORS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   endif()
 
@@ -66,7 +66,7 @@ if (MSVC)
     message(FATAL_ERROR "Requires VS 2015 or later")
   endif()
 
-  if (Uri_USE_STATIC_CRT)
+  if (Skyr_USE_STATIC_CRT)
     # Replace dynamic MSVCRT linker flags with static version.
     foreach(flag_var
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
@@ -75,17 +75,17 @@ if (MSVC)
         string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
       endif(${flag_var} MATCHES "/MD")
     endforeach(flag_var)
-  endif(Uri_USE_STATIC_CRT)
+  endif(Skyr_USE_STATIC_CRT)
 
   add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE)
 endif(MSVC)
 
-include_directories(${Uri_SOURCE_DIR}/src ${Uri_SOURCE_DIR}/include)
+include_directories(${Skyr_SOURCE_DIR}/src ${Skyr_SOURCE_DIR}/include)
 
 add_subdirectory(src)
 
 # Testing
-if (Uri_BUILD_TESTS)
+if (Skyr_BUILD_TESTS)
   message(STATUS "Configuring tests")
   enable_testing()
   add_subdirectory(deps/googletest)
@@ -93,7 +93,7 @@ if (Uri_BUILD_TESTS)
 endif()
 
 # Documentation
-if (Uri_BUILD_DOCS)
+if (Skyr_BUILD_DOCS)
   message("Configuring documentation")
   find_package(Doxygen)
   if (DOXYGEN_FOUND)

@@ -5,7 +5,7 @@
 
 #include <fstream>
 #include <gtest/gtest.h>
-#include <network/uri/detail/uri_parse.hpp>
+#include <skyr/url_parse.hpp>
 
 // http://formvalidation.io/validators/uri/
 
@@ -26,12 +26,11 @@ std::vector<std::string> create_urls(const std::string &filename) {
 // All valid URLs in the list should pass
 class test_valid_urls : public ::testing::TestWithParam<std::string> {};
 
-INSTANTIATE_TEST_CASE_P(uri_parse_test, test_valid_urls,
+INSTANTIATE_TEST_CASE_P(uri_parse_tests, test_valid_urls,
                         testing::ValuesIn(create_urls("valid_urls.txt")));
 
-TEST_P(test_valid_urls, urls_are_valid) {
+TEST_P(test_valid_urls, parse) {
   auto input = GetParam();
-  std::cout << input << std::endl;
-  auto result = network::detail::parse(input);
-  EXPECT_TRUE(result.success);
+  auto result = skyr::parse(input);
+  EXPECT_TRUE(result);
 }

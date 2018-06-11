@@ -21,6 +21,9 @@
 #pragma warning(disable : 4251 4231 4660)
 #endif
 
+/**
+ * @namespace skyr
+ */
 namespace skyr {
 /**
  * @class type_error

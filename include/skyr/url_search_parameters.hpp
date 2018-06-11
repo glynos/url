@@ -48,11 +48,6 @@ class url_search_parameters {
   explicit url_search_parameters(string_view query);
 
   /**
-   * @brief Constructor.
-   */
-  url_search_parameters(std::initializer_list<value_type> parameters);
-
-  /**
    * @brief
    */
   void append(const string_type &name, const string_type &value);

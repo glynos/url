@@ -8,8 +8,9 @@
 
 #include <skyr/optional.hpp>
 #include <skyr/string_view.hpp>
-#include <skyr/url_parse.hpp>
-#include "skyr/url_record.hpp"
+#include <skyr/url_state.hpp>
+#include <skyr/url_record.hpp>
+#include <skyr/ipv4_address.hpp>
 
 namespace skyr {
 enum class url_parse_action {
@@ -50,8 +51,6 @@ class url_parser_context {
       const skyr::optional<url_record> &base,
       const skyr::optional<url_record> &url,
       skyr::optional<skyr::url_state> state_override = skyr::nullopt);
-
-  //url_parse_action parse_part(char c);
 
   bool is_eof() const {
     return it == end(view);

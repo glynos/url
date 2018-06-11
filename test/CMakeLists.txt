@@ -12,14 +12,10 @@ set(
   encoding_tests
   path_iterator_tests
   url_tests
-#  url_parse_tests
   url_web_platform_tests
+  url_parse_tests
   url_search_parameters_tests
   )
-
-if (Uri_RUN_WEB_PLATFORM_TESTS)
-    list(APPEND TESTS url_web_platform_tests)
-endif()
 
 foreach (test ${TESTS})
   add_executable(${test} ${test}.cpp)
@@ -29,10 +25,10 @@ foreach (test ${TESTS})
     target_link_libraries(${test} ${OPENSSL_LIBRARIES})
   endif()
   set_target_properties(${test}
-    PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${Uri_BINARY_DIR}/tests)
+    PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${Skyr_BINARY_DIR}/tests)
   add_test(${test}
-    ${Uri_BINARY_DIR}/tests/${test})
+    ${Skyr_BINARY_DIR}/tests/${test})
 endforeach (test)
 
 file(GLOB URI_LISTS *.txt *.json)
-file(COPY ${URI_LISTS} DESTINATION ${Uri_BINARY_DIR}/tests)
+file(COPY ${URI_LISTS} DESTINATION ${Skyr_BINARY_DIR}/tests)

@@ -49,6 +49,30 @@ OutputIterator pct_encode_char(char in, OutputIterator out, const char *includes
   }
   return out;
 }
+
+inline bool is_pct_encoded(string_view::const_iterator it,
+                           string_view::const_iterator last,
+                           const std::locale &locale = std::locale("C")) {
+  if (it == last) {
+    return false;
+  }
+
+  if (*it == '%') {
+    ++it;
+    if (it != last) {
+      if (std::isxdigit(*it, locale)) {
+        ++it;
+        if (it != last) {
+          if (std::isxdigit(*it, locale)) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return false;
+}
 }  // namespace details
 }  // namespace skyr
 
