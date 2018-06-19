@@ -116,10 +116,13 @@ class url {
    */
   std::string port() const;
 
-//  template <intT>
-//  intT port() const {
-//    return static_cast<intT>(std::atoi(port().c_str()));
-//  }
+  template <typename intT>
+  intT port(typename std::is_integral<intT>::type * = nullptr) const {
+    auto p = port();
+    const char *port_first = p.data();
+    char *port_last = nullptr;
+    return static_cast<intT>(std::strtoul(port_first, &port_last, 10));
+  }
 
   /**
    *

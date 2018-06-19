@@ -126,10 +126,10 @@ TEST(url_tests, full_url_port_with_non_default_port_test) {
   EXPECT_EQ("8080", instance.port());
 }
 
-//TEST(url_tests, full_url_port_as_int_test) {
-//  auto instance = skyr::url("http://user@www.example.com:80/path?query#fragment");
-//  EXPECT_EQ(80, instance.port<int>());
-//}
+TEST(url_tests, full_url_port_as_int_test) {
+  auto instance = skyr::url("http://www.example.com:8080/");
+  EXPECT_EQ(8080, instance.port<int>());
+}
 
 TEST(url_tests, full_url_path_test) {
   auto instance = skyr::url("http://user@www.example.com:80/path?query#fragment");
