@@ -26,7 +26,7 @@ TEST(url_search_parameters_test, query_with_single_kvp) {
 }
 
 TEST(url_search_parameters_test, query_with_single_kvp_in_initalizer_list) {
-  skyr::url_search_parameters parameters{{"a", "b"}};
+  skyr::url_search_parameters parameters{"a=b"};
 
   auto it = parameters.begin();
   ASSERT_NE(it, parameters.end());
@@ -52,7 +52,7 @@ TEST(url_search_parameters_test, query_with_two_kvps) {
 }
 
 TEST(url_search_parameters_test, query_with_two_kvps_in_initializer_list) {
-  skyr::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  skyr::url_search_parameters parameters{"a=b&c=d"};
 
   auto it = parameters.begin();
   ASSERT_NE(it, parameters.end());
@@ -133,7 +133,7 @@ TEST(url_search_parameters_test, query_sort_test) {
 }
 
 TEST(url_search_parameters_test, copy_test) {
-  skyr::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  skyr::url_search_parameters parameters{"a=b&c=d"};
   skyr::url_search_parameters copy(parameters);
 
   auto it = copy.begin();
@@ -148,7 +148,7 @@ TEST(url_search_parameters_test, copy_test) {
 }
 
 TEST(url_search_parameters_test, copy_assignment_test) {
-  skyr::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  skyr::url_search_parameters parameters{"a=b&c=d"};
   skyr::url_search_parameters copy;
   copy = parameters;
 
@@ -164,7 +164,7 @@ TEST(url_search_parameters_test, copy_assignment_test) {
 }
 
 TEST(url_search_parameters_test, move_test) {
-  skyr::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  skyr::url_search_parameters parameters{"a=b&c=d"};
   skyr::url_search_parameters copy(std::move(parameters));
 
   auto it = copy.begin();
@@ -179,7 +179,7 @@ TEST(url_search_parameters_test, move_test) {
 }
 
 TEST(url_search_parameters_test, move_assignment_test) {
-  skyr::url_search_parameters parameters{{"a", "b"}, {"c", "d"}};
+  skyr::url_search_parameters parameters{"a=b&c=d"};
   skyr::url_search_parameters copy;
   copy = std::move(parameters);
 
