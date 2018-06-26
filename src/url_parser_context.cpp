@@ -102,7 +102,7 @@ optional<std::string> parse_opaque_host(string_view input) {
         [] (char c) -> bool {
           static const char forbidden[] = "\0\t\n\r #/:?@[\\]";
           const char *first = forbidden, *last = forbidden + sizeof(forbidden);
-          return last != std::__1::find(first, last, c);
+          return last != std::find(first, last, c);
         });
   if (it != end(input)) {
       // result.validation_error = true;

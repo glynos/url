@@ -28,8 +28,8 @@ class ipv6_address {
   using const_iterator = const unsigned short *;
   using reference = unsigned short &;
   using const_reference = const unsigned short &;
-  using size_type = size_t;
-  using difference_type = ptrdiff_t;
+  using size_type = std::size_t;
+  using difference_type = std::ptrdiff_t;
 
   /**
    * @brief Constructor.

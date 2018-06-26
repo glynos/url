@@ -6,6 +6,7 @@
 #include <sstream>
 #include <vector>
 #include <cassert>
+#include <cstring>
 #include "skyr/optional.hpp"
 #include "skyr/ipv6_address.hpp"
 
