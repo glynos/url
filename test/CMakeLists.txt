@@ -10,7 +10,6 @@ set(
   TESTS
   optional_tests
   encoding_tests
-  path_iterator_tests
   url_tests
   url_web_platform_tests
   url_parse_tests

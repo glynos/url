@@ -32,8 +32,7 @@ set(Skyr_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/url_parse.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_serialize.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/url_search_parameters.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/url_path_iterator.hpp)
+        ${CMAKE_SOURCE_DIR}/include/skyr/url_search_parameters.hpp)
 
 add_library(skyr ${Skyr_SRCS})
 target_link_libraries(skyr)
