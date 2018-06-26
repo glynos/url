@@ -12,6 +12,7 @@
 #include "skyr/url_state.hpp"
 #include "skyr/url_parse.hpp"
 #include "url_parser_context.hpp"
+#include "skyr/url_serialize.hpp"
 
 namespace skyr {
 optional<url_record> basic_parse(
