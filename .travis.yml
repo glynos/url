@@ -41,7 +41,7 @@ matrix:
     - os: osx
       osx_image: xcode8
       compiler: clang
-      env: COMPILER='clang++'
+      env: COMPILER='clang++-3.8'
 
 install:
     - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps_"
