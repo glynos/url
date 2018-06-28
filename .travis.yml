@@ -37,11 +37,11 @@ matrix:
           packages: ['g++-6']
       env: COMPILER='g++-6'
 
-    # 3/ OSX Clang Builds
-    - os: osx
-      osx_image: xcode8
-      compiler: clang
-      env: COMPILER='clang++-3.8'
+#    # 3/ OSX Clang Builds
+#    - os: osx
+#      osx_image: xcode8
+#      compiler: clang
+#      env: COMPILER='clang++-3.8'
 
 install:
     - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps_"

@@ -182,14 +182,19 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
   return host? host.value().to_string() : ascii_domain;
 }
 
-bool is_valid_port(const std::string &port) {
-  auto first = begin(port), last = end(port);
+bool is_valid_port(string_view port) {
+  if (port.empty()) {
+    return false;
+  }
+
+  auto first = begin(port);
   auto it = first;
 
   const char* port_first = std::addressof(*it);
   char* port_last = 0;
   auto value = std::strtoul(port_first, &port_last, 10);
-  return (std::addressof(*last) == port_last) && (port_first != port_last) &&
+  return
+      (port_first != port_last) &&
       (value < std::numeric_limits<std::uint16_t>::max());
 }
 
@@ -213,21 +218,20 @@ bool is_windows_drive_letter(
   return ((*it == ':') || (*it == '|'));
 }
 
-inline bool is_windows_drive_letter(const std::string &segment) {
-  auto view = string_view(segment);
-  return is_windows_drive_letter(begin(view), end(view));
+inline bool is_windows_drive_letter(string_view segment) {
+  return is_windows_drive_letter(begin(segment), end(segment));
 }
 
-bool is_single_dot_path_segment(const std::string &segment) {
-  auto segment_lower = segment;
+bool is_single_dot_path_segment(string_view segment) {
+  auto segment_lower = segment.to_string();
   std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
                  [] (char ch) -> char { return std::tolower(ch, std::locale("C")); });
 
   return ((segment_lower == ".") || (segment_lower == "%2e"));
 }
 
-bool is_double_dot_path_segment(const std::string &segment) {
-  auto segment_lower = segment;
+bool is_double_dot_path_segment(string_view segment) {
+  auto segment_lower = segment.to_string();
   std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
                  [] (char ch) -> char { return std::tolower(ch, std::locale("C")); });
 
@@ -238,14 +242,14 @@ bool is_double_dot_path_segment(const std::string &segment) {
           (segment_lower == "%2e%2e"));
 }
 
-void shorten_path(const std::string &scheme, std::vector<std::string> &path) {
+void shorten_path(string_view scheme, std::vector<std::string> &path) {
   if (path.empty()) {
     return;
   }
 
   if ((scheme.compare("file") == 0) &&
       (path.size() == 1) &&
-      is_windows_drive_letter(path.front())) {
+      is_windows_drive_letter(string_view(path.front()))) {
     return;
   }
 
@@ -591,7 +595,7 @@ url_parse_action url_parser_context::parse_port(char c) {
           (url.is_special() && (c == '\\')) ||
           state_override) {
     if (!buffer.empty()) {
-      if (!is_valid_port(buffer)) {
+      if (!is_valid_port(string_view(buffer))) {
         validation_error = true;
         return url_parse_action::fail;
       }
@@ -650,7 +654,7 @@ url_parse_action url_parser_context::parse_file(char c) {
       if (!is_windows_drive_letter(it, end(view))) {
         url.host = base.value().host;
         url.path = base.value().path;
-        shorten_path(url.scheme, url.path);
+        shorten_path(string_view(url.scheme), url.path);
       }
       else {
         validation_error = true;
@@ -675,7 +679,7 @@ url_parse_action url_parser_context::parse_file_slash(char c) {
   } else {
     if (base &&
             ((base.value().scheme.compare("file") == 0) && !is_windows_drive_letter(it, end(view)))) {
-      if (!base.value().path.empty() && is_windows_drive_letter(base.value().path[0])) {
+      if (!base.value().path.empty() && is_windows_drive_letter(string_view(base.value().path[0]))) {
         url.path.push_back(base.value().path[0]);
       } else {
         url.host = base.value().host;
@@ -693,7 +697,7 @@ url_parse_action url_parser_context::parse_file_host(char c) {
   if ((is_eof()) || (c == '/') || (c == '\\') || (c == '?') || (c == '#')) {
     decrement();
 
-    if (!state_override && is_windows_drive_letter(buffer)) {
+    if (!state_override && is_windows_drive_letter(string_view(buffer))) {
       validation_error = true;
       state = url_state::path;
     } else if (buffer.empty()) {
@@ -766,17 +770,17 @@ url_parse_action url_parser_context::parse_path(char c) {
       validation_error = true;
     }
 
-    if (is_double_dot_path_segment(buffer)) {
-      shorten_path(url.scheme, url.path);
+    if (is_double_dot_path_segment(string_view(buffer))) {
+      shorten_path(string_view(url.scheme), url.path);
       if (!((c == '/') || (url.is_special() && (c == '\\')))) {
         url.path.emplace_back();
       }
     } else if (
-        is_single_dot_path_segment(buffer) &&
+        is_single_dot_path_segment(string_view(buffer)) &&
             !((c == '/') || (url.is_special() && (c == '\\')))) {
       url.path.emplace_back();
-    } else if (!is_single_dot_path_segment(buffer)) {
-      if ((url.scheme.compare("file") == 0) && url.path.empty() && is_windows_drive_letter(buffer)) {
+    } else if (!is_single_dot_path_segment(string_view(buffer))) {
+      if ((url.scheme.compare("file") == 0) && url.path.empty() && is_windows_drive_letter(string_view(buffer))) {
         if (!url.host || !url.host.value().empty()) {
           validation_error = true;
           url.host = std::string();
