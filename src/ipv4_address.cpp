@@ -28,7 +28,7 @@ optional<std::uint64_t> parse_ipv4_number(
   }
 
   if (input.empty()) {
-    return 0;
+    return 0ULL;
   }
 
   try {
@@ -62,7 +62,7 @@ std::string ipv4_address::to_string() const {
 }
 
 namespace details {
-std::tuple<bool, optional<ipv4_address>> parse_ipv4_address(string_view input) {
+expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input) {
   auto validation_error_flag = false;
 
   std::vector<std::string> parts;
@@ -83,19 +83,19 @@ std::tuple<bool, optional<ipv4_address>> parse_ipv4_address(string_view input) {
   }
 
   if (parts.size() > 4) {
-    return {true, nullopt};
+    return skyr::make_unexpected(ipv4_address_errc::valid_domain);
   }
 
   auto numbers = std::vector<std::uint64_t>();
 
   for (const auto &part : parts) {
     if (part.empty()) {
-      return {true, nullopt};
+      return skyr::make_unexpected(ipv4_address_errc::valid_domain);
     }
 
     auto number = parse_ipv4_number(string_view(part), validation_error_flag);
     if (!number) {
-      return {true, nullopt};
+      return skyr::make_unexpected(ipv4_address_errc::valid_domain);
     }
 
     numbers.push_back(number.value());
@@ -120,13 +120,13 @@ std::tuple<bool, optional<ipv4_address>> parse_ipv4_address(string_view input) {
   numbers_it = std::find_if(numbers_first, numbers_last_but_one,
                             [](auto number) -> bool { return number > 255; });
   if (numbers_it != numbers_last_but_one) {
-    return {false, nullopt};
+    return skyr::make_unexpected(ipv4_address_errc::invalid);
   }
 
   if (numbers.back() >=
       static_cast<std::uint64_t>(std::pow(256, 5 - numbers.size()))) {
     // validation_error = true;
-    return {false, nullopt};
+    return skyr::make_unexpected(ipv4_address_errc::invalid);
   }
 
   auto ipv4 = numbers.back();
@@ -138,15 +138,15 @@ std::tuple<bool, optional<ipv4_address>> parse_ipv4_address(string_view input) {
     ++counter;
   }
 
-  return {true, ipv4_address(ipv4)};
+  return {ipv4_address(ipv4)};
 }
 }  // namespace details
 
 optional<ipv4_address> parse_ipv4_address(string_view input) {
   auto result = details::parse_ipv4_address(input);
-  if (!std::get<0>(result)) {
+  if (!result) {
     return nullopt;
   }
-  return std::get<1>(result);
+  return result.value();
 }
 }  // namespace skyr

@@ -25,6 +25,7 @@ class type_error : public std::runtime_error {
   type_error() : std::runtime_error("Type error") {}
 };
 
+/// This class repesents a URL.
 class url {
  public:
 
@@ -36,22 +37,19 @@ class url {
   using size_type = string_view::size_type;
   using difference_type = string_view::difference_type;
 
-  /// \brief Constructor
+  /// Default constructor
   url() = default;
 
-  /// \brief Constructor
-  /// \param input
+  /// Constructor
+  /// \param input The input string
+  /// \throws `type_error`
   explicit url(std::string input);
 
-  /// \brief Constructor
-  /// \param input The input string.
-  /// \param base A base URL.
+  /// Constructor
+  /// \param input The input string
+  /// \param base A base URL
+  /// \throws `type_error`
   url(std::string input, std::string base);
-
-  /// \brief Constructor
-  /// \param input The input string.
-  /// \param base A base URL.
-  url(std::string input, url base);
 
   /// \returns
   std::string href() const;

@@ -7,11 +7,11 @@
 #define SKYR_IPV4_ADDRESS_INC
 
 #include <string>
-#include <tuple>
 #include <skyr/string_view.hpp>
+#include <skyr/expected.hpp>
 
 namespace skyr {
-///
+/// Represents an IPv4 address.
 class ipv4_address {
 
   unsigned int repr;
@@ -34,7 +34,12 @@ class ipv4_address {
 
 /// \exclude
 namespace details {
-std::tuple<bool, optional<ipv4_address>> parse_ipv4_address(string_view input);
+enum class ipv4_address_errc {
+  valid_domain,
+  invalid,
+};
+
+expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input);
 }  // namespace details
 
 /// \brief

@@ -169,17 +169,16 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
     return nullopt;
   }
 
-  auto ipv4_host = details::parse_ipv4_address(string_view(ascii_domain));
-
-  auto ok = false;
-  auto host = optional<ipv4_address>();
-
-  std::tie(ok, host) = ipv4_host;
-
-  if (!ok) {
-    return nullopt;
+  auto host = details::parse_ipv4_address(string_view(ascii_domain));
+  if (!host) {
+    if (host.error() == details::ipv4_address_errc::valid_domain) {
+      return ascii_domain;
+    }
+    else {
+      return nullopt;
+    }
   }
-  return host? host.value().to_string() : ascii_domain;
+  return host.value().to_string();
 }
 
 bool is_valid_port(string_view port) {
