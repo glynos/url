@@ -95,14 +95,16 @@ endif()
 # Documentation
 if (Skyr_BUILD_DOCS)
   message("Configuring documentation")
-  find_package(Doxygen)
-  if (DOXYGEN_FOUND)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
-    add_custom_target(doc
-      ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-      COMMENT "Generating API documentation with Doxygen" VERBATIM)
+  find_package(standardese) # find standardese after installation
+
+  # generates a custom target that will run standardese to generate the documentation
+  if(standardese_FOUND)
+    standardese_generate(skyr
+            INCLUDE_DIRECTORY skyr
+            CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/standardese.config
+            INPUT skyr/url.hpp)
   endif()
+
 endif()
 
 install(DIRECTORY include DESTINATION ".")

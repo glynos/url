@@ -11,7 +11,7 @@
 #include <map>
 #include <set>
 #include <unordered_set>
-#include <skyr.hpp>
+#include <skyr/url.hpp>
 
 TEST(url_tests, construct_invalid_url) {
   EXPECT_THROW(skyr::url("I am not a valid url."), skyr::type_error);

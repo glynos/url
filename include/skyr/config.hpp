@@ -10,11 +10,11 @@
  * \brief Contains macros to configure compiler or platform-specific workarounds.
  */
 
-#ifndef NETWORK_URI_CONFIG_INC
-#define NETWORK_URI_CONFIG_INC
+#ifndef SKYR_CONFIG_INC
+#define SKYR_CONFIG_INC
 
 #if defined(_MSC_VER)
 #define NETWORK_URI_MSVC _MSC_VER
 #endif  // _MSC_VER
 
-#endif // NETWORK_URI_CONFIG_INC
+#endif // SKYR_CONFIG_INC

@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_URI_DETAIL_TRANSLATE_INC
-#define NETWORK_URI_DETAIL_TRANSLATE_INC
+#ifndef SKYR_URL_DETAILS_TRANSLATE_INC
+#define SKYR_URL_DETAILS_TRANSLATE_INC
 
 #include <string>
 #include <locale>
@@ -89,4 +89,4 @@ inline std::string translate(const Source &source) {
 }  // namespace details
 }  // namespace skyr
 
-#endif  // NETWORK_URI_DETAIL_TRANSLATE_INC
+#endif  // SKYR_URL_DETAILS_TRANSLATE_INC

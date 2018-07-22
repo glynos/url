@@ -3,17 +3,13 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_URI_WHATWG_URL_INC
-#define NETWORK_URI_WHATWG_URL_INC
-
-/**
- * \file
- * \brief Contains the url class.
- */
+#ifndef SKYR_URL_INC
+#define SKYR_URL_INC
 
 #include <string>
 #include <stdexcept>
 #include <array>
+#include "skyr/string_view.hpp"
 #include "skyr/url_record.hpp"
 
 #ifdef NETWORK_URI_MSVC
@@ -21,24 +17,14 @@
 #pragma warning(disable : 4251 4231 4660)
 #endif
 
-/**
- * @namespace skyr
- */
 namespace skyr {
-/**
- * @class type_error
- */
+/// This exception is used when there is an error parsing the URL.
 class type_error : public std::runtime_error {
  public:
-  /**
-   * @brief Constructor.
-   */
+   /// Constructor
   type_error() : std::runtime_error("Type error") {}
 };
 
-/**
- * @class url
- */
 class url {
  public:
 
@@ -50,72 +36,48 @@ class url {
   using size_type = string_view::size_type;
   using difference_type = string_view::difference_type;
 
-  /**
-   * @brief Constructor.
-   */
+  /// \brief Constructor
   url() = default;
 
-  /**
-   * @brief Constructor.
-   * @param input
-   */
+  /// \brief Constructor
+  /// \param input
   explicit url(std::string input);
 
-  /**
-   * @brief Constructor.
-   * @param input
-   * @param base
-   */
+  /// \brief Constructor
+  /// \param input The input string.
+  /// \param base A base URL.
   url(std::string input, std::string base);
 
-  /**
-   *
-   * @return
-   */
+  /// \brief Constructor
+  /// \param input The input string.
+  /// \param base A base URL.
+  url(std::string input, url base);
+
+  /// \returns
   std::string href() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   std::string origin() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   std::string protocol() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   std::string username() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   std::string password() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   std::string host() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   std::string hostname() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   std::string port() const;
 
+  /// \returns
   template <typename intT>
   intT port(typename std::is_integral<intT>::type * = nullptr) const {
     auto p = port();
@@ -124,81 +86,48 @@ class url {
     return static_cast<intT>(std::strtoul(port_first, &port_last, 10));
   }
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   std::string pathname() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   std::string search() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   std::string hash() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   bool is_special() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   bool validation_error() const;
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   const_iterator begin() const {
     return view_.begin();
   }
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   const_iterator end() const {
     return view_.end();
   }
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   bool empty() const {
     return view_.empty();
   }
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   size_type size() const {
     return view_.size();
   }
 
-  /**
-   *
-   * @return
-   */
+  /// \returns
   size_type length() const {
     return view_.length();
   }
 
-  /**
-   *
-   * @param scheme
-   * @return
-   */
+  /// \param scheme
+  /// \returns
   static optional<std::uint16_t> default_port(const std::string &scheme);
 
  private:
@@ -209,4 +138,4 @@ class url {
 };
 }  // namespace skyr
 
-#endif  // NETWORK_URI_WHATWG_URL_INC
+#endif  // SKYR_URL_INC

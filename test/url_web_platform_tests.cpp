@@ -8,7 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <skyr.hpp>
+#include <skyr/url.hpp>
 #include "json.hpp"
 #include "string_utility.hpp"
 

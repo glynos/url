@@ -41,11 +41,32 @@ optional<std::uint64_t> parse_ipv4_number(
 }
 }  // namespace
 
+std::string ipv4_address::to_string() const {
+  auto output = std::string();
+
+  auto n = repr;
+
+  for (auto i = 1U; i <= 4U; ++i) {
+    std::ostringstream oss;
+    oss << (n % 256);
+    output = oss.str() + output;
+
+    if (i != 4) {
+      output = "." + output;
+    }
+
+    n = static_cast<std::uint32_t>(std::floor(n / 256.));
+  }
+
+  return output;
+}
+
+namespace details {
 std::tuple<bool, optional<ipv4_address>> parse_ipv4_address(string_view input) {
   auto validation_error_flag = false;
 
   std::vector<std::string> parts;
-  parts.push_back(std::string());
+  parts.emplace_back();
   for (auto ch : input) {
     if (ch == '.') {
       parts.emplace_back();
@@ -119,24 +140,13 @@ std::tuple<bool, optional<ipv4_address>> parse_ipv4_address(string_view input) {
 
   return {true, ipv4_address(ipv4)};
 }
+}  // namespace details
 
-std::string ipv4_address::to_string() const {
-  auto output = std::string();
-
-  auto n = repr;
-
-  for (auto i = 1U; i <= 4U; ++i) {
-    std::ostringstream oss;
-    oss << (n % 256);
-    output = oss.str() + output;
-
-    if (i != 4) {
-      output = "." + output;
-    }
-
-    n = static_cast<std::uint32_t>(std::floor(n / 256.));
+optional<ipv4_address> parse_ipv4_address(string_view input) {
+  auto result = details::parse_ipv4_address(input);
+  if (!std::get<0>(result)) {
+    return nullopt;
   }
-
-  return output;
+  return std::get<1>(result);
 }
 }  // namespace skyr

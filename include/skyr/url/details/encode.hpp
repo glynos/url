@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_URI_ENCODE_INC
-#define NETWORK_URI_ENCODE_INC
+#ifndef SKYR_URL_DETAILS_ENCODE_INC
+#define SKYR_URL_DETAILS_ENCODE_INC
 
 #include <iterator>
 #include <cstring>
@@ -21,7 +21,7 @@ inline char hex_to_letter(char in) {
   }
 
   if ((in >= 10) && (in < 16)) {
-    return in - 10 + 'A';
+    return in - char(10) + 'A';
   }
 
   return in;
@@ -76,4 +76,4 @@ inline bool is_pct_encoded(string_view::const_iterator it,
 }  // namespace details
 }  // namespace skyr
 
-#endif  // NETWORK_URI_ENCODE_INC
+#endif  // SKYR_URL_DETAILS_ENCODE_INC

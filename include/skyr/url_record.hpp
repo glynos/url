@@ -3,56 +3,51 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef URI_URL_RECORD_HPP
-#define URI_URL_RECORD_HPP
+#ifndef SKYR_URL_RECORD_INC
+#define SKYR_URL_RECORD_INC
 
 #include <vector>
-#include <iterator>
 #include <string>
 #include <cstdint>
 #include <skyr/optional.hpp>
-#include <skyr/string_view.hpp>
-#include <skyr/ipv4_address.hpp>
 
 namespace skyr {
-
-/**
- * @class url_record
- */
+/// This class represents a URL identifier.
 struct url_record {
+  /// The input URL.
   std::string url;
 
+  /// An ASCII string that identifies the type of URL.
   std::string scheme;
+  /// An ASCII string identifying a username.
   std::string username;
+  /// An ASCII string identifying a password.
   std::string password;
+  /// An optional URL host, either a domain, IPv4 or IPv6 address, an opaque host, or empty.
   skyr::optional<std::string> host;
+  /// An optional network port.
   skyr::optional<std::uint16_t> port;
+  /// A list of zero or more ASCII strings, used to identify a location in a hierarchical form.
   std::vector<std::string> path;
+  /// An optional ASCII string.
   skyr::optional<std::string> query;
+  /// An optional ASCII string.
   skyr::optional<std::string> fragment;
 
+  /// A Boolean value indiciating whether this URL can be used as a base URL.
   bool cannot_be_a_base_url;
-  skyr::optional<std::string> object;
 
-  /**
-   * @brief Constructor.
-   */
+  /// \brief Constructor
   url_record()
       : url{}, cannot_be_a_base_url{false} {}
 
-  /**
-   *
-   * @return
-   */
+   /// \returns `true` if the URL scheme is a special scheme, `false` otherwise.
   bool is_special() const;
 
-  /**
-   *
-   * @return
-   */
+   /// \returns `true` if the URL username or password is an empty string, `false` otherwise.
   bool includes_credentials() const;
 
 };
 }  // namespace skyr
 
-#endif //URI_URL_RECORD_HPP
+#endif // SKYR_URL_RECORD_INC

@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_URI_URL_SEARCH_PARAMETERS_INC
-#define NETWORK_URI_URL_SEARCH_PARAMETERS_INC
+#ifndef SKYR_URL_SEARCH_PARAMETERS_INC
+#define SKYR_URL_SEARCH_PARAMETERS_INC
 
 #include <string>
 #include <vector>
@@ -12,89 +12,55 @@
 #include <skyr/string_view.hpp>
 
 namespace skyr {
-/**
- * @class uri_search_parameters
- */
+/// \brief
 class url_search_parameters {
  public:
-  /**
-   * @brief
-   */
-  using string_type = std::string;
 
-  /**
-   * @brief
-   */
+  using string_type = std::string;
   using string_view = skyr::string_view;
-  
-  /**
-   * @brief
-   */
   using value_type = std::pair<string_type, string_type>;
-  
-  /**
-   * @brief
-   */
   using const_iterator = std::vector<value_type>::const_iterator;
 
-  /**
-   * @brief Constructor.
-   */
+  /// \brief Constructor
   url_search_parameters();
 
-  /**
-   * @brief Constructor.
-   */
+  /// \brief Constructor
+  /// \param query
   explicit url_search_parameters(string_view query);
 
-  /**
-   * @brief
-   */
+  /// \param name
+  /// \param value
   void append(const string_type &name, const string_type &value);
 
-  /**
-   * @brief
-   */
+  /// \param name
   void remove(const string_type &name);
 
-  /**
-   * @brief
-   */
+  /// \param name
+  /// \returns
   optional<string_type> get(const string_type &name) const noexcept;
   
-  /**
-   * @brief
-   */
+  /// \param name
+  /// \returns
   std::vector<string_type> get_all(const string_type &name) const;
 
-  /**
-   * @brief
-   */
+  /// \param
+  /// \returns
   bool contains(const string_type &name) const noexcept;
 
-  /**
-   * @brief
-   */
+  /// \param name
+  /// \param value
   void set(const string_type &name, const string_type &value);
 
-  /**
-   * @brief
-   */
+  /// \brief
   void sort();
 
-  /**
-   * @brief
-   */
+  /// \returns
   const_iterator begin() const noexcept;
 
-  /**
-   * @brief
-   */
+  /// \returns
   const_iterator end() const noexcept;
 
-  /**
-   * @brief
-   */
+  /// \returns
   string_type to_string() const;
 
  private:
@@ -104,4 +70,4 @@ class url_search_parameters {
 };
 }  // namespace skyr
 
-#endif  // NETWORK_URI_URL_SEARCH_PARAMETERS_INC
+#endif  // SKYR_URL_SEARCH_PARAMETERS_INC

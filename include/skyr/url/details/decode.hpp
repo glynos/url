@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_URI_DECODE_INC
-#define NETWORK_URI_DECODE_INC
+#ifndef SKYR_URL_DETAILS_DECODE_INC
+#define SKYR_URL_DETAILS_DECODE_INC
 
 #include <skyr/optional.hpp>
 #include <iterator>
@@ -20,11 +20,11 @@ inline optional<char> letter_to_hex(char in) {
   }
 
   if ((in >= 'a') && (in <= 'f')) {
-    return in + 10 - 'a';
+    return in + char(10) - 'a';
   }
 
   if ((in >= 'A') && (in <= 'F')) {
-    return in + 10 - 'A';
+    return in + char(10) - 'A';
   }
 
   return nullopt;
@@ -58,13 +58,12 @@ optional<char> pct_decode_char(InputIterator &it) {
 }
 
 template <class InputIterator, class OutputIterator>
-OutputIterator pct_decode(InputIterator in_begin, InputIterator in_end,
-                          OutputIterator out_begin) {
-  auto it = in_begin;
-  auto out = out_begin;
-  while (it != in_end) {
+OutputIterator pct_decode(InputIterator first, InputIterator last,
+                          OutputIterator out) {
+  auto it = first;
+  while (it != last) {
     if (*it == '%') {
-      if (std::distance(it, in_end) < 3) {
+      if (std::distance(it, last) < 3) {
         out++ = *it;
         return out;
       }
@@ -83,4 +82,4 @@ OutputIterator pct_decode(InputIterator in_begin, InputIterator in_end,
 }  // namespace details
 }  // namespace skyr
 
-#endif  // NETWORK_URI_DECODE_INC
+#endif  // SKYR_URL_DETAILS_DECODE_INC

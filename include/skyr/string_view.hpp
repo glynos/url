@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_STRING_VIEW_INC
-#define NETWORK_STRING_VIEW_INC
+#ifndef SKYR_STRING_VIEW_INC
+#define SKYR_STRING_VIEW_INC
 
 /**
  * \file
@@ -18,7 +18,7 @@
 #define NETWORK_STRING_VIEW_STD17
 #endif
 
-#if defined(NETWORK_STRING_VIEW_STD17)
+#if defined(SKYR_STRING_VIEW_STD17)
 #include <experimental/string_view>
 
 namespace skyr {
@@ -281,6 +281,6 @@ std::basic_ostream<charT, traits>& operator<<(
 typedef basic_string_view<char> string_view;
 }  // namespace skyr
 
-#endif  // defined(NETWORK_STRING_VIEW_STD17)
+#endif  // defined(SKYR_STRING_VIEW_STD17)
 
-#endif  // NETWORK_STRING_VIEW_INC
+#endif  // SKYR_STRING_VIEW_INC

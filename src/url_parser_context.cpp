@@ -26,7 +26,7 @@ inline bool is_in(string_view::value_type c,
 }
 
 inline bool is_whitespace(char ch) {
-  const char whitespace[] = "\0\x1b\x04\x12\x1f";
+  static const char whitespace[] = "\0\x1b\x04\x12\x1f";
 
   return
       !(std::isspace(ch, std::locale("C")) ||
@@ -169,7 +169,7 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
     return nullopt;
   }
 
-  auto ipv4_host = parse_ipv4_address(string_view(ascii_domain));
+  auto ipv4_host = details::parse_ipv4_address(string_view(ascii_domain));
 
   auto ok = false;
   auto host = optional<ipv4_address>();

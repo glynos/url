@@ -3,40 +3,34 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_DETAIL_URI_PARSE_INC
-#define NETWORK_DETAIL_URI_PARSE_INC
+#ifndef SKYR_URL_PARSE_INC
+#define SKYR_URL_PARSE_INC
 
-#include <string>
-#include <cstdint>
 #include <array>
+#include <cstdint>
 #include <skyr/optional.hpp>
-#include <skyr/url_state.hpp>
 #include <skyr/url_record.hpp>
+#include <skyr/url_state.hpp>
+#include <string>
 
 namespace skyr {
-/**
- *
- * @param input
- * @param base
- * @param url
- * @param state_override
- * @return
- */
+/// \param input The input string that will be parse.
+/// \param base An optional base URL.
+/// \param url An optional `url_record`.
+/// \param state_override
+/// \returns An optional `url_record` on success.
 optional<url_record> basic_parse(
     std::string input,
     const optional<url_record> &base = nullopt,
     const optional<url_record> &url = nullopt,
     optional<url_state> state_override = nullopt);
 
-/**
- *
- * @param input
- * @param base
- * @return
- */
+/// \param input The input string that will be parse.
+/// \param base An optional base URL.
+/// \returns An optional `url_record` on success.
 optional<url_record> parse(
     std::string input,
     const optional<url_record> &base = nullopt);
 }  // namespace skyr
 
-#endif  // NETWORK_DETAIL_URI_PARSE_INC
+#endif  // SKYR_URL_PARSE_INC

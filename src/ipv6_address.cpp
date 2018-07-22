@@ -49,8 +49,82 @@ inline std::uint16_t hex_to_dec(char c) {
 }
 }  // namespace
 
+std::string ipv6_address::to_string() const {
+  auto output = std::string();
+  auto compress = skyr::optional<size_t>();
+
+  auto sequences = std::vector<std::pair<size_t, size_t>>();
+  auto in_sequence = false;
+
+  auto first = std::begin(repr), last = std::end(repr);
+  auto it = first;
+  while (true) {
+    if (*it == 0) {
+      auto index = std::distance(first, it);
+
+      if (!in_sequence) {
+        sequences.emplace_back(index, 1);
+        in_sequence = true;
+      } else {
+        ++sequences.back().second;
+      }
+    } else {
+      if (in_sequence) {
+        if (sequences.back().second == 1) {
+          sequences.pop_back();
+        }
+        in_sequence = false;
+      }
+    }
+    ++it;
+
+    if (it == last) {
+      if (!sequences.empty() && (sequences.back().second == 1)) {
+        sequences.pop_back();
+      }
+      in_sequence = false;
+      break;
+    }
+  }
+
+  if (!sequences.empty()) {
+    stable_sort(std::begin(sequences), std::end(sequences),
+                [](const auto &lhs,
+                   const auto &rhs) -> bool {
+                  return lhs.second > rhs.second;
+                });
+    compress = sequences.front().first;
+  }
+
+  auto ignore0 = false;
+  for (auto i = 0UL; i <= 7UL; ++i) {
+    if (ignore0 && (repr[i] == 0)) {
+      continue;
+    } else if (ignore0) {
+      ignore0 = false;
+    }
+
+    if (compress && (compress.value() == i)) {
+      auto separator = (i == 0) ? std::string("::") : std::string(":");
+      output += separator;
+      ignore0 = true;
+      continue;
+    }
+
+    std::ostringstream oss;
+    oss << std::hex << repr[i];
+    output += oss.str();
+
+    if (i != 7) {
+      output += ":";
+    }
+  }
+
+  return std::string("[") + output + "]";
+}
+
 optional<ipv6_address> parse_ipv6_address(string_view input) {
-  auto address = ipv6_address{};
+  auto address = ipv6_address::repr_type{};
 
   auto piece_index = 0;
   auto compress = optional<decltype(piece_index)>();
@@ -189,80 +263,6 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
     return nullopt;
   }
 
-  return address;
-}
-
-std::string ipv6_address::to_string() const {
-  auto output = std::string();
-  auto compress = skyr::optional<size_t>();
-
-  auto sequences = std::vector<std::pair<size_t, size_t>>();
-  auto in_sequence = false;
-
-  auto first = std::begin(repr), last = std::end(repr);
-  auto it = first;
-  while (true) {
-    if (*it == 0) {
-      auto index = std::distance(first, it);
-
-      if (!in_sequence) {
-        sequences.emplace_back(index, 1);
-        in_sequence = true;
-      } else {
-        ++sequences.back().second;
-      }
-    } else {
-      if (in_sequence) {
-        if (sequences.back().second == 1) {
-          sequences.pop_back();
-        }
-        in_sequence = false;
-      }
-    }
-    ++it;
-
-    if (it == last) {
-      if (!sequences.empty() && (sequences.back().second == 1)) {
-        sequences.pop_back();
-      }
-      in_sequence = false;
-      break;
-    }
-  }
-
-  if (!sequences.empty()) {
-    stable_sort(std::begin(sequences), std::end(sequences),
-                [](const auto &lhs,
-                   const auto &rhs) -> bool {
-                  return lhs.second > rhs.second;
-                });
-    compress = sequences.front().first;
-  }
-
-  auto ignore0 = false;
-  for (auto i = 0UL; i <= 7UL; ++i) {
-    if (ignore0 && (repr[i] == 0)) {
-      continue;
-    } else if (ignore0) {
-      ignore0 = false;
-    }
-
-    if (compress && (compress.value() == i)) {
-      auto separator = (i == 0) ? std::string("::") : std::string(":");
-      output += separator;
-      ignore0 = true;
-      continue;
-    }
-
-    std::ostringstream oss;
-    oss << std::hex << repr[i];
-    output += oss.str();
-
-    if (i != 7) {
-      output += ":";
-    }
-  }
-
-  return std::string("[") + output + "]";
+  return ipv6_address(address);
 }
 }  // namespace skyr

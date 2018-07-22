@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SKYR_IPV6_ADDRESS_HPP
-#define SKYR_IPV6_ADDRESS_HPP
+#ifndef SKYR_IPV6_ADDRESS_INC
+#define SKYR_IPV6_ADDRESS_INC
 
 #include <string>
 #include <array>
@@ -13,9 +13,7 @@
 #include <skyr/string_view.hpp>
 
 namespace skyr {
-/**
- *
- */
+/// \brief
 class ipv6_address {
 
   std::array<unsigned short, 8> repr;
@@ -31,82 +29,23 @@ class ipv6_address {
   using size_type = std::size_t;
   using difference_type = std::ptrdiff_t;
 
-  /**
-   * @brief Constructor.
-   */
+  /// \brief Constructor
   ipv6_address() {
     std::fill(std::begin(repr), std::end(repr), 0);
   }
 
-  explicit ipv6_address(string_view address);
+  /// \brief Constructor
+   explicit ipv6_address(std::array<unsigned short, 8> repr)
+       : repr(repr) {}
 
-  /**
-   *
-   * @return
-   */
-  iterator begin() {
-    return repr.begin();
-  }
-
-  /**
-   *
-   * @return
-   */
-  iterator end() {
-    return repr.end();
-  }
-
-  /**
-   *
-   * @return
-   */
-  const_iterator begin() const {
-    return repr.begin();
-  }
-
-  /**
-   *
-   * @return
-   */
-  const_iterator end() const {
-    return repr.end();
-  }
-
-  /**
-   *
-   * @param index
-   * @return
-   */
-  reference operator [] (size_type index) {
-    return repr[index];
-  }
-
-  /**
-   *
-   * @param index
-   * @return
-   */
-  value_type operator [] (size_type index) const {
-    return repr[index];
-  }
-
-  /**
-   *
-   * @return
-   */
-  size_type size() const {
-    return repr.size();
-  }
-
-  /**
-   *
-   * @return
-   */
+   /// \returns
   std::string to_string() const;
 
 };
 
+/// \param input
+/// \param returns
 optional<ipv6_address> parse_ipv6_address(string_view input);
 }  // namespace skyr
 
-#endif //SKYR_IPV6_ADDRESS_HPP
+#endif //SKYR_IPV6_ADDRESS_INC
