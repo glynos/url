@@ -10,6 +10,7 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/ipv4_address.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ipv6_address.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_parse.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_serialize.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_schemes.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_schemes.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url.cpp
@@ -22,7 +23,7 @@ set(Skyr_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/url/details/decode.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url/details/encode.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url/details/translate.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/url_state.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url_parse_state.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_record.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/ipv4_address.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/ipv6_address.hpp

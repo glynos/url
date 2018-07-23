@@ -8,7 +8,7 @@
 
 #include <skyr/optional.hpp>
 #include <skyr/string_view.hpp>
-#include <skyr/url_state.hpp>
+#include <skyr/url_parse_state.hpp>
 #include <skyr/url_record.hpp>
 #include <skyr/ipv4_address.hpp>
 
@@ -35,8 +35,8 @@ class url_parser_context {
   skyr::optional<url_record> base;
   url_record url;
 
-  skyr::url_state state;
-  skyr::optional<skyr::url_state> state_override;
+  skyr::url_parse_state state;
+  skyr::optional<skyr::url_parse_state> state_override;
 
   std::string buffer;
 
@@ -50,7 +50,7 @@ class url_parser_context {
       std::string input,
       const skyr::optional<url_record> &base,
       const skyr::optional<url_record> &url,
-      skyr::optional<skyr::url_state> state_override = skyr::nullopt);
+      skyr::optional<skyr::url_parse_state> state_override = skyr::nullopt);
 
   bool is_eof() const {
     return it == end(view);

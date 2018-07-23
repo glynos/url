@@ -10,9 +10,10 @@
 #include <skyr/url_record.hpp>
 
 namespace skyr {
-/// \param url A URL record.
-/// \param exclude_fragment Indicates whether to exclude the URL fragment or not.
-/// \returns A serialize URL string.
+/// This function serializes a URL according to the WhatWG URL spec.
+/// \param url A URL record
+/// \param exclude_fragment Indicates whether to exclude the URL fragment or not
+/// \returns A serialized URL string
 std::string serialize(
     const url_record &url,
     bool exclude_fragment = false);

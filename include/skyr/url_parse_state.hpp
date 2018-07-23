@@ -3,12 +3,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SKYR_URL_STATE_INC
-#define SKYR_URL_STATE_INC
+#ifndef SKYR_URL_PARSE_STATE_INC
+#define SKYR_URL_PARSE_STATE_INC
 
 namespace skyr {
-/// States of the URL parser.
-enum class url_state {
+/// States of the URL parser
+enum class url_parse_state {
   /// The scheme start
   scheme_start,
   /// The scheme

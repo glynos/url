@@ -14,7 +14,7 @@
 #include "skyr/url/details/encode.hpp"
 #include "skyr/url/details/decode.hpp"
 #include "url_schemes.hpp"
-#include "skyr/url_state.hpp"
+#include "skyr/url_parse_state.hpp"
 #include "skyr/ipv6_address.hpp"
 
 namespace skyr {
@@ -260,11 +260,11 @@ url_parser_context::url_parser_context(
     std::string input,
     const optional<url_record> &base,
     const optional<url_record> &url,
-    optional<url_state> state_override)
+    optional<url_parse_state> state_override)
     : input(input)
     , base(base)
     , url(url? url.value() : url_record{})
-    , state(state_override? state_override.value() : url_state::scheme_start)
+    , state(state_override? state_override.value() : url_parse_state::scheme_start)
     , state_override(state_override)
     , buffer()
     , at_flag(false)
@@ -283,9 +283,9 @@ url_parse_action url_parser_context::parse_scheme_start(char c) {
   if (std::isalpha(c, std::locale("C"))) {
     auto lower = std::tolower(c, std::locale("C"));
     buffer.push_back(lower);
-    state = url_state::scheme;
+    state = url_parse_state::scheme;
   } else if (!state_override) {
-    state = url_state::no_scheme;
+    state = url_parse_state::no_scheme;
     reset();
     return url_parse_action::continue_;
   } else {
@@ -330,22 +330,22 @@ url_parse_action url_parser_context::parse_scheme(char c) {
       if (!remaining_starts_with(it, end(view), "//")) {
         validation_error = true;
       }
-      state = url_state::file;
+      state = url_parse_state::file;
     } else if (url.is_special() && base && (base.value().scheme == url.scheme)) {
-      state = url_state::special_relative_or_authority;
+      state = url_parse_state::special_relative_or_authority;
     } else if (url.is_special()) {
-      state = url_state::special_authority_slashes;
+      state = url_parse_state::special_authority_slashes;
     } else if (remaining_starts_with(it, end(view), "/")) {
-      state = url_state::path_or_authority;
+      state = url_parse_state::path_or_authority;
       increment();
     } else {
       url.cannot_be_a_base_url = true;
       url.path.emplace_back();
-      state = url_state::cannot_be_a_base_url_path;
+      state = url_parse_state::cannot_be_a_base_url_path;
     }
   } else if (!state_override) {
     buffer.clear();
-    state = url_state::no_scheme;
+    state = url_parse_state::no_scheme;
     reset();
     return url_parse_action::continue_;
   }
@@ -364,13 +364,13 @@ url_parse_action url_parser_context::parse_no_scheme(char c) {
     url.fragment = std::string();
 
     url.cannot_be_a_base_url = true;
-    state = url_state::fragment;
+    state = url_parse_state::fragment;
   } else if (base.value().scheme.compare("file") != 0) {
-    state = url_state::relative;
+    state = url_parse_state::relative;
     reset();
     return url_parse_action::continue_;
   } else {
-    state = url_state::file;
+    state = url_parse_state::file;
     reset();
     return url_parse_action::continue_;
   }
@@ -380,20 +380,20 @@ url_parse_action url_parser_context::parse_no_scheme(char c) {
 url_parse_action url_parser_context::parse_special_relative_or_authority(char c) {
   if ((c == '/') && remaining_starts_with(it, end(view), "/")) {
     increment();
-    state = url_state::special_authority_ignore_slashes;
+    state = url_parse_state::special_authority_ignore_slashes;
   } else {
     validation_error = true;
     decrement();
-    state = url_state::relative;
+    state = url_parse_state::relative;
   }
   return url_parse_action::increment;
 }
 
 url_parse_action url_parser_context::parse_path_or_authority(char c) {
   if (c == '/') {
-    state = url_state::authority;
+    state = url_parse_state::authority;
   } else {
-    state = url_state::path;
+    state = url_parse_state::path;
     decrement();
   }
   return url_parse_action::increment;
@@ -410,7 +410,7 @@ url_parse_action url_parser_context::parse_relative(char c) {
     url.query = base.value().query;
   }
   else if (c == '/') {
-    state = url_state::relative_slash;
+    state = url_parse_state::relative_slash;
   } else if (c == '?') {
     url.username = base.value().username;
     url.password = base.value().password;
@@ -418,7 +418,7 @@ url_parse_action url_parser_context::parse_relative(char c) {
     url.port = base.value().port;
     url.path = base.value().path;
     url.query = std::string();
-    state = url_state::query;
+    state = url_parse_state::query;
   } else if (c == '#') {
     url.username = base.value().username;
     url.password = base.value().password;
@@ -427,11 +427,11 @@ url_parse_action url_parser_context::parse_relative(char c) {
     url.path = base.value().path;
     url.query = base.value().query;
     url.fragment = std::string();
-    state = url_state::fragment;
+    state = url_parse_state::fragment;
   } else {
     if (url.is_special() && (c == '\\')) {
       validation_error = true;
-      state = url_state::relative_slash;
+      state = url_parse_state::relative_slash;
     } else {
       url.username = base.value().username;
       url.password = base.value().password;
@@ -441,7 +441,7 @@ url_parse_action url_parser_context::parse_relative(char c) {
       if (!url.path.empty()) {
         url.path.pop_back();
       }
-      state = url_state::path;
+      state = url_parse_state::path;
       decrement();
     }
   }
@@ -454,17 +454,17 @@ url_parse_action url_parser_context::parse_relative_slash(char c) {
     if (c == '\\') {
       validation_error = true;
     }
-    state = url_state::special_authority_ignore_slashes;
+    state = url_parse_state::special_authority_ignore_slashes;
   }
   else if (c == '/') {
-    state = url_state::authority;
+    state = url_parse_state::authority;
   }
   else {
     url.username = base.value().username;
     url.password = base.value().password;
     url.host = base.value().host;
     url.port = base.value().port;
-    state = url_state::path;
+    state = url_parse_state::path;
     decrement();
   }
 
@@ -474,11 +474,11 @@ url_parse_action url_parser_context::parse_relative_slash(char c) {
 url_parse_action url_parser_context::parse_special_authority_slashes(char c) {
   if ((c == '/') && remaining_starts_with(it, end(view), "/")) {
     increment();
-    state = url_state::special_authority_ignore_slashes;
+    state = url_parse_state::special_authority_ignore_slashes;
   } else {
     validation_error = true;
     decrement();
-    state = url_state::special_authority_ignore_slashes;
+    state = url_parse_state::special_authority_ignore_slashes;
   }
 
   return url_parse_action::increment;
@@ -487,7 +487,7 @@ url_parse_action url_parser_context::parse_special_authority_slashes(char c) {
 url_parse_action url_parser_context::parse_special_authority_ignore_slashes(char c) {
   if ((c != '/') && (c != '\\')) {
     decrement();
-    state = url_state::authority;
+    state = url_parse_state::authority;
   } else {
     validation_error = true;
   }
@@ -527,7 +527,7 @@ url_parse_action url_parser_context::parse_authority(char c) {
       return url_parse_action::fail;
     }
     restart_from_buffer();
-    state = url_state::host;
+    state = url_parse_state::host;
     buffer.clear();
     return url_parse_action::increment;
   } else {
@@ -540,7 +540,7 @@ url_parse_action url_parser_context::parse_authority(char c) {
 url_parse_action url_parser_context::parse_hostname(char c) {
   if (state_override && (url.scheme.compare("file") == 0)) {
     decrement();
-    state = url_state::file_host;
+    state = url_parse_state::file_host;
   } else if ((c == ':') && !square_braces_flag) {
     if (buffer.empty()) {
       validation_error = true;
@@ -553,9 +553,9 @@ url_parse_action url_parser_context::parse_hostname(char c) {
     }
     url.host = host.value();
     buffer.clear();
-    state = url_state::port;
+    state = url_parse_state::port;
 
-    if (state_override && (state_override.value() == url_state::hostname)) {
+    if (state_override && (state_override.value() == url_parse_state::hostname)) {
       return url_parse_action::success;
     }
   } else if (
@@ -574,7 +574,7 @@ url_parse_action url_parser_context::parse_hostname(char c) {
     }
     url.host = host.value();
     buffer.clear();
-    state = url_state::path_start;
+    state = url_parse_state::path_start;
   } else {
     if (c == '[') {
       square_braces_flag = true;
@@ -615,7 +615,7 @@ url_parse_action url_parser_context::parse_port(char c) {
     }
 
     decrement();
-    state = url_state::path_start;
+    state = url_parse_state::path_start;
   } else {
     validation_error = true;
     return url_parse_action::fail;
@@ -631,7 +631,7 @@ url_parse_action url_parser_context::parse_file(char c) {
     if (c == '\\') {
       validation_error = true;
     }
-    state = url_state::file_slash;
+    state = url_parse_state::file_slash;
   } else if (base && (base.value().scheme.compare("file") == 0)) {
     if (is_eof()) {
       url.host = base.value().host;
@@ -642,13 +642,13 @@ url_parse_action url_parser_context::parse_file(char c) {
       url.host = base.value().host;
       url.path = base.value().path;
       url.query = std::string();
-      state = url_state::query;
+      state = url_parse_state::query;
     } else if (c == '#') {
       url.host = base.value().host;
       url.path = base.value().path;
       url.query = base.value().query;
       url.fragment = std::string();
-      state = url_state::fragment;
+      state = url_parse_state::fragment;
     } else {
       if (!is_windows_drive_letter(it, end(view))) {
         url.host = base.value().host;
@@ -659,11 +659,11 @@ url_parse_action url_parser_context::parse_file(char c) {
         validation_error = true;
       }
       decrement();
-      state = url_state::path;
+      state = url_parse_state::path;
     }
   } else {
     decrement();
-    state = url_state::path;
+    state = url_parse_state::path;
   }
 
   return url_parse_action::increment;
@@ -674,7 +674,7 @@ url_parse_action url_parser_context::parse_file_slash(char c) {
     if (c == '\\') {
       validation_error = true;
     }
-    state = url_state::file_host;
+    state = url_parse_state::file_host;
   } else {
     if (base &&
             ((base.value().scheme.compare("file") == 0) && !is_windows_drive_letter(it, end(view)))) {
@@ -685,7 +685,7 @@ url_parse_action url_parser_context::parse_file_slash(char c) {
       }
     }
 
-    state = url_state::path;
+    state = url_parse_state::path;
     decrement();
   }
 
@@ -698,7 +698,7 @@ url_parse_action url_parser_context::parse_file_host(char c) {
 
     if (!state_override && is_windows_drive_letter(string_view(buffer))) {
       validation_error = true;
-      state = url_state::path;
+      state = url_parse_state::path;
     } else if (buffer.empty()) {
       url.host = std::string();
 
@@ -706,7 +706,7 @@ url_parse_action url_parser_context::parse_file_host(char c) {
         return url_parse_action::success;
       }
 
-      state = url_state::path_start;
+      state = url_parse_state::path_start;
     } else {
       auto host = parse_host(string_view(buffer), !url.is_special());
       if (!host) {
@@ -724,7 +724,7 @@ url_parse_action url_parser_context::parse_file_host(char c) {
 
       buffer.clear();
 
-      state = url_state::path_start;
+      state = url_parse_state::path_start;
     }
   } else {
     buffer.push_back(c);
@@ -738,18 +738,18 @@ url_parse_action url_parser_context::parse_path_start(char c) {
     if (c == '\\') {
       validation_error = true;
     }
-    state = url_state::path;
+    state = url_parse_state::path;
     if ((c != '/') && (c != '\\')) {
       decrement();
     }
   } else if (!state_override && (c == '?')) {
     url.query = std::string();
-    state = url_state::query;
+    state = url_parse_state::query;
   } else if (!state_override && (c == '#')) {
     url.fragment = std::string();
-    state = url_state::fragment;
+    state = url_parse_state::fragment;
   } else if (!is_eof()) {
-    state = url_state::path;
+    state = url_parse_state::path;
     if (c != '/') {
       decrement();
     }
@@ -803,12 +803,12 @@ url_parse_action url_parser_context::parse_path(char c) {
 
     if (c == '?') {
       url.query = std::string();
-      state = url_state::query;
+      state = url_parse_state::query;
     }
 
     if (c == '#') {
       url.fragment = std::string();
-      state = url_state::fragment;
+      state = url_parse_state::fragment;
     }
   } else {
     details::pct_encode_char(c, std::back_inserter(buffer), " \"<>`#?{}");
@@ -820,10 +820,10 @@ url_parse_action url_parser_context::parse_path(char c) {
 url_parse_action url_parser_context::parse_cannot_be_a_base_url(char c) {
   if (c == '?') {
     url.query = std::string();
-    state = url_state::query;
+    state = url_parse_state::query;
   } else if (c == '#') {
     url.fragment = std::string();
-    state = url_state::fragment;
+    state = url_parse_state::fragment;
   } else {
     if (!is_eof() && !is_url_code_point(c) && (c != '%')) {
       validation_error = true;
@@ -843,7 +843,7 @@ url_parse_action url_parser_context::parse_cannot_be_a_base_url(char c) {
 url_parse_action url_parser_context::parse_query(char c) {
   if (!state_override && (c == '#')) {
     url.fragment = std::string();
-    state = url_state::fragment;
+    state = url_parse_state::fragment;
   } else if (!is_eof()) {
     details::pct_encode_char(c, std::back_inserter(url.query.value()), " \"#<>");
   }

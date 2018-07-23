@@ -47,9 +47,7 @@ std::string ipv4_address::to_string() const {
   auto n = repr;
 
   for (auto i = 1U; i <= 4U; ++i) {
-    std::ostringstream oss;
-    oss << (n % 256);
-    output = oss.str() + output;
+    output = std::to_string(n % 256) + output;
 
     if (i != 4) {
       output = "." + output;

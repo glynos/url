@@ -6,29 +6,29 @@
 #ifndef SKYR_URL_PARSE_INC
 #define SKYR_URL_PARSE_INC
 
-#include <array>
-#include <cstdint>
-#include <skyr/optional.hpp>
-#include <skyr/url_record.hpp>
-#include <skyr/url_state.hpp>
 #include <string>
+#include <skyr/optional.hpp>
+#include <skyr/expected.hpp>
+#include <skyr/url_record.hpp>
+#include <skyr/url_parse_state.hpp>
 
 namespace skyr {
-/// \param input The input string that will be parse.
-/// \param base An optional base URL.
-/// \param url An optional `url_record`.
+/// \param input The input string that will be parse
+/// \param base An optional base URL
+/// \param url An optional `url_record`
 /// \param state_override
-/// \returns An optional `url_record` on success.
-optional<url_record> basic_parse(
+/// \returns An optional `url_record` on success
+expected<url_record, url_parse_state> basic_parse(
     std::string input,
     const optional<url_record> &base = nullopt,
     const optional<url_record> &url = nullopt,
-    optional<url_state> state_override = nullopt);
+    optional<url_parse_state> state_override = nullopt);
 
-/// \param input The input string that will be parse.
-/// \param base An optional base URL.
-/// \returns An optional `url_record` on success.
-optional<url_record> parse(
+/// Parses a URL
+/// \param input The input string that will be parse
+/// \param base An optional base URL
+/// \returns An optional `url_record` on success
+expected<url_record, url_parse_state> parse(
     std::string input,
     const optional<url_record> &base = nullopt);
 }  // namespace skyr

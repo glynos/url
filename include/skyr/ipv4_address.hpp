@@ -42,7 +42,7 @@ enum class ipv4_address_errc {
 expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input);
 }  // namespace details
 
-/// \brief
+/// \param input
 /// \returns
 optional<ipv4_address> parse_ipv4_address(string_view input);
 }  // namespace skyr
