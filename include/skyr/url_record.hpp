@@ -37,7 +37,7 @@ struct url_record {
   /// A Boolean value indiciating whether this URL can be used as a base URL.
   bool cannot_be_a_base_url;
 
-  /// \brief Constructor
+  /// Default constructor
   url_record()
       : url{}, cannot_be_a_base_url{false} {}
 

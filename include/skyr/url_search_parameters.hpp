@@ -12,7 +12,7 @@
 #include <skyr/string_view.hpp>
 
 namespace skyr {
-/// \brief
+///
 class url_search_parameters {
  public:
 
@@ -21,10 +21,10 @@ class url_search_parameters {
   using value_type = std::pair<string_type, string_type>;
   using const_iterator = std::vector<value_type>::const_iterator;
 
-  /// \brief Constructor
+  /// Constructor
   url_search_parameters();
 
-  /// \brief Constructor
+  /// Constructor
   /// \param query
   explicit url_search_parameters(string_view query);
 
@@ -43,15 +43,15 @@ class url_search_parameters {
   /// \returns
   std::vector<string_type> get_all(const string_type &name) const;
 
-  /// \param
-  /// \returns
+  /// \param name
+  /// \returns `true` if the value is in the search parameters, `false` otherwise.
   bool contains(const string_type &name) const noexcept;
 
   /// \param name
   /// \param value
   void set(const string_type &name, const string_type &value);
 
-  /// \brief
+  ///
   void sort();
 
   /// \returns

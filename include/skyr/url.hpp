@@ -7,10 +7,10 @@
 #define SKYR_URL_INC
 
 #include <string>
-#include <stdexcept>
-#include <array>
-#include "skyr/string_view.hpp"
-#include "skyr/url_record.hpp"
+#include <skyr/string_view.hpp>
+#include <skyr/expected.hpp>
+#include <skyr/url_record.hpp>
+#include <skyr/url_error.hpp>
 
 #ifdef NETWORK_URI_MSVC
 #pragma warning(push)
@@ -18,13 +18,6 @@
 #endif
 
 namespace skyr {
-/// This exception is used when there is an error parsing the URL.
-class type_error : public std::runtime_error {
- public:
-   /// Constructor
-  type_error() : std::runtime_error("Type error") {}
-};
-
 /// This class repesents a URL.
 class url {
  public:
@@ -50,6 +43,10 @@ class url {
   /// \param base A base URL
   /// \throws `type_error`
   url(std::string input, std::string base);
+
+  /// Constructor
+  /// \param input A URL record
+  explicit url(url_record &&input) noexcept;
 
   /// \returns
   std::string href() const;
@@ -100,33 +97,42 @@ class url {
   bool validation_error() const;
 
   /// \returns
-  const_iterator begin() const {
+  std::string serialize() const;
+
+  /// \returns
+  const_iterator begin() const noexcept {
     return view_.begin();
   }
 
   /// \returns
-  const_iterator end() const {
+  const_iterator end() const noexcept {
     return view_.end();
   }
 
   /// \returns
-  bool empty() const {
+  bool empty() const noexcept {
     return view_.empty();
   }
 
   /// \returns
-  size_type size() const {
+  size_type size() const noexcept {
     return view_.size();
   }
 
   /// \returns
-  size_type length() const {
+  size_type length() const noexcept {
     return view_.length();
+  }
+
+  /// \param other
+  /// \returns
+  int compare(const url &other) const noexcept {
+    return view_.compare(other.view_);
   }
 
   /// \param scheme
   /// \returns
-  static optional<std::uint16_t> default_port(const std::string &scheme);
+  static optional<std::uint16_t> default_port(const std::string &scheme) noexcept;
 
  private:
   url_record url_;
@@ -134,6 +140,31 @@ class url {
 
   // query object
 };
+
+/// \param input
+/// \returns
+expected<url, parse_error> make_url(std::string input) noexcept;
+
+/// \param input
+/// \param base
+/// \returns
+expected<url, parse_error> make_url(std::string input, std::string base) noexcept;
+
+/// Equality operator
+/// \param lhs
+/// \param rhs
+/// \returns
+inline bool operator == (const url &lhs, const url &rhs) noexcept {
+  return lhs.compare(rhs) == 0;
+}
+
+/// Inequality operator
+/// \param lhs
+/// \param rhs
+/// \returns
+inline bool operator != (const url &lhs, const url &rhs) noexcept {
+  return !(lhs == rhs);
+}
 }  // namespace skyr
 
 #endif  // SKYR_URL_INC

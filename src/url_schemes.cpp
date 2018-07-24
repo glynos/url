@@ -7,7 +7,7 @@
 
 namespace skyr {
 namespace details {
-const default_port_list &special_schemes() {
+const default_port_list &special_schemes() noexcept {
   static const auto schemes = default_port_list{
     {"ftp", 21},
     {"file", nullopt},
@@ -20,7 +20,7 @@ const default_port_list &special_schemes() {
   return schemes;
 }
 
-optional<std::uint16_t> default_port(string_view scheme) {
+optional<std::uint16_t> default_port(string_view scheme) noexcept {
   auto schemes = special_schemes();
   auto first = begin(schemes), last = end(schemes);
   auto it = std::find_if(
@@ -35,7 +35,7 @@ optional<std::uint16_t> default_port(string_view scheme) {
   return nullopt;
 }
 
-bool is_special(string_view scheme) {
+bool is_special(string_view scheme) noexcept {
   auto schemes = special_schemes();
   auto first = begin(schemes), last = end(schemes);
   auto it = std::find_if(
@@ -47,7 +47,7 @@ bool is_special(string_view scheme) {
   return (it != last);
 }
 
-bool is_default_port(string_view scheme, std::uint16_t port) {
+bool is_default_port(string_view scheme, std::uint16_t port) noexcept {
   auto dport = default_port(scheme);
   return dport && (dport.value() == port);
 }

@@ -37,11 +37,11 @@ bool remaining_starts_with(
 }
 
 inline std::uint16_t hex_to_dec(char c) {
-  assert(std::isxdigit(c, std::locale("C")));
+  assert(std::isxdigit(c, std::locale::classic()));
 
-  auto c_lower = std::tolower(c, std::locale("C"));
+  auto c_lower = std::tolower(c, std::locale::classic());
 
-  if (std::isdigit(c_lower, std::locale("C"))) {
+  if (std::isdigit(c_lower, std::locale::classic())) {
     return static_cast<std::uint16_t>(c_lower - '0');
   }
 
@@ -56,7 +56,7 @@ std::string ipv6_address::to_string() const {
   auto sequences = std::vector<std::pair<size_t, size_t>>();
   auto in_sequence = false;
 
-  auto first = std::begin(repr), last = std::end(repr);
+  auto first = std::begin(repr_), last = std::end(repr_);
   auto it = first;
   while (true) {
     if (*it == 0) {
@@ -98,7 +98,7 @@ std::string ipv6_address::to_string() const {
 
   auto ignore0 = false;
   for (auto i = 0UL; i <= 7UL; ++i) {
-    if (ignore0 && (repr[i] == 0)) {
+    if (ignore0 && (repr_[i] == 0)) {
       continue;
     } else if (ignore0) {
       ignore0 = false;
@@ -112,7 +112,7 @@ std::string ipv6_address::to_string() const {
     }
 
     std::ostringstream oss;
-    oss << std::hex << repr[i];
+    oss << std::hex << repr_[i];
     output += oss.str();
 
     if (i != 7) {
@@ -124,7 +124,8 @@ std::string ipv6_address::to_string() const {
 }
 
 optional<ipv6_address> parse_ipv6_address(string_view input) {
-  auto address = ipv6_address::repr_type{};
+  auto address = std::array<unsigned short, 8>{};
+  auto validation_error = false;
 
   auto piece_index = 0;
   auto compress = optional<decltype(piece_index)>();
@@ -134,7 +135,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
 
   if (*it == ':') {
     if (!remaining_starts_with(it, last, ":")) {
-      // validation error
+      validation_error = true;
       return nullopt;
     }
 
@@ -145,13 +146,13 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
 
   while (it != last) {
     if (piece_index == 8) {
-      // validation error
+      validation_error = true;
       return nullopt;
     }
 
     if (*it == ':') {
       if (compress) {
-        // validation error
+        validation_error = true;
         return nullopt;
       }
 
@@ -164,7 +165,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
     auto value = 0;
     auto length = 0;
 
-    while ((length < 4) && std::isxdigit(*it, std::locale("C"))) {
+    while ((length < 4) && std::isxdigit(*it, std::locale::classic())) {
       value = value * 0x10 + hex_to_dec(*it);
       ++it;
       ++length;
@@ -172,14 +173,14 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
 
     if (*it == '.') {
       if (length == 0) {
-        // validation error
+        validation_error = true;
         return nullopt;
       }
 
       it -= length;
 
       if (piece_index > 6) {
-        // validation error
+        validation_error = true;
         return nullopt;
       }
 
@@ -192,30 +193,29 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
           if ((*it == '.') && (numbers_seen < 4)) {
             ++it;
           } else {
-            // validation error
+            validation_error = true;
             return nullopt;
           }
         }
 
-        if (!std::isdigit(*it, std::locale("C"))) {
-          // validation error
+        if (!std::isdigit(*it, std::locale::classic())) {
+          validation_error = true;
           return nullopt;
         }
 
-        while (std::isdigit(*it, std::locale("C"))) {
-          //auto number = hex_to_dec(*it);
-          auto number = static_cast<std::uint32_t>(*it - '0');
+        while (std::isdigit(*it, std::locale::classic())) {
+          auto number = static_cast<std::uint16_t>(*it - '0');
           if (!ipv4_piece) {
             ipv4_piece = number;
           } else if (ipv4_piece.value() == 0) {
-            // validation error
+            validation_error = true;
             return nullopt;
           } else {
-            ipv4_piece = ipv4_piece.value() * 10 + number;
+            ipv4_piece = ipv4_piece.value() * std::uint16_t(10) + number;
           }
 
           if (ipv4_piece.value() > 255) {
-            // validation error
+            validation_error = true;
             return nullopt;
           }
 
@@ -231,7 +231,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
       }
 
       if (numbers_seen != 4) {
-        // validation error
+        validation_error = true;
         return nullopt;
       }
 
@@ -239,11 +239,11 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
     } else if (*it == ':') {
       ++it;
       if (it == last) {
-        // validation error
+        validation_error = true;
         return nullopt;
       }
     } else if (it != last) {
-      // validation error
+      validation_error = true;
       return nullopt;
     }
     address[piece_index] = value;
@@ -259,7 +259,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
       --swaps;
     }
   } else if (!compress && (piece_index != 8)) {
-    // validation error
+    validation_error = true;
     return nullopt;
   }
 

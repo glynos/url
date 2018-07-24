@@ -17,7 +17,9 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/url_search_parameters.cpp
 
         ${CMAKE_SOURCE_DIR}/include/tl/optional.hpp
+        ${CMAKE_SOURCE_DIR}/include/tl/expected.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/optional.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/expected.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/string_view.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/config.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url/details/decode.hpp
@@ -30,6 +32,7 @@ set(Skyr_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/url_parse.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_serialize.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/url_error.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_search_parameters.hpp)
 
 add_library(skyr ${Skyr_SRCS})

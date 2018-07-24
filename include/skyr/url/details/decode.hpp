@@ -8,13 +8,19 @@
 #ifndef SKYR_URL_DETAILS_DECODE_INC
 #define SKYR_URL_DETAILS_DECODE_INC
 
-#include <skyr/optional.hpp>
+#include <skyr/expected.hpp>
 #include <iterator>
 #include <cassert>
 
 namespace skyr {
 namespace details {
-inline optional<char> letter_to_hex(char in) {
+enum class decode_errc {
+  non_hex_input,
+  conversion_failed,
+
+};
+
+inline expected<char, decode_errc> letter_to_hex(char in) {
   if ((in >= '0') && (in <= '9')) {
     return in - '0';
   }
@@ -27,30 +33,30 @@ inline optional<char> letter_to_hex(char in) {
     return in + char(10) - 'A';
   }
 
-  return nullopt;
+  return make_unexpected(decode_errc::non_hex_input);
 }
 
 template <class InputIterator>
-optional<char> pct_decode_char(InputIterator &it) {
+expected<char, decode_errc> pct_decode_char(InputIterator &it) {
   assert(*it == '%');
 
   ++it;
   auto h0 = *it;
   if (h0 >= '8') {
     // unable to pct_decode characters outside the ASCII character set.
-    return nullopt;
+    return make_unexpected(decode_errc::conversion_failed);
   }
 
   auto v0 = letter_to_hex(h0);
   if (!v0) {
-    return nullopt;
+    return v0;
   }
 
   ++it;
   auto h1 = *it;
   auto v1 = letter_to_hex(h1);
   if (!v1) {
-    return nullopt;
+    return v1;
   }
 
   ++it;
@@ -58,8 +64,8 @@ optional<char> pct_decode_char(InputIterator &it) {
 }
 
 template <class InputIterator, class OutputIterator>
-OutputIterator pct_decode(InputIterator first, InputIterator last,
-                          OutputIterator out) {
+expected<OutputIterator, decode_errc> pct_decode(
+    InputIterator first, InputIterator last, OutputIterator out) {
   auto it = first;
   while (it != last) {
     if (*it == '%') {
@@ -69,7 +75,7 @@ OutputIterator pct_decode(InputIterator first, InputIterator last,
       }
       auto c = pct_decode_char(it);
       if (!c) {
-        throw std::runtime_error("Invalid character");
+        return make_unexpected(std::move(c.error()));
       }
       out = c.value();
       ++out;

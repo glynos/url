@@ -29,7 +29,7 @@ inline bool is_whitespace(char ch) {
   static const char whitespace[] = "\0\x1b\x04\x12\x1f";
 
   return
-      !(std::isspace(ch, std::locale("C")) ||
+      !(std::isspace(ch, std::locale::classic()) ||
           is_in(ch, string_view(whitespace, sizeof(whitespace))));
 }
 
@@ -121,7 +121,7 @@ template <class InputIter, class OutputIter>
 OutputIter domain_to_ascii(InputIter first, InputIter last, OutputIter it_out) {
   auto it = first;
   while (it != last) {
-    it_out++ = std::tolower(*it, std::locale("C"));
+    it_out++ = std::tolower(*it, std::locale::classic());
 //    it_out++ = *it;
     ++it;
   }
@@ -152,10 +152,8 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
   }
 
   auto domain = std::string{};
-  try {
-    details::pct_decode(begin(input), end(input), std::back_inserter(domain));
-  }
-  catch (std::exception &) {
+  auto result = details::pct_decode(begin(input), end(input), std::back_inserter(domain));
+  if (!result) {
     // result.validation_error = true;
     return nullopt;
   }
@@ -199,7 +197,7 @@ bool is_valid_port(string_view port) {
 
 bool is_url_code_point(char c) {
   return
-      std::isalnum(c, std::locale("C")) || is_in(c, "!$&'()*+,-./:/=?@_~");
+      std::isalnum(c, std::locale::classic()) || is_in(c, "!$&'()*+,-./:/=?@_~");
 }
 
 bool is_windows_drive_letter(
@@ -209,7 +207,7 @@ bool is_windows_drive_letter(
     return false;
   }
 
-  if (!std::isalpha(*it, std::locale("C"))) {
+  if (!std::isalpha(*it, std::locale::classic())) {
     return false;
   }
 
@@ -224,7 +222,7 @@ inline bool is_windows_drive_letter(string_view segment) {
 bool is_single_dot_path_segment(string_view segment) {
   auto segment_lower = segment.to_string();
   std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
-                 [] (char ch) -> char { return std::tolower(ch, std::locale("C")); });
+                 [] (char ch) -> char { return std::tolower(ch, std::locale::classic()); });
 
   return ((segment_lower == ".") || (segment_lower == "%2e"));
 }
@@ -232,7 +230,7 @@ bool is_single_dot_path_segment(string_view segment) {
 bool is_double_dot_path_segment(string_view segment) {
   auto segment_lower = segment.to_string();
   std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
-                 [] (char ch) -> char { return std::tolower(ch, std::locale("C")); });
+                 [] (char ch) -> char { return std::tolower(ch, std::locale::classic()); });
 
   return (
       (segment_lower == "..") ||
@@ -280,8 +278,8 @@ url_parser_context::url_parser_context(
 }
 
 url_parse_action url_parser_context::parse_scheme_start(char c) {
-  if (std::isalpha(c, std::locale("C"))) {
-    auto lower = std::tolower(c, std::locale("C"));
+  if (std::isalpha(c, std::locale::classic())) {
+    auto lower = std::tolower(c, std::locale::classic());
     buffer.push_back(lower);
     state = url_parse_state::scheme;
   } else if (!state_override) {
@@ -297,8 +295,8 @@ url_parse_action url_parser_context::parse_scheme_start(char c) {
 }
 
 url_parse_action url_parser_context::parse_scheme(char c) {
-  if (std::isalnum(c, std::locale("C")) || is_in(c, "+-.")) {
-    auto lower = std::tolower(c, std::locale("C"));
+  if (std::isalnum(c, std::locale::classic()) || is_in(c, "+-.")) {
+    auto lower = std::tolower(c, std::locale::classic());
     buffer.push_back(lower);
   } else if (c == ':') {
     if (state_override) {
@@ -587,7 +585,7 @@ url_parse_action url_parser_context::parse_hostname(char c) {
 }
 
 url_parse_action url_parser_context::parse_port(char c) {
-  if (std::isdigit(c, std::locale("C"))) {
+  if (std::isdigit(c, std::locale::classic())) {
     buffer += c;
   } else if (
       ((is_eof()) || (c == '/') || (c == '?') || (c == '#')) ||
@@ -828,7 +826,7 @@ url_parse_action url_parser_context::parse_cannot_be_a_base_url(char c) {
     if (!is_eof() && !is_url_code_point(c) && (c != '%')) {
       validation_error = true;
     }
-    else if ((c == '%') && !details::is_pct_encoded(it, end(view), std::locale("C"))) {
+    else if ((c == '%') && !details::is_pct_encoded(it, end(view), std::locale::classic())) {
       validation_error = true;
     }
     if (!is_eof()) {

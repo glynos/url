@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef NETWORK_DETAIL_URL_DEFAULT_PORT_INC
-#define NETWORK_DETAIL_URL_DEFAULT_PORT_INC
+#ifndef SKYR_DETAILS_URL_SCHEMES_INC
+#define SKYR_DETAILS_URL_SCHEMES_INC
 
 #include <vector>
 #include <utility>
@@ -17,15 +17,15 @@ namespace skyr {
 namespace details {
 using default_port_list = std::vector<std::pair<std::string, optional<std::uint16_t>>>;
 
-const default_port_list &special_schemes();
+const default_port_list &special_schemes() noexcept;
 
-bool is_special(string_view scheme);
+bool is_special(string_view scheme) noexcept;
 
-optional<std::uint16_t> default_port(string_view scheme);
+optional<std::uint16_t> default_port(string_view scheme) noexcept;
 
-bool is_default_port(string_view scheme, std::uint16_t port);
+bool is_default_port(string_view scheme, std::uint16_t port) noexcept;
 }  // namespace details
 }  // namespace skyr
 
 
-#endif  // NETWORK_DETAIL_URL_DEFAULT_PORT_INC
+#endif  // SKYR_DETAILS_URL_SCHEMES_INC

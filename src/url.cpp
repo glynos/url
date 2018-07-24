@@ -4,13 +4,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "skyr/url.hpp"
 #include <algorithm>
 #include <cassert>
 #include <functional>
 #include <locale>
 #include <vector>
+#include "skyr/url.hpp"
 #include "skyr/url_parse.hpp"
+#include "skyr/url_serialize.hpp"
 #include "url_schemes.hpp"
 
 namespace skyr {
@@ -23,7 +24,7 @@ url::url(std::string input) {
   url_ = parsed_url.value();
   view_ = string_view(url_.url);
 
-  auto query = url_.query ? url_.query.value() : std::string();
+  // auto query = url_.query ? url_.query.value() : std::string();
   // TODO: set query object
 }
 
@@ -41,9 +42,14 @@ url::url(std::string input, std::string base) {
   url_ = parsed_url.value();
   view_ = string_view(url_.url);
 
-  auto query = url_.query ? url_.query.value() : std::string();
+  // auto query = url_.query ? url_.query.value() : std::string();
   // TODO: set query object
 }
+
+url::url(url_record &&input) noexcept
+  : url_(input)
+  , view_(url_.url) {}
+
 
 std::string url::href() const { return std::string(); }
 
@@ -130,7 +136,35 @@ bool url::is_special() const { return url_.is_special(); }
 
 bool url::validation_error() const { return false; }
 
-optional<std::uint16_t> url::default_port(const std::string &scheme) {
+std::string url::serialize() const {
+  using skyr::serialize;
+  return serialize(url_, true);
+}
+
+optional<std::uint16_t> url::default_port(const std::string &scheme) noexcept {
   return details::default_port(string_view(scheme));
+}
+
+expected<url, parse_error> make_url(std::string input) noexcept {
+  auto parsed_url = parse(input);
+  if (!parsed_url) {
+    return make_unexpected(std::move(parsed_url.error()));
+  }
+
+  return url(std::move(parsed_url.value()));
+}
+
+expected<url, parse_error> make_url(std::string input, std::string base) noexcept {
+  auto parsed_base = parse(base);
+  if (!parsed_base) {
+    return make_unexpected(std::move(parsed_base.error()));
+  }
+
+  auto parsed_url = parse(input, parsed_base.value());
+  if (!parsed_url) {
+    return make_unexpected(std::move(parsed_url.error()));
+  }
+
+  return url(std::move(parsed_url.value()));
 }
 }  // namespace skyr

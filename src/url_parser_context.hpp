@@ -72,6 +72,9 @@ class url_parser_context {
     it = it - buffer.size() - 1;
   }
 
+  std::string parsed_until() const {
+    return std::string(begin(view), it);
+  }
   url_parse_action parse_scheme_start(char c);
   url_parse_action parse_scheme(char c);
   url_parse_action parse_no_scheme(char c);

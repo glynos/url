@@ -10,7 +10,7 @@
 #include <skyr/url_record.hpp>
 
 namespace skyr {
-/// This function serializes a URL according to the WhatWG URL spec.
+/// This function serializes a URL record according to the WhatWG URL spec.
 /// \param url A URL record
 /// \param exclude_fragment Indicates whether to exclude the URL fragment or not
 /// \returns A serialized URL string
