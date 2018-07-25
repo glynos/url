@@ -149,8 +149,6 @@ expected<url_record, parse_error> parse(
     return url;
   }
 
-  // TODO: check Blob URL store
-
   return url;
 }
 }  // namespace skyr

@@ -7,11 +7,11 @@
 #include "url_schemes.hpp"
 
 namespace skyr {
-bool url_record::is_special() const {
+bool url_record::is_special() const noexcept {
   return skyr::details::is_special(basic_string_view<char>(scheme));
 }
 
-bool url_record::includes_credentials() const {
+bool url_record::includes_credentials() const noexcept {
   return !username.empty() || !password.empty();
 }
 }  // namespace skyr

@@ -18,6 +18,14 @@
 #endif
 
 namespace skyr {
+/// This exception is used when there is an error parsing the URL.
+class type_error : public std::runtime_error {
+ public:
+  /// Constructor
+  type_error() : runtime_error("Type error") {}
+
+};
+
 /// This class repesents a URL.
 class url {
  public:
@@ -91,10 +99,10 @@ class url {
   std::string hash() const;
 
   /// \returns
-  bool is_special() const;
+  bool is_special() const noexcept;
 
   /// \returns
-  bool validation_error() const;
+  bool validation_error() const noexcept;
 
   /// \returns
   std::string serialize() const;

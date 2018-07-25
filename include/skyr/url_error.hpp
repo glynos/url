@@ -18,14 +18,6 @@ struct parse_error {
   ///
   std::string parse_until;
 };
-
-/// This exception is used when there is an error parsing the URL.
-class type_error : public std::runtime_error {
- public:
-   /// Constructor
-  type_error() : runtime_error("Type error") {}
-
-};
 }  // namespace skyr
 
 #endif // SKYR_URL_ERROR_INC

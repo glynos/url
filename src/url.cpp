@@ -132,9 +132,9 @@ std::string url::hash() const {
   return "#" + url_.fragment.value();
 }
 
-bool url::is_special() const { return url_.is_special(); }
+bool url::is_special() const noexcept { return url_.is_special(); }
 
-bool url::validation_error() const { return false; }
+bool url::validation_error() const noexcept { return false; }
 
 std::string url::serialize() const {
   using skyr::serialize;

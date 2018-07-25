@@ -17,7 +17,6 @@ namespace skyr {
 class ipv6_address {
 
   std::array<unsigned short, 8> repr_;
-  bool validation_error_;
 
   using repr_type = decltype(repr_);
 
@@ -33,20 +32,14 @@ class ipv6_address {
 
   /// Constructor
   ipv6_address()
-      : repr_(), validation_error_(false) {
+      : repr_() {
     std::fill(std::begin(repr_), std::end(repr_), 0);
   }
 
   /// Constructor
   /// \param repr
   explicit ipv6_address(std::array<unsigned short, 8> repr)
-      : repr_(repr), validation_error_(false) {}
-
-  /// Constructor
-  /// \param repr
-  /// \param validation_error
-  ipv6_address(std::array<unsigned short, 8> repr, bool validation_error)
-      : repr_(repr), validation_error_(validation_error) {}
+      : repr_(repr) {}
 
    /// \returns
   std::string to_string() const;

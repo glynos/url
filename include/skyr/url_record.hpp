@@ -34,7 +34,7 @@ struct url_record {
   /// An optional ASCII string.
   skyr::optional<std::string> fragment;
 
-  /// A Boolean value indiciating whether this URL can be used as a base URL.
+  /// A Boolean value indicating whether this URL can be used as a base URL.
   bool cannot_be_a_base_url;
 
   /// Default constructor
@@ -42,10 +42,10 @@ struct url_record {
       : url{}, cannot_be_a_base_url{false} {}
 
    /// \returns `true` if the URL scheme is a special scheme, `false` otherwise.
-  bool is_special() const;
+  bool is_special() const noexcept;
 
-   /// \returns `true` if the URL username or password is an empty string, `false` otherwise.
-  bool includes_credentials() const;
+   /// \returns `true` if the URL username or password is not an empty string, `false` otherwise.
+  bool includes_credentials() const noexcept;
 
 };
 }  // namespace skyr

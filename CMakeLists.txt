@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.8)
 project(Skyr)
 
 option(Skyr_BUILD_TESTS "Build the URI tests." ON)
-option(Skyr_BUILD_DOCS "Build the URI documentation." ON)
+option(Skyr_BUILD_DOCS "Build the URI documentation." OFF)
 option(Skyr_FULL_WARNINGS "Build the library with all warnings turned on." ON)
 option(Skyr_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(Skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
@@ -89,7 +89,7 @@ if (Skyr_BUILD_TESTS)
   message(STATUS "Configuring tests")
   enable_testing()
   add_subdirectory(deps/googletest)
-  add_subdirectory(test)
+  add_subdirectory(tests)
 endif()
 
 # Documentation

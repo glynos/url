@@ -15,7 +15,7 @@
 
 namespace skyr {
 ///
-/// \param input The input string that will be parse
+/// \param input The input string that will be parsed
 /// \param base An optional base URL
 /// \param url An optional `url_record`
 /// \param state_override
@@ -27,7 +27,7 @@ expected<url_record, parse_error> basic_parse(
     optional<url_parse_state> state_override = nullopt);
 
 /// Parses a URL
-/// \param input The input string that will be parse
+/// \param input The input string that will be parsed
 /// \param base An optional base URL
 /// \returns An optional `url_record` on success
 expected<url_record, parse_error> parse(

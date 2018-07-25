@@ -3,7 +3,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "url_parser_context.hpp"
 #include <iterator>
 #include <limits>
 #include <cmath>
@@ -11,21 +10,22 @@
 #include <deque>
 #include <map>
 #include <array>
+#include "url_parser_context.hpp"
+#include "url_schemes.hpp"
 #include "skyr/url/details/encode.hpp"
 #include "skyr/url/details/decode.hpp"
-#include "url_schemes.hpp"
 #include "skyr/url_parse_state.hpp"
 #include "skyr/ipv6_address.hpp"
 
 namespace skyr {
 namespace {
 inline bool is_in(string_view::value_type c,
-                  string_view view) {
+                  string_view view) noexcept {
   auto first = begin(view), last = end(view);
   return last != std::find(first, last, c);
 }
 
-inline bool is_whitespace(char ch) {
+inline bool is_whitespace(char ch) noexcept {
   static const char whitespace[] = "\0\x1b\x04\x12\x1f";
 
   return
@@ -66,7 +66,7 @@ bool remove_tabs_and_newlines(std::string &input) {
   return it == last;
 }
 
-inline bool is_forbidden_host_point(string_view::value_type c) {
+inline bool is_forbidden_host_point(string_view::value_type c) noexcept {
   static const char forbidden[] = "\0\t\n\r #%/:?@[\\]";
   const char *first = forbidden, *last = forbidden + sizeof(forbidden);
   return last != std::find(first, last, c);
@@ -75,7 +75,7 @@ inline bool is_forbidden_host_point(string_view::value_type c) {
 bool remaining_starts_with(
     string_view::const_iterator first,
     string_view::const_iterator last,
-    const char *chars) {
+    const char *chars) noexcept {
   auto chars_first = chars, chars_last = chars + std::strlen(chars);
   auto chars_it = chars_first;
   auto it = first;
@@ -179,7 +179,7 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
   return host.value().to_string();
 }
 
-bool is_valid_port(string_view port) {
+bool is_valid_port(string_view port) noexcept {
   if (port.empty()) {
     return false;
   }
@@ -195,14 +195,14 @@ bool is_valid_port(string_view port) {
       (value < std::numeric_limits<std::uint16_t>::max());
 }
 
-bool is_url_code_point(char c) {
+bool is_url_code_point(char c) noexcept {
   return
       std::isalnum(c, std::locale::classic()) || is_in(c, "!$&'()*+,-./:/=?@_~");
 }
 
 bool is_windows_drive_letter(
     string_view::const_iterator it,
-    string_view::const_iterator last) {
+    string_view::const_iterator last) noexcept {
   if (std::distance(it, last) < 2) {
     return false;
   }
@@ -215,11 +215,11 @@ bool is_windows_drive_letter(
   return ((*it == ':') || (*it == '|'));
 }
 
-inline bool is_windows_drive_letter(string_view segment) {
+inline bool is_windows_drive_letter(string_view segment) noexcept {
   return is_windows_drive_letter(begin(segment), end(segment));
 }
 
-bool is_single_dot_path_segment(string_view segment) {
+bool is_single_dot_path_segment(string_view segment) noexcept {
   auto segment_lower = segment.to_string();
   std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
                  [] (char ch) -> char { return std::tolower(ch, std::locale::classic()); });
@@ -227,7 +227,7 @@ bool is_single_dot_path_segment(string_view segment) {
   return ((segment_lower == ".") || (segment_lower == "%2e"));
 }
 
-bool is_double_dot_path_segment(string_view segment) {
+bool is_double_dot_path_segment(string_view segment) noexcept {
   auto segment_lower = segment.to_string();
   std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
                  [] (char ch) -> char { return std::tolower(ch, std::locale::classic()); });

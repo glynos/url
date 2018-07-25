@@ -10,7 +10,6 @@
 #include <iostream>
 #include <skyr/url.hpp>
 #include "json.hpp"
-#include "string_utility.hpp"
 
 // Tests using test data from W3C
 // https://github.com/w3c/web-platform-tests/tree/master/url
@@ -84,26 +83,25 @@ INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls,
 
 TEST_P(test_parse_urls_using_base_urls, parse) {
   auto test_case_data = test_case{GetParam()};
-
-//  std::cout << ">>>" << test_case_data.input << "<<<" << std::endl;
-//  try {
-//    auto url = skyr::url(test_case_data.input, test_case_data.base);
-//  }
-//  catch (skyr::type_error &) {
-//    std::cout << ">>>" << test_case_data.input << "<<<" << std::endl;
-//  }
-//
   auto instance = skyr::url(test_case_data.input, test_case_data.base);
-
-  EXPECT_EQ(test_case_data.protocol, instance.protocol());
-  EXPECT_EQ(test_case_data.username, instance.username());
-  EXPECT_EQ(test_case_data.password, instance.password());
-  EXPECT_EQ(test_case_data.host, instance.host());
-  EXPECT_EQ(test_case_data.hostname, instance.hostname());
-  EXPECT_EQ(test_case_data.port, instance.port());
-  EXPECT_EQ(test_case_data.pathname, instance.pathname());
-  EXPECT_EQ(test_case_data.search, instance.search());
-  EXPECT_EQ(test_case_data.hash, instance.hash());
+  EXPECT_EQ(test_case_data.protocol, instance.protocol())
+            << "Input: [" << test_case_data.input << "]";
+  EXPECT_EQ(test_case_data.username, instance.username())
+            << "Input: [" << test_case_data.input << "]";
+  EXPECT_EQ(test_case_data.password, instance.password())
+            << "Input: [" << test_case_data.input << "]";
+  EXPECT_EQ(test_case_data.host, instance.host())
+            << "Input: [" << test_case_data.input << "]";
+  EXPECT_EQ(test_case_data.hostname, instance.hostname())
+            << "Input: [" << test_case_data.input << "]";
+  EXPECT_EQ(test_case_data.port, instance.port())
+            << "Input: [" << test_case_data.input << "]";
+  EXPECT_EQ(test_case_data.pathname, instance.pathname())
+            << "Input: [" << test_case_data.input << "]";
+  EXPECT_EQ(test_case_data.search, instance.search())
+            << "Input: [" << test_case_data.input << "]";
+  EXPECT_EQ(test_case_data.hash, instance.hash())
+            << "Input: [" << test_case_data.input << "]";
 }
 
 class test_parse_urls_using_base_urls_failing : public ::testing::TestWithParam<test_case> {};
@@ -113,10 +111,6 @@ INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls_
 
 TEST_P(test_parse_urls_using_base_urls_failing, parse) {
   auto test_case_data = test_case{GetParam()};
-//  try {
-//    auto url = skyr::url(test_case_data.input);
-//    std::cout << "|||" << test_case_data.input << "|||" << std::endl;
-//  }
-//  catch (skyr::type_error &) {}
-  ASSERT_THROW(skyr::url(test_case_data.input, test_case_data.base), skyr::type_error);
+  ASSERT_THROW(skyr::url(test_case_data.input, test_case_data.base), skyr::type_error)
+               << "Input: [" << test_case_data.input << "]";
 }
