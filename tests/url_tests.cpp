@@ -463,8 +463,32 @@ TEST(url_tests, git_default_port_is_not_given) {
   ASSERT_FALSE(port);
 }
 
-TEST(url_test, about_blank) {
+TEST(url_tests, about_blank) {
   auto instance = skyr::url("about:blank");
   EXPECT_EQ("about:", instance.protocol());
   EXPECT_EQ("blank", instance.pathname());
+}
+
+TEST(url_tests, percent_encoding_fools_parser_1) {
+  // https://github.com/glynos/uri/issues/26
+  auto instance = skyr::url("http://-error-.invalid/");
+  EXPECT_EQ("http:", instance.protocol());
+  EXPECT_EQ("-error-.invalid", instance.host());
+  EXPECT_EQ("/", instance.pathname());
+}
+
+TEST(url_tests, percent_encoding_fools_parser_2) {
+  // https://github.com/glynos/uri/issues/26
+  auto instance = skyr::url("http://%2Derror-.invalid/");
+  EXPECT_EQ("http:", instance.protocol());
+  EXPECT_EQ("-error-.invalid", instance.host());
+  EXPECT_EQ("/", instance.pathname());
+}
+
+TEST(url_tests, percent_encoding_fools_parser_3) {
+  // https://github.com/glynos/uri/issues/26
+  auto instance = skyr::url("http://xx%2E%2Eyy.invalid/");
+  EXPECT_EQ("http:", instance.protocol());
+  EXPECT_EQ("xx..yy.invalid", instance.host());
+  EXPECT_EQ("/", instance.pathname());
 }

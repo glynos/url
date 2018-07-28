@@ -14,6 +14,7 @@
 #include <skyr/string_view.hpp>
 
 namespace skyr {
+/// \exclude
 namespace details {
 using default_port_list = std::vector<std::pair<std::string, optional<std::uint16_t>>>;
 
@@ -24,6 +25,8 @@ const default_port_list &special_schemes() noexcept;
 /// \returns
 bool is_special(string_view scheme) noexcept;
 
+/// \param scheme
+/// \returns
 optional<std::uint16_t> default_port(string_view scheme) noexcept;
 
 /// \param scheme

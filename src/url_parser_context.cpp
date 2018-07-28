@@ -19,8 +19,9 @@
 
 namespace skyr {
 namespace {
-inline bool is_in(string_view::value_type c,
-                  string_view view) noexcept {
+inline bool is_in(
+    string_view::value_type c,
+    string_view view) noexcept {
   auto first = begin(view), last = end(view);
   return last != std::find(first, last, c);
 }
@@ -38,7 +39,7 @@ bool remove_leading_whitespace(std::string &input) {
   auto first = begin(view), last = end(view);
   auto it = std::find_if(first, last, is_whitespace);
   if (it != first) {
-    input = std::string(it, last);
+    input.assign(it, last);
   }
 
   return it == first;
@@ -122,7 +123,6 @@ OutputIter domain_to_ascii(InputIter first, InputIter last, OutputIter it_out) {
   auto it = first;
   while (it != last) {
     it_out++ = std::tolower(*it, std::locale::classic());
-//    it_out++ = *it;
     ++it;
   }
   return it_out;
@@ -220,23 +220,27 @@ inline bool is_windows_drive_letter(string_view segment) noexcept {
 }
 
 bool is_single_dot_path_segment(string_view segment) noexcept {
-  auto segment_lower = segment.to_string();
-  std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
-                 [] (char ch) -> char { return std::tolower(ch, std::locale::classic()); });
+  auto lower = segment.to_string();
+  std::transform(begin(lower), end(lower), begin(lower),
+                 [] (char ch) -> char {
+    return std::tolower(ch, std::locale::classic());
+  });
 
-  return ((segment_lower == ".") || (segment_lower == "%2e"));
+  return ((lower == ".") || (lower == "%2e"));
 }
 
 bool is_double_dot_path_segment(string_view segment) noexcept {
-  auto segment_lower = segment.to_string();
-  std::transform(begin(segment_lower), end(segment_lower), begin(segment_lower),
-                 [] (char ch) -> char { return std::tolower(ch, std::locale::classic()); });
+  auto lower = segment.to_string();
+  std::transform(begin(lower), end(lower), begin(lower),
+                 [] (char ch) -> char {
+    return std::tolower(ch, std::locale::classic());
+  });
 
   return (
-      (segment_lower == "..") ||
-          (segment_lower == ".%2e") ||
-          (segment_lower == "%2e.") ||
-          (segment_lower == "%2e%2e"));
+      (lower == "..") ||
+          (lower == ".%2e") ||
+          (lower == "%2e.") ||
+          (lower == "%2e%2e"));
 }
 
 void shorten_path(string_view scheme, std::vector<std::string> &path) {

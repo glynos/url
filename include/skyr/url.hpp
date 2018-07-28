@@ -151,12 +151,12 @@ class url {
 
 /// \param input
 /// \returns
-expected<url, parse_error> make_url(std::string input) noexcept;
+expected<url, url_parse_error> make_url(std::string input) noexcept;
 
 /// \param input
 /// \param base
 /// \returns
-expected<url, parse_error> make_url(std::string input, std::string base) noexcept;
+expected<url, url_parse_error> make_url(std::string input, std::string base) noexcept;
 
 /// Equality operator
 /// \param lhs

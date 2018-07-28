@@ -14,7 +14,7 @@
 #define SKYR_CONFIG_INC
 
 #if defined(_MSC_VER)
-#define NETWORK_URI_MSVC _MSC_VER
+#define SKYR_URI_MSVC _MSC_VER
 #endif  // _MSC_VER
 
 #endif // SKYR_CONFIG_INC

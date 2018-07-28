@@ -145,7 +145,7 @@ optional<std::uint16_t> url::default_port(const std::string &scheme) noexcept {
   return details::default_port(string_view(scheme));
 }
 
-expected<url, parse_error> make_url(std::string input) noexcept {
+expected<url, url_parse_error> make_url(std::string input) noexcept {
   auto parsed_url = parse(input);
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));
@@ -154,7 +154,7 @@ expected<url, parse_error> make_url(std::string input) noexcept {
   return url(std::move(parsed_url.value()));
 }
 
-expected<url, parse_error> make_url(std::string input, std::string base) noexcept {
+expected<url, url_parse_error> make_url(std::string input, std::string base) noexcept {
   auto parsed_base = parse(base);
   if (!parsed_base) {
     return make_unexpected(std::move(parsed_base.error()));

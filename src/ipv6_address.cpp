@@ -15,7 +15,7 @@ namespace {
 bool remaining_starts_with(
     string_view::const_iterator first,
     string_view::const_iterator last,
-    const char *chars) {
+    const char *chars) noexcept {
   auto chars_first = chars, chars_last = chars + std::strlen(chars);
   auto chars_it = chars_first;
   auto it = first;
@@ -36,7 +36,7 @@ bool remaining_starts_with(
   return true;
 }
 
-inline std::uint16_t hex_to_dec(char c) {
+inline std::uint16_t hex_to_dec(char c) noexcept {
   assert(std::isxdigit(c, std::locale::classic()));
 
   auto c_lower = std::tolower(c, std::locale::classic());
@@ -125,7 +125,7 @@ std::string ipv6_address::to_string() const {
 
 optional<ipv6_address> parse_ipv6_address(string_view input) {
   auto address = std::array<unsigned short, 8>{};
-  auto validation_error = false;
+  // auto validation_error = false;
 
   auto piece_index = 0;
   auto compress = optional<decltype(piece_index)>();
@@ -135,7 +135,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
 
   if (*it == ':') {
     if (!remaining_starts_with(it, last, ":")) {
-      validation_error = true;
+      // validation_error = true;
       return nullopt;
     }
 
@@ -146,13 +146,13 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
 
   while (it != last) {
     if (piece_index == 8) {
-      validation_error = true;
+      // validation_error = true;
       return nullopt;
     }
 
     if (*it == ':') {
       if (compress) {
-        validation_error = true;
+        // validation_error = true;
         return nullopt;
       }
 
@@ -173,14 +173,14 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
 
     if (*it == '.') {
       if (length == 0) {
-        validation_error = true;
+        // validation_error = true;
         return nullopt;
       }
 
       it -= length;
 
       if (piece_index > 6) {
-        validation_error = true;
+        // validation_error = true;
         return nullopt;
       }
 
@@ -193,13 +193,13 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
           if ((*it == '.') && (numbers_seen < 4)) {
             ++it;
           } else {
-            validation_error = true;
+            // validation_error = true;
             return nullopt;
           }
         }
 
         if (!std::isdigit(*it, std::locale::classic())) {
-          validation_error = true;
+          // validation_error = true;
           return nullopt;
         }
 
@@ -208,14 +208,14 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
           if (!ipv4_piece) {
             ipv4_piece = number;
           } else if (ipv4_piece.value() == 0) {
-            validation_error = true;
+            // validation_error = true;
             return nullopt;
           } else {
             ipv4_piece = ipv4_piece.value() * std::uint16_t(10) + number;
           }
 
           if (ipv4_piece.value() > 255) {
-            validation_error = true;
+            // validation_error = true;
             return nullopt;
           }
 
@@ -231,7 +231,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
       }
 
       if (numbers_seen != 4) {
-        validation_error = true;
+        // validation_error = true;
         return nullopt;
       }
 
@@ -239,11 +239,11 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
     } else if (*it == ':') {
       ++it;
       if (it == last) {
-        validation_error = true;
+        // validation_error = true;
         return nullopt;
       }
     } else if (it != last) {
-      validation_error = true;
+      // validation_error = true;
       return nullopt;
     }
     address[piece_index] = value;
@@ -259,7 +259,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
       --swaps;
     }
   } else if (!compress && (piece_index != 8)) {
-    validation_error = true;
+    // validation_error = true;
     return nullopt;
   }
 

@@ -14,21 +14,23 @@ namespace skyr {
 /// Represents an IPv4 address.
 class ipv4_address {
 
-  unsigned int repr;
+  unsigned int repr_;
 
  public:
 
   /// \brief Constructor
   ipv4_address()
-      : repr(0) {}
+      : repr_(0) {}
 
    /// \brief Constructor
    /// \param address
   explicit ipv4_address(unsigned int address)
-      : repr(address) {}
+      : repr_(address) {}
 
   /// \returns
   std::string to_string() const;
+
+  ///
 
 };
 

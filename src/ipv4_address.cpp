@@ -44,7 +44,7 @@ optional<std::uint64_t> parse_ipv4_number(
 std::string ipv4_address::to_string() const {
   auto output = std::string();
 
-  auto n = repr;
+  auto n = repr_;
 
   for (auto i = 1U; i <= 4U; ++i) {
     output = std::to_string(n % 256) + output;

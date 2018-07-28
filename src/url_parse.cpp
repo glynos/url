@@ -16,7 +16,7 @@
 #include "skyr/url_error.hpp"
 
 namespace skyr {
-expected<url_record, parse_error> basic_parse(
+expected<url_record, url_parse_error> basic_parse(
     std::string input,
     const optional<url_record> &base,
     const optional<url_record> &url,
@@ -117,7 +117,7 @@ expected<url_record, parse_error> basic_parse(
       case url_parse_action::continue_:
         continue;
       case url_parse_action::fail:
-        return make_unexpected(parse_error{context.state, context.parsed_until()});
+        return make_unexpected(url_parse_error{context.state, context.parsed_until()});
       case url_parse_action::success:
         return context.url;
     }
@@ -132,7 +132,7 @@ expected<url_record, parse_error> basic_parse(
   return context.url;
 }
 
-expected<url_record, parse_error> parse(
+expected<url_record, url_parse_error> parse(
     std::string input,
     const optional<url_record> &base) {
   auto url = basic_parse(input, base);

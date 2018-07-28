@@ -20,7 +20,7 @@ namespace skyr {
 /// \param url An optional `url_record`
 /// \param state_override
 /// \returns An optional `url_record` on success
-expected<url_record, parse_error> basic_parse(
+expected<url_record, url_parse_error> basic_parse(
     std::string input,
     const optional<url_record> &base = nullopt,
     const optional<url_record> &url = nullopt,
@@ -30,7 +30,7 @@ expected<url_record, parse_error> basic_parse(
 /// \param input The input string that will be parsed
 /// \param base An optional base URL
 /// \returns An optional `url_record` on success
-expected<url_record, parse_error> parse(
+expected<url_record, url_parse_error> parse(
     std::string input,
     const optional<url_record> &base = nullopt);
 }  // namespace skyr

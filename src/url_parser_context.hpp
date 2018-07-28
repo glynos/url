@@ -52,29 +52,30 @@ class url_parser_context {
       const skyr::optional<url_record> &url,
       skyr::optional<skyr::url_parse_state> state_override = skyr::nullopt);
 
-  bool is_eof() const {
+  bool is_eof() const noexcept {
     return it == end(view);
   }
 
-  void increment() {
+  void increment() noexcept {
     ++it;
   }
 
-  void decrement() {
+  void decrement() noexcept {
     --it;
   }
 
-  void reset() {
+  void reset() noexcept {
     it = begin(view);
   }
 
-  void restart_from_buffer() {
+  void restart_from_buffer() noexcept {
     it = it - buffer.size() - 1;
   }
 
   std::string parsed_until() const {
     return std::string(begin(view), it);
   }
+
   url_parse_action parse_scheme_start(char c);
   url_parse_action parse_scheme(char c);
   url_parse_action parse_no_scheme(char c);

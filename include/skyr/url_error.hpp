@@ -12,7 +12,7 @@
 
 namespace skyr {
 ///
-struct parse_error {
+struct url_parse_error {
   ///
   url_parse_state state;
   ///
