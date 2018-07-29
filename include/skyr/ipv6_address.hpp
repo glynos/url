@@ -22,14 +22,6 @@ class ipv6_address {
 
  public:
 
-  using value_type = repr_type::value_type;
-  using iterator = repr_type::iterator;
-  using const_iterator = repr_type::const_iterator;
-  using reference = repr_type::reference;
-  using const_reference = repr_type::const_reference;
-  using size_type = repr_type::size_type;
-  using difference_type = repr_type::difference_type;
-
   /// Constructor
   ipv6_address()
       : repr_() {

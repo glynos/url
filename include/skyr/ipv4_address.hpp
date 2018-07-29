@@ -18,19 +18,17 @@ class ipv4_address {
 
  public:
 
-  /// \brief Constructor
+  /// Constructor
   ipv4_address()
       : repr_(0) {}
 
-   /// \brief Constructor
+   /// Constructor
    /// \param address
   explicit ipv4_address(unsigned int address)
       : repr_(address) {}
 
-  /// \returns
+  /// \returns The address as a string.
   std::string to_string() const;
-
-  ///
 
 };
 

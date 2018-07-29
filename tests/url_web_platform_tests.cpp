@@ -83,7 +83,7 @@ INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls,
 
 TEST_P(test_parse_urls_using_base_urls, parse) {
   auto test_case_data = test_case{GetParam()};
-  auto instance = skyr::url(test_case_data.input, test_case_data.base);
+  auto instance = skyr::url(test_case_data.input, skyr::url(test_case_data.base));
   EXPECT_EQ(test_case_data.protocol, instance.protocol())
             << "Input: [" << test_case_data.input << "]";
   EXPECT_EQ(test_case_data.username, instance.username())
@@ -111,6 +111,6 @@ INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls_
 
 TEST_P(test_parse_urls_using_base_urls_failing, parse) {
   auto test_case_data = test_case{GetParam()};
-  ASSERT_THROW(skyr::url(test_case_data.input, test_case_data.base), skyr::type_error)
+  ASSERT_THROW(skyr::url(test_case_data.input, skyr::url(test_case_data.base)), skyr::type_error)
                << "Input: [" << test_case_data.input << "]";
 }

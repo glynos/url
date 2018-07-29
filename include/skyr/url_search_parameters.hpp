@@ -52,6 +52,9 @@ class url_search_parameters {
   void set(const string_type &name, const string_type &value);
 
   ///
+  void clear() noexcept;
+
+  ///
   void sort();
 
   /// \returns

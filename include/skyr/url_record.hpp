@@ -12,7 +12,7 @@
 #include <skyr/optional.hpp>
 
 namespace skyr {
-/// This class represents a URL identifier.
+/// This class represents the parts of a URL identifier.
 struct url_record {
   /// The input URL.
   std::string url;

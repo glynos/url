@@ -11,6 +11,7 @@
 #include <skyr/expected.hpp>
 #include <skyr/url_record.hpp>
 #include <skyr/url_error.hpp>
+#include <skyr/url_search_parameters.hpp>
 
 #ifdef NETWORK_URI_MSVC
 #pragma warning(push)
@@ -18,7 +19,7 @@
 #endif
 
 namespace skyr {
-/// This exception is used when there is an error parsing the URL.
+/// ``type_error`` is thrown when there is an error parsing the URL.
 class type_error : public std::runtime_error {
  public:
   /// Constructor
@@ -50,7 +51,7 @@ class url {
   /// \param input The input string
   /// \param base A base URL
   /// \throws `type_error`
-  url(std::string input, std::string base);
+  url(std::string input, skyr::url base);
 
   /// Constructor
   /// \param input A URL record
@@ -59,23 +60,44 @@ class url {
   /// \returns
   std::string href() const;
 
+  /// \param href
+  void set_href(std::string href);
+
+  /// \returns
+  std::string to_json() const;
+
   /// \returns
   std::string origin() const;
 
   /// \returns
   std::string protocol() const;
 
+  /// \param protocol
+  void set_protocol(std::string protocol);
+
   /// \returns
   std::string username() const;
+
+  /// \param username
+  void set_username(std::string username);
 
   /// \returns
   std::string password() const;
 
+  /// \param password
+  void set_password(std::string password);
+
   /// \returns
   std::string host() const;
 
+  /// \param host
+  void set_host(std::string host);
+
   /// \returns
   std::string hostname() const;
+
+  /// \param hostname
+  void set_hostname(std::string hostname);
 
   /// \returns
   std::string port() const;
@@ -89,23 +111,40 @@ class url {
     return static_cast<intT>(std::strtoul(port_first, &port_last, 10));
   }
 
+  /// \param port
+  void set_port(std::string port);
+
+  /// \param port
+  void set_port(std::uint16_t port);
+
   /// \returns
   std::string pathname() const;
+
+  /// \param pathname
+  void set_pathname(std::string pathname);
 
   /// \returns
   std::string search() const;
 
+  /// \param search
+  void set_search(std::string search);
+
+  /// \returns
+  url_search_parameters &search_parameters();
+
   /// \returns
   std::string hash() const;
+
+  /// \param hash
+  void set_hash(std::string hash);
+
+  url_record record() const;
 
   /// \returns
   bool is_special() const noexcept;
 
   /// \returns
   bool validation_error() const noexcept;
-
-  /// \returns
-  std::string serialize() const;
 
   /// \returns
   const_iterator begin() const noexcept {
@@ -115,6 +154,10 @@ class url {
   /// \returns
   const_iterator end() const noexcept {
     return view_.end();
+  }
+
+  string_view view() const noexcept {
+    return view_;
   }
 
   /// \returns
@@ -145,8 +188,7 @@ class url {
  private:
   url_record url_;
   string_view view_;
-
-  // query object
+  url_search_parameters parameters_;
 };
 
 /// \param input
@@ -156,7 +198,7 @@ expected<url, url_parse_error> make_url(std::string input) noexcept;
 /// \param input
 /// \param base
 /// \returns
-expected<url, url_parse_error> make_url(std::string input, std::string base) noexcept;
+expected<url, url_parse_error> make_url(std::string input, url base) noexcept;
 
 /// Equality operator
 /// \param lhs
@@ -172,6 +214,38 @@ inline bool operator == (const url &lhs, const url &rhs) noexcept {
 /// \returns
 inline bool operator != (const url &lhs, const url &rhs) noexcept {
   return !(lhs == rhs);
+}
+
+/// Comparison operator
+/// \param lhs
+/// \param rhs
+/// \returns
+inline bool operator < (const url &lhs, const url &rhs) noexcept {
+  return lhs.compare(rhs) < 0;
+}
+
+/// Comparison operator
+/// \param lhs
+/// \param rhs
+/// \returns
+inline bool operator > (const url &lhs, const url &rhs) noexcept {
+  return rhs < lhs;
+}
+
+/// Comparison operator
+/// \param lhs
+/// \param rhs
+/// \returns
+inline bool operator <= (const url &lhs, const url &rhs) noexcept {
+  return !(lhs > rhs);
+}
+
+/// Comparison operator
+/// \param lhs
+/// \param rhs
+/// \returns
+inline bool operator >= (const url &lhs, const url &rhs) noexcept {
+  return !(lhs < rhs);
 }
 }  // namespace skyr
 
