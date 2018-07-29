@@ -13,7 +13,6 @@ option(Skyr_FULL_WARNINGS "Build the library with all warnings turned on." ON)
 option(Skyr_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(Skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
 option(Skyr_USE_STD17 "Use the C++ 17 standard (GCC only)" OFF)
-option(Skyr_RUN_WEB_PLATFORM_TESTS "Run web platform tests" OFF)
 
 find_package(Threads REQUIRED)
 
