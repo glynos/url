@@ -12,6 +12,7 @@
 #include <cstring>
 #include <cassert>
 #include <algorithm>
+#include <locale>
 
 namespace skyr {
 namespace details {

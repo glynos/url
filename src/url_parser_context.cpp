@@ -10,6 +10,7 @@
 #include <deque>
 #include <map>
 #include <array>
+#include <locale>
 #include "url_parser_context.hpp"
 #include "url_schemes.hpp"
 #include "skyr/url/details/encode.hpp"
