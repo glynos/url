@@ -8,7 +8,7 @@
 
 namespace skyr {
 bool url_record::is_special() const noexcept {
-  return skyr::details::is_special(basic_string_view<char>(scheme));
+  return skyr::details::is_special(string_view(scheme));
 }
 
 bool url_record::includes_credentials() const noexcept {

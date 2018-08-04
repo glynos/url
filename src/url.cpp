@@ -18,7 +18,7 @@ namespace skyr {
 url::url(std::string input) {
   auto parsed_url = parse(input);
   if (!parsed_url) {
-    throw type_error();
+    throw url_parse_error(parsed_url.error());
   }
 
   url_ = parsed_url.value();
@@ -31,7 +31,7 @@ url::url(std::string input) {
 url::url(std::string input, skyr::url base) {
   auto parsed_url = parse(input, base.url_);
   if (!parsed_url) {
-    throw type_error();
+    throw url_parse_error(parsed_url.error());
   }
 
   url_ = parsed_url.value();
@@ -54,7 +54,7 @@ std::string url::href() const {
 void url::set_href(std::string href) {
   auto parsed_url = details::basic_parse(href);
   if (!parsed_url) {
-    throw type_error();
+    throw url_parse_error(parsed_url.error());
   }
 
   url_ = parsed_url.value();
@@ -205,7 +205,7 @@ optional<std::uint16_t> url::default_port(const std::string &scheme) noexcept {
   return details::default_port(string_view(scheme));
 }
 
-expected<url, url_parse_error> make_url(std::string input) noexcept {
+expected<url, url_parse_errc> make_url(std::string input) noexcept {
   auto parsed_url = parse(input);
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));
@@ -214,7 +214,7 @@ expected<url, url_parse_error> make_url(std::string input) noexcept {
   return url(std::move(parsed_url.value()));
 }
 
-expected<url, url_parse_error> make_url(std::string input, url base) noexcept {
+expected<url, url_parse_errc> make_url(std::string input, url base) noexcept {
   auto parsed_url = parse(input, base.record());
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));

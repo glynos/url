@@ -48,7 +48,7 @@ std::cout << e.pathname() << std::endl;
 ```c++
 auto u = skyr::url("/\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
 if (!u) {
-  std::cerr << "Parsing failed at " << u.parsed_until() << std::endl;
+  std::cerr << "Parsing failed" << std::endl;
 }
 ```
 
@@ -59,6 +59,34 @@ auto input = std::string("/\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
 auto u = skyr::url(input, document.baseURI)
 url.href(); // "https://url.spec.whatwg.org/%F0%9F%8D%A3%F0%9F%8D%BA"
 ```
+
+## Dependencies
+
+This library uses [optional](https://github.com/TartanLlama/optional)
+and [expected](https://github.com/TartanLlama/expected).
+
+The tests are built using [Google Test](https://github.com/google/googletest).
+
+## Requirements
+
+This library has been tested using the following compilers:
+
+Linux:
+
+* GCC 6
+* GCC 7
+* GCC 8
+* Clang 5
+* Clang 6
+
+MacOS:
+
+* Clang 5
+* Clang 6
+
+Windows:
+
+* Visual Studio 2017
 
 ## License
 

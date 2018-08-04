@@ -13,21 +13,33 @@
 #include <skyr/url_error.hpp>
 #include <skyr/url_search_parameters.hpp>
 
-#ifdef NETWORK_URI_MSVC
+#ifdef SKYR_URI_MSVC
 #pragma warning(push)
 #pragma warning(disable : 4251 4231 4660)
 #endif
 
 namespace skyr {
-/// ``type_error`` is thrown when there is an error parsing the URL.
-class type_error : public std::runtime_error {
+/// `url_parse_exception` is thrown when there is an error parsing the URL.
+class url_parse_error : public std::runtime_error {
  public:
   /// Constructor
-  type_error() : runtime_error("Type error") {}
+  /// \param error
+  explicit url_parse_error(url_parse_errc error) noexcept
+    : runtime_error("URL parse exception")
+    , error_(error) {}
+
+  /// \returns
+  url_parse_errc error() const noexcept {
+    return error_;
+  }
+
+ private:
+
+  url_parse_errc error_;
 
 };
 
-/// This class repesents a URL.
+/// This class represents a URL.
 class url {
  public:
 
@@ -44,13 +56,13 @@ class url {
 
   /// Constructor
   /// \param input The input string
-  /// \throws `type_error`
+  /// \throws `url_parse_exception`
   explicit url(std::string input);
 
   /// Constructor
   /// \param input The input string
   /// \param base A base URL
-  /// \throws `type_error`
+  /// \throws `url_parse_exception`
   url(std::string input, skyr::url base);
 
   /// Constructor
@@ -193,12 +205,12 @@ class url {
 
 /// \param input
 /// \returns
-expected<url, url_parse_error> make_url(std::string input) noexcept;
+expected<url, url_parse_errc> make_url(std::string input) noexcept;
 
 /// \param input
 /// \param base
 /// \returns
-expected<url, url_parse_error> make_url(std::string input, url base) noexcept;
+expected<url, url_parse_errc> make_url(std::string input, url base) noexcept;
 
 /// Equality operator
 /// \param lhs

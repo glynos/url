@@ -12,11 +12,8 @@
 
 namespace skyr {
 ///
-struct url_parse_error {
-  ///
-  url_parse_state state;
-  ///
-  std::string parse_until;
+enum class url_parse_errc {
+  failed = 1,
 };
 }  // namespace skyr
 
