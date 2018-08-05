@@ -17,6 +17,11 @@ TEST(ipv4_address_tests, loopback_test) {
   EXPECT_EQ("127.0.0.1", instance.to_string());
 }
 
+TEST(ipv4_address_tests, address_test) {
+  auto instance = skyr::ipv4_address(0x814ff5fc);
+  EXPECT_EQ("129.79.245.252", instance.to_string());
+}
+
 TEST(ipv4_address_tests, parse_zero_test) {
   auto address = std::string("0.0.0.0");
   auto instance = skyr::parse_ipv4_address(address);
@@ -29,4 +34,11 @@ TEST(ipv4_address_tests, parse_loopback_test) {
   auto instance = skyr::parse_ipv4_address(address);
   ASSERT_TRUE(instance);
   EXPECT_EQ(0x7f000001, instance.value().address());
+}
+
+TEST(ipv4_address_tests, parse_address_test) {
+  auto address = std::string("129.79.245.252");
+  auto instance = skyr::parse_ipv4_address(address);
+  ASSERT_TRUE(instance);
+  EXPECT_EQ(0x814ff5fc, instance.value().address());
 }

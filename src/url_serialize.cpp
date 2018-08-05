@@ -23,6 +23,7 @@ std::string serialize_excluding_fragment(
   auto output = url.scheme + ":";
 
   if (url.host) {
+    output += "//";
     if (url.includes_credentials()) {
       output += url.username;
       if (!url.password.empty()) {
@@ -30,14 +31,14 @@ std::string serialize_excluding_fragment(
         output += url.password;
       }
       output += "@";
+    }
 
-      // TODO: serialize host
-      output += url.host.value();
+    // TODO: serialize host
+    output += url.host.value();
 
-      if (url.port) {
-        output += ":";
-        output += std::to_string(url.port.value());
-      }
+    if (url.port) {
+      output += ":";
+      output += std::to_string(url.port.value());
     }
   }
   else if (!url.host && (url.scheme.compare("file") == 0)) {

@@ -141,7 +141,7 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
     view.remove_suffix(1);
     auto ipv6_address = parse_ipv6_address(view);
     if (ipv6_address) {
-      return ipv6_address.value().to_string();
+      return "[" + ipv6_address.value().to_string() + "]";
     }
     else {
       return nullopt;
@@ -569,7 +569,7 @@ url_parse_action url_parser_context::parse_hostname(char c) {
       return url_parse_action::invalid_hostname;
     }
 
-    auto host = parse_host(string_view(buffer), false);
+    auto host = parse_host(string_view(buffer));
     if (!host) {
       return url_parse_action::invalid_hostname;
     }
@@ -846,7 +846,14 @@ url_parse_action url_parser_context::parse_query(char c) {
     url.fragment = std::string();
     state = url_parse_state::fragment;
   } else if (!is_eof()) {
-    details::pct_encode_char(c, std::back_inserter(url.query.value()), " \"#<>");
+    if ((c < '!') ||
+        (c > '~') ||
+        (is_in(c, "\"#<>")) ||
+        ((c == '\'') && url.is_special())) {
+      details::pct_encode_char(c, std::back_inserter(url.query.value()), " \"#<>'");
+    } else {
+      url.query.value().push_back(c);
+    }
   }
   return url_parse_action::increment;
 }

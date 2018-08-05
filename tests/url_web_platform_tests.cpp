@@ -108,7 +108,8 @@ TEST_P(test_parse_urls_using_base_urls, DISABLED_parse_using_constructor) {
 TEST_P(test_parse_urls_using_base_urls, parse_using_make) {
   auto test_case_data = test_case{GetParam()};
   auto instance = skyr::make_url(test_case_data.input, skyr::url(test_case_data.base));
-  ASSERT_TRUE(instance);
+  ASSERT_TRUE(instance)
+    << "Input: [" << test_case_data.input << "] " << static_cast<int>(instance.error());
   EXPECT_EQ(test_case_data.protocol, instance.value().protocol())
             << "Input: [" << test_case_data.input << "]";
   EXPECT_EQ(test_case_data.username, instance.value().username())

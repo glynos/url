@@ -121,7 +121,7 @@ std::string ipv6_address::to_string() const {
     }
   }
 
-  return std::string("[") + output + "]";
+  return output;
 }
 
 optional<ipv6_address> parse_ipv6_address(string_view input) {

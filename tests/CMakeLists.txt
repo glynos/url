@@ -7,24 +7,24 @@
 include_directories(${gtest_SOURCE_DIR}/include)
 
 set(
-  TESTS
-  encoding_tests
-  url_tests
-  url_web_platform_tests
-  url_parse_tests
-  url_search_parameters_tests
-  ipv4_address_tests
-  ipv6_address_tests
-  )
+    TESTS
+    percent_encoding_tests
+    url_tests
+    url_web_platform_tests
+    url_parse_tests
+    url_parsing_example_tests
+    url_search_parameters_tests
+    ipv4_address_tests
+    ipv6_address_tests
+    )
 
 foreach (test ${TESTS})
-  add_executable(${test} ${test}.cpp)
-  add_dependencies(${test} skyr gtest_main)
-  target_link_libraries(${test} ${CMAKE_THREAD_LIBS_INIT} skyr gtest_main)
-  set_target_properties(${test}
-    PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${Skyr_BINARY_DIR}/tests)
-  add_test(${test}
-    ${Skyr_BINARY_DIR}/tests/${test})
+    add_executable(${test} ${test}.cpp)
+    add_dependencies(${test} skyr gtest_main)
+    target_link_libraries(${test} ${CMAKE_THREAD_LIBS_INIT} skyr gtest_main)
+    set_target_properties(${test} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${Skyr_BINARY_DIR}/tests)
+    add_test(${test} ${Skyr_BINARY_DIR}/tests/${test}
+    )
 endforeach (test)
 
 file(GLOB URI_LISTS *.txt *.json)
