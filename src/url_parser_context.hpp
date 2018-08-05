@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef URI_URL_CONTEXT_HPP
-#define URI_URL_CONTEXT_HPP
+#ifndef SKYR_URL_CONTEXT_HPP
+#define SKYR_URL_CONTEXT_HPP
 
 #include <skyr/optional.hpp>
 #include <skyr/string_view.hpp>
@@ -14,12 +14,13 @@
 
 namespace skyr {
 enum class url_parse_action {
+  success = 0,
+  invalid_scheme = 1,
+  invalid_hostname,
+  invalid_port,
   increment,
   continue_,
-  fail,
-  success,
 };
-
 
 class url_parser_context {
 
@@ -72,10 +73,6 @@ class url_parser_context {
     it = it - buffer.size() - 1;
   }
 
-  std::string parsed_until() const {
-    return std::string(begin(view), it);
-  }
-
   url_parse_action parse_scheme_start(char c);
   url_parse_action parse_scheme(char c);
   url_parse_action parse_no_scheme(char c);
@@ -100,4 +97,4 @@ class url_parser_context {
 };
 }  // namespace skyr
 
-#endif //URI_URL_CONTEXT_HPP
+#endif // SKYR_URL_CONTEXT_HPP

@@ -1,5 +1,4 @@
-// Copyright 2012-2018 Glyn Matthews.
-// Copyright 2012 Google, Inc.
+// Copyright 2018 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -45,10 +44,14 @@ url::url(url_record &&input) noexcept
   : url_(input)
   , view_(url_.url) {}
 
+void url::swap(url &other) noexcept {
+  std::swap(url_, other.url_);
+  view_ = string_view(url_.url);
+}
 
 std::string url::href() const {
   using skyr::serialize;
-  return serialize(url_, true);
+  return serialize_excluding_fragment(url_);
 }
 
 void url::set_href(std::string href) {
@@ -67,7 +70,7 @@ void url::set_href(std::string href) {
 
 std::string url::to_json() const {
   using skyr::serialize;
-  return serialize(url_, true);
+  return serialize_excluding_fragment(url_);
 }
 
 std::string url::origin() const { return std::string(); }
@@ -205,7 +208,7 @@ optional<std::uint16_t> url::default_port(const std::string &scheme) noexcept {
   return details::default_port(string_view(scheme));
 }
 
-expected<url, url_parse_errc> make_url(std::string input) noexcept {
+expected<url, url_parse_errc> make_url(std::string input) {
   auto parsed_url = parse(input);
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));
@@ -214,7 +217,7 @@ expected<url, url_parse_errc> make_url(std::string input) noexcept {
   return url(std::move(parsed_url.value()));
 }
 
-expected<url, url_parse_errc> make_url(std::string input, url base) noexcept {
+expected<url, url_parse_errc> make_url(std::string input, url base) {
   auto parsed_url = parse(input, base.record());
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));

@@ -7,8 +7,19 @@
 
 namespace skyr {
 std::string serialize(
-    const url_record &url,
-    bool exclude_fragment) {
+    const url_record &url) {
+  auto output = serialize_excluding_fragment(url);
+
+  if (url.fragment) {
+    output += "#";
+    output += url.fragment.value();
+  }
+
+  return output;
+}
+
+std::string serialize_excluding_fragment(
+    const url_record &url) {
   auto output = url.scheme + ":";
 
   if (url.host) {
@@ -46,11 +57,6 @@ std::string serialize(
   if (url.query) {
     output += "?";
     output += url.query.value();
-  }
-
-  if (!exclude_fragment && url.fragment) {
-    output += "#";
-    output += url.fragment.value();
   }
 
   return output;

@@ -114,7 +114,7 @@ optional<std::string> parse_opaque_host(string_view input) {
   auto output = std::string();
   for (auto c : input) {
     details::pct_encode_char(c, back_inserter(output));
-    }
+  }
 
   return output;
 }
@@ -186,9 +186,7 @@ bool is_valid_port(string_view port) noexcept {
   }
 
   auto first = begin(port);
-  auto it = first;
-
-  const char* port_first = std::addressof(*it);
+  const char* port_first = std::addressof(*first);
   char* port_last = 0;
   auto value = std::strtoul(port_first, &port_last, 10);
   return
@@ -293,7 +291,7 @@ url_parse_action url_parser_context::parse_scheme_start(char c) {
     return url_parse_action::continue_;
   } else {
     validation_error = true;
-    return url_parse_action::fail;
+    return url_parse_action::invalid_scheme;
   }
 
   return url_parse_action::increment;
@@ -306,19 +304,19 @@ url_parse_action url_parser_context::parse_scheme(char c) {
   } else if (c == ':') {
     if (state_override) {
       if (url.is_special() && !details::is_special(string_view(buffer))) {
-        return url_parse_action::fail;
+        return url_parse_action::invalid_scheme;
       }
 
       if (!url.is_special() && details::is_special(string_view(buffer))) {
-        return url_parse_action::fail;
+        return url_parse_action::invalid_scheme;
       }
 
       if ((url.includes_credentials() || url.port) &&(buffer.compare("file") == 0)) {
-        return url_parse_action::fail;
+        return url_parse_action::invalid_scheme;
       }
 
       if ((url.scheme.compare("file") == 0) && (!url.host || url.host.value().empty())) {
-        return url_parse_action::fail;
+        return url_parse_action::invalid_scheme;
       }
     }
 
@@ -359,7 +357,7 @@ url_parse_action url_parser_context::parse_scheme(char c) {
 url_parse_action url_parser_context::parse_no_scheme(char c) {
   if (!base || (base.value().cannot_be_a_base_url && (c != '#'))) {
     validation_error = true;
-    return url_parse_action::fail;
+    return url_parse_action::invalid_scheme;
   } else if (base.value().cannot_be_a_base_url && (c == '#')) {
     url.scheme = base.value().scheme;
     url.path = base.value().path;
@@ -527,7 +525,7 @@ url_parse_action url_parser_context::parse_authority(char c) {
           (url.is_special() && (c == '\\'))) {
     if (at_flag && buffer.empty()) {
       validation_error = true;
-      return url_parse_action::fail;
+      return url_parse_action::invalid_hostname;
     }
     restart_from_buffer();
     state = url_parse_state::host;
@@ -547,12 +545,12 @@ url_parse_action url_parser_context::parse_hostname(char c) {
   } else if ((c == ':') && !square_braces_flag) {
     if (buffer.empty()) {
       validation_error = true;
-      return url_parse_action::fail;
+      return url_parse_action::invalid_hostname;
     }
 
     auto host = parse_host(string_view(buffer), false);
     if (!host) {
-      return url_parse_action::fail;
+      return url_parse_action::invalid_hostname;
     }
     url.host = host.value();
     buffer.clear();
@@ -568,12 +566,12 @@ url_parse_action url_parser_context::parse_hostname(char c) {
 
     if (url.is_special() && buffer.empty()) {
       validation_error = true;
-      return url_parse_action::fail;
+      return url_parse_action::invalid_hostname;
     }
 
     auto host = parse_host(string_view(buffer), false);
     if (!host) {
-      return url_parse_action::fail;
+      return url_parse_action::invalid_hostname;
     }
     url.host = host.value();
     buffer.clear();
@@ -599,7 +597,7 @@ url_parse_action url_parser_context::parse_port(char c) {
     if (!buffer.empty()) {
       if (!is_valid_port(string_view(buffer))) {
         validation_error = true;
-        return url_parse_action::fail;
+        return url_parse_action::invalid_port;
       }
 
       auto view = string_view(url.scheme.data(), url.scheme.length());
@@ -621,7 +619,7 @@ url_parse_action url_parser_context::parse_port(char c) {
     state = url_parse_state::path_start;
   } else {
     validation_error = true;
-    return url_parse_action::fail;
+    return url_parse_action::invalid_port;
   }
 
   return url_parse_action::increment;
@@ -713,7 +711,7 @@ url_parse_action url_parser_context::parse_file_host(char c) {
     } else {
       auto host = parse_host(string_view(buffer), !url.is_special());
       if (!host) {
-        return url_parse_action::fail;
+        return url_parse_action::invalid_hostname;
       }
 
       if (host.value() == "localhost") {

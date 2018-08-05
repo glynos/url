@@ -9,23 +9,28 @@
 #include <string>
 #include <skyr/string_view.hpp>
 #include <skyr/expected.hpp>
+#include <skyr/optional.hpp>
 
 namespace skyr {
 /// Represents an IPv4 address.
 class ipv4_address {
 
-  unsigned int repr_;
+  unsigned int address_;
 
  public:
 
   /// Constructor
   ipv4_address()
-      : repr_(0) {}
+      : address_(0) {}
 
    /// Constructor
    /// \param address
   explicit ipv4_address(unsigned int address)
-      : repr_(address) {}
+      : address_(address) {}
+
+  unsigned int address() const noexcept {
+    return address_;
+  }
 
   /// \returns The address as a string.
   std::string to_string() const;
@@ -45,6 +50,10 @@ expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input);
 /// \param input
 /// \returns
 optional<ipv4_address> parse_ipv4_address(string_view input);
+
+/// \param input
+/// \returns
+optional<ipv4_address> parse_ipv4_address(std::string input);
 }  // namespace skyr
 
 #endif //SKYR_IPV4_ADDRESS_INC

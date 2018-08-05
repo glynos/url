@@ -12,11 +12,15 @@
 namespace skyr {
 /// This function serializes a URL record according to the WhatWG URL spec.
 /// \param url A URL record
-/// \param exclude_fragment Indicates whether to exclude the URL fragment or not
 /// \returns A serialized URL string
 std::string serialize(
-    const url_record &url,
-    bool exclude_fragment = false);
+    const url_record &url);
+
+/// This function serializes a URL record according to the WhatWG URL spec.
+/// \param url A URL record
+/// \returns A serialized URL string
+std::string serialize_excluding_fragment(
+    const url_record &url);
 }  // namespace skyr
 
 #endif  // SKYR_URL_SERIALIZE_INC

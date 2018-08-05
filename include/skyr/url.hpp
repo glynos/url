@@ -25,7 +25,7 @@ class url_parse_error : public std::runtime_error {
   /// Constructor
   /// \param error
   explicit url_parse_error(url_parse_errc error) noexcept
-    : runtime_error("URL parse exception")
+    : runtime_error("URL parse error")
     , error_(error) {}
 
   /// \returns
@@ -64,6 +64,10 @@ class url {
   /// \param base A base URL
   /// \throws `url_parse_exception`
   url(std::string input, skyr::url base);
+
+  ///
+  /// \param other
+  void swap(url &other) noexcept;
 
   /// Constructor
   /// \param input A URL record
@@ -205,12 +209,12 @@ class url {
 
 /// \param input
 /// \returns
-expected<url, url_parse_errc> make_url(std::string input) noexcept;
+expected<url, url_parse_errc> make_url(std::string input);
 
 /// \param input
 /// \param base
 /// \returns
-expected<url, url_parse_errc> make_url(std::string input, url base) noexcept;
+expected<url, url_parse_errc> make_url(std::string input, url base);
 
 /// Equality operator
 /// \param lhs

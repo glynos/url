@@ -18,7 +18,7 @@ optional<std::uint64_t> parse_ipv4_number(
     bool &validation_error_flag) {
   auto R = 10;
 
-  if ((input.size() >= 2) && (input[0] == '0') && (std::tolower(input[1], std::locale("C")) == 'x')) {
+  if ((input.size() >= 2) && (input[0] == '0') && (std::tolower(input[1], std::locale::classic()) == 'x')) {
     input = input.substr(2);
     R = 16;
   }
@@ -44,7 +44,7 @@ optional<std::uint64_t> parse_ipv4_number(
 std::string ipv4_address::to_string() const {
   auto output = std::string();
 
-  auto n = repr_;
+  auto n = address_;
 
   for (auto i = 1U; i <= 4U; ++i) {
     output = std::to_string(n % 256) + output;
@@ -146,5 +146,9 @@ optional<ipv4_address> parse_ipv4_address(string_view input) {
     return nullopt;
   }
   return result.value();
+}
+
+optional<ipv4_address> parse_ipv4_address(std::string input) {
+  return parse_ipv4_address(string_view(input));
 }
 }  // namespace skyr

@@ -20,7 +20,7 @@ namespace details {
 /// \param base An optional base URL
 /// \param url An optional `url_record`
 /// \param state_override
-/// \returns A `url_record` on success
+/// \returns A `url_record` on success and an error code on failure.
 expected<url_record, url_parse_errc> basic_parse(
     std::string input,
     const optional<url_record> &base = nullopt,
@@ -31,7 +31,7 @@ expected<url_record, url_parse_errc> basic_parse(
 /// Parses a URL and returns a `url_record`.
 /// \param input The input string that will be parsed
 /// \param base An optional base URL
-/// \returns A `url_record` on success
+/// \returns A `url_record` on success and an error code on failure.
 expected<url_record, url_parse_errc> parse(
     std::string input,
     const optional<url_record> &base = nullopt);

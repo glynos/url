@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <iterator>
 #include <skyr/string_view.hpp>
+#include <skyr/optional.hpp>
 
 namespace skyr {
 ///

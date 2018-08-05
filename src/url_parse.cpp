@@ -113,14 +113,16 @@ expected<url_record, url_parse_errc> basic_parse(
     auto func = parse_funcs[context.state];
     auto action = func(context, *context.it);
     switch (action) {
+      case url_parse_action::success:
+        return context.url;
       case url_parse_action::increment:
         break;
       case url_parse_action::continue_:
         continue;
-      case url_parse_action::fail:
-        return make_unexpected(url_parse_errc::failed);
-      case url_parse_action::success:
-        return context.url;
+      case url_parse_action::invalid_scheme:
+      case url_parse_action::invalid_hostname:
+      case url_parse_action::invalid_port:
+        return make_unexpected(url_parse_errc(static_cast<int>(action)));
     }
 
     if (context.is_eof()) {

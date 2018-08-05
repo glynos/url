@@ -14,27 +14,51 @@
 #include <skyr/url.hpp>
 
 TEST(url_tests, construct_invalid_url) {
-  EXPECT_THROW(skyr::url("I am not a valid url."), skyr::type_error);
+  EXPECT_THROW(skyr::url("I am not a valid url."), skyr::url_parse_error);
+}
+
+TEST(url_tests, construct_invalid_url_make) {
+  EXPECT_FALSE(skyr::make_url("I am not a valid url."));
 }
 
 TEST(url_tests, construct_url_from_char_array) {
   EXPECT_NO_THROW(skyr::url("http://www.example.com/"));
 }
 
+TEST(url_tests, construct_url_from_char_array_make) {
+  EXPECT_TRUE(skyr::make_url("http://www.example.com/"));
+}
+
 TEST(url_tests, construct_url_starting_with_ipv4_like) {
   EXPECT_NO_THROW(skyr::url("http://198.51.100.0.example.com/"));
+}
+
+TEST(url_tests, construct_url_starting_with_ipv4_like_make) {
+  EXPECT_TRUE(skyr::make_url("http://198.51.100.0.example.com/"));
 }
 
 TEST(url_tests, construct_url_starting_with_ipv4_like_glued) {
   ASSERT_NO_THROW(skyr::url("http://198.51.100.0example.com/"));
 }
 
+TEST(url_tests, construct_url_starting_with_ipv4_like_glued_make) {
+  ASSERT_TRUE(skyr::make_url("http://198.51.100.0example.com/"));
+}
+
 TEST(url_tests, construct_url_like_short_ipv4) {
   EXPECT_NO_THROW(skyr::url("http://198.51.100/"));
 }
 
+TEST(url_tests, construct_url_like_short_ipv4_make) {
+  EXPECT_TRUE(skyr::make_url("http://198.51.100/"));
+}
+
 TEST(url_tests, construct_url_like_long_ipv4) {
   EXPECT_NO_THROW(skyr::url("http://198.51.100.0.255/"));
+}
+
+TEST(url_tests, construct_url_like_long_ipv4_make) {
+  EXPECT_TRUE(skyr::make_url("http://198.51.100.0.255/"));
 }
 
 //TEST(url_tests, construct_url_from_wchar_t_array) {
@@ -42,7 +66,13 @@ TEST(url_tests, construct_url_like_long_ipv4) {
 //}
 
 TEST(url_tests, construct_url_from_string) {
-  EXPECT_NO_THROW(skyr::url(std::string("http://www.example.com/")));
+  auto input = std::string("http://www.example.com/");
+  EXPECT_NO_THROW(skyr::url(input));
+}
+
+TEST(url_tests, construct_url_from_string_make) {
+  auto input = std::string("http://www.example.com/");
+  EXPECT_TRUE(skyr::make_url(input));
 }
 
 //TEST(url_tests, construct_url_from_wstring) {
@@ -375,7 +405,7 @@ TEST(url_tests, git) {
 }
 
 TEST(url_tests, invalid_port_test) {
-  EXPECT_THROW(skyr::url("http://123.34.23.56:6662626/"), skyr::type_error);
+  EXPECT_THROW(skyr::url("http://123.34.23.56:6662626/"), skyr::url_parse_error);
 }
 
 TEST(url_tests, valid_empty_port_test) {
@@ -392,15 +422,15 @@ TEST(url_tests, nonspecial_url_with_one_slash) {
 }
 
 TEST(url_tests, url_begins_with_a_colon) {
-  EXPECT_THROW(skyr::url("://example.com"), skyr::type_error);
+  EXPECT_THROW(skyr::url("://example.com"), skyr::url_parse_error);
 }
 
 TEST(url_tests, url_begins_with_a_number) {
-  EXPECT_THROW(skyr::url("3http://example.com"), skyr::type_error);
+  EXPECT_THROW(skyr::url("3http://example.com"), skyr::url_parse_error);
 }
 
 TEST(url_tests, url_scheme_contains_an_invalid_character) {
-  EXPECT_THROW(skyr::url("ht%tp://example.com"), skyr::type_error);
+  EXPECT_THROW(skyr::url("ht%tp://example.com"), skyr::url_parse_error);
 }
 
 TEST(url_tests, path_no_double_slash) {
@@ -414,11 +444,11 @@ TEST(url_tests, path_has_double_slash) {
 }
 
 TEST(url_tests, url_has_host_bug_87) {
-  EXPECT_THROW(skyr::url("http://"), skyr::type_error);
+  EXPECT_THROW(skyr::url("http://"), skyr::url_parse_error);
 }
 
 TEST(url_tests, url_has_host_bug_87_2) {
-  EXPECT_THROW(skyr::url("http://user@"), skyr::type_error);
+  EXPECT_THROW(skyr::url("http://user@"), skyr::url_parse_error);
 }
 
 TEST(url_tests, http_scheme_is_special) {
@@ -491,4 +521,16 @@ TEST(url_tests, percent_encoding_fools_parser_3) {
   EXPECT_EQ("http:", instance.protocol());
   EXPECT_EQ("xx..yy.invalid", instance.host());
   EXPECT_EQ("/", instance.pathname());
+}
+
+TEST(url_tests, web_platform_tests_42) {
+  auto base = skyr::url("http://example.org/foo/bar");
+  auto instance = skyr::url("http://foo.com/\\@", base);
+  EXPECT_EQ("//@", instance.pathname());
+}
+
+TEST(url_tests, web_platform_tests_123) {
+  auto base = skyr::url("about:blank");
+  auto instance = skyr::url("http://example.com////../..", base);
+  EXPECT_EQ("//", instance.pathname());
 }

@@ -4,7 +4,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 
-include_directories( ${gtest_SOURCE_DIR}/include)
+include_directories(${gtest_SOURCE_DIR}/include)
 
 set(
   TESTS
@@ -13,6 +13,8 @@ set(
   url_web_platform_tests
   url_parse_tests
   url_search_parameters_tests
+  ipv4_address_tests
+  ipv6_address_tests
   )
 
 foreach (test ${TESTS})
