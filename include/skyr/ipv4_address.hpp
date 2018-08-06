@@ -12,7 +12,7 @@
 #include <skyr/optional.hpp>
 
 namespace skyr {
-/// Represents an IPv4 address.
+/// This lass represents an IPv4 address.
 class ipv4_address {
 
   unsigned int address_;

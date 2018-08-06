@@ -14,34 +14,36 @@
 #include <skyr/optional.hpp>
 
 namespace skyr {
-///
+/// This class represents in IPv6 address.
 class ipv6_address {
 
-  std::array<unsigned short, 8> repr_;
+  std::array<unsigned short, 8> address_;
 
-  using repr_type = decltype(repr_);
+  using repr_type = decltype(address_);
 
  public:
 
   /// Constructor
   ipv6_address()
-      : repr_() {
-    std::fill(std::begin(repr_), std::end(repr_), 0);
-  }
+      : address_{{0, 0, 0, 0, 0, 0, 0, 0}} {}
 
   /// Constructor
-  /// \param repr
-  explicit ipv6_address(std::array<unsigned short, 8> repr)
-      : repr_(repr) {}
+  /// \param address
+  explicit ipv6_address(std::array<unsigned short, 8> address)
+      : address_(address) {}
 
-   /// \returns
+   /// \returns The IPv4 address as a string.
   std::string to_string() const;
 
 };
 
 /// \param input
-/// \param returns
+/// \returns
 optional<ipv6_address> parse_ipv6_address(string_view input);
+
+/// \param input
+/// \returns
+optional<ipv6_address> parse_ipv6_address(std::string input);
 }  // namespace skyr
 
 #endif //SKYR_IPV6_ADDRESS_INC

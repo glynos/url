@@ -47,6 +47,7 @@ url::url(url_record &&input) noexcept
 void url::swap(url &other) noexcept {
   std::swap(url_, other.url_);
   view_ = string_view(url_.url);
+  other.view_ = string_view(other.url_.url);
 }
 
 std::string url::href() const {
@@ -54,10 +55,10 @@ std::string url::href() const {
   return serialize_excluding_fragment(url_);
 }
 
-void url::set_href(std::string href) {
+url_parse_errc url::set_href(std::string href) {
   auto parsed_url = details::basic_parse(href);
   if (!parsed_url) {
-    throw url_parse_error(parsed_url.error());
+    return parsed_url.error();
   }
 
   url_ = parsed_url.value();
@@ -66,6 +67,8 @@ void url::set_href(std::string href) {
   if (url_.query) {
     parameters_ = url_search_parameters(url_.query.value());
   }
+
+  return url_parse_errc::success;
 }
 
 std::string url::to_json() const {
@@ -77,20 +80,20 @@ std::string url::origin() const { return std::string(); }
 
 std::string url::protocol() const { return url_.scheme + ":"; }
 
-void url::set_protocol(const std::string protocol) {
-  return;
+url_parse_errc url::set_protocol(const std::string protocol) {
+  return url_parse_errc::success;
 }
 
 std::string url::username() const { return url_.username; }
 
-void url::set_username(std::string username) {
-  return;
+url_parse_errc url::set_username(std::string username) {
+  return url_parse_errc::success;
 }
 
 std::string url::password() const { return url_.password; }
 
-void url::set_password(std::string password) {
-  return;
+url_parse_errc url::set_password(std::string password) {
+  return url_parse_errc::success;
 }
 
 std::string url::host() const {
@@ -105,8 +108,8 @@ std::string url::host() const {
   return url_.host.value() + ":" + std::to_string(url_.port.value());
 }
 
-void url::set_host(std::string host) {
-  return;
+url_parse_errc url::set_host(std::string host) {
+  return url_parse_errc::success;
 }
 
 std::string url::hostname() const {
@@ -117,8 +120,8 @@ std::string url::hostname() const {
   return url_.host.value();
 }
 
-void url::set_hostname(std::string hostname) {
-  return;
+url_parse_errc url::set_hostname(std::string hostname) {
+  return url_parse_errc::success;
 }
 
 std::string url::port() const {
@@ -129,8 +132,8 @@ std::string url::port() const {
   return std::to_string(url_.port.value());
 }
 
-void url::set_port(std::string port) {
-  return;
+url_parse_errc url::set_port(std::string port) {
+  return url_parse_errc::success;
 }
 
 void url::set_port(std::uint16_t) {

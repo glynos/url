@@ -13,6 +13,7 @@
 namespace skyr {
 ///
 enum class url_parse_errc {
+  success=0,
   invalid_scheme=1,
   invalid_hostname,
   invalid_port,

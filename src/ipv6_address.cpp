@@ -57,7 +57,7 @@ std::string ipv6_address::to_string() const {
   auto sequences = std::vector<std::pair<size_t, size_t>>();
   auto in_sequence = false;
 
-  auto first = std::begin(repr_), last = std::end(repr_);
+  auto first = std::begin(address_), last = std::end(address_);
   auto it = first;
   while (true) {
     if (*it == 0) {
@@ -99,7 +99,7 @@ std::string ipv6_address::to_string() const {
 
   auto ignore0 = false;
   for (auto i = 0UL; i <= 7UL; ++i) {
-    if (ignore0 && (repr_[i] == 0)) {
+    if (ignore0 && (address_[i] == 0)) {
       continue;
     } else if (ignore0) {
       ignore0 = false;
@@ -113,7 +113,7 @@ std::string ipv6_address::to_string() const {
     }
 
     std::ostringstream oss;
-    oss << std::hex << repr_[i];
+    oss << std::hex << address_[i];
     output += oss.str();
 
     if (i != 7) {
@@ -265,5 +265,9 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
   }
 
   return ipv6_address(address);
+}
+
+optional<ipv6_address> parse_ipv6_address(std::string input) {
+  return parse_ipv6_address(string_view(input));
 }
 }  // namespace skyr

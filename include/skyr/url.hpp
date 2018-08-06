@@ -65,19 +65,19 @@ class url {
   /// \throws `url_parse_exception`
   url(std::string input, skyr::url base);
 
-  ///
-  /// \param other
-  void swap(url &other) noexcept;
-
   /// Constructor
   /// \param input A URL record
   explicit url(url_record &&input) noexcept;
+
+  ///
+  /// \param other
+  void swap(url &other) noexcept;
 
   /// \returns
   std::string href() const;
 
   /// \param href
-  void set_href(std::string href);
+  url_parse_errc set_href(std::string href);
 
   /// \returns
   std::string to_json() const;
@@ -89,31 +89,31 @@ class url {
   std::string protocol() const;
 
   /// \param protocol
-  void set_protocol(std::string protocol);
+  url_parse_errc set_protocol(std::string protocol);
 
   /// \returns
   std::string username() const;
 
   /// \param username
-  void set_username(std::string username);
+  url_parse_errc set_username(std::string username);
 
   /// \returns
   std::string password() const;
 
   /// \param password
-  void set_password(std::string password);
+  url_parse_errc set_password(std::string password);
 
   /// \returns
   std::string host() const;
 
   /// \param host
-  void set_host(std::string host);
+  url_parse_errc set_host(std::string host);
 
   /// \returns
   std::string hostname() const;
 
   /// \param hostname
-  void set_hostname(std::string hostname);
+  url_parse_errc set_hostname(std::string hostname);
 
   /// \returns
   std::string port() const;
@@ -128,7 +128,7 @@ class url {
   }
 
   /// \param port
-  void set_port(std::string port);
+  url_parse_errc set_port(std::string port);
 
   /// \param port
   void set_port(std::uint16_t port);
