@@ -106,5 +106,16 @@ expected<std::string, domain_errc> unicode_to_ascii(
 
   return ascii_domain;
 }
+
+expected<std::string, domain_errc> domain_to_ascii(
+    string_view domain,
+    bool be_strict) {
+  auto result = unicode_to_ascii(
+      domain, false, true, true, be_strict, false, be_strict);
+  if (!result) {
+    // validation error
+  }
+  return result;
+}
 }  // namespace details
 }  // namespace skyr

@@ -26,8 +26,8 @@ set(Skyr_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/expected.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/string_view.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/config.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/details/decode.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/details/encode.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/details/percent_decode.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/details/percent_encode.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/details/translate.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_parse_state.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_record.hpp

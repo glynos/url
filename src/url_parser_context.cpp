@@ -14,8 +14,8 @@
 #include "url_parser_context.hpp"
 #include "domain.hpp"
 #include "url_schemes.hpp"
-#include "skyr/details/encode.hpp"
-#include "skyr/details/decode.hpp"
+#include "skyr/details/percent_encode.hpp"
+#include "skyr/details/percent_decode.hpp"
 #include "skyr/url_parse_state.hpp"
 #include "skyr/ipv6_address.hpp"
 
@@ -119,12 +119,6 @@ optional<std::string> parse_opaque_host(string_view input) {
   return output;
 }
 
-std::string domain_to_ascii(string_view domain, bool be_strict = true) {
-  auto ascii_domain = details::unicode_to_ascii(
-      domain, true, true, true, true, true, true);
-  return ascii_domain.value();
-}
-
 optional<std::string> parse_host(string_view input, bool is_not_special = false) {
   if (input.front() == '[') {
     if (input.back() != ']') {
@@ -149,27 +143,32 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
   }
 
   auto domain = std::string{};
-  auto result = details::pct_decode(begin(input), end(input), std::back_inserter(domain));
+  auto result = details::pct_decode(
+      begin(input), end(input), std::back_inserter(domain));
   if (!result) {
     // result.validation_error = true;
     return nullopt;
   }
 
-  auto ascii_domain = domain_to_ascii(string_view(domain));
+  auto ascii_domain = details::domain_to_ascii(string_view(domain));
+  if (!ascii_domain) {
+    return nullopt;
+  }
 
-  auto it = std::find_if(begin(ascii_domain), end(ascii_domain), is_forbidden_host_point);
-  if (it != end(ascii_domain)) {
+  auto it = std::find_if(
+      begin(ascii_domain.value()), end(ascii_domain.value()), is_forbidden_host_point);
+  if (it != end(ascii_domain.value())) {
     // result.validation_error = true;
     return nullopt;
   }
 
-  auto host = details::parse_ipv4_address(string_view(ascii_domain));
+  auto host = parse_ipv4_address(string_view(ascii_domain.value()));
   if (!host) {
-    if (host.error() == details::ipv4_address_errc::valid_domain) {
-      return ascii_domain;
+    if (host.error() == ipv4_address_errc::invalid) {
+      return nullopt;
     }
     else {
-      return nullopt;
+      return ascii_domain.value();
     }
   }
   return host.value().to_string();

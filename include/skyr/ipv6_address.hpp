@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <iterator>
 #include <skyr/string_view.hpp>
-#include <skyr/optional.hpp>
+#include <skyr/expected.hpp>
 
 namespace skyr {
 /// This class represents in IPv6 address.
@@ -37,13 +37,17 @@ class ipv6_address {
 
 };
 
-/// \param input
-/// \returns
-optional<ipv6_address> parse_ipv6_address(string_view input);
+enum class ipv6_address_errc {
+  invalid,
+};
 
 /// \param input
 /// \returns
-optional<ipv6_address> parse_ipv6_address(std::string input);
+expected<ipv6_address, ipv6_address_errc > parse_ipv6_address(string_view input);
+
+/// \param input
+/// \returns
+expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(std::string input);
 }  // namespace skyr
 
 #endif //SKYR_IPV6_ADDRESS_INC

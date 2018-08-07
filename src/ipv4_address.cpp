@@ -13,7 +13,7 @@
 
 namespace skyr {
 namespace {
-optional<std::uint64_t> parse_ipv4_number(
+expected<std::uint64_t, ipv4_address_errc> parse_ipv4_number(
     string_view input,
     bool &validation_error_flag) {
   auto R = 10;
@@ -36,7 +36,7 @@ optional<std::uint64_t> parse_ipv4_number(
     return number;
   }
   catch (std::exception &) {
-    return nullopt;
+    return make_unexpected(ipv4_address_errc::invalid_segment_number);
   }
 }
 }  // namespace
@@ -59,7 +59,6 @@ std::string ipv4_address::to_string() const {
   return output;
 }
 
-namespace details {
 expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input) {
   auto validation_error_flag = false;
 
@@ -81,19 +80,19 @@ expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input) 
   }
 
   if (parts.size() > 4) {
-    return skyr::make_unexpected(ipv4_address_errc::valid_domain);
+    return skyr::make_unexpected(ipv4_address_errc::more_than_4_segments);
   }
 
   auto numbers = std::vector<std::uint64_t>();
 
   for (const auto &part : parts) {
     if (part.empty()) {
-      return skyr::make_unexpected(ipv4_address_errc::valid_domain);
+      return skyr::make_unexpected(ipv4_address_errc::empty_part);
     }
 
     auto number = parse_ipv4_number(string_view(part), validation_error_flag);
     if (!number) {
-      return skyr::make_unexpected(ipv4_address_errc::valid_domain);
+      return skyr::make_unexpected(ipv4_address_errc::invalid_segment_number);
     }
 
     numbers.push_back(number.value());
@@ -138,17 +137,8 @@ expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input) 
 
   return {ipv4_address(ipv4)};
 }
-}  // namespace details
 
-optional<ipv4_address> parse_ipv4_address(string_view input) {
-  auto result = details::parse_ipv4_address(input);
-  if (!result) {
-    return nullopt;
-  }
-  return result.value();
-}
-
-optional<ipv4_address> parse_ipv4_address(std::string input) {
+expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(std::string input) {
   return parse_ipv4_address(string_view(input));
 }
 }  // namespace skyr

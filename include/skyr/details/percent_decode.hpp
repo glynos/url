@@ -38,7 +38,7 @@ inline expected<char, decode_errc> letter_to_hex(char in) {
   return make_unexpected(decode_errc::non_hex_input);
 }
 
-expected<char, decode_errc> pct_decode_char(string_view input) {
+inline expected<char, decode_errc> pct_decode_char(string_view input) {
   assert((input.size() >= 3) && (input.front() == '%'));
 
   auto it = begin(input);
@@ -88,11 +88,11 @@ expected<OutputIterator, decode_errc> pct_decode(
   return out;
 }
 
-inline expected<std::string, decode_errc> pct_decode(string_view input) {
-  auto result = std::string{};
-  pct_decode(begin(input), end(input), std::back_inserter(result));
-  return result;
-}
+//inline expected<std::string, decode_errc> pct_decode(string_view input) {
+//  auto result = std::string{};
+//  pct_decode(begin(input), end(input), std::back_inserter(result));
+//  return result;
+//}
 }  // namespace details
 }  // namespace skyr
 

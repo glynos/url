@@ -32,6 +32,11 @@ expected<std::string, domain_errc> unicode_to_ascii(
     bool use_std3_ascii_rules,
     bool transitional_processing,
     bool verify_dns_length);
+
+
+expected<std::string, domain_errc> domain_to_ascii(
+    string_view domain,
+    bool be_strict = true);
 }  // namespace details
 }  // namespace skyr
 

@@ -37,23 +37,20 @@ class ipv4_address {
 
 };
 
-/// \exclude
-namespace details {
 enum class ipv4_address_errc {
-  valid_domain,
+  more_than_4_segments,
+  empty_part,
+  invalid_segment_number,
   invalid,
 };
 
+/// \param input
+/// \returns
 expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input);
-}  // namespace details
 
 /// \param input
 /// \returns
-optional<ipv4_address> parse_ipv4_address(string_view input);
-
-/// \param input
-/// \returns
-optional<ipv4_address> parse_ipv4_address(std::string input);
+expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(std::string input);
 }  // namespace skyr
 
 #endif //SKYR_IPV4_ADDRESS_INC

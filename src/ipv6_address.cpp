@@ -124,7 +124,7 @@ std::string ipv6_address::to_string() const {
   return output;
 }
 
-optional<ipv6_address> parse_ipv6_address(string_view input) {
+expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) {
   auto address = std::array<unsigned short, 8>{};
   // auto validation_error = false;
 
@@ -137,7 +137,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
   if (*it == ':') {
     if (!starts_with(it, last, ":")) {
       // validation_error = true;
-      return nullopt;
+      return make_unexpected(ipv6_address_errc::invalid);
     }
 
     it += 2;
@@ -148,13 +148,13 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
   while (it != last) {
     if (piece_index == 8) {
       // validation_error = true;
-      return nullopt;
+      return make_unexpected(ipv6_address_errc::invalid);
     }
 
     if (*it == ':') {
       if (compress) {
         // validation_error = true;
-        return nullopt;
+        return make_unexpected(ipv6_address_errc::invalid);
       }
 
       ++it;
@@ -175,14 +175,14 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
     if (*it == '.') {
       if (length == 0) {
         // validation_error = true;
-        return nullopt;
+        return make_unexpected(ipv6_address_errc::invalid);
       }
 
       it -= length;
 
       if (piece_index > 6) {
         // validation_error = true;
-        return nullopt;
+        return make_unexpected(ipv6_address_errc::invalid);
       }
 
       auto numbers_seen = 0;
@@ -195,13 +195,13 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
             ++it;
           } else {
             // validation_error = true;
-            return nullopt;
+            return make_unexpected(ipv6_address_errc::invalid);
           }
         }
 
         if (!std::isdigit(*it, std::locale::classic())) {
           // validation_error = true;
-          return nullopt;
+          return make_unexpected(ipv6_address_errc::invalid);
         }
 
         while (std::isdigit(*it, std::locale::classic())) {
@@ -210,14 +210,14 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
             ipv4_piece = number;
           } else if (ipv4_piece.value() == 0) {
             // validation_error = true;
-            return nullopt;
+            return make_unexpected(ipv6_address_errc::invalid);
           } else {
             ipv4_piece = ipv4_piece.value() * std::uint16_t(10) + number;
           }
 
           if (ipv4_piece.value() > 255) {
             // validation_error = true;
-            return nullopt;
+            return make_unexpected(ipv6_address_errc::invalid);
           }
 
           ++it;
@@ -233,7 +233,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
 
       if (numbers_seen != 4) {
         // validation_error = true;
-        return nullopt;
+        return make_unexpected(ipv6_address_errc::invalid);
       }
 
       break;
@@ -241,11 +241,11 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
       ++it;
       if (it == last) {
         // validation_error = true;
-        return nullopt;
+        return make_unexpected(ipv6_address_errc::invalid);
       }
     } else if (it != last) {
       // validation_error = true;
-      return nullopt;
+      return make_unexpected(ipv6_address_errc::invalid);
     }
     address[piece_index] = value;
     ++piece_index;
@@ -261,13 +261,13 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
     }
   } else if (!compress && (piece_index != 8)) {
     // validation_error = true;
-    return nullopt;
+    return make_unexpected(ipv6_address_errc::invalid);
   }
 
   return ipv6_address(address);
 }
 
-optional<ipv6_address> parse_ipv6_address(std::string input) {
+expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(std::string input) {
   return parse_ipv6_address(string_view(input));
 }
 }  // namespace skyr
