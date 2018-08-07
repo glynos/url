@@ -8,9 +8,11 @@
 #ifndef SKYR_URL_DETAILS_DECODE_INC
 #define SKYR_URL_DETAILS_DECODE_INC
 
-#include <skyr/expected.hpp>
 #include <iterator>
 #include <cassert>
+#include <string>
+#include <skyr/expected.hpp>
+#include <skyr/string_view.hpp>
 
 namespace skyr {
 namespace details {
@@ -36,10 +38,10 @@ inline expected<char, decode_errc> letter_to_hex(char in) {
   return make_unexpected(decode_errc::non_hex_input);
 }
 
-template <class InputIterator>
-expected<char, decode_errc> pct_decode_char(InputIterator &it) {
-  assert(*it == '%');
+expected<char, decode_errc> pct_decode_char(string_view input) {
+  assert((input.size() >= 3) && (input.front() == '%'));
 
+  auto it = begin(input);
   ++it;
   auto h0 = *it;
   if (h0 >= '8') {
@@ -59,7 +61,6 @@ expected<char, decode_errc> pct_decode_char(InputIterator &it) {
     return v1;
   }
 
-  ++it;
   return static_cast<char>((0x10 * v0.value()) + v1.value());
 }
 
@@ -73,17 +74,24 @@ expected<OutputIterator, decode_errc> pct_decode(
         out++ = *it;
         return out;
       }
-      auto c = pct_decode_char(it);
+      auto c = pct_decode_char(string_view(std::addressof(*it), 3));
       if (!c) {
         return make_unexpected(std::move(c.error()));
       }
       out = c.value();
       ++out;
+      it += 3;
     } else {
       *out++ = *it++;
     }
   }
   return out;
+}
+
+inline expected<std::string, decode_errc> pct_decode(string_view input) {
+  auto result = std::string{};
+  pct_decode(begin(input), end(input), std::back_inserter(result));
+  return result;
 }
 }  // namespace details
 }  // namespace skyr

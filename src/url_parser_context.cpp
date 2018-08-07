@@ -12,9 +12,10 @@
 #include <array>
 #include <locale>
 #include "url_parser_context.hpp"
+#include "domain.hpp"
 #include "url_schemes.hpp"
-#include "skyr/url/details/encode.hpp"
-#include "skyr/url/details/decode.hpp"
+#include "skyr/details/encode.hpp"
+#include "skyr/details/decode.hpp"
 #include "skyr/url_parse_state.hpp"
 #include "skyr/ipv6_address.hpp"
 
@@ -74,7 +75,7 @@ inline bool is_forbidden_host_point(string_view::value_type c) noexcept {
   return last != std::find(first, last, c);
 }
 
-bool remaining_starts_with(
+bool starts_with(
     string_view::const_iterator first,
     string_view::const_iterator last,
     const char *chars) noexcept {
@@ -113,21 +114,16 @@ optional<std::string> parse_opaque_host(string_view input) {
 
   auto output = std::string();
   for (auto c : input) {
-    details::pct_encode_char(c, back_inserter(output));
+    output += details::pct_encode_char(c);
   }
-
   return output;
 }
 
-template <class InputIter, class OutputIter>
-OutputIter domain_to_ascii(InputIter first, InputIter last, OutputIter it_out) {
-  auto it = first;
-  while (it != last) {
-    it_out++ = std::tolower(*it, std::locale::classic());
-    ++it;
-  }
-  return it_out;
-};
+std::string domain_to_ascii(string_view domain, bool be_strict = true) {
+  auto ascii_domain = details::unicode_to_ascii(
+      domain, true, true, true, true, true, true);
+  return ascii_domain.value();
+}
 
 optional<std::string> parse_host(string_view input, bool is_not_special = false) {
   if (input.front() == '[') {
@@ -159,8 +155,7 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
     return nullopt;
   }
 
-  auto ascii_domain = std::string{};
-  domain_to_ascii(begin(domain), end(domain), std::back_inserter(ascii_domain));
+  auto ascii_domain = domain_to_ascii(string_view(domain));
 
   auto it = std::find_if(begin(ascii_domain), end(ascii_domain), is_forbidden_host_point);
   if (it != end(ascii_domain)) {
@@ -328,7 +323,7 @@ url_parse_action url_parser_context::parse_scheme(char c) {
     buffer.clear();
 
     if (url.scheme.compare("file") == 0) {
-      if (!remaining_starts_with(it, end(view), "//")) {
+      if (!starts_with(it, end(view), "//")) {
         validation_error = true;
       }
       state = url_parse_state::file;
@@ -336,7 +331,7 @@ url_parse_action url_parser_context::parse_scheme(char c) {
       state = url_parse_state::special_relative_or_authority;
     } else if (url.is_special()) {
       state = url_parse_state::special_authority_slashes;
-    } else if (remaining_starts_with(it, end(view), "/")) {
+    } else if (starts_with(it, end(view), "/")) {
       state = url_parse_state::path_or_authority;
       increment();
     } else {
@@ -379,7 +374,7 @@ url_parse_action url_parser_context::parse_no_scheme(char c) {
 }
 
 url_parse_action url_parser_context::parse_special_relative_or_authority(char c) {
-  if ((c == '/') && remaining_starts_with(it, end(view), "/")) {
+  if ((c == '/') && starts_with(it, end(view), "/")) {
     increment();
     state = url_parse_state::special_authority_ignore_slashes;
   } else {
@@ -473,7 +468,7 @@ url_parse_action url_parser_context::parse_relative_slash(char c) {
 }
 
 url_parse_action url_parser_context::parse_special_authority_slashes(char c) {
-  if ((c == '/') && remaining_starts_with(it, end(view), "/")) {
+  if ((c == '/') && starts_with(it, end(view), "/")) {
     increment();
     state = url_parse_state::special_authority_ignore_slashes;
   } else {
@@ -509,9 +504,8 @@ url_parse_action url_parser_context::parse_authority(char c) {
         continue;
       }
 
-      auto pct_encoded = std::string();
-      details::pct_encode_char(
-          c, std::back_inserter(pct_encoded), " \"<>`#?{}/:;=@[\\]^|");
+      auto pct_encoded = details::pct_encode_char(
+          c, " \"<>`#?{}/:;=@[\\]^|");
 
       if (password_token_seen_flag) {
         url.password += pct_encoded;
@@ -812,7 +806,7 @@ url_parse_action url_parser_context::parse_path(char c) {
       state = url_parse_state::fragment;
     }
   } else {
-    details::pct_encode_char(c, std::back_inserter(buffer), " \"<>`#?{}");
+    buffer += details::pct_encode_char(c, " \"<>`#?{}");
   }
 
   return url_parse_action::increment;
@@ -833,9 +827,7 @@ url_parse_action url_parser_context::parse_cannot_be_a_base_url(char c) {
       validation_error = true;
     }
     if (!is_eof()) {
-      auto el = std::string();
-      details::pct_encode_char(c, std::back_inserter(el));
-      url.path[0] += el;
+      url.path[0] += details::pct_encode_char(c);
     }
   }
   return url_parse_action::increment;
@@ -850,7 +842,7 @@ url_parse_action url_parser_context::parse_query(char c) {
         (c > '~') ||
         (is_in(c, "\"#<>")) ||
         ((c == '\'') && url.is_special())) {
-      details::pct_encode_char(c, std::back_inserter(url.query.value()), " \"#<>'");
+      url.query.value() += details::pct_encode_char(c, " \"#<>'");
     } else {
       url.query.value().push_back(c);
     }
@@ -862,7 +854,7 @@ url_parse_action url_parser_context::parse_fragment(char c) {
   if (c == '\0') {
     validation_error = true;
   } else {
-    details::pct_encode_char(c, std::back_inserter(url.fragment.value()), " \"<>`");
+    url.fragment.value() += details::pct_encode_char(c, " \"<>'");
   }
   return url_parse_action::increment;
 }

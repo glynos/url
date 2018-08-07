@@ -13,7 +13,7 @@
 
 namespace skyr {
 namespace {
-bool remaining_starts_with(
+bool starts_with(
     string_view::const_iterator first,
     string_view::const_iterator last,
     const char *chars) noexcept {
@@ -135,7 +135,7 @@ optional<ipv6_address> parse_ipv6_address(string_view input) {
   auto it = first;
 
   if (*it == ':') {
-    if (!remaining_starts_with(it, last, ":")) {
+    if (!starts_with(it, last, ":")) {
       // validation_error = true;
       return nullopt;
     }
