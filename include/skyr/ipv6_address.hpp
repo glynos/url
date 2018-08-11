@@ -38,15 +38,15 @@ class ipv6_address {
 };
 
 enum class ipv6_address_errc {
-//  does_not_start_with_double_colon
+//  does_not_start_with_double_colon,
 //  invalid_index,
 //  segment_length_is_zero,
-  invalid,
+  validation_error,
 };
 
 /// \param input
 /// \returns
-expected<ipv6_address, ipv6_address_errc > parse_ipv6_address(string_view input);
+expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input);
 
 /// \param input
 /// \returns

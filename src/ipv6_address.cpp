@@ -138,7 +138,7 @@ expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) 
     ++next_it;
     if (!starts_with(next_it, last, ":")) {
       // validation_error = true;
-      return make_unexpected(ipv6_address_errc::invalid);
+      return make_unexpected(ipv6_address_errc::validation_error);
     }
 
     it += 2;
@@ -149,13 +149,13 @@ expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) 
   while (it != last) {
     if (piece_index == 8) {
       // validation_error = true;
-      return make_unexpected(ipv6_address_errc::invalid);
+      return make_unexpected(ipv6_address_errc::validation_error);
     }
 
     if (*it == ':') {
       if (compress) {
         // validation_error = true;
-        return make_unexpected(ipv6_address_errc::invalid);
+        return make_unexpected(ipv6_address_errc::validation_error);
       }
 
       ++it;
@@ -176,14 +176,14 @@ expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) 
     if (*it == '.') {
       if (length == 0) {
         // validation_error = true;
-        return make_unexpected(ipv6_address_errc::invalid);
+        return make_unexpected(ipv6_address_errc::validation_error);
       }
 
       it -= length;
 
       if (piece_index > 6) {
         // validation_error = true;
-        return make_unexpected(ipv6_address_errc::invalid);
+        return make_unexpected(ipv6_address_errc::validation_error);
       }
 
       auto numbers_seen = 0;
@@ -196,13 +196,13 @@ expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) 
             ++it;
           } else {
             // validation_error = true;
-            return make_unexpected(ipv6_address_errc::invalid);
+            return make_unexpected(ipv6_address_errc::validation_error);
           }
         }
 
         if (!std::isdigit(*it, std::locale::classic())) {
           // validation_error = true;
-          return make_unexpected(ipv6_address_errc::invalid);
+          return make_unexpected(ipv6_address_errc::validation_error);
         }
 
         while (std::isdigit(*it, std::locale::classic())) {
@@ -211,14 +211,14 @@ expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) 
             ipv4_piece = number;
           } else if (ipv4_piece.value() == 0) {
             // validation_error = true;
-            return make_unexpected(ipv6_address_errc::invalid);
+            return make_unexpected(ipv6_address_errc::validation_error);
           } else {
             ipv4_piece = ipv4_piece.value() * std::uint16_t(10) + number;
           }
 
           if (ipv4_piece.value() > 255) {
             // validation_error = true;
-            return make_unexpected(ipv6_address_errc::invalid);
+            return make_unexpected(ipv6_address_errc::validation_error);
           }
 
           ++it;
@@ -234,7 +234,7 @@ expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) 
 
       if (numbers_seen != 4) {
         // validation_error = true;
-        return make_unexpected(ipv6_address_errc::invalid);
+        return make_unexpected(ipv6_address_errc::validation_error);
       }
 
       break;
@@ -242,11 +242,11 @@ expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) 
       ++it;
       if (it == last) {
         // validation_error = true;
-        return make_unexpected(ipv6_address_errc::invalid);
+        return make_unexpected(ipv6_address_errc::validation_error);
       }
     } else if (it != last) {
       // validation_error = true;
-      return make_unexpected(ipv6_address_errc::invalid);
+      return make_unexpected(ipv6_address_errc::validation_error);
     }
     address[piece_index] = value;
     ++piece_index;
@@ -262,7 +262,7 @@ expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) 
     }
   } else if (!compress && (piece_index != 8)) {
     // validation_error = true;
-    return make_unexpected(ipv6_address_errc::invalid);
+    return make_unexpected(ipv6_address_errc::validation_error);
   }
 
   return ipv6_address(address);

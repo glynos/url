@@ -20,12 +20,7 @@ url::url(std::string input) {
   if (!parsed_url) {
     throw url_parse_error(parsed_url.error());
   }
-
-  url_ = parsed_url.value();
-  view_ = string_view(url_.url);
-
-  // auto query = url_.query ? url_.query.value() : std::string();
-  // TODO: set query object
+  update_record(std::move(parsed_url.value()));
 }
 
 url::url(std::string input, skyr::url base) {
@@ -33,12 +28,7 @@ url::url(std::string input, skyr::url base) {
   if (!parsed_url) {
     throw url_parse_error(parsed_url.error());
   }
-
-  url_ = parsed_url.value();
-  view_ = string_view(url_.url);
-
-  // auto query = url_.query ? url_.query.value() : std::string();
-  // TODO: set query object
+  update_record(std::move(parsed_url.value()));
 }
 
 url::url(url_record &&input) noexcept
@@ -53,6 +43,7 @@ void url::swap(url &other) noexcept {
 
 void url::update_record(url_record &&record) {
   url_ = record;
+  view_ = string_view(url_.url);
 
   parameters_.clear();
   if (url_.query) {
@@ -343,7 +334,6 @@ expected<url, url_parse_errc> make_url(std::string input) {
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));
   }
-
   return url(std::move(parsed_url.value()));
 }
 
@@ -352,7 +342,6 @@ expected<url, url_parse_errc> make_url(std::string input, url base) {
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));
   }
-
   return url(std::move(parsed_url.value()));
 }
 }  // namespace skyr

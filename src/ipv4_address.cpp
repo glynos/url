@@ -117,13 +117,13 @@ expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input) 
   numbers_it = std::find_if(numbers_first, numbers_last_but_one,
                             [](auto number) -> bool { return number > 255; });
   if (numbers_it != numbers_last_but_one) {
-    return skyr::make_unexpected(ipv4_address_errc::invalid);
+    return skyr::make_unexpected(ipv4_address_errc::validation_error);
   }
 
   if (numbers.back() >=
       static_cast<std::uint64_t>(std::pow(256, 5 - numbers.size()))) {
     // validation_error = true;
-    return skyr::make_unexpected(ipv4_address_errc::invalid);
+    return skyr::make_unexpected(ipv4_address_errc::validation_error);
   }
 
   auto ipv4 = numbers.back();

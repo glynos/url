@@ -164,7 +164,7 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
 
   auto host = parse_ipv4_address(string_view(ascii_domain.value()));
   if (!host) {
-    if (host.error() == ipv4_address_errc::invalid) {
+    if (host.error() == ipv4_address_errc::validation_error) {
       return nullopt;
     }
     else {
@@ -748,6 +748,9 @@ url_parse_action url_parser_context::parse_path_start(char c) {
     if ((c != '/') && (c != '\\')) {
       decrement();
     }
+    else {
+      url.path.emplace_back();
+    }
   } else if (!state_override && (c == '?')) {
     url.query = std::string();
     state = url_parse_state::query;
@@ -759,11 +762,10 @@ url_parse_action url_parser_context::parse_path_start(char c) {
     if (c != '/') {
       decrement();
     }
-//    else {
-//      url.path.push_back(buffer);
-//    }
+    else {
+      url.path.emplace_back();
+    }
   }
-
   return url_parse_action::increment;
 }
 
@@ -785,7 +787,8 @@ url_parse_action url_parser_context::parse_path(char c) {
             !((c == '/') || (url.is_special() && (c == '\\')))) {
       url.path.emplace_back();
     } else if (!is_single_dot_path_segment(string_view(buffer))) {
-      if ((url.scheme.compare("file") == 0) && url.path.empty() && is_windows_drive_letter(string_view(buffer))) {
+      if ((url.scheme.compare("file") == 0) &&
+          url.path.empty() && is_windows_drive_letter(string_view(buffer))) {
         if (!url.host || !url.host.value().empty()) {
           validation_error = true;
           url.host = std::string();
@@ -817,6 +820,14 @@ url_parse_action url_parser_context::parse_path(char c) {
       state = url_parse_state::fragment;
     }
   } else {
+    if (!is_url_code_point(c) && (c != '%')) {
+      validation_error = true;
+    }
+
+//    if ((c == '%') && starts_with(it, end(view), "") {
+//
+//    }
+
     buffer += details::pct_encode_char(c, " \"<>`#?{}");
   }
 
@@ -865,7 +876,7 @@ url_parse_action url_parser_context::parse_fragment(char c) {
   if (c == '\0') {
     validation_error = true;
   } else {
-    url.fragment.value() += details::pct_encode_char(c, " \"<>'");
+    url.fragment.value() += details::pct_encode_char(c, " \"`<>'");
   }
   return url_parse_action::increment;
 }

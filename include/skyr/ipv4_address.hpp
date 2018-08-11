@@ -12,7 +12,7 @@
 #include <skyr/optional.hpp>
 
 namespace skyr {
-/// This lass represents an IPv4 address.
+/// This class represents an IPv4 address.
 class ipv4_address {
 
   unsigned int address_;
@@ -28,6 +28,7 @@ class ipv4_address {
   explicit ipv4_address(unsigned int address)
       : address_(address) {}
 
+  /// \returns
   unsigned int address() const noexcept {
     return address_;
   }
@@ -37,11 +38,12 @@ class ipv4_address {
 
 };
 
+///
 enum class ipv4_address_errc {
   more_than_4_segments,
   empty_part,
   invalid_segment_number,
-  invalid,
+  validation_error,
 };
 
 /// \param input
