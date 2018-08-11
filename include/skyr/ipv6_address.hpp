@@ -38,6 +38,9 @@ class ipv6_address {
 };
 
 enum class ipv6_address_errc {
+//  does_not_start_with_double_colon
+//  invalid_index,
+//  segment_length_is_zero,
   invalid,
 };
 

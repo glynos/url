@@ -70,6 +70,10 @@ expected<url_record, url_parse_errc> basic_parse(
        [](url_parser_context &context, char c) -> url_parse_action {
          return context.parse_hostname(c);
        }},
+      {url_parse_state::hostname,
+       [](url_parser_context &context, char c) -> url_parse_action {
+         return context.parse_hostname(c);
+       }},
       {url_parse_state::port,
        [](url_parser_context &context, char c) -> url_parse_action {
          return context.parse_port(c);
@@ -121,6 +125,8 @@ expected<url_record, url_parse_errc> basic_parse(
         continue;
       case url_parse_action::invalid_scheme:
       case url_parse_action::invalid_hostname:
+      case url_parse_action::cannot_be_a_base_url:
+      case url_parse_action::cannot_have_a_username_password_or_port:
       case url_parse_action::invalid_port:
         return make_unexpected(url_parse_errc(static_cast<int>(action)));
     }

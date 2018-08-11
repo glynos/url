@@ -14,4 +14,8 @@ bool url_record::is_special() const noexcept {
 bool url_record::includes_credentials() const noexcept {
   return !username.empty() || !password.empty();
 }
+
+bool url_record::cannot_have_a_username_password_or_port() const noexcept {
+  return (!host || host.value().empty()) || cannot_be_a_base_url || (scheme == "file");
+}
 }  // namespace skyr

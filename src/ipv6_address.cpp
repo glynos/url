@@ -20,7 +20,6 @@ bool starts_with(
   auto chars_first = chars, chars_last = chars + std::strlen(chars);
   auto chars_it = chars_first;
   auto it = first;
-  ++it;
   while (chars_it != chars_last) {
     if (*it != *chars_it) {
       return false;
@@ -125,9 +124,9 @@ std::string ipv6_address::to_string() const {
 }
 
 expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) {
-  auto address = std::array<unsigned short, 8>{};
   // auto validation_error = false;
 
+  auto address = std::array<unsigned short, 8>{{0, 0, 0, 0, 0, 0, 0, 0}};
   auto piece_index = 0;
   auto compress = optional<decltype(piece_index)>();
 
@@ -135,7 +134,9 @@ expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) 
   auto it = first;
 
   if (*it == ':') {
-    if (!starts_with(it, last, ":")) {
+    auto next_it = it;
+    ++next_it;
+    if (!starts_with(next_it, last, ":")) {
       // validation_error = true;
       return make_unexpected(ipv6_address_errc::invalid);
     }

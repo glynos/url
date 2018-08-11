@@ -14,6 +14,7 @@ set(
     url_web_platform_tests
     url_parse_tests
     url_parsing_example_tests
+    url_setter_tests
     url_search_parameters_tests
     ipv4_address_tests
     ipv6_address_tests

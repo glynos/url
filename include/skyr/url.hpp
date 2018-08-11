@@ -77,7 +77,7 @@ class url {
   std::string href() const;
 
   /// \param href
-  url_parse_errc set_href(std::string href);
+  expected<void, url_parse_errc> set_href(std::string href);
 
   /// \returns
   std::string to_json() const;
@@ -89,31 +89,31 @@ class url {
   std::string protocol() const;
 
   /// \param protocol
-  url_parse_errc set_protocol(std::string protocol);
+  expected<void, url_parse_errc> set_protocol(std::string protocol);
 
   /// \returns
   std::string username() const;
 
   /// \param username
-  url_parse_errc set_username(std::string username);
+  expected<void, url_parse_errc> set_username(std::string username);
 
   /// \returns
   std::string password() const;
 
   /// \param password
-  url_parse_errc set_password(std::string password);
+  expected<void, url_parse_errc> set_password(std::string password);
 
   /// \returns
   std::string host() const;
 
   /// \param host
-  url_parse_errc set_host(std::string host);
+  expected<void, url_parse_errc> set_host(std::string host);
 
   /// \returns
   std::string hostname() const;
 
   /// \param hostname
-  url_parse_errc set_hostname(std::string hostname);
+  expected<void, url_parse_errc> set_hostname(std::string hostname);
 
   /// \returns
   std::string port() const;
@@ -128,22 +128,22 @@ class url {
   }
 
   /// \param port
-  url_parse_errc set_port(std::string port);
+  expected<void, url_parse_errc> set_port(std::string port);
 
   /// \param port
-  void set_port(std::uint16_t port);
+  expected<void, url_parse_errc> set_port(std::uint16_t port);
 
   /// \returns
   std::string pathname() const;
 
   /// \param pathname
-  void set_pathname(std::string pathname);
+  expected<void, url_parse_errc> set_pathname(std::string pathname);
 
   /// \returns
   std::string search() const;
 
   /// \param search
-  void set_search(std::string search);
+  expected<void, url_parse_errc> set_search(std::string search);
 
   /// \returns
   url_search_parameters &search_parameters();
@@ -152,8 +152,9 @@ class url {
   std::string hash() const;
 
   /// \param hash
-  void set_hash(std::string hash);
+  expected<void, url_parse_errc> set_hash(std::string hash);
 
+  /// \returns
   url_record record() const;
 
   /// \returns
@@ -172,6 +173,7 @@ class url {
     return view_.end();
   }
 
+  /// \returns
   string_view view() const noexcept {
     return view_;
   }
@@ -202,6 +204,9 @@ class url {
   static optional<std::uint16_t> default_port(const std::string &scheme) noexcept;
 
  private:
+
+  void update_record(url_record &&record);
+
   url_record url_;
   string_view view_;
   url_search_parameters parameters_;

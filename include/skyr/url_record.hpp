@@ -47,6 +47,8 @@ struct url_record {
    /// \returns `true` if the URL username or password is not an empty string, `false` otherwise.
   bool includes_credentials() const noexcept;
 
+  bool cannot_have_a_username_password_or_port() const noexcept;
+
 };
 }  // namespace skyr
 

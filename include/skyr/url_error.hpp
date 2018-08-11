@@ -13,9 +13,10 @@
 namespace skyr {
 ///
 enum class url_parse_errc {
-  success=0,
   invalid_scheme=1,
   invalid_hostname,
+  cannot_be_a_base_url,
+  cannot_have_a_username_password_or_port,
   invalid_port,
 };
 }  // namespace skyr

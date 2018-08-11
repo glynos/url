@@ -11,6 +11,7 @@
 #include "skyr/url.hpp"
 #include "skyr/url_parse.hpp"
 #include "skyr/url_serialize.hpp"
+#include "skyr/details/percent_encode.hpp"
 #include "url_schemes.hpp"
 
 namespace skyr {
@@ -50,55 +51,91 @@ void url::swap(url &other) noexcept {
   other.view_ = string_view(other.url_.url);
 }
 
-std::string url::href() const {
-  using skyr::serialize;
-  return serialize_excluding_fragment(url_);
-}
-
-url_parse_errc url::set_href(std::string href) {
-  auto parsed_url = details::basic_parse(href);
-  if (!parsed_url) {
-    return parsed_url.error();
-  }
-
-  url_ = parsed_url.value();
+void url::update_record(url_record &&record) {
+  url_ = record;
 
   parameters_.clear();
   if (url_.query) {
     parameters_ = url_search_parameters(url_.query.value());
   }
+}
 
-  return url_parse_errc::success;
+std::string url::href() const {
+  return serialize(url_);
+}
+
+expected<void, url_parse_errc> url::set_href(std::string href) {
+  auto new_url = details::basic_parse(href);
+  if (!new_url) {
+    return make_unexpected(std::move(new_url.error()));
+  }
+
+  update_record(std::move(new_url.value()));
+  return {};
 }
 
 std::string url::to_json() const {
-  using skyr::serialize;
-  return serialize_excluding_fragment(url_);
+  return serialize(url_);
 }
 
-std::string url::origin() const { return std::string(); }
+std::string url::origin() const { return {}; }
 
 std::string url::protocol() const { return url_.scheme + ":"; }
 
-url_parse_errc url::set_protocol(const std::string protocol) {
-  return url_parse_errc::success;
+expected<void, url_parse_errc> url::set_protocol(std::string protocol) {
+  auto new_url = details::basic_parse(
+      protocol + ":", nullopt, url_, url_parse_state::scheme_start);
+  if (!new_url) {
+    return make_unexpected(std::move(new_url.error()));
+  }
+
+  update_record(std::move(new_url.value()));
+  return {};
 }
 
 std::string url::username() const { return url_.username; }
 
-url_parse_errc url::set_username(std::string username) {
-  return url_parse_errc::success;
+expected<void, url_parse_errc> url::set_username(std::string username) {
+  if (url_.cannot_have_a_username_password_or_port()) {
+    return make_unexpected(url_parse_errc::cannot_have_a_username_password_or_port);
+  }
+
+  auto new_url = url_;
+
+  new_url.username.clear();
+  for (auto c : username) {
+    auto pct_encoded = details::pct_encode_char(
+        c, " \"<>`#?{}/:;=@[\\]^|");
+    new_url.username += pct_encoded;
+  }
+
+  update_record(std::move(new_url));
+  return {};
 }
 
 std::string url::password() const { return url_.password; }
 
-url_parse_errc url::set_password(std::string password) {
-  return url_parse_errc::success;
+expected<void, url_parse_errc> url::set_password(std::string password) {
+  if (url_.cannot_have_a_username_password_or_port()) {
+    return make_unexpected(url_parse_errc::cannot_have_a_username_password_or_port);
+  }
+
+  auto new_url = url_;
+
+  new_url.password.clear();
+  for (auto c : password) {
+    auto pct_encoded = details::pct_encode_char(
+        c, " \"<>`#?{}/:;=@[\\]^|");
+    new_url.password += pct_encoded;
+  }
+
+  update_record(std::move(new_url));
+  return {};
 }
 
 std::string url::host() const {
   if (!url_.host) {
-    return std::string();
+    return {};
   }
 
   if (!url_.port) {
@@ -108,36 +145,76 @@ std::string url::host() const {
   return url_.host.value() + ":" + std::to_string(url_.port.value());
 }
 
-url_parse_errc url::set_host(std::string host) {
-  return url_parse_errc::success;
+expected<void, url_parse_errc> url::set_host(std::string host) {
+  if (url_.cannot_be_a_base_url) {
+    return make_unexpected(url_parse_errc::cannot_be_a_base_url);
+  }
+
+  auto new_url = details::basic_parse(
+      host, nullopt, url_, url_parse_state::host);
+  if (!new_url) {
+    return make_unexpected(std::move(new_url.error()));
+  }
+
+  update_record(std::move(new_url.value()));
+  return {};
 }
 
 std::string url::hostname() const {
   if (!url_.host) {
-    return std::string();
+    {};
   }
 
   return url_.host.value();
 }
 
-url_parse_errc url::set_hostname(std::string hostname) {
-  return url_parse_errc::success;
+expected<void, url_parse_errc> url::set_hostname(std::string hostname) {
+  if (url_.cannot_be_a_base_url) {
+    return make_unexpected(url_parse_errc::cannot_be_a_base_url);
+  }
+
+  auto new_url = details::basic_parse(
+      hostname, nullopt, url_, url_parse_state::hostname);
+  if (!new_url) {
+    return make_unexpected(std::move(new_url.error()));
+  }
+
+  update_record(std::move(new_url.value()));
+  return {};
 }
 
 std::string url::port() const {
   if (!url_.port) {
-    return std::string();
+    return {};
   }
 
   return std::to_string(url_.port.value());
 }
 
-url_parse_errc url::set_port(std::string port) {
-  return url_parse_errc::success;
+expected<void, url_parse_errc> url::set_port(std::string port) {
+  if (url_.cannot_have_a_username_password_or_port()) {
+    return make_unexpected(url_parse_errc::cannot_have_a_username_password_or_port);
+  }
+
+  if (port.empty()) {
+    auto new_url = url_;
+    new_url.port = nullopt;
+    update_record(std::move(new_url));
+  }
+  else {
+    auto new_url = details::basic_parse(
+        port, nullopt, url_, url_parse_state::port);
+    if (!new_url) {
+      return make_unexpected(std::move(new_url.error()));
+    }
+    update_record(std::move(new_url.value()));
+  }
+
+  return {};
 }
 
-void url::set_port(std::uint16_t) {
-  return;
+expected<void, url_parse_errc> url::set_port(std::uint16_t port) {
+  return set_port(std::to_string(port));
 }
 
 std::string url::pathname() const {
@@ -146,7 +223,7 @@ std::string url::pathname() const {
   }
 
   if (url_.path.empty()) {
-    return std::string("");
+    return {};
   }
 
   if ((url_.path.size() == 1) && url_.path[0].empty()) {
@@ -167,20 +244,51 @@ std::string url::pathname() const {
   return pathname;
 }
 
-void url::set_pathname(std::string pathname) {
-  return;
+expected<void, url_parse_errc> url::set_pathname(std::string pathname) {
+  if (url_.cannot_be_a_base_url) {
+    return make_unexpected(url_parse_errc::cannot_be_a_base_url);
+  }
+
+  url_.path.clear();
+  auto new_url = details::basic_parse(
+      pathname, nullopt, url_, url_parse_state::path_start);
+  if (!new_url) {
+    return make_unexpected(std::move(new_url.error()));
+  }
+  update_record(std::move(new_url.value()));
+  return {};
 }
 
 std::string url::search() const {
   if (!url_.query || url_.query.value().empty()) {
-    return std::string();
+    return {};
   }
 
   return "?" + url_.query.value();
 }
 
-void url::set_search(std::string search) {
-  return;
+expected<void, url_parse_errc> url::set_search(std::string search) {
+  auto url = url_;
+  if (search.empty()) {
+    url.query = nullopt;
+    update_record(std::move(url));
+    return {};
+  }
+
+  auto input = search;
+  if (input.front() == '?') {
+    auto first = std::begin(input), last = std::end(input);
+    input.assign(first + 1, last);
+  }
+
+  url_.query = "";
+  auto new_url = details::basic_parse(
+      input, nullopt, url_, url_parse_state::query);
+  if (!new_url) {
+    return make_unexpected(std::move(new_url.error()));
+  }
+  update_record(std::move(new_url.value()));
+  return {};
 }
 
 url_search_parameters &url::search_parameters() {
@@ -189,14 +297,33 @@ url_search_parameters &url::search_parameters() {
 
 std::string url::hash() const {
   if (!url_.fragment || url_.fragment.value().empty()) {
-    return std::string();
+    return {};
   }
 
   return "#" + url_.fragment.value();
 }
 
-void url::set_hash(std::string hash) {
-  return;
+expected<void, url_parse_errc> url::set_hash(std::string hash) {
+  if (hash.empty()) {
+    url_.fragment = nullopt;
+    update_record(std::move(url_));
+    return {};
+  }
+
+  auto input = hash;
+  if (input.front() == '#') {
+    auto first = std::begin(input), last = std::end(input);
+    input.assign(first + 1, last);
+  }
+
+  url_.fragment = "";
+  auto new_url = details::basic_parse(
+      input, nullopt, url_, url_parse_state::fragment);
+  if (!new_url) {
+    return make_unexpected(std::move(new_url.error()));
+  }
+  update_record(std::move(new_url.value()));
+  return {};
 }
 
 url_record url::record() const {

@@ -306,7 +306,7 @@ url_parse_action url_parser_context::parse_scheme(char c) {
       }
 
       if ((url.includes_credentials() || url.port) &&(buffer.compare("file") == 0)) {
-        return url_parse_action::invalid_scheme;
+        return url_parse_action::cannot_have_a_username_password_or_port;
       }
 
       if ((url.scheme.compare("file") == 0) && (!url.host || url.host.value().empty())) {
@@ -318,6 +318,7 @@ url_parse_action url_parser_context::parse_scheme(char c) {
 
     if (state_override) {
       // TODO: check default port
+      return url_parse_action::success;
     }
     buffer.clear();
 

@@ -19,7 +19,7 @@ enum class idna_status {
 };
 
 idna_status map_status(char c) {
-  return idna_status::valid;
+  return idna_status::mapped;
 }
 
 char map(char c) {
