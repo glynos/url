@@ -162,7 +162,7 @@ expected<void, url_parse_errc> url::set_host(std::string host) {
 
 std::string url::hostname() const {
   if (!url_.host) {
-    {};
+    return {};
   }
 
   return url_.host.value();

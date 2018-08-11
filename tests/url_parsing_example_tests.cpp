@@ -112,22 +112,28 @@ TEST(url_parsing_example_tests, url_serialize_13) {
   EXPECT_EQ("https://example.com/x", output);
 }
 
-TEST(url_parsing_example_tests, url_serialize_14) {
+TEST(url_parsing_example_tests, url_parse_fails_1) {
   auto instance = skyr::parse("https://ex ample.org/");
   ASSERT_FALSE(instance);
 }
 
-TEST(url_parsing_example_tests, url_serialize_15) {
+TEST(url_parsing_example_tests, url_parse_fails_2) {
   auto instance = skyr::parse("example");
   ASSERT_FALSE(instance);
 }
 
-TEST(url_parsing_example_tests, url_serialize_16) {
+TEST(url_parsing_example_tests, url_parse_fails_3) {
   auto instance = skyr::parse("https://example.com:demo");
   ASSERT_FALSE(instance);
 }
 
-TEST(url_parsing_example_tests, url_serialize_17) {
+TEST(url_parsing_example_tests, url_parse_fails_4) {
   auto instance = skyr::parse("http://[www.example.com]/");
   ASSERT_FALSE(instance);
+}
+
+TEST(url_parsing_example_tests, test_protocol_non_special_to_special) {
+  auto instance = skyr::parse("non-special://example.com/");
+  ASSERT_TRUE(instance);
+  EXPECT_EQ("non-special://example.com/", skyr::serialize(instance.value()));
 }

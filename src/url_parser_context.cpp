@@ -562,6 +562,13 @@ url_parse_action url_parser_context::parse_hostname(char c) {
       validation_error = true;
       return url_parse_action::invalid_hostname;
     }
+    else if (
+        state_override &&
+        buffer.empty() &&
+        (url.includes_credentials() || url.port)) {
+      validation_error = true;
+      return url_parse_action::continue_;
+    }
 
     auto host = parse_host(string_view(buffer));
     if (!host) {
@@ -570,6 +577,10 @@ url_parse_action url_parser_context::parse_hostname(char c) {
     url.host = host.value();
     buffer.clear();
     state = url_parse_state::path_start;
+
+    if (state_override) {
+      return url_parse_action::success;
+    }
   } else {
     if (c == '[') {
       square_braces_flag = true;
@@ -748,9 +759,9 @@ url_parse_action url_parser_context::parse_path_start(char c) {
     if (c != '/') {
       decrement();
     }
-    else {
-      url.path.push_back(buffer);
-    }
+//    else {
+//      url.path.push_back(buffer);
+//    }
   }
 
   return url_parse_action::increment;
