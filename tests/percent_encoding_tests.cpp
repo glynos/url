@@ -6,7 +6,6 @@
 #include <gtest/gtest.h>
 #include <skyr/details/percent_encode.hpp>
 
-
 class encode_fragment_tests : public ::testing::TestWithParam<char> {};
 
 INSTANTIATE_TEST_CASE_P(

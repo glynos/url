@@ -15,12 +15,17 @@ namespace skyr {
 namespace punycode {
 /// Punycode encoding or decoding error status
 enum class punycode_errc {
-  fail,
+  bad_input = 1,
+  overflow,
 };
 
 /// \param input
 /// \returns
 expected<std::string, punycode_errc> encode(string_view input);
+
+/// \param input
+/// \returns
+expected<std::string, punycode_errc> encode(u32string_view input);
 
 /// \param input
 /// \returns

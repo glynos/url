@@ -18,6 +18,7 @@ set(
     url_search_parameters_tests
     ipv4_address_tests
     ipv6_address_tests
+    punycode_tests
     )
 
 foreach (test ${TESTS})

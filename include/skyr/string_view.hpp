@@ -320,6 +320,9 @@ std::basic_ostream<charT, traits>& operator<<(
 
 ///
 typedef basic_string_view<char> string_view;
+
+///
+typedef basic_string_view<char32_t> u32string_view;
 }  // namespace skyr
 
 #endif  // defined(SKYR_STRING_VIEW_STD17)
