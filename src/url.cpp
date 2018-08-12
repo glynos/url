@@ -217,22 +217,12 @@ std::string url::pathname() const {
     return {};
   }
 
-  if ((url_.path.size() == 1) && url_.path[0].empty()) {
-    return std::string("/");
-  }
-
-  auto pathname = std::string("");
-  if (!url_.path[0].empty()) {
-    pathname += "/";
-  }
-
+  auto pathname = std::string("/");
   for (const auto &segment : url_.path) {
     pathname += segment;
     pathname += "/";
   }
-  pathname = pathname.substr(0, pathname.length() - 1);
-
-  return pathname;
+  return pathname.substr(0, pathname.length() - 1);
 }
 
 expected<void, url_parse_errc> url::set_pathname(std::string pathname) {

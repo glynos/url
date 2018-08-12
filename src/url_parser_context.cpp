@@ -748,9 +748,6 @@ url_parse_action url_parser_context::parse_path_start(char c) {
     if ((c != '/') && (c != '\\')) {
       decrement();
     }
-    else {
-      url.path.emplace_back();
-    }
   } else if (!state_override && (c == '?')) {
     url.query = std::string();
     state = url_parse_state::query;
@@ -761,9 +758,6 @@ url_parse_action url_parser_context::parse_path_start(char c) {
     state = url_parse_state::path;
     if (c != '/') {
       decrement();
-    }
-    else {
-      url.path.emplace_back();
     }
   }
   return url_parse_action::increment;

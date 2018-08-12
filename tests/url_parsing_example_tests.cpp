@@ -10,6 +10,18 @@
 
 /// https://url.spec.whatwg.org/#example-url-parsing
 
+TEST(url_parsing_example_tests, url_path_1) {
+  auto instance = skyr::parse("https:example.org");
+  ASSERT_TRUE(instance);
+  EXPECT_EQ(1, instance.value().path.size());
+}
+
+TEST(url_parsing_example_tests, url_path_2) {
+  auto instance = skyr::parse("https://////example.com///");
+  ASSERT_TRUE(instance);
+  EXPECT_EQ(3, instance.value().path.size());
+}
+
 TEST(url_parsing_example_tests, url_serialize_1) {
   auto input = std::string("https:example.org");
   auto instance = skyr::parse(input);
