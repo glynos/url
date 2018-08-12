@@ -58,7 +58,7 @@ using ucs4_convert = std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>
 
 expected<std::string, punycode_errc> encode(string_view input) {
   try {
-    auto ucs4conv = ucs4_convert{};
+    ucs4_convert ucs4conv{};
     auto ucs4 = ucs4conv.from_bytes(begin(input), end(input));
     return encode(ucs4);
   } catch(const std::range_error&) {
@@ -149,23 +149,23 @@ expected<std::string, punycode_errc> decode(string_view input) {
   auto n = initial_n;
   auto bias = initial_bias;
 
-  auto basic = 0;
-  for (auto j = 0; j < input.size(); ++j) {
+  auto basic = 0U;
+  for (auto j = 0U; j < input.size(); ++j) {
     if (delim(input[j])) {
       basic = j;
     }
   }
 
-  for (auto j = 0; j < basic; ++j) {
+  for (auto j = 0U; j < basic; ++j) {
     result += input[j];
   }
 
-  auto in = (basic > 0) ? (basic + 1) : 0;
-  auto i = 0;
+  auto in = (basic > 0U) ? (basic + 1U) : 0U;
+  auto i = 0U;
   while (in < input.size()) {
     auto oldi = i;
 
-    auto w = 1;
+    auto w = 1U;
     auto k = base;
     while (true) {
       if (in >= input.size()) {
@@ -191,8 +191,8 @@ expected<std::string, punycode_errc> decode(string_view input) {
       k += base;
     }
 
-    auto out = result.size() + 1;
-    bias = adapt((i - oldi), out, (oldi == 0));
+    auto out = result.size() + 1U;
+    bias = adapt((i - oldi), out, (oldi == 0U));
 
     if ((i / out) > (std::numeric_limits<char32_t>::max() - n)) {
       return make_unexpected(punycode_errc::overflow);
@@ -204,7 +204,7 @@ expected<std::string, punycode_errc> decode(string_view input) {
   }
 
   try {
-    auto ucs4conv = ucs4_convert{};
+    ucs4_convert ucs4conv{};
     return ucs4conv.to_bytes(result);
   } catch(const std::range_error&) {
     return make_unexpected(punycode_errc::bad_input);

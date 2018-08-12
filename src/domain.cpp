@@ -6,6 +6,7 @@
 #include <vector>
 #include <locale>
 #include "domain.hpp"
+#include "punycode.hpp"
 
 namespace skyr {
 namespace details {
@@ -70,19 +71,47 @@ expected<std::string, domain_errc> process(
     return make_unexpected(domain_errc::fail);
   }
 
-  // TODO: normalize
-
-  // TODO: break
-//  auto labels = std::vector<std::string>{};
-
-  // TODO: convert
-//  for (auto &&label : labels) {
-////    if (starts_with(label), "xn--")
-////    else
-//  }
-
   return result;
 }
+
+namespace {
+bool is_ascii(string_view input) noexcept {
+  auto first = begin(input), last = end(input);
+  auto it = std::find_if(
+      first, last,
+      [] (char c) -> bool {
+        return !std::isprint(c, std::locale::classic());
+      });
+  return it == last;
+}
+
+std::vector<std::string> split(string_view domain) noexcept {
+  auto labels = std::vector<std::string>{};
+  auto first = begin(domain), last = end(domain);
+  auto it = first;
+  auto prev = it;
+  while (it != last) {
+    if (*it == '.') {
+      labels.emplace_back(prev, it);
+      ++it;
+      prev = it;
+    }
+    else {
+      ++it;
+    }
+  }
+  labels.emplace_back(prev, it);
+  return labels;
+}
+
+std::string join(const std::vector<std::string> &labels) {
+  auto domain = std::string();
+  for (const auto &label : labels) {
+    domain += label + ".";
+  }
+  return domain.substr(0, domain.length() - 1);
+}
+}  // namespace
 
 expected<std::string, domain_errc> unicode_to_ascii(
     string_view domain_name,
@@ -92,7 +121,7 @@ expected<std::string, domain_errc> unicode_to_ascii(
     bool use_std3_ascii_rules,
     bool transitional_processing,
     bool verify_dns_length) {
-  auto ascii_domain = process(
+  auto domain = process(
       domain_name,
       use_std3_ascii_rules,
       check_hyphens,
@@ -100,11 +129,37 @@ expected<std::string, domain_errc> unicode_to_ascii(
       check_joiners,
       transitional_processing);
 
-  if (verify_dns_length) {
-
+  if (!domain) {
+    return make_unexpected(std::move(domain.error()));
   }
 
-  return ascii_domain;
+  auto labels = split(domain.value());
+
+  for (auto &label : labels) {
+    if (!is_ascii(label)) {
+      auto encoded = punycode::encode(label);
+      if (!encoded) {
+        return make_unexpected(domain_errc::encoding_error);
+      }
+      label = encoded.value();
+    }
+  }
+
+  if (verify_dns_length) {
+//    auto length = domain.value().size();
+//    if ((length < 1) || (length > 253)) {
+//      return make_unexpected(domain_errc::incorrect_length);
+//    }
+//
+//    for (const auto &label : labels) {
+//      auto label_length = label.size();
+//      if ((label_length < 1) || (label_length > 63)) {
+//        return make_unexpected(domain_errc::incorrect_length);
+//      }
+//    }
+  }
+
+  return join(labels);
 }
 
 expected<std::string, domain_errc> domain_to_ascii(

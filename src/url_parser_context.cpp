@@ -150,7 +150,7 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
     return nullopt;
   }
 
-  auto ascii_domain = details::domain_to_ascii(string_view(domain));
+  auto ascii_domain = details::domain_to_ascii(domain);
   if (!ascii_domain) {
     return nullopt;
   }
@@ -570,7 +570,7 @@ url_parse_action url_parser_context::parse_hostname(char c) {
       return url_parse_action::continue_;
     }
 
-    auto host = parse_host(string_view(buffer));
+    auto host = parse_host(buffer);
     if (!host) {
       return url_parse_action::invalid_hostname;
     }
@@ -714,7 +714,7 @@ url_parse_action url_parser_context::parse_file_host(char c) {
 
       state = url_parse_state::path_start;
     } else {
-      auto host = parse_host(string_view(buffer), !url.is_special());
+      auto host = parse_host(buffer, !url.is_special());
       if (!host) {
         return url_parse_action::invalid_hostname;
       }

@@ -14,6 +14,8 @@ namespace skyr {
 namespace details {
 enum class domain_errc {
   fail=1,
+  encoding_error,
+  incorrect_dns_length,
 };
 
 expected<std::string, domain_errc> process(
