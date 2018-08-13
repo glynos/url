@@ -39,15 +39,15 @@ make test
 ### Creating a URL without a base URL
 
 ```c++
-auto u = skyr::url("http://example.org/\xf0\x9f\x92\xa9");
-std::cout << e.pathname() << std::endl;
+auto url = skyr::url("http://example.org/\xf0\x9f\x92\xa9");
+std::cout << url.pathname() << std::endl;
 ```
 
 ### Creating an non-absolute URL without a base URL
 
 ```c++
-auto u = skyr::url("/\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
-if (!u) {
+auto url = skyr::url("/\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
+if (!url) {
   std::cerr << "Parsing failed" << std::endl;
 }
 ```
@@ -56,7 +56,7 @@ if (!u) {
 
 ```c++
 auto input = std::string("/\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
-auto u = skyr::url(input, document.baseURI)
+auto url = skyr::url(input, document.baseURI)
 url.href(); // "https://url.spec.whatwg.org/%F0%9F%8D%A3%F0%9F%8D%BA"
 ```
 

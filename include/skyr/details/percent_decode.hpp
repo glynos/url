@@ -64,35 +64,28 @@ inline expected<char, decode_errc> pct_decode_char(string_view input) {
   return static_cast<char>((0x10 * v0.value()) + v1.value());
 }
 
-template <class InputIterator, class OutputIterator>
-expected<OutputIterator, decode_errc> pct_decode(
-    InputIterator first, InputIterator last, OutputIterator out) {
+inline expected<std::string, decode_errc> pct_decode(string_view input) {
+  auto result = std::string{};
+  auto first = begin(input), last = end(input);
   auto it = first;
   while (it != last) {
     if (*it == '%') {
       if (std::distance(it, last) < 3) {
-        out++ = *it;
-        return out;
+        result.push_back(*it);
+        return result;
       }
       auto c = pct_decode_char(string_view(std::addressof(*it), 3));
       if (!c) {
         return make_unexpected(std::move(c.error()));
       }
-      out = c.value();
-      ++out;
+      result.push_back(c.value());
       it += 3;
     } else {
-      *out++ = *it++;
+      result.push_back(*it++);
     }
   }
-  return out;
+  return result;
 }
-
-//inline expected<std::string, decode_errc> pct_decode(string_view input) {
-//  auto result = std::string{};
-//  pct_decode(begin(input), end(input), std::back_inserter(result));
-//  return result;
-//}
 }  // namespace details
 }  // namespace skyr
 

@@ -8,7 +8,7 @@
 #include <locale>
 #include <algorithm>
 #include <vector>
-#include "punycode.hpp"
+#include "skyr/punycode.hpp"
 #include "skyr/optional.hpp"
 
 namespace skyr {

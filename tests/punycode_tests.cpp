@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <string>
-#include "../src/punycode.hpp"
+#include "skyr/punycode.hpp"
 
 
 using param = std::pair<std::string, std::string>;

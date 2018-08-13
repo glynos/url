@@ -99,17 +99,20 @@ bool starts_with(
   return true;
 }
 
-optional<std::string> parse_opaque_host(string_view input) {
+enum class host_parsing_errc {
+  invalid_ipv6_address,
+  forbidden_host_point,
+  cannot_decode_host_point,
+  domain_error,
+  invalid_ipv4_address,
+};
+
+expected<std::string, host_parsing_errc> parse_opaque_host(string_view input) {
   auto it = std::find_if(
-        begin(input), end(input),
-        [] (char c) -> bool {
-          static const char forbidden[] = "\0\t\n\r #/:?@[\\]";
-          const char *first = forbidden, *last = forbidden + sizeof(forbidden);
-          return last != std::find(first, last, c);
-        });
+      begin(input), end(input), is_forbidden_host_point);
   if (it != end(input)) {
       // result.validation_error = true;
-      return nullopt;
+      return make_unexpected(host_parsing_errc::forbidden_host_point);
     }
 
   auto output = std::string();
@@ -119,11 +122,12 @@ optional<std::string> parse_opaque_host(string_view input) {
   return output;
 }
 
-optional<std::string> parse_host(string_view input, bool is_not_special = false) {
+expected<std::string, host_parsing_errc> parse_host(
+    string_view input, bool is_not_special = false) {
   if (input.front() == '[') {
     if (input.back() != ']') {
       // result.validation_error = true;
-      return nullopt;
+      return make_unexpected(host_parsing_errc::invalid_ipv6_address);
     }
 
     auto view = string_view(input);
@@ -134,7 +138,7 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
       return "[" + ipv6_address.value().to_string() + "]";
     }
     else {
-      return nullopt;
+      return make_unexpected(host_parsing_errc::invalid_ipv6_address);
     }
   }
 
@@ -142,30 +146,27 @@ optional<std::string> parse_host(string_view input, bool is_not_special = false)
     return parse_opaque_host(input);
   }
 
-  auto domain = std::string{};
-  auto result = details::pct_decode(
-      begin(input), end(input), std::back_inserter(domain));
-  if (!result) {
-    // result.validation_error = true;
-    return nullopt;
+  auto domain = details::pct_decode(input);
+  if (!domain) {
+    return make_unexpected(host_parsing_errc::cannot_decode_host_point);
   }
 
-  auto ascii_domain = details::domain_to_ascii(domain);
+  auto ascii_domain = details::domain_to_ascii(domain.value());
   if (!ascii_domain) {
-    return nullopt;
+    return make_unexpected(host_parsing_errc::domain_error);
   }
 
   auto it = std::find_if(
       begin(ascii_domain.value()), end(ascii_domain.value()), is_forbidden_host_point);
   if (it != end(ascii_domain.value())) {
     // result.validation_error = true;
-    return nullopt;
+    return make_unexpected(host_parsing_errc::domain_error);
   }
 
   auto host = parse_ipv4_address(string_view(ascii_domain.value()));
   if (!host) {
     if (host.error() == ipv4_address_errc::validation_error) {
-      return nullopt;
+      return make_unexpected(host_parsing_errc::invalid_ipv4_address);
     }
     else {
       return ascii_domain.value();

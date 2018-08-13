@@ -5,8 +5,8 @@
 
 #include <vector>
 #include <locale>
+#include <skyr/punycode.hpp>
 #include "domain.hpp"
-#include "punycode.hpp"
 
 namespace skyr {
 namespace details {
