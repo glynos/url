@@ -11,35 +11,19 @@
 #include <skyr/expected.hpp>
 
 namespace skyr {
-namespace details {
 enum class domain_errc {
   fail=1,
   encoding_error,
   incorrect_dns_length,
 };
 
-expected<std::string, domain_errc> process(
-    string_view domain_name,
-    bool use_std3_ascii_rules,
-    bool check_hyphens,
-    bool check_bidi,
-    bool check_joiners,
-    bool transitional_processing);
-
-expected<std::string, domain_errc> unicode_to_ascii(
-    string_view domain_name,
-    bool check_hyphens,
-    bool check_bidi,
-    bool check_joiners,
-    bool use_std3_ascii_rules,
-    bool transitional_processing,
-    bool verify_dns_length);
-
-
 expected<std::string, domain_errc> domain_to_ascii(
     string_view domain,
     bool be_strict = true);
-}  // namespace details
+
+expected<std::string, domain_errc> domain_to_ascii(
+    u32string_view domain,
+    bool be_strict = true);
 }  // namespace skyr
 
 #endif //SKYR_DOMAIN_HPP

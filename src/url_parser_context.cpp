@@ -12,7 +12,7 @@
 #include <array>
 #include <locale>
 #include "url_parser_context.hpp"
-#include "domain.hpp"
+#include "skyr/domain.hpp"
 #include "url_schemes.hpp"
 #include "skyr/details/percent_encode.hpp"
 #include "skyr/details/percent_decode.hpp"
@@ -151,7 +151,7 @@ expected<std::string, host_parsing_errc> parse_host(
     return make_unexpected(host_parsing_errc::cannot_decode_host_point);
   }
 
-  auto ascii_domain = details::domain_to_ascii(domain.value());
+  auto ascii_domain = domain_to_ascii(domain.value());
   if (!ascii_domain) {
     return make_unexpected(host_parsing_errc::domain_error);
   }

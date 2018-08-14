@@ -19,6 +19,7 @@ set(
     ipv4_address_tests
     ipv6_address_tests
     punycode_tests
+    domain_tests
     )
 
 foreach (test ${TESTS})
