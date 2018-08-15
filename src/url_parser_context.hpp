@@ -7,19 +7,15 @@
 #define SKYR_URL_CONTEXT_HPP
 
 #include <skyr/optional.hpp>
+#include <skyr/expected.hpp>
+#include "skyr/url_error.hpp"
 #include <skyr/string_view.hpp>
 #include <skyr/url_parse_state.hpp>
 #include <skyr/url_record.hpp>
-#include <skyr/ipv4_address.hpp>
 
 namespace skyr {
 enum class url_parse_action {
   success = 0,
-  invalid_scheme = 1,
-  invalid_hostname,
-  cannot_be_a_base_url,
-  cannot_have_a_username_password_or_port,
-  invalid_port,
   increment,
   continue_,
 };
@@ -75,26 +71,26 @@ class url_parser_context {
     it = it - buffer.size() - 1;
   }
 
-  url_parse_action parse_scheme_start(char c);
-  url_parse_action parse_scheme(char c);
-  url_parse_action parse_no_scheme(char c);
-  url_parse_action parse_special_relative_or_authority(char c);
-  url_parse_action parse_path_or_authority(char c);
-  url_parse_action parse_relative(char c);
-  url_parse_action parse_relative_slash(char c);
-  url_parse_action parse_special_authority_slashes(char c);
-  url_parse_action parse_special_authority_ignore_slashes(char c);
-  url_parse_action parse_authority(char c);
-  url_parse_action parse_hostname(char c);
-  url_parse_action parse_port(char c);
-  url_parse_action parse_file(char c);
-  url_parse_action parse_file_slash(char c);
-  url_parse_action parse_file_host(char c);
-  url_parse_action parse_path_start(char c);
-  url_parse_action parse_path(char c);
-  url_parse_action parse_cannot_be_a_base_url(char c);
-  url_parse_action parse_query(char c);
-  url_parse_action parse_fragment(char c);
+  expected<url_parse_action, url_parse_errc> parse_scheme_start(char c);
+  expected<url_parse_action, url_parse_errc> parse_scheme(char c);
+  expected<url_parse_action, url_parse_errc> parse_no_scheme(char c);
+  expected<url_parse_action, url_parse_errc> parse_special_relative_or_authority(char c);
+  expected<url_parse_action, url_parse_errc> parse_path_or_authority(char c);
+  expected<url_parse_action, url_parse_errc> parse_relative(char c);
+  expected<url_parse_action, url_parse_errc> parse_relative_slash(char c);
+  expected<url_parse_action, url_parse_errc> parse_special_authority_slashes(char c);
+  expected<url_parse_action, url_parse_errc> parse_special_authority_ignore_slashes(char c);
+  expected<url_parse_action, url_parse_errc> parse_authority(char c);
+  expected<url_parse_action, url_parse_errc> parse_hostname(char c);
+  expected<url_parse_action, url_parse_errc> parse_port(char c);
+  expected<url_parse_action, url_parse_errc> parse_file(char c);
+  expected<url_parse_action, url_parse_errc> parse_file_slash(char c);
+  expected<url_parse_action, url_parse_errc> parse_file_host(char c);
+  expected<url_parse_action, url_parse_errc> parse_path_start(char c);
+  expected<url_parse_action, url_parse_errc> parse_path(char c);
+  expected<url_parse_action, url_parse_errc> parse_cannot_be_a_base_url(char c);
+  expected<url_parse_action, url_parse_errc> parse_query(char c);
+  expected<url_parse_action, url_parse_errc> parse_fragment(char c);
 
 };
 }  // namespace skyr

@@ -34,7 +34,7 @@ expected<std::string, unicode_errc> wstring_to_bytes(wstring_view input) {
     return wstring().to_bytes(begin(input), end(input));
   }
   catch (std::range_error &) {
-    return make_unexpected(unicode_errc::range_error);
+    return make_unexpected(unicode_errc::overflow);
   }
 }
 
@@ -43,7 +43,7 @@ expected<std::u16string, unicode_errc> ucs2_from_bytes(string_view input) {
     return ucs2().from_bytes(begin(input), end(input));
   }
   catch (std::range_error &) {
-    return make_unexpected(unicode_errc::range_error);
+    return make_unexpected(unicode_errc::overflow);
   }
 }
 
@@ -52,7 +52,7 @@ expected<std::string, unicode_errc> ucs2_to_bytes(u16string_view input) {
     return ucs2().to_bytes(begin(input), end(input));
   }
   catch (std::range_error &) {
-    return make_unexpected(unicode_errc::range_error);
+    return make_unexpected(unicode_errc::overflow);
   }
 }
 
@@ -61,7 +61,7 @@ expected<std::u32string, unicode_errc> ucs4_from_bytes(string_view input) {
     return ucs4().from_bytes(begin(input), end(input));
   }
   catch (std::range_error &) {
-    return make_unexpected(unicode_errc::range_error);
+    return make_unexpected(unicode_errc::overflow);
   }
 }
 
@@ -70,7 +70,7 @@ expected<std::string, unicode_errc> ucs4_to_bytes(u32string_view input) {
     return ucs4().to_bytes(begin(input), end(input));
   }
   catch (std::range_error &) {
-    return make_unexpected(unicode_errc::range_error);
+    return make_unexpected(unicode_errc::overflow);
   }
 }
 }  // namespace skyr

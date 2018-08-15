@@ -13,30 +13,26 @@
 namespace skyr {
 ///
 enum class domain_errc {
-  fail=1,
+  disallowed_code_point=1,
+  bad_input,
+  overflow,
   encoding_error,
-  incorrect_dns_length,
+  // invalid_length,
 };
 
 /// Punycode functions
 namespace punycode {
-/// Punycode encoding or decoding error status
-enum class punycode_errc {
-  bad_input = 1,
-  overflow,
-};
+/// \param input
+/// \returns
+expected<std::string, domain_errc> encode(string_view input);
 
 /// \param input
 /// \returns
-expected<std::string, punycode_errc> encode(string_view input);
+expected<std::string, domain_errc> encode(u32string_view input);
 
 /// \param input
 /// \returns
-expected<std::string, punycode_errc> encode(u32string_view input);
-
-/// \param input
-/// \returns
-expected<std::string, punycode_errc> decode(string_view input);
+expected<std::string, domain_errc> decode(string_view input);
 }  // namespace punycode
 
 /// \param domain

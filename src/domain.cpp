@@ -52,15 +52,15 @@ inline bool delim(char32_t c) {
 }
 }  // namespace
 
-expected<std::string, punycode_errc> encode(string_view input) {
+expected<std::string, domain_errc> encode(string_view input) {
   auto ucs4 = ucs4_from_bytes(input);
   if (!ucs4) {
-    return make_unexpected(punycode_errc::bad_input);
+    return make_unexpected(domain_errc::bad_input);
   }
   return encode(ucs4.value());
 }
 
-expected<std::string, punycode_errc> encode(u32string_view input) {
+expected<std::string, domain_errc> encode(u32string_view input) {
   auto result = std::string{};
   result.reserve(256);
 
@@ -90,7 +90,7 @@ expected<std::string, punycode_errc> encode(u32string_view input) {
     }
 
     if ((m - n) > ((std::numeric_limits<char32_t>::max() - delta) / (h + 1))) {
-      return make_unexpected(punycode_errc::overflow);
+      return make_unexpected(domain_errc::overflow);
     }
     delta += (m - n) * (h + 1);
     n = m;
@@ -98,7 +98,7 @@ expected<std::string, punycode_errc> encode(u32string_view input) {
     for (auto c : input) {
       if (c < n) {
         if (++delta == 0) {
-          return make_unexpected(punycode_errc::overflow);
+          return make_unexpected(domain_errc::overflow);
         }
       }
 
@@ -129,7 +129,7 @@ expected<std::string, punycode_errc> encode(u32string_view input) {
   return to_ascii(result);
 }
 
-expected<std::string, punycode_errc> decode(string_view input) {
+expected<std::string, domain_errc> decode(string_view input) {
   auto result = std::u32string();
   result.reserve(256);
 
@@ -162,14 +162,14 @@ expected<std::string, punycode_errc> decode(string_view input) {
     auto k = base;
     while (true) {
       if (in >= input.size()) {
-        return make_unexpected(punycode_errc::bad_input);
+        return make_unexpected(domain_errc::bad_input);
       }
       auto digit = decode_digit(input[in++]);
       if (digit >= base) {
-        return make_unexpected(punycode_errc::bad_input);
+        return make_unexpected(domain_errc::bad_input);
       }
       if (digit > ((std::numeric_limits<char32_t>::max() - i) / w)) {
-        return make_unexpected(punycode_errc::overflow);
+        return make_unexpected(domain_errc::overflow);
       }
       i += digit * w;
       auto t = (k <= bias) ? tmin :
@@ -178,7 +178,7 @@ expected<std::string, punycode_errc> decode(string_view input) {
         break;
       }
       if (w > (std::numeric_limits<char32_t>::max() / (base - t))) {
-        return make_unexpected(punycode_errc::overflow);
+        return make_unexpected(domain_errc::overflow);
       }
       w *= (base - t);
       k += base;
@@ -188,7 +188,7 @@ expected<std::string, punycode_errc> decode(string_view input) {
     bias = adapt((i - oldi), out, (oldi == 0U));
 
     if ((i / out) > (std::numeric_limits<char32_t>::max() - n)) {
-      return make_unexpected(punycode_errc::overflow);
+      return make_unexpected(domain_errc::overflow);
     }
     n += i / out;
     i %= out;
@@ -198,7 +198,7 @@ expected<std::string, punycode_errc> decode(string_view input) {
 
   auto bytes = ucs4_to_bytes(result);
   if (!bytes) {
-    return make_unexpected(punycode_errc::bad_input);
+    return make_unexpected(domain_errc::bad_input);
   }
   return bytes.value();
 }
@@ -314,7 +314,7 @@ expected<std::u32string, domain_errc> process(
   }
 
   if (error) {
-    return make_unexpected(domain_errc::fail);
+    return make_unexpected(domain_errc::disallowed_code_point);
   }
 
   return result;
@@ -384,7 +384,7 @@ expected<std::string, domain_errc> unicode_to_ascii(
     if (!is_ascii(label)) {
       auto encoded = punycode::encode(label);
       if (!encoded) {
-        return make_unexpected(domain_errc::encoding_error);
+        return make_unexpected(std::move(encoded.error()));
       }
       label.assign(begin(encoded.value()), end(encoded.value()));
     }
@@ -393,13 +393,13 @@ expected<std::string, domain_errc> unicode_to_ascii(
   if (verify_dns_length) {
 //    auto length = domain.value().size();
 //    if ((length < 1) || (length > 253)) {
-//      return make_unexpected(domain_errc::incorrect_length);
+//      return make_unexpected(domain_errc::invalid_length);
 //    }
 //
 //    for (const auto &label : labels) {
 //      auto label_length = label.size();
 //      if ((label_length < 1) || (label_length > 63)) {
-//        return make_unexpected(domain_errc::incorrect_length);
+//        return make_unexpected(domain_errc::invalid_length);
 //      }
 //    }
   }

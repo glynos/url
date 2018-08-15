@@ -12,7 +12,7 @@
 
 namespace skyr {
 enum class unicode_errc {
-  range_error,
+  overflow,
 };
 
 /// \param
