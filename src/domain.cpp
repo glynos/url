@@ -41,6 +41,14 @@ idna_status map_status(char32_t c, bool use_std3_ascii_rules) {
       ((c >= 0xff5f) && (c <= 0xff60))) {
     return idna_status::mapped;
   }
+  else if (
+      (c == 0x00a0) ||
+      (c == 0x3000) ||
+      ((c >= 0xfdd0) && (c <= 0xfdef)) ||
+      ((c >= 0xff00) && (c <= 0xff0c)) ||
+      ((c >= 0xffef) && (c <= 0xffff))) {
+    return idna_status::disallowed;
+  }
 
   return idna_status::valid;
 }
@@ -227,6 +235,7 @@ expected<std::string, domain_errc> domain_to_ascii(
       domain, false, true, true, be_strict, false, be_strict);
   if (!result) {
     // validation error
+    return make_unexpected(std::move(result.error()));
   }
   return result;
 }
