@@ -21,8 +21,7 @@ expected<std::uint64_t, ipv4_address_errc> parse_ipv4_number(
   if ((input.size() >= 2) && (input[0] == '0') && (std::tolower(input[1], std::locale::classic()) == 'x')) {
     input = input.substr(2);
     R = 16;
-  }
-  else if ((input.size() >= 2) && (input[0] == '0')) {
+  } else if ((input.size() >= 2) && (input[0] == '0')) {
     input = input.substr(1);
     R = 8;
   }
@@ -32,7 +31,11 @@ expected<std::uint64_t, ipv4_address_errc> parse_ipv4_number(
   }
 
   try {
-    auto number = std::stoul(input.to_string(), nullptr, R);
+    auto pos = static_cast<std::size_t>(0);
+    auto number = std::stoul(input.to_string(), &pos, R);
+    if (pos != input.length()) {
+      return make_unexpected(ipv4_address_errc::invalid_segment_number);
+    }
     return number;
   }
   catch (std::exception &) {
@@ -136,9 +139,5 @@ expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input) 
   }
 
   return {ipv4_address(ipv4)};
-}
-
-expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(std::string input) {
-  return parse_ipv4_address(string_view(input));
 }
 }  // namespace skyr

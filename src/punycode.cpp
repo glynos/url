@@ -4,12 +4,11 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <cstring>
-#include <codecvt>
-#include <locale>
 #include <algorithm>
 #include <vector>
-#include "skyr/punycode.hpp"
+#include "skyr/unicode.hpp"
 #include "skyr/optional.hpp"
+#include "skyr/punycode.hpp"
 
 namespace skyr {
 namespace punycode {
@@ -24,8 +23,8 @@ static const char32_t initial_n = 0x80;
 static const char32_t delimiter = 0x2D;
 
 static char32_t decode_digit(char32_t cp) {
-  return  cp - 48 < 10 ? cp - 22 :  cp - 65 < 26 ? cp - 65 :
-                                    cp - 97 < 26 ? cp - 97 :  base;
+  return cp - 48 < 10 ? cp - 22 : cp - 65 < 26 ? cp - 65 :
+                                  cp - 97 < 26 ? cp - 97 : base;
 }
 
 static char encode_digit(char32_t d, int flag) {
@@ -52,18 +51,14 @@ std::string to_ascii(std::string input) {
 inline bool delim(char32_t c) {
   return c == delimiter;
 }
-
-using ucs4_convert = std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>;
 }  // namespace
 
 expected<std::string, punycode_errc> encode(string_view input) {
-  try {
-    ucs4_convert ucs4conv{};
-    auto ucs4 = ucs4conv.from_bytes(begin(input), end(input));
-    return encode(ucs4);
-  } catch(const std::range_error&) {
+  auto ucs4 = ucs4_from_bytes(input);
+  if (!ucs4) {
     return make_unexpected(punycode_errc::bad_input);
   }
+  return encode(ucs4.value());
 }
 
 expected<std::string, punycode_errc> encode(u32string_view input) {
@@ -141,8 +136,7 @@ expected<std::string, punycode_errc> decode(string_view input) {
 
   if (input.substr(0, 4).compare("xn--") == 0) {
     input.remove_prefix(4);
-  }
-  else {
+  } else {
     return input.to_string();
   }
 
@@ -203,12 +197,11 @@ expected<std::string, punycode_errc> decode(string_view input) {
     result.insert(i++, 1, n);
   }
 
-  try {
-    ucs4_convert ucs4conv{};
-    return ucs4conv.to_bytes(result);
-  } catch(const std::range_error&) {
+  auto bytes = ucs4_to_bytes(result);
+  if (!bytes) {
     return make_unexpected(punycode_errc::bad_input);
   }
+  return bytes.value();
 }
 }  // namespace punycode
 }  // namespace skyr

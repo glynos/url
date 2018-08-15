@@ -67,7 +67,7 @@ TEST(url_tests, construct_url_like_long_ipv4_make) {
 
 TEST(url_tests, construct_url_from_string) {
   auto input = std::string("http://www.example.com/");
-  EXPECT_NO_THROW(skyr::url(input));
+  EXPECT_NO_THROW((skyr::url(input)));
 }
 
 TEST(url_tests, construct_url_from_string_make) {
@@ -523,13 +523,13 @@ TEST(url_tests, percent_encoding_fools_parser_3) {
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_web_platform_tests_42) {
+TEST(url_tests, web_platform_tests_42) {
   auto base = skyr::url("http://example.org/foo/bar");
   auto instance = skyr::url("http://foo.com/\\@", base);
   EXPECT_EQ("//@", instance.pathname());
 }
 
-TEST(url_tests, DISABLED_web_platform_tests_123) {
+TEST(url_tests, web_platform_tests_123) {
   auto base = skyr::url("about:blank");
   auto instance = skyr::url("http://example.com////../..", base);
   EXPECT_EQ("//", instance.pathname());

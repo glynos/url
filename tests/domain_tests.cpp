@@ -16,7 +16,12 @@ INSTANTIATE_TEST_CASE_P(
     domain_tests,
     ::testing::Values(
         param{"example.com", "example.com"},
-        param{"你好你好", "xn--6qqa088eba"}
+        param("⌘.ws", "xn--bih.ws"),
+        param{"你好你好", "xn--6qqa088eba"},
+        param{"你好你好.com", "xn--6qqa088eba.com"},
+        param{"उदाहरण.परीक्षा", "xn--p1b6ci4b4b3a.xn--11b5bs3a9aj6g"},
+        param{"faß.ExAmPlE", "xn--fa-hia.example"},
+        param{"Ｇｏ.com", "go.com"}
     ));
 
 TEST_P(domain_tests, domain_to_ascii_tests) {

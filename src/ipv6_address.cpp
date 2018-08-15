@@ -267,8 +267,4 @@ expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input) 
 
   return ipv6_address(address);
 }
-
-expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(std::string input) {
-  return parse_ipv6_address(string_view(input));
-}
 }  // namespace skyr

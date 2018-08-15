@@ -27,6 +27,11 @@ INSTANTIATE_TEST_CASE_P(
         param{"☃", "xn--n3h"},
         param{"bücher", "xn--bcher-kva"},
         param("ü", "xn--tda"),
+        param("⌘", "xn--bih"),
+        param("ñ", "xn--ida"),
+        param("☃", "xn--n3h"),
+        param{"उदाहरण", "xn--p1b6ci4b4b3a"},
+        param{"परीक्षा", "xn--11b5bs3a9aj6g"},
         param("glyn", "xn--glyn-")
     ));
 
@@ -37,7 +42,8 @@ TEST_P(punycode_tests, encode_set) {
   std::tie(input, expected) = GetParam();
   auto encoded = skyr::punycode::encode(input);
   ASSERT_TRUE(encoded);
-  EXPECT_EQ(expected, encoded.value()) << input << " --> " << expected << "(" << encoded.value() << ")";
+  EXPECT_EQ(expected, encoded.value())
+    << input << " --> " << expected << "(" << encoded.value() << ")";
 }
 
 TEST_P(punycode_tests, decode_set) {
@@ -47,5 +53,6 @@ TEST_P(punycode_tests, decode_set) {
   std::tie(expected, input) = GetParam();
   auto decoded = skyr::punycode::decode(input);
   ASSERT_TRUE(decoded);
-  EXPECT_EQ(expected, decoded.value()) << input << " --> " << expected << "(" << decoded.value() << ")";
+  EXPECT_EQ(expected, decoded.value())
+    << input << " --> " << expected << "(" << decoded.value() << ")";
 }

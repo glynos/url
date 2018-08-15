@@ -49,10 +49,6 @@ enum class ipv4_address_errc {
 /// \param input
 /// \returns
 expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input);
-
-/// \param input
-/// \returns
-expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(std::string input);
 }  // namespace skyr
 
 #endif //SKYR_IPV4_ADDRESS_INC

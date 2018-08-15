@@ -42,3 +42,16 @@ TEST(ipv4_address_tests, parse_address_test) {
   ASSERT_TRUE(instance);
   EXPECT_EQ(0x814ff5fc, instance.value().address());
 }
+
+TEST(ipv4_address_test, parse_address_with_hex) {
+  auto address = std::string("0x7f.0.0.0x7f");
+  auto instance = skyr::parse_ipv4_address(address);
+  ASSERT_TRUE(instance);
+  EXPECT_EQ(0x7f00007f, instance.value().address());
+}
+
+TEST(ipv4_address_test, parse_invalid_address_with_hex) {
+  auto address = std::string("0x7f.0.0.0x7g");
+  auto instance = skyr::parse_ipv4_address(address);
+  ASSERT_FALSE(instance);
+}

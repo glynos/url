@@ -47,10 +47,6 @@ enum class ipv6_address_errc {
 /// \param input
 /// \returns
 expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(string_view input);
-
-/// \param input
-/// \returns
-expected<ipv6_address, ipv6_address_errc> parse_ipv6_address(std::string input);
 }  // namespace skyr
 
 #endif //SKYR_IPV6_ADDRESS_INC

@@ -11,16 +11,23 @@
 #include <skyr/expected.hpp>
 
 namespace skyr {
+///
 enum class domain_errc {
   fail=1,
   encoding_error,
   incorrect_dns_length,
 };
 
+/// \param domain
+/// \param be_strict
+/// returns
 expected<std::string, domain_errc> domain_to_ascii(
     string_view domain,
     bool be_strict = true);
 
+/// \param domain
+/// \param be_strict
+/// \returns
 expected<std::string, domain_errc> domain_to_ascii(
     u32string_view domain,
     bool be_strict = true);
