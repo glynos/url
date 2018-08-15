@@ -86,48 +86,49 @@ TEST_P(test_parse_urls_using_base_urls, DISABLED_parse_using_constructor) {
   auto test_case_data = test_case{GetParam()};
   auto instance = skyr::url(test_case_data.input, skyr::url(test_case_data.base));
   EXPECT_EQ(test_case_data.protocol, instance.protocol())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.username, instance.username())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.password, instance.password())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.host, instance.host())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.hostname, instance.hostname())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.port, instance.port())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.pathname, instance.pathname())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.search, instance.search())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.hash, instance.hash())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
 }
 
 TEST_P(test_parse_urls_using_base_urls, parse_using_make) {
   auto test_case_data = test_case{GetParam()};
   auto instance = skyr::make_url(test_case_data.input, skyr::url(test_case_data.base));
   ASSERT_TRUE(instance)
-    << "Input: [" << test_case_data.input << "] " << static_cast<int>(instance.error());
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "] "
+    << static_cast<int>(instance.error());
   EXPECT_EQ(test_case_data.protocol, instance.value().protocol())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.username, instance.value().username())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.password, instance.value().password())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.host, instance.value().host())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.hostname, instance.value().hostname())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.port, instance.value().port())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.pathname, instance.value().pathname())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.search, instance.value().search())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.hash, instance.value().hash())
-            << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
 }
 
 class test_parse_urls_using_base_urls_failing : public ::testing::TestWithParam<test_case> {};
@@ -139,12 +140,12 @@ TEST_P(test_parse_urls_using_base_urls_failing, DISABLED_parse_using_constructor
   auto test_case_data = test_case{GetParam()};
   auto base = skyr::url(test_case_data.base);
   ASSERT_THROW(skyr::url(test_case_data.input, base), skyr::url_parse_error)
-                << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
 }
 
 TEST_P(test_parse_urls_using_base_urls_failing, parse_using_make) {
   auto test_case_data = test_case{GetParam()};
   auto base = skyr::url(test_case_data.base);
   ASSERT_FALSE(skyr::make_url(test_case_data.input, base))
-                << "Input: [" << test_case_data.input << "]";
+    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
 }

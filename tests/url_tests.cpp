@@ -534,3 +534,33 @@ TEST(url_tests, web_platform_tests_123) {
   auto instance = skyr::url("http://example.com////../..", base);
   EXPECT_EQ("//", instance.pathname());
 }
+
+TEST(url_tests, web_platform_tests_233) {
+  auto base = skyr::url("about:blank");
+  auto instance = skyr::url("sc://faß.ExAmPlE/", base);
+  EXPECT_EQ("fa%C3%9F.ExAmPlE", instance.host());
+}
+
+TEST(url_tests, web_platform_tests_277) {
+  auto base = skyr::url("about:blank");
+  auto instance = skyr::url("sc://%/", base);
+  EXPECT_EQ("%", instance.host());
+}
+
+TEST(url_tests, web_platform_tests_283) {
+  auto base = skyr::url("about:blank");
+  auto instance = skyr::url("ftp://%e2%98%83", base);
+  EXPECT_EQ("xn--n3h", instance.host());
+}
+
+TEST(url_tests, web_platform_tests_284) {
+  auto base = skyr::url("about:blank");
+  auto instance = skyr::url("https://%e2%98%83", base);
+  EXPECT_EQ("xn--n3h", instance.host());
+}
+
+TEST(url_tests, web_platform_tests_349) {
+  auto base = skyr::url("file://host/dir/file");
+  auto instance = skyr::url("C|a", base);
+  EXPECT_EQ("host", instance.host());
+}

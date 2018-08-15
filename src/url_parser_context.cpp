@@ -108,9 +108,12 @@ enum class host_parsing_errc {
 };
 
 expected<std::string, host_parsing_errc> parse_opaque_host(string_view input) {
+  auto first = begin(input), last = end(input);
   auto it = std::find_if(
-      begin(input), end(input), is_forbidden_host_point);
-  if (it != end(input)) {
+      first, last, [] (char c) -> bool {
+        return (c != '%') && is_forbidden_host_point(c);
+      });
+  if (it != last) {
       // result.validation_error = true;
       return make_unexpected(host_parsing_errc::forbidden_host_point);
     }
@@ -206,7 +209,14 @@ bool is_windows_drive_letter(
   }
 
   ++it;
-  return ((*it == ':') || (*it == '|'));
+  auto result = ((*it == ':') || (*it == '|'));
+  if (result) {
+    ++it;
+    if (it != last) {
+      result = ((*it == '/') || (*it == '\\') || (*it == '?') || (*it == '#'));
+    }
+  }
+  return result;
 }
 
 inline bool is_windows_drive_letter(string_view segment) noexcept {
@@ -543,7 +553,7 @@ url_parse_action url_parser_context::parse_hostname(char c) {
       return url_parse_action::invalid_hostname;
     }
 
-    auto host = parse_host(string_view(buffer), false);
+    auto host = parse_host(string_view(buffer), !url.is_special());
     if (!host) {
       return url_parse_action::invalid_hostname;
     }
@@ -571,7 +581,7 @@ url_parse_action url_parser_context::parse_hostname(char c) {
       return url_parse_action::continue_;
     }
 
-    auto host = parse_host(buffer);
+    auto host = parse_host(buffer, !url.is_special());
     if (!host) {
       return url_parse_action::invalid_hostname;
     }

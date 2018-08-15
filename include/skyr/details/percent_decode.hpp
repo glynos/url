@@ -44,11 +44,11 @@ inline expected<char, decode_errc> pct_decode_char(string_view input) {
   auto it = begin(input);
   ++it;
   auto h0 = *it;
-  if (h0 >= '8') {
-    // unable to pct_decode characters outside the ASCII character set.
-    return make_unexpected(decode_errc::conversion_failed);
-  }
-
+//  if (h0 >= '8') {
+//    // unable to pct_decode characters outside the ASCII character set.
+//    return make_unexpected(decode_errc::conversion_failed);
+//  }
+//
   auto v0 = letter_to_hex(h0);
   if (!v0) {
     return v0;
