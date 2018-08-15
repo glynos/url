@@ -15,22 +15,6 @@
 #include "url_schemes.hpp"
 
 namespace skyr {
-url::url(std::string input) {
-  auto parsed_url = parse(input);
-  if (!parsed_url) {
-    throw url_parse_error(parsed_url.error());
-  }
-  update_record(std::move(parsed_url.value()));
-}
-
-url::url(std::string input, skyr::url base) {
-  auto parsed_url = parse(input, base.url_);
-  if (!parsed_url) {
-    throw url_parse_error(parsed_url.error());
-  }
-  update_record(std::move(parsed_url.value()));
-}
-
 url::url(url_record &&input) noexcept
   : url_(input)
   , view_(url_.url) {}
@@ -40,6 +24,15 @@ void url::swap(url &other) noexcept {
   view_ = string_view(url_.url);
   other.view_ = string_view(other.url_.url);
 }
+
+void url::initialize(std::string input, optional<url_record> base) {
+  auto parsed_url = parse(input, base);
+  if (!parsed_url) {
+    throw url_parse_error(parsed_url.error());
+  }
+  update_record(std::move(parsed_url.value()));
+}
+
 
 void url::update_record(url_record &&record) {
   url_ = record;
@@ -68,8 +61,6 @@ expected<void, url_parse_errc> url::set_href(std::string href) {
 std::string url::to_json() const {
   return serialize(url_);
 }
-
-std::string url::origin() const { return {}; }
 
 std::string url::protocol() const { return url_.scheme + ":"; }
 
@@ -319,19 +310,13 @@ optional<std::uint16_t> url::default_port(const std::string &scheme) noexcept {
   return details::default_port(string_view(scheme));
 }
 
-expected<url, url_parse_errc> make_url(std::string input) {
-  auto parsed_url = parse(input);
+namespace details {
+expected<url, url_parse_errc> make_url(std::string input, optional<url_record> base) {
+  auto parsed_url = parse(input, base);
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));
   }
   return url(std::move(parsed_url.value()));
 }
-
-expected<url, url_parse_errc> make_url(std::string input, url base) {
-  auto parsed_url = parse(input, base.record());
-  if (!parsed_url) {
-    return make_unexpected(std::move(parsed_url.error()));
-  }
-  return url(std::move(parsed_url.value()));
-}
+}  // namespace details
 }  // namespace skyr

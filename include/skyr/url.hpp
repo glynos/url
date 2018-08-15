@@ -12,6 +12,7 @@
 #include <skyr/url_record.hpp>
 #include <skyr/url_error.hpp>
 #include <skyr/url_search_parameters.hpp>
+#include <skyr/details/translate.hpp>
 
 #ifdef SKYR_URI_MSVC
 #pragma warning(push)
@@ -19,7 +20,7 @@
 #endif
 
 namespace skyr {
-/// `url_parse_exception` is thrown when there is an error parsing the URL.
+/// `url_parse_error` is thrown when there is an error parsing the URL.
 class url_parse_error : public std::runtime_error {
  public:
   /// Constructor
@@ -55,15 +56,23 @@ class url {
   url() = default;
 
   /// Constructor
+  /// \tparam Source
   /// \param input The input string
   /// \throws `url_parse_exception`
-  explicit url(std::string input);
+  template <class Source>
+  explicit url(Source input) {
+    initialize(details::translate(input));
+  }
 
   /// Constructor
+  /// \tparam Source
   /// \param input The input string
   /// \param base A base URL
   /// \throws `url_parse_exception`
-  url(std::string input, skyr::url base);
+  template <class Source>
+  url(Source input, url base) {
+    initialize(details::translate(input), base.url_);
+  }
 
   /// Constructor
   /// \param input A URL record
@@ -81,9 +90,6 @@ class url {
 
   /// \returns
   std::string to_json() const;
-
-  /// \returns
-  std::string origin() const;
 
   /// \returns
   std::string protocol() const;
@@ -205,6 +211,7 @@ class url {
 
  private:
 
+  void initialize(std::string input, optional<url_record> base = nullopt);
   void update_record(url_record &&record);
 
   url_record url_;
@@ -212,14 +219,27 @@ class url {
   url_search_parameters parameters_;
 };
 
+/// \exclude
+namespace details {
+expected<url, url_parse_errc> make_url(std::string input, optional<url_record> base = nullopt);
+}  // details
+
+/// \tparam Source
 /// \param input
 /// \returns
-expected<url, url_parse_errc> make_url(std::string input);
+template <class Source>
+expected<url, url_parse_errc> make_url(Source input) {
+  return details::make_url(details::translate(input));
+}
 
+/// \tparam Source
 /// \param input
 /// \param base
 /// \returns
-expected<url, url_parse_errc> make_url(std::string input, url base);
+template <class Source>
+expected<url, url_parse_errc> make_url(Source input, url base) {
+  return details::make_url(details::translate(input), base.record());
+}
 
 /// Equality operator
 /// \param lhs

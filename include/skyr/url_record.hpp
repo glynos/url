@@ -14,27 +14,27 @@
 namespace skyr {
 /// This class represents the parts of a URL identifier.
 struct url_record {
-  /// The input URL.
+  /// The input URL
   std::string url;
 
-  /// An ASCII string that identifies the type of URL.
+  /// An ASCII string that identifies the type of URL
   std::string scheme;
-  /// An ASCII string identifying a username.
+  /// An ASCII string identifying a username
   std::string username;
-  /// An ASCII string identifying a password.
+  /// An ASCII string identifying a password
   std::string password;
-  /// An optional URL host, either a domain, IPv4 or IPv6 address, an opaque host, or empty.
+  /// An optional URL host, either a domain, IPv4 or IPv6 address, an opaque host, or empty
   skyr::optional<std::string> host;
-  /// An optional network port.
+  /// An optional network port
   skyr::optional<std::uint16_t> port;
-  /// A list of zero or more ASCII strings, used to identify a location in a hierarchical form.
+  /// A list of zero or more ASCII strings, used to identify a location in a hierarchical form
   std::vector<std::string> path;
-  /// An optional ASCII string.
+  /// An optional ASCII string
   skyr::optional<std::string> query;
-  /// An optional ASCII string.
+  /// An optional ASCII string
   skyr::optional<std::string> fragment;
 
-  /// A Boolean value indicating whether this URL can be used as a base URL.
+  /// A Boolean value indicating whether this URL can be used as a base URL
   bool cannot_be_a_base_url;
 
   /// Default constructor
@@ -47,6 +47,7 @@ struct url_record {
    /// \returns `true` if the URL username or password is not an empty string, `false` otherwise.
   bool includes_credentials() const noexcept;
 
+  ///
   bool cannot_have_a_username_password_or_port() const noexcept;
 
 };

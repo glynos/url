@@ -7,8 +7,7 @@
 #define SKYR_URL_DETAILS_TRANSLATE_INC
 
 #include <string>
-#include <locale>
-#include <codecvt>
+#include <skyr/unicode.hpp>
 
 namespace skyr {
 namespace details {
@@ -43,8 +42,8 @@ struct translate_impl<const char[N]> {
 template <>
 struct translate_impl<std::wstring> {
   std::string operator()(const std::wstring &source) const {
-    std::wstring_convert<std::codecvt_utf8<wchar_t >> convert;
-    return convert.to_bytes(source);
+    auto bytes = wstring_to_bytes(source);
+    return bytes.value();
   }
 };
 
@@ -80,12 +79,91 @@ struct translate_impl<const wchar_t *> {
   }
 };
 
+template <>
+struct translate_impl<std::u16string> {
+  std::string operator()(const std::u16string &source) const {
+    auto bytes = ucs2_to_bytes(source);
+    return bytes.value();
+  }
+};
+
+template <int N>
+struct translate_impl<const char16_t[N]> {
+  std::string operator()(const char16_t *source) const {
+    translate_impl<std::u16string> impl;
+    return impl(source);
+  }
+};
+
+template <int N>
+struct translate_impl<char16_t[N]> {
+  std::string operator()(const char16_t *source) const {
+    translate_impl<std::u16string> impl;
+    return impl(source);
+  }
+};
+
+template <>
+struct translate_impl<char16_t *> {
+  std::string operator()(const char16_t *source) const {
+    translate_impl<std::u16string> impl;
+    return impl(source);
+  }
+};
+
+template <>
+struct translate_impl<const char16_t *> {
+  std::string operator()(const char16_t *source) const {
+    translate_impl<std::u16string> impl;
+    return impl(source);
+  }
+};
+
+template <>
+struct translate_impl<std::u32string> {
+  std::string operator()(const std::u32string &source) const {
+    auto bytes = ucs4_to_bytes(source);
+    return bytes.value();
+  }
+};
+
+template <int N>
+struct translate_impl<const char32_t[N]> {
+  std::string operator()(const char32_t *source) const {
+    translate_impl<std::u32string> impl;
+    return impl(source);
+  }
+};
+
+template <int N>
+struct translate_impl<char32_t[N]> {
+  std::string operator()(const char32_t *source) const {
+    translate_impl<std::u32string> impl;
+    return impl(source);
+  }
+};
+
+template <>
+struct translate_impl<char32_t *> {
+  std::string operator()(const char32_t *source) const {
+    translate_impl<std::u32string> impl;
+    return impl(source);
+  }
+};
+
+template <>
+struct translate_impl<const char32_t *> {
+  std::string operator()(const char32_t *source) const {
+    translate_impl<std::u32string> impl;
+    return impl(source);
+  }
+};
+
 template <typename Source>
 inline std::string translate(const Source &source) {
   translate_impl<Source> impl;
   return impl(source);
 }
-
 }  // namespace details
 }  // namespace skyr
 

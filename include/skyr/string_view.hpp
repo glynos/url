@@ -322,6 +322,12 @@ std::basic_ostream<charT, traits>& operator<<(
 typedef basic_string_view<char> string_view;
 
 ///
+typedef basic_string_view<wchar_t> wstring_view;
+
+///
+typedef basic_string_view<char16_t> u16string_view;
+
+///
 typedef basic_string_view<char32_t> u32string_view;
 }  // namespace skyr
 
