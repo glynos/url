@@ -14,8 +14,7 @@
 #include "url_parser_context.hpp"
 #include "skyr/domain.hpp"
 #include "url_schemes.hpp"
-#include "skyr/details/percent_encode.hpp"
-#include "skyr/details/percent_decode.hpp"
+#include "skyr/percent_encode.hpp"
 #include "skyr/url_parse_state.hpp"
 #include "skyr/ipv6_address.hpp"
 
@@ -120,7 +119,7 @@ expected<std::string, host_parsing_errc> parse_opaque_host(string_view input) {
 
   auto output = std::string();
   for (auto c : input) {
-    output += details::pct_encode_char(c);
+    output += pct_encode_byte(c);
   }
   return output;
 }
@@ -149,7 +148,7 @@ expected<std::string, host_parsing_errc> parse_host(
     return parse_opaque_host(input);
   }
 
-  auto domain = details::pct_decode(input);
+  auto domain = pct_decode(input);
   if (!domain) {
     return make_unexpected(host_parsing_errc::cannot_decode_host_point);
   }
@@ -515,7 +514,7 @@ url_parse_action url_parser_context::parse_authority(char c) {
         continue;
       }
 
-      auto pct_encoded = details::pct_encode_char(
+      auto pct_encoded = pct_encode_byte(
           c, " \"<>`#?{}/:;=@[\\]^|");
 
       if (password_token_seen_flag) {
@@ -833,7 +832,7 @@ url_parse_action url_parser_context::parse_path(char c) {
 //
 //    }
 
-    buffer += details::pct_encode_char(c, " \"<>`#?{}");
+    buffer += pct_encode_byte(c, " \"<>`#?{}");
   }
 
   return url_parse_action::increment;
@@ -850,11 +849,12 @@ url_parse_action url_parser_context::parse_cannot_be_a_base_url(char c) {
     if (!is_eof() && !is_url_code_point(c) && (c != '%')) {
       validation_error = true;
     }
-    else if ((c == '%') && !details::is_pct_encoded(it, end(view), std::locale::classic())) {
+    else if ((c == '%') && !is_pct_encoded(
+        string_view(std::addressof(*it), std::distance(it, end(view))))) {
       validation_error = true;
     }
     if (!is_eof()) {
-      url.path[0] += details::pct_encode_char(c);
+      url.path[0] += pct_encode_byte(c);
     }
   }
   return url_parse_action::increment;
@@ -869,7 +869,7 @@ url_parse_action url_parser_context::parse_query(char c) {
         (c > '~') ||
         (is_in(c, "\"#<>")) ||
         ((c == '\'') && url.is_special())) {
-      url.query.value() += details::pct_encode_char(c, " \"#<>'");
+      url.query.value() += pct_encode_byte(c, " \"#<>'");
     } else {
       url.query.value().push_back(c);
     }
@@ -881,7 +881,7 @@ url_parse_action url_parser_context::parse_fragment(char c) {
   if (c == '\0') {
     validation_error = true;
   } else {
-    url.fragment.value() += details::pct_encode_char(c, " \"`<>'");
+    url.fragment.value() += pct_encode_byte(c, " \"`<>'");
   }
   return url_parse_action::increment;
 }

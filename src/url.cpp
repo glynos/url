@@ -11,7 +11,7 @@
 #include "skyr/url.hpp"
 #include "skyr/url_parse.hpp"
 #include "skyr/url_serialize.hpp"
-#include "skyr/details/percent_encode.hpp"
+#include "skyr/percent_encode.hpp"
 #include "url_schemes.hpp"
 
 namespace skyr {
@@ -86,7 +86,7 @@ expected<void, url_parse_errc> url::set_username(std::string username) {
 
   new_url.username.clear();
   for (auto c : username) {
-    auto pct_encoded = details::pct_encode_char(
+    auto pct_encoded = pct_encode_byte(
         c, " \"<>`#?{}/:;=@[\\]^|");
     new_url.username += pct_encoded;
   }
@@ -106,7 +106,7 @@ expected<void, url_parse_errc> url::set_password(std::string password) {
 
   new_url.password.clear();
   for (auto c : password) {
-    auto pct_encoded = details::pct_encode_char(
+    auto pct_encoded = pct_encode_byte(
         c, " \"<>`#?{}/:;=@[\\]^|");
     new_url.password += pct_encoded;
   }

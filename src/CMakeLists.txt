@@ -11,7 +11,6 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/ipv6_address.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/unicode.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/domain.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/punycode.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_parse.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_serialize.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_schemes.hpp
@@ -21,16 +20,14 @@ set(Skyr_SRCS
 
         ${CMAKE_SOURCE_DIR}/include/tl/optional.hpp
         ${CMAKE_SOURCE_DIR}/include/tl/expected.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/config.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/optional.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/expected.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/string_view.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/config.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/details/percent_decode.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/details/percent_encode.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/percent_encode.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/details/translate.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/unicode.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/domain.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/punycode.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_parse_state.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_record.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/ipv4_address.hpp

@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #include <vector>
 #include <string>
-#include "skyr/punycode.hpp"
+#include "skyr/domain.hpp"
 
 
 using param = std::pair<std::string, std::string>;

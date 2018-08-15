@@ -4,15 +4,15 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include <skyr/details/percent_decode.hpp>
+#include <skyr/percent_encode.hpp>
 
 
-TEST(percent_decode, decode_codepoints_before_0x80_set) {
-  for (auto i = 0; i < 0x80; ++i) {
+TEST(percent_decode, decode_codepoints_set) {
+  for (auto i = 0; i < 0xff; ++i) {
     char buffer[8];
     std::snprintf(buffer, sizeof(buffer), "%02X", i);
     auto input = std::string("%") + buffer;
-    auto decoded = skyr::details::pct_decode_char(input);
+    auto decoded = skyr::pct_decode_byte(input);
     ASSERT_TRUE(decoded);
     EXPECT_EQ(static_cast<char>(i), decoded.value());
   }

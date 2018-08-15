@@ -4,7 +4,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include <skyr/details/percent_encode.hpp>
+#include <skyr/percent_encode.hpp>
 
 class encode_fragment_tests : public ::testing::TestWithParam<char> {};
 
@@ -14,9 +14,8 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::Values(' ', '\"', '<', '>', '`'));
 
 TEST_P(encode_fragment_tests, encode_fragment_set) {
-  auto encoded = skyr::details::pct_encode_char(GetParam(), " \"<>`");
-  auto view = skyr::string_view(encoded);
-  ASSERT_TRUE(skyr::details::is_pct_encoded(begin(view), end(view)));
+  auto encoded = skyr::pct_encode_byte(GetParam(), " \"<>`");
+  ASSERT_TRUE(skyr::is_pct_encoded(encoded));
 }
 
 class encode_path_tests : public ::testing::TestWithParam<char> {};
@@ -27,9 +26,8 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::Values(' ', '\"', '<', '>', '`', '#', '?', '{', '}'));
 
 TEST_P(encode_path_tests, encode_path_set) {
-  auto encoded = skyr::details::pct_encode_char(GetParam(), " \"<>`#?{}");
-  auto view = skyr::string_view(encoded);
-  ASSERT_TRUE(skyr::details::is_pct_encoded(begin(view), end(view)));
+  auto encoded = skyr::pct_encode_byte(GetParam(), " \"<>`#?{}");
+  ASSERT_TRUE(skyr::is_pct_encoded(encoded));
 }
 
 class encode_userinfo_tests : public ::testing::TestWithParam<char> {};
@@ -41,14 +39,13 @@ INSTANTIATE_TEST_CASE_P(
         ' ', '\"', '<', '>', '`', '#', '?', '{', '}', '/', ':', ';', '=', '@', '[', '\\', ']', '^', '|'));
 
 TEST_P(encode_userinfo_tests, encode_userinfo_set) {
-  auto encoded = skyr::details::pct_encode_char(GetParam(), " \"<>`#?{}/:;=@[\\]^|");
-  auto view = skyr::string_view(encoded);
-  ASSERT_TRUE(skyr::details::is_pct_encoded(begin(view), end(view)));
+  auto encoded = skyr::pct_encode_byte(GetParam(), " \"<>`#?{}/:;=@[\\]^|");
+  ASSERT_TRUE(skyr::is_pct_encoded(encoded));
 }
 
 TEST(encode_tests, encode_codepoints_before_0x20_set) {
   for (auto i = 0; i < 0x20; ++i) {
-    auto encoded = skyr::details::pct_encode_char(static_cast<char>(i));
+    auto encoded = skyr::pct_encode_byte(static_cast<char>(i));
     char buffer[8];
     std::snprintf(buffer, sizeof(buffer), "%02X", i);
     auto output = std::string("%") + buffer;
@@ -58,7 +55,7 @@ TEST(encode_tests, encode_codepoints_before_0x20_set) {
 
 TEST(encode_tests, encode_codepoints_before_0x7e_set) {
   for (auto i = 0x7f; i <= 0xff; ++i) {
-    auto encoded = skyr::details::pct_encode_char(static_cast<char>(i));
+    auto encoded = skyr::pct_encode_byte(static_cast<char>(i));
     char buffer[8];
     std::snprintf(buffer, sizeof(buffer), "%02X", i);
     auto output = std::string("%") + buffer;

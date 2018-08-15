@@ -18,6 +18,27 @@ enum class domain_errc {
   incorrect_dns_length,
 };
 
+/// Punycode functions
+namespace punycode {
+/// Punycode encoding or decoding error status
+enum class punycode_errc {
+  bad_input = 1,
+  overflow,
+};
+
+/// \param input
+/// \returns
+expected<std::string, punycode_errc> encode(string_view input);
+
+/// \param input
+/// \returns
+expected<std::string, punycode_errc> encode(u32string_view input);
+
+/// \param input
+/// \returns
+expected<std::string, punycode_errc> decode(string_view input);
+}  // namespace punycode
+
 /// \param domain
 /// \param be_strict
 /// returns
