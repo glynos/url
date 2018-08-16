@@ -134,10 +134,10 @@ expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input) 
 
   auto counter = 0UL;
   for (auto number : numbers) {
-    ipv4 += number * std::pow(256, 3 - counter);
+    ipv4 += number * static_cast<std::uint64_t>(std::pow(256, 3 - counter));
     ++counter;
   }
 
-  return {ipv4_address(ipv4)};
+  return {ipv4_address(static_cast<unsigned int>(ipv4))};
 }
 }  // namespace skyr

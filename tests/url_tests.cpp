@@ -580,12 +580,12 @@ TEST(url_tests, web_platform_tests_33) {
 
 TEST(url_tests, web_platform_tests_34) {
   auto base = skyr::url("http://other.com/");
-  ASSERT_THROW(skyr::url("http://\uFDD0zyx.com", base), skyr::url_parse_error);
+  ASSERT_THROW(skyr::url(U"http://\uFDD0zyx.com", base), skyr::url_parse_error);
 }
 
 TEST(url_tests, web_platform_tests_36) {
   auto base = skyr::url("about:blank");
-  ASSERT_THROW(skyr::url("https://\ufffd", base), skyr::url_parse_error);
+  ASSERT_THROW(skyr::url(U"https://\ufffd", base), skyr::url_parse_error);
 }
 
 TEST(url_tests, web_platform_tests_38) {

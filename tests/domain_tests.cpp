@@ -40,7 +40,7 @@ TEST(domain_tests, invalid_domain_1) {
 }
 
 TEST(domain_tests, invalid_domain_2) {
-  auto instance = skyr::domain_to_ascii("http://\uFDD0zyx.com");
+  auto instance = skyr::domain_to_ascii(U"http://\uFDD0zyx.com");
   ASSERT_FALSE(instance);
 }
 
@@ -53,6 +53,3 @@ TEST(domain_tests, invalid_domain_4) {
   auto instance = skyr::domain_to_ascii("％４１.com");
   ASSERT_FALSE(instance);
 }
-
-//        param{"％４１.com", ""},
-//        param{"％００.com", ""}

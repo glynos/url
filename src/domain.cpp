@@ -8,6 +8,7 @@
 #include <vector>
 #include "skyr/unicode.hpp"
 #include "skyr/domain.hpp"
+#include "idna_table.hpp"
 
 namespace skyr {
 namespace punycode {
@@ -26,7 +27,7 @@ static char32_t decode_digit(char32_t cp) {
                                   cp - 97 < 26 ? cp - 97 : base;
 }
 
-static char encode_digit(char32_t d, int flag) {
+static char32_t encode_digit(char32_t d, int flag) {
   return d + 22 + 75 * (d < 26) - ((flag != 0) << 5);
 }
 
@@ -70,7 +71,7 @@ expected<std::string, domain_errc> encode(u32string_view input) {
 
   for (auto c : input) {
     if (c < 0x80) {
-      result += c;
+      result += static_cast<char>(c);
     }
   }
 
@@ -205,75 +206,6 @@ expected<std::string, domain_errc> decode(string_view input) {
 }  // namespace punycode
 
 namespace {
-enum class idna_status {
-  disallowed,
-  ignored,
-  mapped,
-  deviation,
-  valid,
-};
-
-idna_status map_status(char32_t c, bool use_std3_ascii_rules) {
-  if ((c == 0x00ad) ||
-      (c == 0x034f) ||
-      ((c >= 0x180b) && (c <= 0x180d)) ||
-      (c == 0x200b) ||
-      (c == 0x2060) ||
-      (c == 0x2064) ||
-      ((c >= 0xfe00) && (c <= 0xfe0f)) ||
-      (c == 0xfeff) ||
-      ((c >= 0x1bca0) && (c <= 0x1bca3)) ||
-      ((c >= 0xe0100) && (c <= 0xe01ef))) {
-     return idna_status::ignored;
-  }
-  else if (
-      ((c >= 0x0041) && (c <= 0x005a)) ||
-      (c == 0x3002) ||
-      ((c >= 0xff0d) && (c <= 0xff0e)) ||
-      ((c >= 0xff10) && (c <= 0xff19)) ||
-      ((c >= 0xff21) && (c <= 0xff3a)) ||
-      ((c >= 0xff41) && (c <= 0xff5a)) ||
-      ((c >= 0xff5f) && (c <= 0xff60))) {
-    return idna_status::mapped;
-  }
-  else if (
-      (c == 0x00a0) ||
-      (c == 0x3000) ||
-      ((c >= 0xfdd0) && (c <= 0xfdef)) ||
-      ((c >= 0xff00) && (c <= 0xff0c)) ||
-      ((c >= 0xffef) && (c <= 0xffff))) {
-    return idna_status::disallowed;
-  }
-
-  return idna_status::valid;
-}
-
-char32_t map(char32_t c) {
-  if ((c >= 0x0041) && (c <= 0x005a)) {
-    // upper to lower case
-    return c + 0x0020;
-  }
-  else if (c == 0x3002) {
-    return 0x002e;
-  }
-  else if (
-      ((c >= 0xff01) && (c <= 0xff20)) ||
-      ((c >= 0xff3b) && (c <= 0xff5e))) {
-    // fullwidth characters
-    return c - 0xfee0;
-  }
-  else if ((c >= 0xff21) && (0xff3a)) {
-    // fullwidth characters to lower case
-    return c - 0xfec0;
-  }
-  else if (
-      ((c >= 0xff5f) && (c <= 0xff60))) {
-    // fullwidth characters
-    return c - 0xfeff;
-  }
-  return c;
-}
-
 expected<std::u32string, domain_errc> process(
     u32string_view domain_name,
     bool use_std3_ascii_rules,

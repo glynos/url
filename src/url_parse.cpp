@@ -129,7 +129,7 @@ expected<url_record, url_parse_errc> basic_parse(
       case url_parse_action::continue_:
         continue;
     }
-    
+
     if (context.is_eof()) {
       break;
     }
