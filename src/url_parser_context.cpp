@@ -161,7 +161,7 @@ expected<std::string, url_parse_errc> parse_host(
 
   auto host = parse_ipv4_address(string_view(ascii_domain.value()));
   if (!host) {
-    if (host.error() == ipv4_address_errc::validation_error) {
+    if (host.error() == make_error_code(ipv4_address_errc::validation_error)) {
       return make_unexpected(url_parse_errc::invalid_ipv4_address);
     }
     else {

@@ -13,9 +13,21 @@
 
 namespace skyr {
 ///
-enum class decode_errc {
+enum class percent_decode_errc {
   non_hex_input,
 };
+}  // namespace skyr
+
+namespace std {
+template <>
+struct is_error_code_enum<skyr::percent_decode_errc> : true_type {};
+}  // namespace std
+
+namespace skyr {
+///
+/// \param error
+/// \returns
+std::error_code make_error_code(percent_decode_errc error);
 
 /// \param in
 /// \param includes
@@ -24,11 +36,11 @@ std::string pct_encode_byte(char in, const char *includes = "");
 
 /// \param input
 /// \returns
-expected<char, decode_errc> pct_decode_byte(string_view input);
+expected<char, std::error_code> pct_decode_byte(string_view input);
 
 /// \param input
 /// \returns
-expected<std::string, decode_errc> pct_decode(string_view input);
+expected<std::string, std::error_code> pct_decode(string_view input);
 
 /// \param input
 /// \param locale

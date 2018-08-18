@@ -13,7 +13,40 @@
 
 namespace skyr {
 namespace {
-expected<std::uint64_t, ipv4_address_errc> parse_ipv4_number(
+class percent_encode_error_category : public std::error_category {
+ public:
+  const char *name() const noexcept override;
+  std::string message(int error) const noexcept override;
+};
+
+const char *percent_encode_error_category::name() const noexcept {
+  return "domain";
+}
+
+std::string percent_encode_error_category::message(int error) const noexcept {
+  switch (static_cast<ipv4_address_errc>(error)) {
+    case ipv4_address_errc::more_than_4_segments:
+      return "Input contains more than 4 segments";
+    case ipv4_address_errc::empty_part:
+      return "Empty input";
+    case ipv4_address_errc::invalid_segment_number:
+      return "Invalid segment number";
+    case ipv4_address_errc::validation_error:
+      return "Validation error";
+    default:
+      return "(Unknown error)";
+  }
+}
+
+static const percent_encode_error_category category{};
+}  // namespace
+
+std::error_code make_error_code(ipv4_address_errc error) {
+  return std::error_code(static_cast<int>(error), category);
+}
+
+namespace {
+expected<std::uint64_t, std::error_code> parse_ipv4_number(
     string_view input,
     bool &validation_error_flag) {
   auto R = 10;
@@ -34,12 +67,12 @@ expected<std::uint64_t, ipv4_address_errc> parse_ipv4_number(
     auto pos = static_cast<std::size_t>(0);
     auto number = std::stoul(input.to_string(), &pos, R);
     if (pos != input.length()) {
-      return make_unexpected(ipv4_address_errc::invalid_segment_number);
+      return make_unexpected(make_error_code(ipv4_address_errc::invalid_segment_number));
     }
     return number;
   }
   catch (std::exception &) {
-    return make_unexpected(ipv4_address_errc::invalid_segment_number);
+    return make_unexpected(make_error_code(ipv4_address_errc::invalid_segment_number));
   }
 }
 }  // namespace
@@ -48,7 +81,6 @@ std::string ipv4_address::to_string() const {
   auto output = std::string();
 
   auto n = address_;
-
   for (auto i = 1U; i <= 4U; ++i) {
     output = std::to_string(n % 256) + output;
 
@@ -62,7 +94,7 @@ std::string ipv4_address::to_string() const {
   return output;
 }
 
-expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input) {
+expected<ipv4_address, std::error_code> parse_ipv4_address(string_view input) {
   auto validation_error_flag = false;
 
   std::vector<std::string> parts;
@@ -83,19 +115,19 @@ expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input) 
   }
 
   if (parts.size() > 4) {
-    return skyr::make_unexpected(ipv4_address_errc::more_than_4_segments);
+    return skyr::make_unexpected(make_error_code(ipv4_address_errc::more_than_4_segments));
   }
 
   auto numbers = std::vector<std::uint64_t>();
 
   for (const auto &part : parts) {
     if (part.empty()) {
-      return skyr::make_unexpected(ipv4_address_errc::empty_part);
+      return skyr::make_unexpected(make_error_code(ipv4_address_errc::empty_part));
     }
 
     auto number = parse_ipv4_number(string_view(part), validation_error_flag);
     if (!number) {
-      return skyr::make_unexpected(ipv4_address_errc::invalid_segment_number);
+      return skyr::make_unexpected(make_error_code(ipv4_address_errc::invalid_segment_number));
     }
 
     numbers.push_back(number.value());
@@ -120,13 +152,13 @@ expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input) 
   numbers_it = std::find_if(numbers_first, numbers_last_but_one,
                             [](auto number) -> bool { return number > 255; });
   if (numbers_it != numbers_last_but_one) {
-    return skyr::make_unexpected(ipv4_address_errc::validation_error);
+    return skyr::make_unexpected(make_error_code(ipv4_address_errc::validation_error));
   }
 
   if (numbers.back() >=
       static_cast<std::uint64_t>(std::pow(256, 5 - numbers.size()))) {
     // validation_error = true;
-    return skyr::make_unexpected(ipv4_address_errc::validation_error);
+    return skyr::make_unexpected(make_error_code(ipv4_address_errc::validation_error));
   }
 
   auto ipv4 = numbers.back();

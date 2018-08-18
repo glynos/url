@@ -14,6 +14,25 @@
 #include <skyr/expected.hpp>
 
 namespace skyr {
+enum class ipv6_address_errc {
+//  does_not_start_with_double_colon,
+//  invalid_index,
+//  segment_length_is_zero,
+      validation_error,
+};
+}  // namespace skyr
+
+namespace std {
+template <>
+struct is_error_code_enum<skyr::ipv6_address_errc> : true_type {};
+}  // namespace std
+
+namespace skyr {
+///
+/// \param error
+/// \returns
+std::error_code make_error_code(ipv6_address_errc error);
+
 /// This class represents in IPv6 address.
 class ipv6_address {
 
@@ -35,13 +54,6 @@ class ipv6_address {
    /// \returns The IPv4 address as a string.
   std::string to_string() const;
 
-};
-
-enum class ipv6_address_errc {
-//  does_not_start_with_double_colon,
-//  invalid_index,
-//  segment_length_is_zero,
-  validation_error,
 };
 
 /// \param input

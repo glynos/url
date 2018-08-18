@@ -11,6 +11,33 @@
 
 namespace skyr {
 namespace {
+class percent_encode_error_category : public std::error_category {
+ public:
+  const char *name() const noexcept override;
+  std::string message(int error) const noexcept override;
+};
+
+const char *percent_encode_error_category::name() const noexcept {
+  return "domain";
+}
+
+std::string percent_encode_error_category::message(int error) const noexcept {
+  switch (static_cast<percent_decode_errc >(error)) {
+    case percent_decode_errc::non_hex_input:
+      return "Non hex input";
+    default:
+      return "(Unknown error)";
+  }
+}
+
+static const percent_encode_error_category category{};
+}  // namespace
+
+std::error_code make_error_code(percent_decode_errc error) {
+  return std::error_code(static_cast<int>(error), category);
+}
+
+namespace {
 inline char hex_to_letter(char in) {
   if ((in >= 0) && (in < 10)) {
     return in + '0';
@@ -23,7 +50,7 @@ inline char hex_to_letter(char in) {
   return in;
 }
 
-inline expected<char, decode_errc> letter_to_hex(char in) {
+inline expected<char, std::error_code> letter_to_hex(char in) {
   if ((in >= '0') && (in <= '9')) {
     return in - '0';
   }
@@ -36,7 +63,7 @@ inline expected<char, decode_errc> letter_to_hex(char in) {
     return in + char(10) - 'A';
   }
 
-  return make_unexpected(decode_errc::non_hex_input);
+  return make_unexpected(make_error_code(percent_decode_errc::non_hex_input));
 }
 }  // namespace
 
@@ -63,9 +90,9 @@ std::string pct_encode_byte(char in, const char *includes) {
   return encoded;
 }
 
-expected<char, decode_errc> pct_decode_byte(string_view input) {
+expected<char, std::error_code> pct_decode_byte(string_view input) {
   if ((input.size() < 3) || (input.front() != '%')) {
-    return make_unexpected(decode_errc::non_hex_input);
+    return make_unexpected(make_error_code(percent_decode_errc::non_hex_input));
   }
 
   auto it = begin(input);
@@ -86,7 +113,7 @@ expected<char, decode_errc> pct_decode_byte(string_view input) {
   return static_cast<char>((0x10 * v0.value()) + v1.value());
 }
 
-expected<std::string, decode_errc> pct_decode(string_view input) {
+expected<std::string, std::error_code> pct_decode(string_view input) {
   auto result = std::string{};
   auto first = begin(input), last = end(input);
   auto it = first;

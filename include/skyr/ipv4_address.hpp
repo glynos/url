@@ -12,6 +12,26 @@
 #include <skyr/optional.hpp>
 
 namespace skyr {
+///
+enum class ipv4_address_errc {
+  more_than_4_segments,
+  empty_part,
+  invalid_segment_number,
+  validation_error,
+};
+}  // namespace skyr
+
+namespace std {
+template <>
+struct is_error_code_enum<skyr::ipv4_address_errc> : true_type {};
+}  // namespace std
+
+namespace skyr {
+///
+/// \param error
+/// \returns
+std::error_code make_error_code(ipv4_address_errc error);
+
 /// This class represents an IPv4 address.
 class ipv4_address {
 
@@ -38,17 +58,9 @@ class ipv4_address {
 
 };
 
-///
-enum class ipv4_address_errc {
-  more_than_4_segments,
-  empty_part,
-  invalid_segment_number,
-  validation_error,
-};
-
 /// \param input
 /// \returns
-expected<ipv4_address, ipv4_address_errc> parse_ipv4_address(string_view input);
+expected<ipv4_address, std::error_code> parse_ipv4_address(string_view input);
 }  // namespace skyr
 
 #endif //SKYR_IPV4_ADDRESS_INC

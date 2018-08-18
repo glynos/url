@@ -27,11 +27,10 @@ enum class url_parse_errc {
 };
 }  // namespace skyr
 
-namespace std
-{
+namespace std {
 template <>
 struct is_error_code_enum<skyr::url_parse_errc> : true_type {};
-}
+}  // namespace std
 
 namespace skyr {
 std::error_code make_error_code(url_parse_errc error);

@@ -11,6 +11,39 @@
 #include "idna_table.hpp"
 
 namespace skyr {
+namespace {
+class domain_error_category : public std::error_category {
+ public:
+  const char *name() const noexcept override;
+  std::string message(int error) const noexcept override;
+};
+
+const char *domain_error_category::name() const noexcept {
+  return "domain";
+}
+
+std::string domain_error_category::message(int error) const noexcept {
+  switch (static_cast<domain_errc>(error)) {
+    case domain_errc::disallowed_code_point:
+      return "Disallowed code point";
+    case domain_errc::bad_input:
+      return "Bad input";
+    case domain_errc::overflow:
+      return "Overflow";
+    case domain_errc::encoding_error:
+      return "Encoding error";
+    default:
+      return "(Unknown error)";
+  }
+}
+
+static const domain_error_category category{};
+}  // namespace
+
+std::error_code make_error_code(domain_errc error) {
+  return std::error_code(static_cast<int>(error), category);
+}
+
 namespace punycode {
 namespace {
 static const char32_t base = 36;
@@ -53,15 +86,15 @@ inline bool delim(char32_t c) {
 }
 }  // namespace
 
-expected<std::string, domain_errc> encode(string_view input) {
+expected<std::string, std::error_code> encode(string_view input) {
   auto ucs4 = ucs4_from_bytes(input);
   if (!ucs4) {
-    return make_unexpected(domain_errc::bad_input);
+    return make_unexpected(make_error_code(domain_errc::bad_input));
   }
   return encode(ucs4.value());
 }
 
-expected<std::string, domain_errc> encode(u32string_view input) {
+expected<std::string, std::error_code> encode(u32string_view input) {
   auto result = std::string{};
   result.reserve(256);
 
@@ -91,7 +124,7 @@ expected<std::string, domain_errc> encode(u32string_view input) {
     }
 
     if ((m - n) > ((std::numeric_limits<char32_t>::max() - delta) / (h + 1))) {
-      return make_unexpected(domain_errc::overflow);
+      return make_unexpected(make_error_code(domain_errc::overflow));
     }
     delta += (m - n) * (h + 1);
     n = m;
@@ -99,7 +132,7 @@ expected<std::string, domain_errc> encode(u32string_view input) {
     for (auto c : input) {
       if (c < n) {
         if (++delta == 0) {
-          return make_unexpected(domain_errc::overflow);
+          return make_unexpected(make_error_code(domain_errc::overflow));
         }
       }
 
@@ -130,7 +163,7 @@ expected<std::string, domain_errc> encode(u32string_view input) {
   return to_ascii(result);
 }
 
-expected<std::string, domain_errc> decode(string_view input) {
+expected<std::string, std::error_code> decode(string_view input) {
   auto result = std::u32string();
   result.reserve(256);
 
@@ -163,14 +196,14 @@ expected<std::string, domain_errc> decode(string_view input) {
     auto k = base;
     while (true) {
       if (in >= input.size()) {
-        return make_unexpected(domain_errc::bad_input);
+        return make_unexpected(make_error_code(domain_errc::bad_input));
       }
       auto digit = decode_digit(input[in++]);
       if (digit >= base) {
         return make_unexpected(domain_errc::bad_input);
       }
       if (digit > ((std::numeric_limits<char32_t>::max() - i) / w)) {
-        return make_unexpected(domain_errc::overflow);
+        return make_unexpected(make_error_code(domain_errc::overflow));
       }
       i += digit * w;
       auto t = (k <= bias) ? tmin :
@@ -179,7 +212,7 @@ expected<std::string, domain_errc> decode(string_view input) {
         break;
       }
       if (w > (std::numeric_limits<char32_t>::max() / (base - t))) {
-        return make_unexpected(domain_errc::overflow);
+        return make_unexpected(make_error_code(domain_errc::overflow));
       }
       w *= (base - t);
       k += base;
@@ -189,7 +222,7 @@ expected<std::string, domain_errc> decode(string_view input) {
     bias = adapt((i - oldi), out, (oldi == 0U));
 
     if ((i / out) > (std::numeric_limits<char32_t>::max() - n)) {
-      return make_unexpected(domain_errc::overflow);
+      return make_unexpected(make_error_code(domain_errc::overflow));
     }
     n += i / out;
     i %= out;
@@ -199,14 +232,14 @@ expected<std::string, domain_errc> decode(string_view input) {
 
   auto bytes = ucs4_to_bytes(result);
   if (!bytes) {
-    return make_unexpected(domain_errc::bad_input);
+    return make_unexpected(make_error_code(domain_errc::bad_input));
   }
   return bytes.value();
 }
 }  // namespace punycode
 
 namespace {
-expected<std::u32string, domain_errc> process(
+expected<std::u32string, std::error_code> process(
     u32string_view domain_name,
     bool use_std3_ascii_rules,
     bool check_hyphens,
@@ -246,7 +279,7 @@ expected<std::u32string, domain_errc> process(
   }
 
   if (error) {
-    return make_unexpected(domain_errc::disallowed_code_point);
+    return make_unexpected(make_error_code(domain_errc::disallowed_code_point));
   }
 
   return result;
@@ -290,7 +323,7 @@ std::u32string join(const std::vector<std::u32string> &labels) {
   return domain.substr(0, domain.length() - 1);
 }
 
-expected<std::string, domain_errc> unicode_to_ascii(
+expected<std::string, std::error_code> unicode_to_ascii(
     u32string_view domain_name,
     bool check_hyphens,
     bool check_bidi,
@@ -339,23 +372,23 @@ expected<std::string, domain_errc> unicode_to_ascii(
   auto ucs4_domain = join(labels);
   auto ascii_domain = ucs4_to_bytes(ucs4_domain);
   if (!ascii_domain) {
-    return make_unexpected(domain_errc::encoding_error);
+    return make_unexpected(make_error_code(domain_errc::encoding_error));
   }
   return ascii_domain.value();
 }
 }  // namespace
 
-expected<std::string, domain_errc> domain_to_ascii(
+expected<std::string, std::error_code> domain_to_ascii(
     string_view domain,
     bool be_strict) {
   auto ucs4 = ucs4_from_bytes(domain);
   if (!ucs4) {
-    return make_unexpected(domain_errc::encoding_error);
+    return make_unexpected(make_error_code(domain_errc::encoding_error));
   }
   return domain_to_ascii(ucs4.value(), be_strict);
 }
 
-expected<std::string, domain_errc> domain_to_ascii(
+expected<std::string, std::error_code> domain_to_ascii(
     u32string_view domain,
     bool be_strict) {
   auto result = unicode_to_ascii(

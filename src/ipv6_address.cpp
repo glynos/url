@@ -13,6 +13,33 @@
 
 namespace skyr {
 namespace {
+class ipv6_address_error_category : public std::error_category {
+ public:
+  const char *name() const noexcept override;
+  std::string message(int error) const noexcept override;
+};
+
+const char *ipv6_address_error_category::name() const noexcept {
+  return "domain";
+}
+
+std::string ipv6_address_error_category::message(int error) const noexcept {
+  switch (static_cast<ipv6_address_errc>(error)) {
+    case ipv6_address_errc::validation_error:
+      return "Validation error";
+    default:
+      return "(Unknown error)";
+  }
+}
+
+static const ipv6_address_error_category category{};
+}  // namespace
+
+std::error_code make_error_code(ipv6_address_errc error) {
+  return std::error_code(static_cast<int>(error), category);
+}
+
+namespace {
 bool starts_with(
     string_view::const_iterator first,
     string_view::const_iterator last,
