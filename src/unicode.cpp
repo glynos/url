@@ -38,6 +38,15 @@ expected<std::string, unicode_errc> wstring_to_bytes(wstring_view input) {
   }
 }
 
+expected<std::wstring, unicode_errc> wstring_from_bytes(string_view input) {
+  try {
+    return wstring().from_bytes(begin(input), end(input));
+  }
+  catch (std::range_error &) {
+    return make_unexpected(unicode_errc::overflow);
+  }
+}
+
 expected<std::u16string, unicode_errc> ucs2_from_bytes(string_view input) {
   try {
     return ucs2().from_bytes(begin(input), end(input));

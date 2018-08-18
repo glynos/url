@@ -27,7 +27,7 @@ class url_parse_error : public std::runtime_error {
   /// \param error
   explicit url_parse_error(std::error_code error) noexcept
     : runtime_error("URL parse error")
-    , error_(error) {}
+    , error_(std::move(error)) {}
 
   /// \returns
   std::error_code error() const noexcept {
@@ -44,6 +44,7 @@ class url_parse_error : public std::runtime_error {
 class url {
  public:
 
+  using string_type = std::string;
   using value_type = string_view::value_type;
   using iterator = string_view::iterator;
   using const_iterator = string_view::const_iterator;
@@ -209,6 +210,37 @@ class url {
   /// \returns
   static optional<std::uint16_t> default_port(const std::string &scheme) noexcept;
 
+  ///
+  void clear();
+
+  ///
+  /// \returns
+  const char *c_str() const noexcept;
+
+  ///
+  /// \returns
+  operator string_type() const;
+
+  ///
+  /// \returns
+  std::string string() const;
+
+  ///
+  /// \returns
+  std::wstring wstring() const;
+
+  ///
+  /// \returns
+  std::string u8string() const;
+
+  ///
+  /// \returns
+  std::u16string u16string() const;
+
+  ///
+  /// \returns
+  std::u32string u32string() const;
+
  private:
 
   void initialize(std::string input, optional<url_record> base = nullopt);
@@ -218,6 +250,8 @@ class url {
   string_view view_;
   url_search_parameters parameters_;
 };
+
+void swap(url &lhs, url &rhs) noexcept;
 
 /// \exclude
 namespace details {

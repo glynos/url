@@ -21,6 +21,10 @@ expected<std::string, unicode_errc> wstring_to_bytes(wstring_view input);
 
 /// \param
 /// \returns
+expected<std::wstring, unicode_errc> wstring_from_bytes(string_view input);
+
+/// \param
+/// \returns
 expected<std::u16string, unicode_errc> ucs2_from_bytes(string_view input);
 
 /// \param

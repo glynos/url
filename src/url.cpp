@@ -8,6 +8,7 @@
 #include <functional>
 #include <locale>
 #include <vector>
+#include <cassert>
 #include "skyr/url.hpp"
 #include "skyr/url_parse.hpp"
 #include "skyr/url_serialize.hpp"
@@ -310,9 +311,51 @@ optional<std::uint16_t> url::default_port(const std::string &scheme) noexcept {
   return details::default_port(string_view(scheme));
 }
 
+void url::clear() {
+  update_record(url_record{});
+}
+
+const char *url::c_str() const noexcept {
+  return url_.url.c_str();
+}
+
+url::operator url::string_type() const {
+  return href();
+}
+
+std::string url::string() const {
+  return href();
+}
+
+std::wstring url::wstring() const {
+  auto result = wstring_from_bytes(string());
+  assert(result);
+  return result.value();
+}
+
+std::string url::u8string() const {
+  return href();
+}
+
+std::u16string url::u16string() const {
+  auto result = ucs2_from_bytes(href());
+  assert(result);
+  return result.value();
+}
+
+std::u32string url::u32string() const {
+  auto result = ucs4_from_bytes(href());
+  assert(result);
+  return result.value();
+}
+
+void swap(url &lhs, url &rhs) noexcept {
+  lhs.swap(rhs);
+}
+
 namespace details {
 expected<url, std::error_code> make_url(std::string input, optional<url_record> base) {
-  auto parsed_url = parse(input, base);
+  auto parsed_url = parse(std::move(input), std::move(base));
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));
   }
