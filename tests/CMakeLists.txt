@@ -7,19 +7,20 @@
 include_directories(${gtest_SOURCE_DIR}/include)
 
 set(
-    TESTS
-    percent_decoding_tests
-    percent_encoding_tests
-    url_tests
-    url_web_platform_tests
-    url_parse_tests
-    url_parsing_example_tests
-    url_setter_tests
-    url_search_parameters_tests
-    ipv4_address_tests
-    ipv6_address_tests
-    punycode_tests
-    domain_tests
+        TESTS
+        percent_decoding_tests
+        percent_encoding_tests
+        url_tests
+        url_web_platform_tests
+        url_parse_tests
+        url_parsing_example_tests
+        url_setter_tests
+        url_search_parameters_tests
+        ipv4_address_tests
+        ipv6_address_tests
+        punycode_tests
+        domain_tests
+        unicode_tests
     )
 
 foreach (test ${TESTS})

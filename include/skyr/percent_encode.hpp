@@ -13,26 +13,35 @@
 
 namespace skyr {
 ///
-enum class percent_decode_errc {
+enum class percent_encode_errc {
   non_hex_input,
+  overflow,
 };
 }  // namespace skyr
 
 namespace std {
 template <>
-struct is_error_code_enum<skyr::percent_decode_errc> : true_type {};
+struct is_error_code_enum<skyr::percent_encode_errc> : true_type {};
 }  // namespace std
 
 namespace skyr {
 ///
 /// \param error
 /// \returns
-std::error_code make_error_code(percent_decode_errc error);
+std::error_code make_error_code(percent_encode_errc error);
 
 /// \param in
 /// \param includes
 /// \returns
 std::string pct_encode_byte(char in, const char *includes = "");
+
+/// \param input
+/// \returns
+expected<std::string, std::error_code> pct_encode(string_view input, const char *includes = "");
+
+/// \param input
+/// \returns
+expected<std::string, std::error_code> pct_encode(u32string_view input, const char *includes = "");
 
 /// \param input
 /// \returns

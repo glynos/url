@@ -62,3 +62,31 @@ TEST(encode_tests, encode_codepoints_before_0x7e_set) {
     ASSERT_EQ(output, encoded);
   }
 }
+
+TEST(encode_tests, u8_test_1) {
+  auto input = std::string("\xf0\x9f\x92\xa9");
+  auto encoded = skyr::pct_encode(input);
+  ASSERT_TRUE(encoded);
+  EXPECT_EQ("%F0%9F%92%A9", encoded.value());
+}
+
+TEST(encode_tests, u8_test_2) {
+  auto input = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+  auto encoded = skyr::pct_encode(input);
+  ASSERT_TRUE(encoded);
+  EXPECT_EQ("%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88", encoded.value());
+}
+
+TEST(encode_tests, DISABLED_u32_test_1) {
+  auto input = std::u32string(U"\u1F4A9");
+  auto encoded = skyr::pct_encode(input);
+  ASSERT_TRUE(encoded);
+  EXPECT_EQ("%F0%9F%92%A9", encoded.value());
+}
+
+TEST(encode_tests, DISABLED_u32_test_2) {
+  auto input = std::u32string(U"\u1F3F3\uFE0F\200D\1F308");
+  auto encoded = skyr::pct_encode(input);
+  ASSERT_TRUE(encoded);
+  EXPECT_EQ("%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88", encoded.value());
+}

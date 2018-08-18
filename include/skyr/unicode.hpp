@@ -14,6 +14,7 @@
 namespace skyr {
 enum class unicode_errc {
   overflow,
+  illegal_byte_sequence,
 };
 }  // namespace skyr
 
@@ -37,19 +38,19 @@ expected<std::wstring, std::error_code> wstring_from_bytes(string_view input);
 
 /// \param
 /// \returns
-expected<std::u16string, std::error_code> ucs2_from_bytes(string_view input);
+expected<std::u16string, std::error_code> utf16_from_bytes(string_view input);
 
 /// \param
 /// \returns
-expected<std::string, std::error_code> ucs2_to_bytes(u16string_view input);
+expected<std::string, std::error_code> utf16_to_bytes(u16string_view input);
 
 /// \param
 /// \returns
-expected<std::u32string, std::error_code> ucs4_from_bytes(string_view input);
+expected<std::u32string, std::error_code> utf32_from_bytes(string_view input);
 
 /// \param
 /// \returns
-expected<std::string, std::error_code> ucs4_to_bytes(u32string_view input);
+expected<std::string, std::error_code> utf32_to_bytes(u32string_view input);
 }  // namespace skyr
 
 #endif //SKYR_UNICODE_HPP

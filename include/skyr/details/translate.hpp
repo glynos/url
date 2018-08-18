@@ -82,7 +82,7 @@ struct translate_impl<const wchar_t *> {
 template <>
 struct translate_impl<std::u16string> {
   std::string operator()(const std::u16string &source) const {
-    auto bytes = ucs2_to_bytes(source);
+    auto bytes = utf16_to_bytes(source);
     return bytes.value();
   }
 };
@@ -122,7 +122,7 @@ struct translate_impl<const char16_t *> {
 template <>
 struct translate_impl<std::u32string> {
   std::string operator()(const std::u32string &source) const {
-    auto bytes = ucs4_to_bytes(source);
+    auto bytes = utf32_to_bytes(source);
     return bytes.value();
   }
 };

@@ -338,13 +338,13 @@ std::string url::u8string() const {
 }
 
 std::u16string url::u16string() const {
-  auto result = ucs2_from_bytes(href());
+  auto result = utf16_from_bytes(href());
   assert(result);
   return result.value();
 }
 
 std::u32string url::u32string() const {
-  auto result = ucs4_from_bytes(href());
+  auto result = utf32_from_bytes(href());
   assert(result);
   return result.value();
 }

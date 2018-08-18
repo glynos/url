@@ -87,7 +87,7 @@ inline bool delim(char32_t c) {
 }  // namespace
 
 expected<std::string, std::error_code> encode(string_view input) {
-  auto ucs4 = ucs4_from_bytes(input);
+  auto ucs4 = utf32_from_bytes(input);
   if (!ucs4) {
     return make_unexpected(make_error_code(domain_errc::bad_input));
   }
@@ -230,7 +230,7 @@ expected<std::string, std::error_code> decode(string_view input) {
     result.insert(i++, 1, n);
   }
 
-  auto bytes = ucs4_to_bytes(result);
+  auto bytes = utf32_to_bytes(result);
   if (!bytes) {
     return make_unexpected(make_error_code(domain_errc::bad_input));
   }
@@ -370,7 +370,7 @@ expected<std::string, std::error_code> unicode_to_ascii(
   }
 
   auto ucs4_domain = join(labels);
-  auto ascii_domain = ucs4_to_bytes(ucs4_domain);
+  auto ascii_domain = utf32_to_bytes(ucs4_domain);
   if (!ascii_domain) {
     return make_unexpected(make_error_code(domain_errc::encoding_error));
   }
@@ -381,7 +381,7 @@ expected<std::string, std::error_code> unicode_to_ascii(
 expected<std::string, std::error_code> domain_to_ascii(
     string_view domain,
     bool be_strict) {
-  auto ucs4 = ucs4_from_bytes(domain);
+  auto ucs4 = utf32_from_bytes(domain);
   if (!ucs4) {
     return make_unexpected(make_error_code(domain_errc::encoding_error));
   }

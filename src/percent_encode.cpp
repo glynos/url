@@ -3,11 +3,12 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "skyr/percent_encode.hpp"
 #include <iterator>
 #include <cstring>
 #include <cassert>
 #include <algorithm>
+#include "skyr/percent_encode.hpp"
+#include "skyr/unicode.hpp"
 
 namespace skyr {
 namespace {
@@ -22,8 +23,8 @@ const char *percent_encode_error_category::name() const noexcept {
 }
 
 std::string percent_encode_error_category::message(int error) const noexcept {
-  switch (static_cast<percent_decode_errc >(error)) {
-    case percent_decode_errc::non_hex_input:
+  switch (static_cast<percent_encode_errc>(error)) {
+    case percent_encode_errc::non_hex_input:
       return "Non hex input";
     default:
       return "(Unknown error)";
@@ -33,7 +34,7 @@ std::string percent_encode_error_category::message(int error) const noexcept {
 static const percent_encode_error_category category{};
 }  // namespace
 
-std::error_code make_error_code(percent_decode_errc error) {
+std::error_code make_error_code(percent_encode_errc error) {
   return std::error_code(static_cast<int>(error), category);
 }
 
@@ -63,7 +64,7 @@ inline expected<char, std::error_code> letter_to_hex(char in) {
     return in + char(10) - 'A';
   }
 
-  return make_unexpected(make_error_code(percent_decode_errc::non_hex_input));
+  return make_unexpected(make_error_code(percent_encode_errc::non_hex_input));
 }
 }  // namespace
 
@@ -90,9 +91,28 @@ std::string pct_encode_byte(char in, const char *includes) {
   return encoded;
 }
 
+expected<std::string, std::error_code> pct_encode(string_view input, const char *includes) {
+  auto result = std::string{};
+  auto first = begin(input), last = end(input);
+  auto it = first;
+  while (it != last) {
+    result += pct_encode_byte(*it, includes);
+    ++it;
+  }
+  return result;
+}
+
+expected<std::string, std::error_code> pct_encode(u32string_view input, const char *includes) {
+  auto bytes = utf32_to_bytes(input);
+  if (!bytes) {
+    return make_unexpected(make_error_code(percent_encode_errc::overflow));
+  }
+  return pct_encode(bytes.value(), includes);
+}
+
 expected<char, std::error_code> pct_decode_byte(string_view input) {
   if ((input.size() < 3) || (input.front() != '%')) {
-    return make_unexpected(make_error_code(percent_decode_errc::non_hex_input));
+    return make_unexpected(make_error_code(percent_encode_errc::non_hex_input));
   }
 
   auto it = begin(input);
