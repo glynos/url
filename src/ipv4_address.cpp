@@ -65,7 +65,7 @@ expected<std::uint64_t, std::error_code> parse_ipv4_number(
 
   try {
     auto pos = static_cast<std::size_t>(0);
-    auto number = std::stoul(input.to_string(), &pos, R);
+    auto number = std::stoul(std::string(input), &pos, R);
     if (pos != input.length()) {
       return make_unexpected(make_error_code(ipv4_address_errc::invalid_segment_number));
     }

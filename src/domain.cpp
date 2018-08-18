@@ -170,7 +170,7 @@ expected<std::string, std::error_code> decode(string_view input) {
   if (input.substr(0, 4).compare("xn--") == 0) {
     input.remove_prefix(4);
   } else {
-    return input.to_string();
+    return std::string(input);
   }
 
   auto n = initial_n;

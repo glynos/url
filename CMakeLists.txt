@@ -13,25 +13,13 @@ option(Skyr_BUILD_EXAMPLES "Build the URL examples." ON)
 option(Skyr_FULL_WARNINGS "Build the library with all warnings turned on." ON)
 option(Skyr_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(Skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
-option(Skyr_USE_STD17 "Use the C++ 17 standard (GCC only)" OFF)
 
 find_package(Threads REQUIRED)
 
 set(CMAKE_VERBOSE_MAKEFILE true)
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-  INCLUDE(CheckCXXCompilerFlag)
-
-  if(Skyr_USE_STD17)
-    CHECK_CXX_COMPILER_FLAG(-std=c++17 HAVE_STD17)
-    if (HAVE_STD17)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-    else()
-      message(FATAL_ERROR "No C++ 17 support (Compiler does not define -std=c++17).")
-    endif()
-  else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-  endif()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
   if (Skyr_FULL_WARNINGS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
@@ -43,7 +31,7 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
 
   message("C++ Flags: ${CMAKE_CXX_FLAGS} link flags: ${CMAKE_CXX_LINK_FLAGS}")
 elseif(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
   if (NOT Skyr_DISABLE_LIBCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")

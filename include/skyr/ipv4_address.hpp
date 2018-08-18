@@ -7,6 +7,7 @@
 #define SKYR_IPV4_ADDRESS_INC
 
 #include <string>
+#include <system_error>
 #include <skyr/string_view.hpp>
 #include <skyr/expected.hpp>
 #include <skyr/optional.hpp>

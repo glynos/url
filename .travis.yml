@@ -19,22 +19,22 @@ dist:
 matrix:
   include:
 
-    # 1/ Linux Clang Builds
-    - os: linux
-      compiler: clang
-      addons:
-        apt:
-          sources: ['llvm-toolchain-trusty-5.0', 'ubuntu-toolchain-r-test']
-          packages: ['clang-5.0', 'libc++-dev']
-      env: COMPILER='clang++-5.0'
-
-    - os: linux
-      compiler: clang
-      addons:
-        apt:
-          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
-          packages: ['clang-6.0', 'libc++-dev']
-      env: COMPILER='clang++-6.0'
+#    # 1/ Linux Clang Builds
+#    - os: linux
+#      compiler: clang
+#      addons:
+#        apt:
+#          sources: ['llvm-toolchain-trusty-5.0', 'ubuntu-toolchain-r-test']
+#          packages: ['clang-5.0', 'libc++-dev']
+#      env: COMPILER='clang++-5.0'
+#
+#    - os: linux
+#      compiler: clang
+#      addons:
+#        apt:
+#          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
+#          packages: ['clang-6.0', 'libc++-dev']
+#      env: COMPILER='clang++-6.0'
 
   # 2/ Linux GCC Builds
     - os: linux
@@ -45,21 +45,13 @@ matrix:
           packages: ['g++-6']
       env: COMPILER='g++-6'
 
-    - os: linux
-      compiler: gcc
-      addons: &gcc7
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-7']
-      env: COMPILER='g++-7'
-
-    - os: linux
-      compiler: gcc
-      addons: &gcc8
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-8']
-      env: COMPILER='g++-8'
+#    - os: linux
+#      compiler: gcc
+#      addons: &gcc7
+#        apt:
+#          sources: ['ubuntu-toolchain-r-test']
+#          packages: ['g++-7']
+#      env: COMPILER='g++-7'
 
     - os: linux
       compiler: gcc

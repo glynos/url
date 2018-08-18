@@ -217,7 +217,7 @@ inline bool is_windows_drive_letter(string_view segment) noexcept {
 }
 
 bool is_single_dot_path_segment(string_view segment) noexcept {
-  auto lower = segment.to_string();
+  auto lower = std::string(segment);
   std::transform(begin(lower), end(lower), begin(lower),
                  [] (char ch) -> char {
     return std::tolower(ch, std::locale::classic());
@@ -227,7 +227,7 @@ bool is_single_dot_path_segment(string_view segment) noexcept {
 }
 
 bool is_double_dot_path_segment(string_view segment) noexcept {
-  auto lower = segment.to_string();
+  auto lower = std::string(segment);
   std::transform(begin(lower), end(lower), begin(lower),
                  [] (char ch) -> char {
     return std::tolower(ch, std::locale::classic());

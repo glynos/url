@@ -8,8 +8,10 @@
 
 
 int main(int argc, char *argv[]) {
-  auto base = skyr::make_url("https://url.spec.whatwg.org/");
-  auto url = skyr::make_url(U"/\u1F363\u1F37A", base.value());
+  auto base = skyr::make_url(
+      "https://url.spec.whatwg.org/");
+  auto url = skyr::make_url(
+      "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88", base.value());
   if (url) {
     std::cout << url.value().href() << std::endl;
   }

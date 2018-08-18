@@ -6,22 +6,18 @@
 #ifndef SKYR_STRING_VIEW_INC
 #define SKYR_STRING_VIEW_INC
 
-// simple test for G++ 6 if this compiler uses the C++14 or 17 standards
-#if (__cplusplus == 201402L)
-#define NETWORK_STRING_VIEW_STD14
-#elif (__cplusplus == 201500L)
-#define NETWORK_STRING_VIEW_STD17
-#endif
+#include <skyr/config.hpp>
 
-#if defined(SKYR_STRING_VIEW_STD17)
-#include <experimental/string_view>
+#if defined(SKYR_CAN_USE_STD17_STRING_VIEW)
+#include <string_view>
 
 namespace skyr {
-using string_view = std::experimental::basic_string_view<char>;
+using string_view = std::string_view;
+using wstring_view = std::wstring_view;
+using u16string_view = std::u16string_view;
+using u32string_view = std::u32string_view;
 }  // namespace skyr
-
 #else
-
 #include <string>
 #include <iterator>
 #include <cassert>
@@ -330,7 +326,6 @@ typedef basic_string_view<char16_t> u16string_view;
 ///
 typedef basic_string_view<char32_t> u32string_view;
 }  // namespace skyr
-
 #endif  // defined(SKYR_STRING_VIEW_STD17)
 
 #endif  // SKYR_STRING_VIEW_INC
