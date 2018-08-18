@@ -9,6 +9,7 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/url_record.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ipv4_address.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ipv6_address.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/percent_encode.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/unicode.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/idna_table.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/idna_table.hpp

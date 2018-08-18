@@ -82,7 +82,7 @@ class test_parse_urls_using_base_urls : public ::testing::TestWithParam<test_cas
 INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls,
                         testing::ValuesIn(load_test_data(false)));
 
-TEST_P(test_parse_urls_using_base_urls, DISABLED_parse_using_constructor) {
+TEST_P(test_parse_urls_using_base_urls, parse_using_constructor) {
   auto test_case_data = test_case{GetParam()};
   auto instance = skyr::url(test_case_data.input, skyr::url(test_case_data.base));
   EXPECT_EQ(test_case_data.protocol, instance.protocol())
@@ -136,7 +136,7 @@ class test_parse_urls_using_base_urls_failing : public ::testing::TestWithParam<
 INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls_failing,
                         testing::ValuesIn(load_test_data(true)));
 
-TEST_P(test_parse_urls_using_base_urls_failing, DISABLED_parse_using_constructor) {
+TEST_P(test_parse_urls_using_base_urls_failing, parse_using_constructor) {
   auto test_case_data = test_case{GetParam()};
   auto base = skyr::url(test_case_data.base);
   ASSERT_THROW(skyr::url(test_case_data.input, base), skyr::url_parse_error)

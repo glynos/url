@@ -14,6 +14,7 @@ namespace skyr {
 ///
 enum class url_parse_errc {
   invalid_scheme=1,
+  not_an_absolute_url_with_fragment,
   empty_hostname,
   invalid_ipv4_address,
   invalid_ipv6_address,

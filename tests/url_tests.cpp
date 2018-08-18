@@ -592,3 +592,29 @@ TEST(url_tests, web_platform_tests_38) {
   auto base = skyr::url("about:blank");
   ASSERT_THROW(skyr::url("http://％００.com", base), skyr::url_parse_error);
 }
+
+TEST(url_test, poo_test) {
+  auto instance = skyr::url("http://example.org/\xf0\x9f\x92\xa9");
+  EXPECT_EQ("http:", instance.protocol());
+  EXPECT_EQ("example.org", instance.host());
+  EXPECT_EQ("/%F0%9F%92%A9", instance.pathname());
+}
+
+TEST(url_test, domain_error_test) {
+  auto instance = skyr::make_url(U"http://\uFDD0zyx.com");
+  ASSERT_FALSE(instance);
+  EXPECT_EQ(skyr::url_parse_errc::domain_error, instance.error());
+}
+
+TEST(url_test, not_an_absolute_url_with_fragment_test) {
+  auto instance = skyr::make_url(U"/\u1F363\1F37A");
+  ASSERT_FALSE(instance);
+  EXPECT_EQ(skyr::url_parse_errc::not_an_absolute_url_with_fragment, instance.error());
+}
+
+TEST(url_test, pride_flag_test) {
+  auto base = skyr::url("https://pride.example/hello-world");
+  auto instance = skyr::make_url(U"\u1F3F3\uFE0F\200D\1F308", base);
+  ASSERT_TRUE(instance);
+  EXPECT_EQ("/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88", instance.value().pathname());
+}

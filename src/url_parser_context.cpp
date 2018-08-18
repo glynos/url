@@ -355,7 +355,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_scheme(char
 expected<url_parse_action, url_parse_errc> url_parser_context::parse_no_scheme(char c) {
   if (!base || (base.value().cannot_be_a_base_url && (c != '#'))) {
     validation_error = true;
-    return make_unexpected(url_parse_errc::invalid_scheme);
+    return make_unexpected(url_parse_errc::not_an_absolute_url_with_fragment);
   } else if (base.value().cannot_be_a_base_url && (c == '#')) {
     url.scheme = base.value().scheme;
     url.path = base.value().path;

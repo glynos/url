@@ -16,11 +16,12 @@ INSTANTIATE_TEST_CASE_P(
     domain_tests,
     ::testing::Values(
         param{"example.com", "example.com"},
-        param("⌘.ws", "xn--bih.ws"),
+        param{"⌘.ws", "xn--bih.ws"},
         param{"你好你好", "xn--6qqa088eba"},
         param{"你好你好.com", "xn--6qqa088eba.com"},
         param{"उदाहरण.परीक्षा", "xn--p1b6ci4b4b3a.xn--11b5bs3a9aj6g"},
         param{"faß.ExAmPlE", "xn--fa-hia.example"},
+        param{"βόλος.com", "xn--nxasmm1c.com"},
         param{"Ｇｏ.com", "go.com"}
     ));
 
@@ -40,7 +41,7 @@ TEST(domain_tests, invalid_domain_1) {
 }
 
 TEST(domain_tests, invalid_domain_2) {
-  auto instance = skyr::domain_to_ascii(U"http://\uFDD0zyx.com");
+  auto instance = skyr::domain_to_ascii(U"\uFDD0zyx.com");
   ASSERT_FALSE(instance);
 }
 
