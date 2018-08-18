@@ -7,8 +7,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(Skyr)
 
-option(Skyr_BUILD_TESTS "Build the URI tests." ON)
-option(Skyr_BUILD_DOCS "Build the URI documentation." OFF)
+option(Skyr_BUILD_TESTS "Build the URL tests." ON)
+option(Skyr_BUILD_DOCS "Build the URL documentation." OFF)
+option(Skyr_BUILD_EXAMPLES "Build the URL examples." ON)
 option(Skyr_FULL_WARNINGS "Build the library with all warnings turned on." ON)
 option(Skyr_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(Skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
@@ -103,7 +104,11 @@ if (Skyr_BUILD_DOCS)
             CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/standardese.config
             INPUT skyr/url.hpp)
   endif()
-
 endif()
 
 install(DIRECTORY include DESTINATION ".")
+
+if (Skyr_BUILD_EXAMPLES)
+  message(STATUS "Configuring examples")
+  add_subdirectory(examples)
+endif()

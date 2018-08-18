@@ -11,6 +11,7 @@
 #include <map>
 #include <array>
 #include <locale>
+#include <cstring>
 #include "url_parser_context.hpp"
 #include "skyr/domain.hpp"
 #include "url_schemes.hpp"

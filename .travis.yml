@@ -61,6 +61,14 @@ matrix:
           packages: ['g++-8']
       env: COMPILER='g++-8'
 
+    - os: linux
+      compiler: gcc
+      addons: &gcc8
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-8']
+      env: COMPILER='g++-8'
+
 #    # 3/ OSX Clang Builds
 #    - os: osx
 #      osx_image: xcode8
@@ -86,7 +94,7 @@ before_script:
 script:
     - mkdir _build
     - cd _build
-    - cmake -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -DSkyr_DISABLE_LIBCXX=NO -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF ..
+    - cmake -DSkyr_DISABLE_LIBCXX=NO -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF ..
     - make -j 8
     - make test
 

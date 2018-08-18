@@ -19,6 +19,7 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/url_schemes.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_schemes.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_error.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_search_parameters.cpp
 
         ${CMAKE_SOURCE_DIR}/include/tl/optional.hpp

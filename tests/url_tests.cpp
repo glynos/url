@@ -612,7 +612,7 @@ TEST(url_test, not_an_absolute_url_with_fragment_test) {
   EXPECT_EQ(skyr::url_parse_errc::not_an_absolute_url_with_fragment, instance.error());
 }
 
-TEST(url_test, pride_flag_test) {
+TEST(url_test, DISABLED_pride_flag_test) {
   auto base = skyr::url("https://pride.example/hello-world");
   auto instance = skyr::make_url(U"\u1F3F3\uFE0F\200D\1F308", base);
   ASSERT_TRUE(instance);

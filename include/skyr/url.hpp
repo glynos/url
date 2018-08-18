@@ -25,18 +25,18 @@ class url_parse_error : public std::runtime_error {
  public:
   /// Constructor
   /// \param error
-  explicit url_parse_error(url_parse_errc error) noexcept
+  explicit url_parse_error(std::error_code error) noexcept
     : runtime_error("URL parse error")
     , error_(error) {}
 
   /// \returns
-  url_parse_errc error() const noexcept {
+  std::error_code error() const noexcept {
     return error_;
   }
 
  private:
 
-  url_parse_errc error_;
+  std::error_code error_;
 
 };
 
@@ -86,7 +86,7 @@ class url {
   std::string href() const;
 
   /// \param href
-  expected<void, url_parse_errc> set_href(std::string href);
+  expected<void, std::error_code> set_href(std::string href);
 
   /// \returns
   std::string to_json() const;
@@ -95,31 +95,31 @@ class url {
   std::string protocol() const;
 
   /// \param protocol
-  expected<void, url_parse_errc> set_protocol(std::string protocol);
+  expected<void, std::error_code> set_protocol(std::string protocol);
 
   /// \returns
   std::string username() const;
 
   /// \param username
-  expected<void, url_parse_errc> set_username(std::string username);
+  expected<void, std::error_code> set_username(std::string username);
 
   /// \returns
   std::string password() const;
 
   /// \param password
-  expected<void, url_parse_errc> set_password(std::string password);
+  expected<void, std::error_code> set_password(std::string password);
 
   /// \returns
   std::string host() const;
 
   /// \param host
-  expected<void, url_parse_errc> set_host(std::string host);
+  expected<void, std::error_code> set_host(std::string host);
 
   /// \returns
   std::string hostname() const;
 
   /// \param hostname
-  expected<void, url_parse_errc> set_hostname(std::string hostname);
+  expected<void, std::error_code> set_hostname(std::string hostname);
 
   /// \returns
   std::string port() const;
@@ -134,22 +134,22 @@ class url {
   }
 
   /// \param port
-  expected<void, url_parse_errc> set_port(std::string port);
+  expected<void, std::error_code> set_port(std::string port);
 
   /// \param port
-  expected<void, url_parse_errc> set_port(std::uint16_t port);
+  expected<void, std::error_code> set_port(std::uint16_t port);
 
   /// \returns
   std::string pathname() const;
 
   /// \param pathname
-  expected<void, url_parse_errc> set_pathname(std::string pathname);
+  expected<void, std::error_code> set_pathname(std::string pathname);
 
   /// \returns
   std::string search() const;
 
   /// \param search
-  expected<void, url_parse_errc> set_search(std::string search);
+  expected<void, std::error_code> set_search(std::string search);
 
   /// \returns
   url_search_parameters &search_parameters();
@@ -158,7 +158,7 @@ class url {
   std::string hash() const;
 
   /// \param hash
-  expected<void, url_parse_errc> set_hash(std::string hash);
+  expected<void, std::error_code> set_hash(std::string hash);
 
   /// \returns
   url_record record() const;
@@ -221,14 +221,14 @@ class url {
 
 /// \exclude
 namespace details {
-expected<url, url_parse_errc> make_url(std::string input, optional<url_record> base = nullopt);
+expected<url, std::error_code> make_url(std::string input, optional<url_record> base = nullopt);
 }  // details
 
 /// \tparam Source
 /// \param input
 /// \returns
 template <class Source>
-expected<url, url_parse_errc> make_url(Source input) {
+expected<url, std::error_code> make_url(Source input) {
   return details::make_url(details::translate(input));
 }
 
@@ -237,7 +237,7 @@ expected<url, url_parse_errc> make_url(Source input) {
 /// \param base
 /// \returns
 template <class Source>
-expected<url, url_parse_errc> make_url(Source input, url base) {
+expected<url, std::error_code> make_url(Source input, url base) {
   return details::make_url(details::translate(input), base.record());
 }
 

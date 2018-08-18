@@ -3,6 +3,10 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+# This script arses the IDNA table from
+# https://unicode.org/Public/idna/11.0.0/IdnaMappingTable.txt, and convert it to a C++ table.
+
+
 import sys
 import jinja2
 
@@ -28,22 +32,56 @@ status_keys = [
     ]
 
 
-class CodePoint(object):
+class CodePointRange(object):
+
+    def __init__(self, range):
+        if type(range) == str:
+            self.range = range.split('..') if '..' in range else [range, range]
+        elif type(range) == list:
+            self.range = range
+
+    @property
+    def condition(self):
+        if self.range[0] == '0000':
+            return 'c <= 0x{}'.format(self.range[1])
+        elif self.range[0] == self.range[1]:
+            return 'c == 0x{}'.format(self.range[1])
+        return '(c >= 0x{}) && (c <= 0x{})'.format(self.range[0], self.range[1])
+
+
+def adjacent(first, last):
+    return int(first.range[1] + 1) == int(last.range[0])
+
+
+def squash(first, last):
+    assert adjacent(first, last)
+    return CodePointRange(first.range[0], last.range[1])
+
+
+class CodePointMapped(object):
 
     def __init__(self, code_point):
         self.code_point = code_point
 
     @property
+    def mapped(self):
+        return '0x{}'.format(self.code_point[2]) if len(self.code_point) > 2 else self.code_point[0]
+
+
+class CodePointTransform(object):
+
+    def __init__(self, code_point):
+        self.__condition = CodePointRange(code_point[0])
+        self.status = code_point[1]
+        self.__mapped = CodePointMapped(code_point)
+
+    @property
     def condition(self):
-        code_point = self.code_point[0]
-        if '..' in code_point:
-            f, t = code_point.split('..')
-            return '(c >= 0x{}) && (c <= 0x{})'.format(f, t) if f != '0000' else 'c <= 0x{}'.format(t)
-        return 'c == 0x{}'.format(code_point)
+        return self.__condition.condition
 
     @property
     def mapped(self):
-        return '0x{}'.format(self.code_point[1])
+        return self.__mapped.mapped
 
 
 if __name__ == '__main__':
@@ -51,20 +89,18 @@ if __name__ == '__main__':
 
     code_points = {}
     with open(input, 'r') as input_file, open(output, 'w+') as output_file:
-        counter = 0
         for line in input_file.readlines():
             if line.startswith('#') or line == '\n':
                 continue
 
-            line_data = tidy_line([token.strip() for token in line.split(';')])
-            counter += 1
+            code_point = tidy_line([token.strip() for token in line.split(';')])
 
-            status = line_data[1]
+            status = code_point[1]
             assert status in status_keys, line
             if status not in code_points.keys():
                 code_points[status] = []
-            del line_data[1]
-            code_points[status].append(CodePoint(line_data))
+
+            code_points[status].append(CodePointTransform(code_point))
 
         template = jinja2.Template(
 """// Auto-generated.

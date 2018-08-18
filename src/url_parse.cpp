@@ -17,7 +17,7 @@
 
 namespace skyr {
 namespace details {
-expected<url_record, url_parse_errc> basic_parse(
+expected<url_record, std::error_code> basic_parse(
     std::string input,
     const optional<url_record> &base,
     const optional<url_record> &url,
@@ -118,7 +118,7 @@ expected<url_record, url_parse_errc> basic_parse(
     auto func = parse_funcs[context.state];
     auto action = func(context, *context.it);
     if (!action) {
-      return make_unexpected(std::move(action.error()));
+      return make_unexpected(make_error_code(action.error()));
     }
 
     switch (action.value()) {
@@ -140,7 +140,7 @@ expected<url_record, url_parse_errc> basic_parse(
 }
 }  // namespace details
 
-expected<url_record, url_parse_errc> parse(
+expected<url_record, std::error_code> parse(
     std::string input,
     const optional<url_record> &base) {
   auto url = details::basic_parse(input, base);
