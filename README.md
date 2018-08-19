@@ -46,25 +46,25 @@ Gives the output: `/%F0%9F%92%A9`
 ### Creating an non-absolute URL without a base URL
 
 ```c++
-auto url = skyr::make_url(U"/\u1F363\1F37A");
+auto url = skyr::make_url("\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
 if (!url) {
-  std::cerr << "Parsing failed" << std::endl;
+  std::cerr << "Parsing failed: " << url.error().message() << std::endl;
 }
 ```
 
-Gives the output: `Parsing failed`
+Gives the output: `Parsing failed: Not an absolute URL with fragment`
 
 ### Creating a non-absolute URL with a base URL
 
 ```c++
-auto base = skyr::make_url("https://url.spec.whatwg.org/");
-auto url = skyr::make_url(U"/\u1F363\1F37A", base.value());
+auto base = skyr::make_url("https://example.org/");
+auto url = skyr::make_url("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88", base.value());
 if (url) {
   std::cout << url.value().href() << std::endl;
 }
 ```
 
-Gives the output: `https://url.spec.whatwg.org/%F0%9F%8D%A3%F0%9F%8D%BA`
+Gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88`
 
 ## Dependencies
 
