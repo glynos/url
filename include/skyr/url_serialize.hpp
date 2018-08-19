@@ -10,17 +10,11 @@
 #include <skyr/url_record.hpp>
 
 namespace skyr {
-/// This function serializes a URL record according to the WhatWG URL spec.
+/// Serializes a URL record according to the [WhatWG specification](https://url.spec.whatwg.org/#url-serializing).
 /// \param url A URL record
 /// \returns A serialized URL string
 std::string serialize(
     const url_record &url, bool exclude_fragment = false);
-
-/// This function serializes a URL record according to the WhatWG URL spec.
-/// \param url A URL record
-/// \returns A serialized URL string
-std::string serialize_excluding_fragment(
-    const url_record &url);
 }  // namespace skyr
 
 #endif  // SKYR_URL_SERIALIZE_INC

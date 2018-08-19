@@ -77,18 +77,18 @@ expected<std::wstring, std::error_code> wstring_from_bytes(std::string_view inpu
   }
 }
 
-expected<std::u16string, std::error_code> utf16_from_bytes(std::string_view input) {
+expected<std::string, std::error_code> utf16_to_bytes(std::u16string_view input) {
   try {
-    return utf16().from_bytes(begin(input), end(input));
+    return utf16().to_bytes(begin(input), end(input));
   }
   catch (std::range_error &) {
     return make_unexpected(make_error_code(unicode_errc::overflow));
   }
 }
 
-expected<std::string, std::error_code> utf16_to_bytes(std::u16string_view input) {
+expected<std::u16string, std::error_code> utf16_from_bytes(std::string_view input) {
   try {
-    return utf16().to_bytes(begin(input), end(input));
+    return utf16().from_bytes(begin(input), end(input));
   }
   catch (std::range_error &) {
     return make_unexpected(make_error_code(unicode_errc::overflow));

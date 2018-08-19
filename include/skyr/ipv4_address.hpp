@@ -13,43 +13,41 @@
 #include <skyr/optional.hpp>
 
 namespace skyr {
-///
+/// Enumerates IPv4 address parsing errors.
 enum class ipv4_address_errc {
+  /// The input contains more than 4 segments.
   more_than_4_segments,
-  empty_part,
+  /// The input contains an empty segment.
+  empty_segment,
+  /// The segment numers invalid.
   invalid_segment_number,
+  ///
   validation_error,
 };
-}  // namespace skyr
 
-namespace std {
-template <>
-struct is_error_code_enum<skyr::ipv4_address_errc> : true_type {};
-}  // namespace std
-
-namespace skyr {
-///
-/// \param error
-/// \returns
+/// Creates a `std::error_code` given a `skyr::ipv4_address_errc` value.
+/// \param error An IPv4 address error.
+/// \returns A `std::error_code` object.
 std::error_code make_error_code(ipv4_address_errc error);
 
-/// This class represents an IPv4 address.
+/// Represents an IPv4 address.
 class ipv4_address {
 
   unsigned int address_;
 
  public:
 
-  /// Constructor
+  /// Constructor.
   ipv4_address()
       : address_(0) {}
 
-   /// Constructor
-   /// \param address
+   /// Constructor.
+   /// \param address Sets the IPv4 address to `address`.
   explicit ipv4_address(unsigned int address)
       : address_(address) {}
 
-  /// \returns
+  /// Returns the address value.
+  /// \returns The address value.
   unsigned int address() const noexcept {
     return address_;
   }
@@ -59,9 +57,16 @@ class ipv4_address {
 
 };
 
-/// \param input
-/// \returns
+/// Parses an IPv4 address.
+/// \param input An input string.
+/// \returns An `ipv4_address` object or an error.
 expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view input);
 }  // namespace skyr
+
+/// \exclude
+namespace std {
+template <>
+struct is_error_code_enum<skyr::ipv4_address_errc> : true_type {};
+}  // namespace std
 
 #endif //SKYR_IPV4_ADDRESS_INC

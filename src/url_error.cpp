@@ -3,6 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <string>
 #include "skyr/url_error.hpp"
 
 namespace skyr {
@@ -19,7 +20,7 @@ const char *url_parse_error_category::name() const noexcept {
 
 std::string url_parse_error_category::message(int error) const noexcept {
   switch (static_cast<url_parse_errc>(error)) {
-    case url_parse_errc::invalid_scheme:
+    case url_parse_errc::invalid_scheme_character:
       return "Invalid URL scheme";
     case url_parse_errc::not_an_absolute_url_with_fragment:
       return "Not an absolute URL with fragment";

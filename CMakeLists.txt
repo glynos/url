@@ -9,7 +9,7 @@ project(Skyr)
 
 option(Skyr_BUILD_TESTS "Build the URL tests." ON)
 option(Skyr_BUILD_DOCS "Build the URL documentation." OFF)
-option(Skyr_BUILD_EXAMPLES "Build the URL examples." ON)
+option(Skyr_BUILD_EXAMPLES "Build the URL examples." OFF)
 option(Skyr_FULL_WARNINGS "Build the library with all warnings turned on." ON)
 option(Skyr_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(Skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
@@ -82,19 +82,22 @@ if (Skyr_BUILD_TESTS)
   add_subdirectory(tests)
 endif()
 
-# Documentation
-if (Skyr_BUILD_DOCS)
-  message("Configuring documentation")
-  find_package(standardese) # find standardese after installation
-
-  # generates a custom target that will run standardese to generate the documentation
-  if(standardese_FOUND)
-    standardese_generate(skyr
-            INCLUDE_DIRECTORY skyr
-            CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/standardese.config
-            INPUT skyr/url.hpp)
-  endif()
-endif()
+  # Documentation
+#if (Skyr_BUILD_DOCS)
+#  message(STATUS "Configuring documentation")
+#
+#  set(STANDARDESE_TOOL /Users/glyn/Development/standardese/cmake-build-debug/tool/standardese)
+#  include(standardese-config.cmake)
+#
+#  # generates a custom target that will run standardese to generate the documentation
+#  standardese_generate(skyr_docs
+#            INCLUDE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
+#            CONFIG ${CMAKE_CURRENT_SOURCE_DIR}/docs/standardese.config
+#            INPUT
+#                ${CMAKE_CURRENT_SOURCE_DIR}/include/skyr/domain.hpp
+#                ${CMAKE_CURRENT_SOURCE_DIR}/include/skyr/url.hpp
+#                ${CMAKE_CURRENT_SOURCE_DIR}/include/skyr/expected.hpp)
+#endif()
 
 install(DIRECTORY include DESTINATION ".")
 

@@ -27,7 +27,7 @@ std::string percent_encode_error_category::message(int error) const noexcept {
   switch (static_cast<ipv4_address_errc>(error)) {
     case ipv4_address_errc::more_than_4_segments:
       return "Input contains more than 4 segments";
-    case ipv4_address_errc::empty_part:
+    case ipv4_address_errc::empty_segment:
       return "Empty input";
     case ipv4_address_errc::invalid_segment_number:
       return "Invalid segment number";
@@ -122,7 +122,7 @@ expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view inpu
 
   for (const auto &part : parts) {
     if (part.empty()) {
-      return skyr::make_unexpected(make_error_code(ipv4_address_errc::empty_part));
+      return skyr::make_unexpected(make_error_code(ipv4_address_errc::empty_segment));
     }
 
     auto number = parse_ipv4_number(std::string_view(part), validation_error_flag);

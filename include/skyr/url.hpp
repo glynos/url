@@ -24,12 +24,12 @@ namespace skyr {
 class url_parse_error : public std::runtime_error {
  public:
   /// Constructor
-  /// \param error
+  /// \param error An error code value.
   explicit url_parse_error(std::error_code error) noexcept
     : runtime_error("URL parse error")
     , error_(std::move(error)) {}
 
-  /// \returns
+  /// \returns An error code.
   std::error_code error() const noexcept {
     return error_;
   }
@@ -40,52 +40,61 @@ class url_parse_error : public std::runtime_error {
 
 };
 
-/// This class represents a URL.
+/// Represents a URL. Parsing is performed according to the [WhatWG specification](https://url.spec.whatwg.org/).
 class url {
  public:
 
+  /// `std::basic_string<value_type>`
   using string_type = std::string;
+  /// The internal string_view.
   using string_view = std::string_view;
+  /// The character type (ASCII).
   using value_type = string_view::value_type;
-  using iterator = string_view::iterator;
+  /// A constant iterator with a value type of `value_type`.
   using const_iterator = string_view::const_iterator;
-  using reference = string_view::reference;
+  /// An alias to `const_iterator`
+  using iterator = const_iterator;
+  /// A constant reference with value type of `value_type`.
   using const_reference = string_view::const_reference;
+  /// An alias to `const_reference`
+  using reference = const_reference;
+  ///
   using size_type = string_view::size_type;
+  ///
   using difference_type = string_view::difference_type;
 
-  /// Default constructor
-  url() = default;
+  /// Default constructor.
+  url();
 
-  /// Constructor
-  /// \param input The input string
-  /// \throws `url_parse_exception`
+  /// Constructor.
+  /// \param input The input string.
+  /// \throws `url_parse_exception` on parse errors.
   template <class Source>
   explicit url(string_type &&input) {
     initialize(std::move(input));
   }
 
-  /// Constructor
+  /// Constructor.
   /// \tparam Source
-  /// \param input The input string
-  /// \throws `url_parse_exception`
+  /// \param input The input string.
+  /// \throws `url_parse_exception` on parse errors.
   template <class Source>
   explicit url(const Source &input) {
     initialize(details::translate(input));
   }
 
-  /// Constructor
+  /// Constructor.
   /// \tparam Source
-  /// \param input The input string
-  /// \param base A base URL
-  /// \throws `url_parse_exception`
+  /// \param input The input string.
+  /// \param base A base URL.
+  /// \throws `url_parse_exception` on parse errors.
   template <class Source>
   url(const Source &input, const url &base) {
     initialize(details::translate(input), base.url_);
   }
 
-  /// Constructor
-  /// \param input A URL record
+  /// Constructor.
+  /// \param input A URL record.
   explicit url(url_record &&input) noexcept;
 
   ///
@@ -194,23 +203,27 @@ class url {
     return view_;
   }
 
-  /// \returns
+  /// Tests whether the URL is an empty string.
+  /// \returns `true` if the URL is an empty string, `false` otherwise.
   bool empty() const noexcept {
     return view_.empty();
   }
 
-  /// \returns
+  /// \returns The size of the underlying URL string.
+  /// \returns The number of bytes in the underlying string.
   size_type size() const noexcept {
     return view_.size();
   }
 
-  /// \returns
+  /// \returns The length of the URL string.
+  /// \returns The number of characters in the underlying string.
   size_type length() const noexcept {
     return view_.length();
   }
 
-  /// \param other
-  /// \returns
+  /// Compares this `url` object lexicographically with another.
+  /// \param other The other `url` object.
+  /// \returns `href_.compare(other.href_)`
   int compare(const url &other) const noexcept {
     return view_.compare(other.view_);
   }
@@ -219,35 +232,35 @@ class url {
   /// \returns
   static optional<std::uint16_t> default_port(const std::string &scheme) noexcept;
 
-  ///
+  /// Clears the underlying URL string.
   void clear();
 
-  ///
-  /// \returns
+  /// Returns the underyling byte buffer.
+  /// \returns `href_.c_str()`
   const char *c_str() const noexcept;
 
-  ///
-  /// \returns
+  /// Returns the underlying string.
+  /// \returns `href_`
   operator string_type() const;
 
-  ///
-  /// \returns
+  /// Returns the URL as a `std::string`.
+  /// \returns A URL string.
   std::string string() const;
 
-  ///
-  /// \returns
+  /// Returns the URL as a `std::wstring`.
+  /// \returns A URL string.
   std::wstring wstring() const;
 
-  ///
-  /// \returns
+  /// Returns the URL as a `std::string`.
+  /// \returns A URL string.
   std::string u8string() const;
 
-  ///
-  /// \returns
+  /// Returns the URL as a `std::u16string`.
+  /// \returns A URL string.
   std::u16string u16string() const;
 
-  ///
-  /// \returns
+  /// Returns the URL as a `std::u32string`.
+  /// \returns A URL string.
   std::u32string u32string() const;
 
  private:
@@ -261,6 +274,10 @@ class url {
   url_search_parameters parameters_;
 };
 
+/// Swaps two `url` objects.
+/// Equivalent to `lhs.swap(rhs)`.
+/// \param lhs The first `url` object.
+/// \param rhs The second `url` object.
 void swap(url &lhs, url &rhs) noexcept;
 
 /// \exclude
@@ -269,49 +286,56 @@ expected<url, std::error_code> make_url(
     std::string &&input, optional<url_record> base = nullopt);
 }  // details
 
-/// \param input
-/// \returns
+/// Parses a URL string and constructs a `url` object.
+/// \tparam Source
+/// \param input The input string.
+/// \returns A `url` object on success, an error on failure.
 template <class Source>
 expected<url, std::error_code> make_url(url::string_type &&input) {
   return details::make_url(std::move(input));
 }
 
+/// Parses a URL string and constructs a `url` object.
 /// \tparam Source
-/// \param input
-/// \returns
+/// \param input The input string.
+/// \returns A `url` object on success, an error on failure.
 template <class Source>
 expected<url, std::error_code> make_url(const Source &input) {
   return details::make_url(details::translate(input));
 }
 
-/// \param input
-/// \returns
+/// Parses a URL string and constructs a `url` object.
+/// \tparam Source
+/// \param input The input string.
+/// \param base The base URL.
+/// \returns A `url` object on success, an error on failure.
 template <class Source>
 expected<url, std::error_code> make_url(url::string_type &&input, const url &base) {
   return details::make_url(std::move(input), base.record());
 }
 
+/// Parses a URL string and constructs a `url` object.
 /// \tparam Source
-/// \param input
-/// \param base
-/// \returns
+/// \param input The input string.
+/// \param base The base URL.
+/// \returns A `url` object on success, an error on failure.
 template <class Source>
 expected<url, std::error_code> make_url(const Source &input, const url &base) {
   return details::make_url(details::translate(input), base.record());
 }
 
-/// Equality operator
-/// \param lhs
-/// \param rhs
-/// \returns
+/// Tests two URLs for equality according to the [WhatWG specification](https://url.spec.whatwg.org/#url-equivalence).
+/// \param lhs A `url` object.
+/// \param rhs A `url` object.
+/// \returns `true` if the `url` objects are equal, `false` otherwise.
 inline bool operator == (const url &lhs, const url &rhs) noexcept {
   return lhs.compare(rhs) == 0;
 }
 
-/// Inequality operator
-/// \param lhs
-/// \param rhs
-/// \returns
+/// Tests two URLs for inequality.
+/// \param lhs A `url` object.
+/// \param rhs A `url` object.
+/// \returns !(lhs == rhs)
 inline bool operator != (const url &lhs, const url &rhs) noexcept {
   return !(lhs == rhs);
 }

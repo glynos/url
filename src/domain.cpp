@@ -44,7 +44,6 @@ std::error_code make_error_code(domain_errc error) {
   return std::error_code(static_cast<int>(error), category);
 }
 
-namespace punycode {
 namespace {
 static const char32_t base = 36;
 static const char32_t tmin = 1;
@@ -86,15 +85,15 @@ inline bool delim(char32_t c) {
 }
 }  // namespace
 
-expected<std::string, std::error_code> encode(std::string_view input) {
+expected<std::string, std::error_code> punycode_encode(std::string_view input) {
   auto ucs4 = utf32_from_bytes(input);
   if (!ucs4) {
     return make_unexpected(make_error_code(domain_errc::bad_input));
   }
-  return encode(ucs4.value());
+  return punycode_encode(ucs4.value());
 }
 
-expected<std::string, std::error_code> encode(std::u32string_view input) {
+expected<std::string, std::error_code> punycode_encode(std::u32string_view input) {
   auto result = std::string{};
   result.reserve(256);
 
@@ -163,7 +162,7 @@ expected<std::string, std::error_code> encode(std::u32string_view input) {
   return to_ascii(result);
 }
 
-expected<std::string, std::error_code> decode(std::string_view input) {
+expected<std::string, std::error_code> punycode_decode(std::string_view input) {
   auto result = std::u32string();
   result.reserve(256);
 
@@ -236,7 +235,6 @@ expected<std::string, std::error_code> decode(std::string_view input) {
   }
   return bytes.value();
 }
-}  // namespace punycode
 
 namespace {
 expected<std::u32string, std::error_code> process(
@@ -347,7 +345,7 @@ expected<std::string, std::error_code> unicode_to_ascii(
 
   for (auto &label : labels) {
     if (!is_ascii(label)) {
-      auto encoded = punycode::encode(label);
+      auto encoded = punycode_encode(label);
       if (!encoded) {
         return make_unexpected(std::move(encoded.error()));
       }

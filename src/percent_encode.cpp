@@ -68,46 +68,38 @@ inline expected<char, std::error_code> letter_to_hex(char in) {
 }
 }  // namespace
 
-std::string percent_encode_byte(char in, const char *includes) {
+std::string percent_encode_byte(char in, const exclude_set &excludes) {
   auto encoded = std::string{};
-  if ((static_cast<std::uint32_t>(in) <= 0x1f) ||
-      (static_cast<std::uint32_t>(in) > 0x7e)) {
+  if (excludes.is_excluded(in)) {
     encoded += '%';
     encoded += hex_to_letter((in >> 4) & 0x0f);
     encoded += hex_to_letter(in & 0x0f);
   }
   else {
-    auto first = includes, last = includes + std::strlen(includes);
-    auto it = std::find(first, last, in);
-    if (it != last) {
-      encoded += '%';
-      encoded += hex_to_letter((in >> 4) & 0x0f);
-      encoded += hex_to_letter(in & 0x0f);
-    }
-    else {
-      encoded += in;
-    }
+    encoded += in;
   }
   return encoded;
 }
 
-expected<std::string, std::error_code> percent_encode(std::string_view input, const char *includes) {
+expected<std::string, std::error_code> percent_encode(
+    std::string_view input, const exclude_set &excludes) {
   auto result = std::string{};
   auto first = begin(input), last = end(input);
   auto it = first;
   while (it != last) {
-    result += percent_encode_byte(*it, includes);
+    result += percent_encode_byte(*it, excludes);
     ++it;
   }
   return result;
 }
 
-expected<std::string, std::error_code> percent_encode(std::u32string_view input, const char *includes) {
+expected<std::string, std::error_code> percent_encode(
+    std::u32string_view input, const exclude_set &excludes) {
   auto bytes = utf32_to_bytes(input);
   if (!bytes) {
     return make_unexpected(make_error_code(percent_encode_errc::overflow));
   }
-  return percent_encode(bytes.value(), includes);
+  return percent_encode(bytes.value(), excludes);
 }
 
 expected<char, std::error_code> percent_decode_byte(std::string_view input) {

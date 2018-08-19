@@ -29,8 +29,8 @@ expected<url_record, std::error_code> basic_parse(
 }  // namespace details
 
 /// Parses a URL and returns a `url_record`.
-/// \param input The input string that will be parsed
-/// \param base An optional base URL
+/// \param input The input string.
+/// \param base An optional base URL.
 /// \returns A `url_record` on success and an error code on failure.
 expected<url_record, std::error_code> parse(
     std::string input,

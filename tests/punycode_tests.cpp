@@ -40,7 +40,7 @@ TEST_P(punycode_tests, encode_set) {
   auto expected = std::string();
 
   std::tie(input, expected) = GetParam();
-  auto encoded = skyr::punycode::encode(input);
+  auto encoded = skyr::punycode_encode(input);
   ASSERT_TRUE(encoded);
   EXPECT_EQ(expected, encoded.value())
     << input << " --> " << expected << "(" << encoded.value() << ")";
@@ -51,7 +51,7 @@ TEST_P(punycode_tests, decode_set) {
   auto expected = std::string();
 
   std::tie(expected, input) = GetParam();
-  auto decoded = skyr::punycode::decode(input);
+  auto decoded = skyr::punycode_decode(input);
   ASSERT_TRUE(decoded);
   EXPECT_EQ(expected, decoded.value())
     << input << " --> " << expected << "(" << decoded.value() << ")";

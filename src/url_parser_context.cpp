@@ -289,7 +289,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_scheme_star
     return url_parse_action::continue_;
   } else {
     validation_error = true;
-    return make_unexpected(url_parse_errc::invalid_scheme);
+    return make_unexpected(url_parse_errc::invalid_scheme_character);
   }
 
   return url_parse_action::increment;
@@ -302,19 +302,19 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_scheme(char
   } else if (c == ':') {
     if (state_override) {
       if (url.is_special() && !details::is_special(buffer)) {
-        return make_unexpected(url_parse_errc::invalid_scheme);
+        return make_unexpected(url_parse_errc::cannot_override_scheme);
       }
 
       if (!url.is_special() && details::is_special(buffer)) {
-        return make_unexpected(url_parse_errc::invalid_scheme);
+        return make_unexpected(url_parse_errc::cannot_override_scheme);
       }
 
       if ((url.includes_credentials() || url.port) &&(buffer.compare("file") == 0)) {
-        return make_unexpected(url_parse_errc::invalid_scheme);
+        return make_unexpected(url_parse_errc::cannot_override_scheme);
       }
 
       if ((url.scheme.compare("file") == 0) && (!url.host || url.host.value().empty())) {
-        return make_unexpected(url_parse_errc::invalid_scheme);
+        return make_unexpected(url_parse_errc::cannot_override_scheme);
       }
     }
 
@@ -348,6 +348,9 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_scheme(char
     state = url_parse_state::no_scheme;
     reset();
     return url_parse_action::continue_;
+  }
+  else {
+    return make_unexpected(url_parse_errc::invalid_scheme_character);
   }
 
   return url_parse_action::increment;
@@ -508,9 +511,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_authority(c
         continue;
       }
 
-      auto pct_encoded = percent_encode_byte(
-          c, " \"<>`#?{}/:;=@[\\]^|");
-
+      auto pct_encoded = percent_encode_byte(c, userinfo_set());
       if (password_token_seen_flag) {
         url.password += pct_encoded;
       } else {
@@ -826,7 +827,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_path(char c
 //
 //    }
 
-    buffer += percent_encode_byte(c, " \"<>`#?{}");
+    buffer += percent_encode_byte(c, path_set());
   }
 
   return url_parse_action::increment;
@@ -863,7 +864,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_query(char 
         (c > '~') ||
         (is_in(c, "\"#<>")) ||
         ((c == '\'') && url.is_special())) {
-      url.query.value() += percent_encode_byte(c, " \"#<>'");
+      url.query.value() += percent_encode_byte(c, query_set());
     } else {
       url.query.value().push_back(c);
     }
@@ -875,7 +876,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_fragment(ch
   if (c == '\0') {
     validation_error = true;
   } else {
-    url.fragment.value() += percent_encode_byte(c, " \"`<>'");
+    url.fragment.value() += percent_encode_byte(c, fragment_set());
   }
   return url_parse_action::increment;
 }

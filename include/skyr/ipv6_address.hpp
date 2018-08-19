@@ -15,26 +15,20 @@
 #include <skyr/expected.hpp>
 
 namespace skyr {
+/// Enumerates IPv6 address parsing errors.
 enum class ipv6_address_errc {
 //  does_not_start_with_double_colon,
 //  invalid_index,
 //  segment_length_is_zero,
       validation_error,
 };
-}  // namespace skyr
 
-namespace std {
-template <>
-struct is_error_code_enum<skyr::ipv6_address_errc> : true_type {};
-}  // namespace std
-
-namespace skyr {
-///
-/// \param error
-/// \returns
+/// Creates a `std::error_code` given a `skyr::ipv6_address_errc` value.
+/// \param error An IPv6 address error.
+/// \returns A `std::error_code` object.
 std::error_code make_error_code(ipv6_address_errc error);
 
-/// This class represents in IPv6 address.
+/// Represents an IPv6 address.
 class ipv6_address {
 
   std::array<unsigned short, 8> address_;
@@ -43,12 +37,12 @@ class ipv6_address {
 
  public:
 
-  /// Constructor
+  /// Constructor.
   ipv6_address()
       : address_{{0, 0, 0, 0, 0, 0, 0, 0}} {}
 
-  /// Constructor
-  /// \param address
+  /// Constructor.
+  /// \param address Sets the IPv6 address to `address`.
   explicit ipv6_address(std::array<unsigned short, 8> address)
       : address_(address) {}
 
@@ -57,9 +51,16 @@ class ipv6_address {
 
 };
 
-/// \param input
-/// \returns
+/// Parses an IPv6 address.
+/// \param input An input string.
+/// \returns An `ipv6_address` object or an error.
 expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view input);
 }  // namespace skyr
+
+/// \exclude
+namespace std {
+template <>
+struct is_error_code_enum<skyr::ipv6_address_errc> : true_type {};
+}  // namespace std
 
 #endif //SKYR_IPV6_ADDRESS_INC

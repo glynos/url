@@ -14,7 +14,7 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::Values(' ', '\"', '<', '>', '`'));
 
 TEST_P(encode_fragment_tests, encode_fragment_set) {
-  auto encoded = skyr::percent_encode_byte(GetParam(), " \"<>`");
+  auto encoded = skyr::percent_encode_byte(GetParam(), skyr::fragment_set());
   ASSERT_TRUE(skyr::is_percent_encoded(encoded));
 }
 
@@ -26,7 +26,7 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::Values(' ', '\"', '<', '>', '`', '#', '?', '{', '}'));
 
 TEST_P(encode_path_tests, encode_path_set) {
-  auto encoded = skyr::percent_encode_byte(GetParam(), " \"<>`#?{}");
+  auto encoded = skyr::percent_encode_byte(GetParam(), skyr::path_set());
   ASSERT_TRUE(skyr::is_percent_encoded(encoded));
 }
 
@@ -39,7 +39,7 @@ INSTANTIATE_TEST_CASE_P(
         ' ', '\"', '<', '>', '`', '#', '?', '{', '}', '/', ':', ';', '=', '@', '[', '\\', ']', '^', '|'));
 
 TEST_P(encode_userinfo_tests, encode_userinfo_set) {
-  auto encoded = skyr::percent_encode_byte(GetParam(), " \"<>`#?{}/:;=@[\\]^|");
+  auto encoded = skyr::percent_encode_byte(GetParam(), skyr::userinfo_set());
   ASSERT_TRUE(skyr::is_percent_encoded(encoded));
 }
 
