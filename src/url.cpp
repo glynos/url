@@ -18,15 +18,23 @@
 namespace skyr {
 url::url(url_record &&input) noexcept
   : url_(input)
-  , view_(url_.url) {}
-
-void url::swap(url &other) noexcept {
-  std::swap(url_, other.url_);
-  view_ = string_view(url_.url);
-  other.view_ = string_view(other.url_.url);
+  , href_(serialize(url_))
+  , view_(href_) {
+  parameters_.clear();
+  if (url_.query) {
+    parameters_ = url_search_parameters(url_.query.value());
+  }
 }
 
-void url::initialize(std::string input, optional<url_record> base) {
+void url::swap(url &other) noexcept {
+  using std::swap;
+  swap(url_, other.url_);
+  swap(href_, other.href_);
+  view_ = string_view(href_);
+  other.view_ = string_view(other.href_);
+}
+
+void url::initialize(std::string &&input, optional<url_record> base) {
   auto parsed_url = parse(input, base);
   if (!parsed_url) {
     throw url_parse_error(parsed_url.error());
@@ -37,7 +45,8 @@ void url::initialize(std::string input, optional<url_record> base) {
 
 void url::update_record(url_record &&record) {
   url_ = record;
-  view_ = string_view(url_.url);
+  href_ = serialize(url_);
+  view_ = string_view(href_);
 
   parameters_.clear();
   if (url_.query) {
@@ -46,7 +55,7 @@ void url::update_record(url_record &&record) {
 }
 
 std::string url::href() const {
-  return serialize(url_);
+  return href_;
 }
 
 expected<void, std::error_code> url::set_href(std::string href) {
@@ -60,7 +69,7 @@ expected<void, std::error_code> url::set_href(std::string href) {
 }
 
 std::string url::to_json() const {
-  return serialize(url_);
+  return href_;
 }
 
 std::string url::protocol() const { return url_.scheme + ":"; }
@@ -87,7 +96,7 @@ expected<void, std::error_code> url::set_username(std::string username) {
 
   new_url.username.clear();
   for (auto c : username) {
-    auto pct_encoded = pct_encode_byte(
+    auto pct_encoded = percent_encode_byte(
         c, " \"<>`#?{}/:;=@[\\]^|");
     new_url.username += pct_encoded;
   }
@@ -107,7 +116,7 @@ expected<void, std::error_code> url::set_password(std::string password) {
 
   new_url.password.clear();
   for (auto c : password) {
-    auto pct_encoded = pct_encode_byte(
+    auto pct_encoded = percent_encode_byte(
         c, " \"<>`#?{}/:;=@[\\]^|");
     new_url.password += pct_encoded;
   }
@@ -316,15 +325,15 @@ void url::clear() {
 }
 
 const char *url::c_str() const noexcept {
-  return url_.url.c_str();
+  return href_.c_str();
 }
 
 url::operator url::string_type() const {
-  return href();
+  return href_;
 }
 
 std::string url::string() const {
-  return href();
+  return href_;
 }
 
 std::wstring url::wstring() const {
@@ -354,7 +363,7 @@ void swap(url &lhs, url &rhs) noexcept {
 }
 
 namespace details {
-expected<url, std::error_code> make_url(std::string input, optional<url_record> base) {
+expected<url, std::error_code> make_url(std::string &&input, optional<url_record> base) {
   auto parsed_url = parse(std::move(input), std::move(base));
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));

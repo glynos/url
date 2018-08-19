@@ -7,8 +7,8 @@
 #define SKYR_URL_DETAILS_ENCODE_INC
 
 #include <string>
+#include <string_view>
 #include <locale>
-#include <skyr/string_view.hpp>
 #include <skyr/expected.hpp>
 
 namespace skyr {
@@ -33,29 +33,29 @@ std::error_code make_error_code(percent_encode_errc error);
 /// \param in
 /// \param includes
 /// \returns
-std::string pct_encode_byte(char in, const char *includes = "");
+std::string percent_encode_byte(char in, const char *includes = "");
 
 /// \param input
 /// \returns
-expected<std::string, std::error_code> pct_encode(string_view input, const char *includes = "");
+expected<std::string, std::error_code> percent_encode(std::string_view input, const char *includes = "");
 
 /// \param input
 /// \returns
-expected<std::string, std::error_code> pct_encode(u32string_view input, const char *includes = "");
+expected<std::string, std::error_code> percent_encode(std::u32string_view input, const char *includes = "");
 
 /// \param input
 /// \returns
-expected<char, std::error_code> pct_decode_byte(string_view input);
+expected<char, std::error_code> percent_decode_byte(std::string_view input);
 
 /// \param input
 /// \returns
-expected<std::string, std::error_code> pct_decode(string_view input);
+expected<std::string, std::error_code> percent_decode(std::string_view input);
 
 /// \param input
 /// \param locale
 /// \returns
-bool is_pct_encoded(
-    string_view input,
+bool is_percent_encoded(
+    std::string_view input,
     const std::locale &locale = std::locale::classic());
 }  // namespace skyr
 

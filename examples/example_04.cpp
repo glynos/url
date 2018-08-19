@@ -3,16 +3,17 @@
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <skyr/url.hpp>
+#include <skyr/url_parse.hpp>
+#include <skyr/url_serialize.hpp>
 #include <iostream>
 
 
 int main(int argc, char *argv[]) {
-  auto base = skyr::make_url(
+  auto base = skyr::parse(
       "https://example.org/");
-  auto url = skyr::make_url(
+  auto url = skyr::parse(
       "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88", base.value());
   if (url) {
-    std::cout << url.value().href() << std::endl;
+    std::cout << skyr::serialize(url.value()) << std::endl;
   }
 }

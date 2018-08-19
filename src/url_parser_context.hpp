@@ -6,10 +6,10 @@
 #ifndef SKYR_URL_CONTEXT_HPP
 #define SKYR_URL_CONTEXT_HPP
 
+#include <string_view>
 #include <skyr/optional.hpp>
 #include <skyr/expected.hpp>
 #include "skyr/url_error.hpp"
-#include <skyr/string_view.hpp>
 #include <skyr/url_parse_state.hpp>
 #include <skyr/url_record.hpp>
 
@@ -25,11 +25,11 @@ class url_parser_context {
  private:
 
   std::string input;
-  skyr::string_view view;
+  std::string_view view;
 
  public:
 
-  skyr::string_view::const_iterator it;
+  std::string_view::const_iterator it;
 
   skyr::optional<url_record> base;
   url_record url;

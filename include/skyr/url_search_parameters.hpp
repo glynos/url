@@ -7,9 +7,9 @@
 #define SKYR_URL_SEARCH_PARAMETERS_INC
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include <skyr/optional.hpp>
-#include <skyr/string_view.hpp>
 
 namespace skyr {
 ///
@@ -17,7 +17,7 @@ class url_search_parameters {
  public:
 
   using string_type = std::string;
-  using string_view = skyr::string_view;
+  using string_view = std::string_view;
   using value_type = std::pair<string_type, string_type>;
   using const_iterator = std::vector<value_type>::const_iterator;
 

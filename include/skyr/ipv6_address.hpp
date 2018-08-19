@@ -7,11 +7,11 @@
 #define SKYR_IPV6_ADDRESS_INC
 
 #include <string>
+#include <string_view>
 #include <array>
 #include <algorithm>
 #include <iterator>
 #include <system_error>
-#include <skyr/string_view.hpp>
 #include <skyr/expected.hpp>
 
 namespace skyr {
@@ -59,7 +59,7 @@ class ipv6_address {
 
 /// \param input
 /// \returns
-expected<ipv6_address, std::error_code> parse_ipv6_address(string_view input);
+expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view input);
 }  // namespace skyr
 
 #endif //SKYR_IPV6_ADDRESS_INC

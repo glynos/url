@@ -7,8 +7,8 @@
 #define SKYR_IPV4_ADDRESS_INC
 
 #include <string>
+#include <string_view>
 #include <system_error>
-#include <skyr/string_view.hpp>
 #include <skyr/expected.hpp>
 #include <skyr/optional.hpp>
 
@@ -61,7 +61,7 @@ class ipv4_address {
 
 /// \param input
 /// \returns
-expected<ipv4_address, std::error_code> parse_ipv4_address(string_view input);
+expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view input);
 }  // namespace skyr
 
 #endif //SKYR_IPV4_ADDRESS_INC

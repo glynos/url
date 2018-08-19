@@ -8,7 +8,7 @@
 
 #include <skyr/config.hpp>
 
-#if defined(SKYR_CAN_USE_STD17_STRING_VIEW)
+#if defined(SKYR_CAN_USE_STD17_OPTIONAL)
 #include <optional>
 
 namespace skyr {

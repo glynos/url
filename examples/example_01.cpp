@@ -9,5 +9,6 @@
 
 int main(int argc, char *argv[]) {
   auto url = skyr::make_url("http://example.org/\xf0\x9f\x92\xa9");
+  std::cout << url.value().href() << std::endl;
   std::cout << url.value().pathname() << std::endl;
 }

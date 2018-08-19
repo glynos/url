@@ -68,7 +68,7 @@ inline expected<char, std::error_code> letter_to_hex(char in) {
 }
 }  // namespace
 
-std::string pct_encode_byte(char in, const char *includes) {
+std::string percent_encode_byte(char in, const char *includes) {
   auto encoded = std::string{};
   if ((static_cast<std::uint32_t>(in) <= 0x1f) ||
       (static_cast<std::uint32_t>(in) > 0x7e)) {
@@ -91,26 +91,26 @@ std::string pct_encode_byte(char in, const char *includes) {
   return encoded;
 }
 
-expected<std::string, std::error_code> pct_encode(string_view input, const char *includes) {
+expected<std::string, std::error_code> percent_encode(std::string_view input, const char *includes) {
   auto result = std::string{};
   auto first = begin(input), last = end(input);
   auto it = first;
   while (it != last) {
-    result += pct_encode_byte(*it, includes);
+    result += percent_encode_byte(*it, includes);
     ++it;
   }
   return result;
 }
 
-expected<std::string, std::error_code> pct_encode(u32string_view input, const char *includes) {
+expected<std::string, std::error_code> percent_encode(std::u32string_view input, const char *includes) {
   auto bytes = utf32_to_bytes(input);
   if (!bytes) {
     return make_unexpected(make_error_code(percent_encode_errc::overflow));
   }
-  return pct_encode(bytes.value(), includes);
+  return percent_encode(bytes.value(), includes);
 }
 
-expected<char, std::error_code> pct_decode_byte(string_view input) {
+expected<char, std::error_code> percent_decode_byte(std::string_view input) {
   if ((input.size() < 3) || (input.front() != '%')) {
     return make_unexpected(make_error_code(percent_encode_errc::non_hex_input));
   }
@@ -133,7 +133,7 @@ expected<char, std::error_code> pct_decode_byte(string_view input) {
   return static_cast<char>((0x10 * v0.value()) + v1.value());
 }
 
-expected<std::string, std::error_code> pct_decode(string_view input) {
+expected<std::string, std::error_code> percent_decode(std::string_view input) {
   auto result = std::string{};
   auto first = begin(input), last = end(input);
   auto it = first;
@@ -143,7 +143,7 @@ expected<std::string, std::error_code> pct_decode(string_view input) {
         result.push_back(*it);
         return result;
       }
-      auto c = pct_decode_byte(string_view(std::addressof(*it), 3));
+      auto c = percent_decode_byte(std::string_view(std::addressof(*it), 3));
       if (!c) {
         return make_unexpected(std::move(c.error()));
       }
@@ -156,8 +156,8 @@ expected<std::string, std::error_code> pct_decode(string_view input) {
   return result;
 }
 
-bool is_pct_encoded(
-    string_view input,
+bool is_percent_encoded(
+    std::string_view input,
     const std::locale &locale) {
   auto first = begin(input), last = end(input);
   auto it = first;

@@ -41,8 +41,8 @@ std::error_code make_error_code(ipv6_address_errc error) {
 
 namespace {
 bool starts_with(
-    string_view::const_iterator first,
-    string_view::const_iterator last,
+    std::string_view::const_iterator first,
+    std::string_view::const_iterator last,
     const char *chars) noexcept {
   auto chars_first = chars, chars_last = chars + std::strlen(chars);
   auto chars_it = chars_first;
@@ -150,7 +150,7 @@ std::string ipv6_address::to_string() const {
   return output;
 }
 
-expected<ipv6_address, std::error_code> parse_ipv6_address(string_view input) {
+expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view input) {
   // auto validation_error = false;
 
   auto address = std::array<unsigned short, 8>{{0, 0, 0, 0, 0, 0, 0, 0}};

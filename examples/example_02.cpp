@@ -8,7 +8,7 @@
 
 
 int main(int argc, char *argv[]) {
-  auto url = skyr::make_url(U"/\u1F363\1F37A");
+  auto url = skyr::make_url("\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
   if (!url) {
     std::cerr << "Parsing failed: " << url.error().message() << std::endl;
   }

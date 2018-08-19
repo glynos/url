@@ -86,7 +86,7 @@ inline bool delim(char32_t c) {
 }
 }  // namespace
 
-expected<std::string, std::error_code> encode(string_view input) {
+expected<std::string, std::error_code> encode(std::string_view input) {
   auto ucs4 = utf32_from_bytes(input);
   if (!ucs4) {
     return make_unexpected(make_error_code(domain_errc::bad_input));
@@ -94,7 +94,7 @@ expected<std::string, std::error_code> encode(string_view input) {
   return encode(ucs4.value());
 }
 
-expected<std::string, std::error_code> encode(u32string_view input) {
+expected<std::string, std::error_code> encode(std::u32string_view input) {
   auto result = std::string{};
   result.reserve(256);
 
@@ -163,7 +163,7 @@ expected<std::string, std::error_code> encode(u32string_view input) {
   return to_ascii(result);
 }
 
-expected<std::string, std::error_code> decode(string_view input) {
+expected<std::string, std::error_code> decode(std::string_view input) {
   auto result = std::u32string();
   result.reserve(256);
 
@@ -240,7 +240,7 @@ expected<std::string, std::error_code> decode(string_view input) {
 
 namespace {
 expected<std::u32string, std::error_code> process(
-    u32string_view domain_name,
+    std::u32string_view domain_name,
     bool use_std3_ascii_rules,
     bool check_hyphens,
     bool check_bidi,
@@ -285,7 +285,7 @@ expected<std::u32string, std::error_code> process(
   return result;
 }
 
-bool is_ascii(u32string_view input) noexcept {
+bool is_ascii(std::u32string_view input) noexcept {
   auto first = begin(input), last = end(input);
   auto it = std::find_if(
       first, last,
@@ -295,7 +295,7 @@ bool is_ascii(u32string_view input) noexcept {
   return it == last;
 }
 
-std::vector<std::u32string> split(u32string_view domain) noexcept {
+std::vector<std::u32string> split(std::u32string_view domain) noexcept {
   auto labels = std::vector<std::u32string>{};
   if (!domain.empty()) {
     auto first = begin(domain), last = end(domain);
@@ -324,7 +324,7 @@ std::u32string join(const std::vector<std::u32string> &labels) {
 }
 
 expected<std::string, std::error_code> unicode_to_ascii(
-    u32string_view domain_name,
+    std::u32string_view domain_name,
     bool check_hyphens,
     bool check_bidi,
     bool check_joiners,
@@ -379,7 +379,7 @@ expected<std::string, std::error_code> unicode_to_ascii(
 }  // namespace
 
 expected<std::string, std::error_code> domain_to_ascii(
-    string_view domain,
+    std::string_view domain,
     bool be_strict) {
   auto ucs4 = utf32_from_bytes(domain);
   if (!ucs4) {
@@ -389,7 +389,7 @@ expected<std::string, std::error_code> domain_to_ascii(
 }
 
 expected<std::string, std::error_code> domain_to_ascii(
-    u32string_view domain,
+    std::u32string_view domain,
     bool be_strict) {
   auto result = unicode_to_ascii(
       domain, false, true, true, be_strict, false, be_strict);

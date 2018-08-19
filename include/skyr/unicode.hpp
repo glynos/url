@@ -7,8 +7,8 @@
 #define SKYR_UNICODE_HPP
 
 #include <string>
+#include <string_view>
 #include <system_error>
-#include <skyr/string_view.hpp>
 #include <skyr/expected.hpp>
 
 namespace skyr {
@@ -30,27 +30,27 @@ std::error_code make_error_code(unicode_errc error);
 
 /// \param
 /// \returns
-expected<std::string, std::error_code> wstring_to_bytes(wstring_view input);
+expected<std::string, std::error_code> wstring_to_bytes(std::wstring_view input);
 
 /// \param
 /// \returns
-expected<std::wstring, std::error_code> wstring_from_bytes(string_view input);
+expected<std::wstring, std::error_code> wstring_from_bytes(std::string_view input);
 
 /// \param
 /// \returns
-expected<std::u16string, std::error_code> utf16_from_bytes(string_view input);
+expected<std::u16string, std::error_code> utf16_from_bytes(std::string_view input);
 
 /// \param
 /// \returns
-expected<std::string, std::error_code> utf16_to_bytes(u16string_view input);
+expected<std::string, std::error_code> utf16_to_bytes(std::u16string_view input);
 
 /// \param
 /// \returns
-expected<std::u32string, std::error_code> utf32_from_bytes(string_view input);
+expected<std::u32string, std::error_code> utf32_from_bytes(std::string_view input);
 
 /// \param
 /// \returns
-expected<std::string, std::error_code> utf32_to_bytes(u32string_view input);
+expected<std::string, std::error_code> utf32_to_bytes(std::u32string_view input);
 }  // namespace skyr
 
 #endif //SKYR_UNICODE_HPP

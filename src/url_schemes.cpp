@@ -21,7 +21,7 @@ const default_port_list &special_schemes() noexcept {
   return schemes;
 }
 
-optional<std::uint16_t> default_port(string_view scheme) noexcept {
+optional<std::uint16_t> default_port(std::string_view scheme) noexcept {
   auto schemes = special_schemes();
   auto first = begin(schemes), last = end(schemes);
   auto it = std::find_if(
@@ -36,7 +36,7 @@ optional<std::uint16_t> default_port(string_view scheme) noexcept {
   return nullopt;
 }
 
-bool is_special(string_view scheme) noexcept {
+bool is_special(std::string_view scheme) noexcept {
   auto schemes = special_schemes();
   auto first = begin(schemes), last = end(schemes);
   auto it = std::find_if(
@@ -48,7 +48,7 @@ bool is_special(string_view scheme) noexcept {
   return (it != last);
 }
 
-bool is_default_port(string_view scheme, std::uint16_t port) noexcept {
+bool is_default_port(std::string_view scheme, std::uint16_t port) noexcept {
   auto dport = default_port(scheme);
   return dport && (dport.value() == port);
 }

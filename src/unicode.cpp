@@ -59,7 +59,7 @@ static utf32_convert &utf32() {
 }
 }  // namespace
 
-expected<std::string, std::error_code> wstring_to_bytes(wstring_view input) {
+expected<std::string, std::error_code> wstring_to_bytes(std::wstring_view input) {
   try {
     return wstring().to_bytes(begin(input), end(input));
   }
@@ -68,7 +68,7 @@ expected<std::string, std::error_code> wstring_to_bytes(wstring_view input) {
   }
 }
 
-expected<std::wstring, std::error_code> wstring_from_bytes(string_view input) {
+expected<std::wstring, std::error_code> wstring_from_bytes(std::string_view input) {
   try {
     return wstring().from_bytes(begin(input), end(input));
   }
@@ -77,7 +77,7 @@ expected<std::wstring, std::error_code> wstring_from_bytes(string_view input) {
   }
 }
 
-expected<std::u16string, std::error_code> utf16_from_bytes(string_view input) {
+expected<std::u16string, std::error_code> utf16_from_bytes(std::string_view input) {
   try {
     return utf16().from_bytes(begin(input), end(input));
   }
@@ -86,7 +86,7 @@ expected<std::u16string, std::error_code> utf16_from_bytes(string_view input) {
   }
 }
 
-expected<std::string, std::error_code> utf16_to_bytes(u16string_view input) {
+expected<std::string, std::error_code> utf16_to_bytes(std::u16string_view input) {
   try {
     return utf16().to_bytes(begin(input), end(input));
   }
@@ -95,7 +95,7 @@ expected<std::string, std::error_code> utf16_to_bytes(u16string_view input) {
   }
 }
 
-expected<std::u32string, std::error_code> utf32_from_bytes(string_view input) {
+expected<std::u32string, std::error_code> utf32_from_bytes(std::string_view input) {
   try {
     return utf32().from_bytes(begin(input), end(input));
   }
@@ -104,7 +104,7 @@ expected<std::u32string, std::error_code> utf32_from_bytes(string_view input) {
   }
 }
 
-expected<std::string, std::error_code> utf32_to_bytes(u32string_view input) {
+expected<std::string, std::error_code> utf32_to_bytes(std::u32string_view input) {
   try {
     return utf32().to_bytes(begin(input), end(input));
   }

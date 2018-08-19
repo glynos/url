@@ -29,8 +29,6 @@
 #endif  // defined(SKYR_STD17)
 #endif  // defined(__GNUC__)
 
-
-
 #if defined(_MSC_VER)
 #define SKYR_URI_MSVC _MSC_VER
 #endif  // defined(_MSC_VER)

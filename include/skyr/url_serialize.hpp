@@ -14,7 +14,7 @@ namespace skyr {
 /// \param url A URL record
 /// \returns A serialized URL string
 std::string serialize(
-    const url_record &url);
+    const url_record &url, bool exclude_fragment = false);
 
 /// This function serializes a URL record according to the WhatWG URL spec.
 /// \param url A URL record

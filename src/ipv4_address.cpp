@@ -47,7 +47,7 @@ std::error_code make_error_code(ipv4_address_errc error) {
 
 namespace {
 expected<std::uint64_t, std::error_code> parse_ipv4_number(
-    string_view input,
+    std::string_view input,
     bool &validation_error_flag) {
   auto R = 10;
 
@@ -94,7 +94,7 @@ std::string ipv4_address::to_string() const {
   return output;
 }
 
-expected<ipv4_address, std::error_code> parse_ipv4_address(string_view input) {
+expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view input) {
   auto validation_error_flag = false;
 
   std::vector<std::string> parts;
@@ -125,7 +125,7 @@ expected<ipv4_address, std::error_code> parse_ipv4_address(string_view input) {
       return skyr::make_unexpected(make_error_code(ipv4_address_errc::empty_part));
     }
 
-    auto number = parse_ipv4_number(string_view(part), validation_error_flag);
+    auto number = parse_ipv4_number(std::string_view(part), validation_error_flag);
     if (!number) {
       return skyr::make_unexpected(make_error_code(ipv4_address_errc::invalid_segment_number));
     }

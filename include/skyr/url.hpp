@@ -7,7 +7,7 @@
 #define SKYR_URL_INC
 
 #include <string>
-#include <skyr/string_view.hpp>
+#include <string_view>
 #include <skyr/expected.hpp>
 #include <skyr/url_record.hpp>
 #include <skyr/url_error.hpp>
@@ -45,6 +45,7 @@ class url {
  public:
 
   using string_type = std::string;
+  using string_view = std::string_view;
   using value_type = string_view::value_type;
   using iterator = string_view::iterator;
   using const_iterator = string_view::const_iterator;
@@ -57,11 +58,19 @@ class url {
   url() = default;
 
   /// Constructor
+  /// \param input The input string
+  /// \throws `url_parse_exception`
+  template <class Source>
+  explicit url(string_type &&input) {
+    initialize(std::move(input));
+  }
+
+  /// Constructor
   /// \tparam Source
   /// \param input The input string
   /// \throws `url_parse_exception`
   template <class Source>
-  explicit url(Source input) {
+  explicit url(const Source &input) {
     initialize(details::translate(input));
   }
 
@@ -71,7 +80,7 @@ class url {
   /// \param base A base URL
   /// \throws `url_parse_exception`
   template <class Source>
-  url(Source input, url base) {
+  url(const Source &input, const url &base) {
     initialize(details::translate(input), base.url_);
   }
 
@@ -243,10 +252,11 @@ class url {
 
  private:
 
-  void initialize(std::string input, optional<url_record> base = nullopt);
+  void initialize(std::string &&input, optional<url_record> base = nullopt);
   void update_record(url_record &&record);
 
   url_record url_;
+  std::string href_;
   string_view view_;
   url_search_parameters parameters_;
 };
@@ -255,15 +265,30 @@ void swap(url &lhs, url &rhs) noexcept;
 
 /// \exclude
 namespace details {
-expected<url, std::error_code> make_url(std::string input, optional<url_record> base = nullopt);
+expected<url, std::error_code> make_url(
+    std::string &&input, optional<url_record> base = nullopt);
 }  // details
+
+/// \param input
+/// \returns
+template <class Source>
+expected<url, std::error_code> make_url(url::string_type &&input) {
+  return details::make_url(std::move(input));
+}
 
 /// \tparam Source
 /// \param input
 /// \returns
 template <class Source>
-expected<url, std::error_code> make_url(Source input) {
+expected<url, std::error_code> make_url(const Source &input) {
   return details::make_url(details::translate(input));
+}
+
+/// \param input
+/// \returns
+template <class Source>
+expected<url, std::error_code> make_url(url::string_type &&input, const url &base) {
+  return details::make_url(std::move(input), base.record());
 }
 
 /// \tparam Source
@@ -271,7 +296,7 @@ expected<url, std::error_code> make_url(Source input) {
 /// \param base
 /// \returns
 template <class Source>
-expected<url, std::error_code> make_url(Source input, url base) {
+expected<url, std::error_code> make_url(const Source &input, const url &base) {
   return details::make_url(details::translate(input), base.record());
 }
 

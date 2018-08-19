@@ -7,10 +7,10 @@
 
 namespace skyr {
 std::string serialize(
-    const url_record &url) {
+    const url_record &url, bool exclude_fragment) {
   auto output = serialize_excluding_fragment(url);
 
-  if (url.fragment) {
+  if (!exclude_fragment && url.fragment) {
     output += "#";
     output += url.fragment.value();
   }
