@@ -12,7 +12,7 @@
 #include <skyr/optional.hpp>
 
 namespace skyr {
-///
+/// Allows iterating through search parameters.
 class url_search_parameters {
  public:
 
@@ -21,18 +21,20 @@ class url_search_parameters {
   using value_type = std::pair<string_type, string_type>;
   using const_iterator = std::vector<value_type>::const_iterator;
 
-  /// Constructor
+  /// Constructor.
   url_search_parameters();
 
-  /// Constructor
-  /// \param query
-  explicit url_search_parameters(string_view query);
+  /// Constructor.
+  /// \param search The search string.
+  explicit url_search_parameters(string_view search);
 
-  /// \param name
-  /// \param value
+  /// Appends a name-value pair to the search string.
+  /// \param name The parameter name.
+  /// \param value The parameter value.
   void append(const string_type &name, const string_type &value);
 
-  /// \param name
+  /// Removes a parameter from the search string.
+  /// \param name The name of the parameter to remove.
   void remove(const string_type &name);
 
   /// \param name

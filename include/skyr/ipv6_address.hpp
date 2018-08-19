@@ -17,10 +17,16 @@
 namespace skyr {
 /// Enumerates IPv6 address parsing errors.
 enum class ipv6_address_errc {
-//  does_not_start_with_double_colon,
-//  invalid_index,
-//  segment_length_is_zero,
-      validation_error,
+  /// IPv6 address does not start with a double colon.
+  does_not_start_with_double_colon,
+  /// IPv6 piece is not valid.
+  invalid_piece,
+  /// IPv6 piece is not valid because address is expected to be compressed.
+  compress_expected,
+  /// IPv4 segment is empty.
+  empty_ipv4_segment,
+  /// IPv4 segment number is invalid.
+  invalid_ipv4_segment_number,
 };
 
 /// Creates a `std::error_code` given a `skyr::ipv6_address_errc` value.

@@ -20,10 +20,10 @@
 #endif
 
 namespace skyr {
-/// `url_parse_error` is thrown when there is an error parsing the URL.
+/// Thrown when there is an error parsing the URL.
 class url_parse_error : public std::runtime_error {
  public:
-  /// Constructor
+  /// Constructor.
   /// \param error An error code value.
   explicit url_parse_error(std::error_code error) noexcept
     : runtime_error("URL parse error")

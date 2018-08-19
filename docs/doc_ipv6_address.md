@@ -20,11 +20,23 @@ namespace skyr
 ``` cpp
 enum class ipv6_address_errc
 {
-    validation_error
+    does_not_start_with_double_colon,
+    invalid_piece,
+    compress_expected,
+    empty_ipv4_segment,
+    invalid_ipv4_segment_number
 };
 ```
 
 Enumerates IPv6 address parsing errors.
+
+#### Enumerators
+
+  - `does_not_start_with_double_colon` - IPv6 address does not start with a double colon.
+  - `invalid_piece` - IPv6 piece is not valid.
+  - `compress_expected` - IPv6 piece is not valid because address is expected to be compressed.
+  - `empty_ipv4_segment` - IPv4 segment is empty.
+  - `invalid_ipv4_segment_number` - IPv4 segment number is invalid.
 
 -----
 

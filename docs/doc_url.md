@@ -50,7 +50,7 @@ public:
 };
 ```
 
-`url_parse_error` is thrown when there is an error parsing the URL.
+Thrown when there is an error parsing the URL.
 
 ### Constructor `skyr::url_parse_error::url_parse_error`
 
@@ -58,7 +58,7 @@ public:
 explicit url_parse_error(std::error_code error) noexcept;
 ```
 
-Constructor
+Constructor.
 
 #### Parameters
 

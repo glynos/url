@@ -52,7 +52,7 @@
     
       - [`is_percent_encoded`](doc_percent_encode.html#standardese-skyr__is_percent_encoded-std__string_view-std__localeconst--) - Tests whether the input string contains percent encoded values.
     
-      - [`make_error_code`](doc_ipv6_address.html#standardese-skyr__make_error_code-skyr__ipv6_address_errc-) - Creates a `std::error_code` given a `skyr::ipv6_address_errc` value.
+      - [`make_error_code`](doc_ipv4_address.html#standardese-skyr__make_error_code-skyr__ipv4_address_errc-) - Creates a `std::error_code` given a `skyr::ipv4_address_errc` value.
     
       - [`make_unexpected`](doc_expected.html#standardese-skyr)
     
@@ -110,13 +110,13 @@
     
       - [`url_parse_errc`](doc_url_error.html#standardese-skyr__url_parse_errc) - Enumerates URL parser errors.
     
-      - [`url_parse_error`](doc_url.html#standardese-skyr__url_parse_error) - `url_parse_error` is thrown when there is an error parsing the URL.
+      - [`url_parse_error`](doc_url.html#standardese-skyr__url_parse_error) - Thrown when there is an error parsing the URL.
     
       - [`url_parse_state`](doc_url_parse_state.html#standardese-skyr__url_parse_state) - States of the URL parser.
     
       - [`url_record`](doc_url_record.html#standardese-skyr__url_record) - Represents the parts of a URL identifier.
     
-      - [`url_search_parameters`](doc_url_search_parameters.html#standardese-skyr)
+      - [`url_search_parameters`](doc_url_search_parameters.html#standardese-skyr__url_search_parameters) - Allows iterating through search parameters.
     
       - [`userinfo_set`](doc_percent_encode.html#standardese-skyr__userinfo_set) - Defines code points in the userinfo percent-encode set.
     
