@@ -70,7 +70,7 @@ before_script:
 script:
     - mkdir _build
     - cd _build
-    - cmake -DSkyr_DISABLE_LIBCXX=NO -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF ..
+    - cmake -DSkyr_DISABLE_LIBCXX=OFF -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF ..
     - make -j 8
     - make test
 

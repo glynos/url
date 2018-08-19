@@ -11,14 +11,15 @@ import sys
 import jinja2
 
 
-def tidy_line(line):
-    if line and '#' in line[-1]:
-        line[-1] = line[-1][0:line[-1].find('#')].strip()
-        if line[-1] == '':
-            line = line[:-1]
-    if len(line) == 3:
-        line[2] = line[2].split()[0]
-    return line
+def parse_line(line):
+    tokens = [token.strip() for token in line.split(';')]
+    if tokens and '#' in tokens[-1]:
+        tokens[-1] = tokens[-1][0:tokens[-1].find('#')].strip()
+        if tokens[-1] == '':
+            tokens = tokens[:-1]
+    if len(tokens) == 3:
+        tokens[2] = tokens[2].split()[0]
+    return tokens
 
 
 status_keys = [
@@ -48,14 +49,17 @@ class CodePointRange(object):
             return 'c == 0x{}'.format(self.range[1])
         return '(c >= 0x{}) && (c <= 0x{})'.format(self.range[0], self.range[1])
 
+    def __str__(self):
+        return '{}..{}'.format(self.range[0], self.range[1])
+
 
 def adjacent(first, last):
-    return int(first.range[1] + 1) == int(last.range[0])
+    return int(first.range[1],  16) + 1 == int(last.range[0], 16)
 
 
 def squash(first, last):
     assert adjacent(first, last)
-    return CodePointRange(first.range[0], last.range[1])
+    return CodePointRange([first.range[0], last.range[1]])
 
 
 class CodePointMapped(object):
@@ -80,20 +84,48 @@ class CodePointTransform(object):
         return self.__condition.condition
 
     @property
+    def range(self):
+        return self.__condition
+
+    @property
     def mapped(self):
         return self.__mapped.mapped
+
+    def __str__(self):
+        return '{}'.format(self.range)
+
+
+def squeeze(code_points):
+    code_point_list = code_points.copy()
+    for status, points in code_point_list.items():
+        new_list = []
+        for code_point in points:
+            if not new_list:
+                new_list.append(code_point)
+                continue
+
+            if adjacent(new_list[-1].range, code_point.range):
+                r = squash(new_list[-1].range, code_point.range)
+                new_list[-1] = CodePointTransform([r.range, status])
+            else:
+                new_list.append(code_point)
+        code_point_list[status] = new_list
+
+    return code_point_list
 
 
 if __name__ == '__main__':
     input, output = sys.argv[1], sys.argv[2]
 
+    entries = []
     code_points = {}
     with open(input, 'r') as input_file, open(output, 'w+') as output_file:
         for line in input_file.readlines():
             if line.startswith('#') or line == '\n':
                 continue
 
-            code_point = tidy_line([token.strip() for token in line.split(';')])
+            code_point = parse_line(line)
+            entries.append(code_point)
 
             status = code_point[1]
             assert status in status_keys, line
@@ -102,8 +134,12 @@ if __name__ == '__main__':
 
             code_points[status].append(CodePointTransform(code_point))
 
+        code_point_list = squeeze(code_points)
+        print(len(code_point_list))
+        print('\n'.join(['{}: {}'.format(status, len(lst)) for status, lst in code_point_list.items()]))
+
         template = jinja2.Template(
-"""// Auto-generated.
+            """// Auto-generated.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -113,28 +149,28 @@ if __name__ == '__main__':
 namespace skyr {
 idna_status map_status(char32_t c, bool use_std3_ascii_rules) {
   if (
-{% for code_point in ignored[:-1] %}    ({{ code_point.condition }}) ||
-{% endfor %}    ({{ ignored[-1].condition }})) {
+{% for code_point in statuses.ignored[:-1] %}    ({{ code_point.condition }}) ||
+{% endfor %}    ({{ statuses.ignored[-1].condition }})) {
     return idna_status::ignored;
   } else if (
-{% for code_point in mapped[:-1] %}    ({{ code_point.condition }}) ||
-{% endfor %}    ({{ mapped[-1].condition }})) {
+{% for code_point in statuses.mapped[:-1] %}    ({{ code_point.condition }}) ||
+{% endfor %}    ({{ statuses.mapped[-1].condition }})) {
     return idna_status::mapped;
   } else if (
-{% for code_point in disallowed[:-1] %}    ({{ code_point.condition }}) ||
-{% endfor %}    ({{ disallowed[-1].condition }})) {
+{% for code_point in statuses.disallowed[:-1] %}    ({{ code_point.condition }}) ||
+{% endfor %}    ({{ statuses.disallowed[-1].condition }})) {
     return idna_status::disallowed;
   } else if (
-{% for code_point in disallowed_STD3_valid[:-1] %}    ({{ code_point.condition }}) ||
-{% endfor %}    ({{ disallowed_STD3_valid[-1].condition }})) {
+{% for code_point in statuses.disallowed_STD3_valid[:-1] %}    ({{ code_point.condition }}) ||
+{% endfor %}    ({{ statuses.disallowed_STD3_valid[-1].condition }})) {
     return use_std3_ascii_rules? idna_status::disallowed : idna_status::valid;
   } else if (
-{% for code_point in disallowed_STD3_mapped[:-1] %}    ({{ code_point.condition }}) ||
-{% endfor %}    ({{ disallowed_STD3_mapped[-1].condition }})) {
+{% for code_point in statuses.disallowed_STD3_mapped[:-1] %}    ({{ code_point.condition }}) ||
+{% endfor %}    ({{ statuses.disallowed_STD3_mapped[-1].condition }})) {
     return use_std3_ascii_rules? idna_status::disallowed : idna_status::mapped;
   } else if (
-{% for code_point in deviation[:-1] %}    ({{ code_point.condition }}) ||
-{% endfor %}    ({{ deviation[-1].condition }})) {
+{% for code_point in statuses.deviation[:-1] %}    ({{ code_point.condition }}) ||
+{% endfor %}    ({{ statuses.deviation[-1].condition }})) {
     return idna_status::deviation;
   }
   return idna_status::valid;
@@ -154,4 +190,8 @@ char32_t map(char32_t c) {
 }
 }  // namespace skyr
 """)
-        template.stream(code_points).dump(output_file)
+        template.stream(
+            entries=entries,
+            statuses=code_point_list,
+            mapped=code_points['mapped'],
+            disallowed_STD3_mapped=code_points['disallowed_STD3_mapped']).dump(output_file)

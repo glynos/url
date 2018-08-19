@@ -79,20 +79,13 @@ This library has been tested using the following compilers:
 
 Linux:
 
-* GCC 6
 * GCC 7
 * GCC 8
-* Clang 5
 * Clang 6
 
 MacOS:
 
-* Clang 5
 * Clang 6
-
-Windows:
-
-* Visual Studio 2017
 
 ## License
 
