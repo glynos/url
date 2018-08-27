@@ -607,14 +607,59 @@ TEST(url_test, domain_error_test) {
 }
 
 TEST(url_test, not_an_absolute_url_with_fragment_test) {
-  auto instance = skyr::make_url(U"/\u1F363\1F37A");
+  auto instance = skyr::make_url("/\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
   ASSERT_FALSE(instance);
   EXPECT_EQ(skyr::url_parse_errc::not_an_absolute_url_with_fragment, instance.error());
 }
 
-TEST(url_test, DISABLED_pride_flag_test) {
+TEST(url_test, pride_flag_test) {
   auto base = skyr::url("https://pride.example/hello-world");
-  auto instance = skyr::make_url(U"\u1F3F3\uFE0F\200D\1F308", base);
+  auto instance = skyr::make_url("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88", base);
   ASSERT_TRUE(instance);
   EXPECT_EQ("/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88", instance.value().pathname());
+}
+
+TEST(url_test, search_parameters_test_1) {
+  auto instance = skyr::url("https://example.com/");
+  auto search = instance.search_parameters();
+  EXPECT_EQ("", search.to_string());
+  EXPECT_EQ("", instance.search());
+}
+
+TEST(url_test, search_parameters_test_2) {
+  auto instance = skyr::url("https://example.com/?");
+  auto search = instance.search_parameters();
+  EXPECT_EQ("", search.to_string());
+  EXPECT_EQ("", instance.search());
+}
+
+TEST(url_test, search_parameters_test_3) {
+  auto instance = skyr::url("https://example.com/?a=b&c=d");
+  auto search = instance.search_parameters();
+  EXPECT_EQ("a=b&c=d", search.to_string());
+  EXPECT_EQ("?a=b&c=d", instance.search());
+}
+
+TEST(url_test, search_parameters_test_4) {
+  auto instance = skyr::url("https://example.com/?a=b&c=d");
+  auto search = instance.search_parameters();
+  search.set("e", "f");
+  EXPECT_EQ("a=b&c=d&e=f", search.to_string());
+  EXPECT_EQ("?a=b&c=d&e=f", instance.search());
+}
+
+TEST(url_test, search_parameters_test_5) {
+  auto instance = skyr::url("https://example.com/?a=b&c=d");
+  auto search = instance.search_parameters();
+  search.set("a", "e");
+  EXPECT_EQ("a=e&c=d", search.to_string());
+  EXPECT_EQ("?a=e&c=d", instance.search());
+}
+
+TEST(url_test, search_parameters_test_6) {
+  auto instance = skyr::url("https://example.com/?c=b&a=d");
+  auto search = instance.search_parameters();
+  search.sort();
+  EXPECT_EQ("a=d&c=b", search.to_string());
+  EXPECT_EQ("?a=d&c=b", instance.search());
 }

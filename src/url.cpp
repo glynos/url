@@ -24,12 +24,8 @@ url::url()
 url::url(url_record &&input) noexcept
   : url_(input)
   , href_(serialize(url_))
-  , view_(href_) {
-  parameters_.clear();
-  if (url_.query) {
-    parameters_ = url_search_parameters(url_.query.value());
-  }
-}
+  , view_(href_)
+  , parameters_(url_) {}
 
 void url::swap(url &other) noexcept {
   using std::swap;
@@ -52,11 +48,7 @@ void url::update_record(url_record &&record) {
   url_ = record;
   href_ = serialize(url_);
   view_ = string_view(href_);
-
-  parameters_.clear();
-  if (url_.query) {
-    parameters_ = url_search_parameters(url_.query.value());
-  }
+  parameters_ = url_search_parameters(url_);
 }
 
 std::string url::href() const {
@@ -366,7 +358,9 @@ void swap(url &lhs, url &rhs) noexcept {
 }
 
 namespace details {
-expected<url, std::error_code> make_url(std::string &&input, optional<url_record> base) {
+expected<url, std::error_code> make_url(
+    std::string &&input,
+    optional<url_record> base) {
   auto parsed_url = parse(std::move(input), std::move(base));
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));

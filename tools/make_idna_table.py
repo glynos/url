@@ -3,8 +3,9 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-# This script arses the IDNA table from
-# https://unicode.org/Public/idna/11.0.0/IdnaMappingTable.txt, and convert it to a C++ table.
+# This script parses the IDNA table from
+# https://unicode.org/Public/idna/11.0.0/IdnaMappingTable.txt,
+# and converts it to a C++ table.
 
 
 import sys
@@ -33,28 +34,56 @@ status_keys = [
     ]
 
 
+class CodePointIter(object):
+
+    def __init__(self, first, last):
+        self.__it = first
+        self.__last = last
+
+    def __str__(self):
+        return '0x{:04X}'.format(self.__it)
+
+    def __next__(self):
+        # if self.__it >= self.__last:
+        #     raise StopIteration()
+        self.__it += 1
+        return self.__it
+
+
 class CodePointRange(object):
 
     def __init__(self, range):
         if type(range) == str:
-            self.range = range.split('..') if '..' in range else [range, range]
-        elif type(range) == list:
-            self.range = range
+            range = range.split('..') if '..' in range else [range, range]
+        if type(range[0]) == str:
+            range = [int(range[0], 16), int(range[1], 16)]
+        self.range = range
+        self.__i = self.range[0]
 
     @property
     def condition(self):
-        if self.range[0] == '0000':
-            return 'c <= 0x{}'.format(self.range[1])
+        if self.range[0] == 0:
+            return 'c <= 0x{:04X}'.format(self.range[1])
         elif self.range[0] == self.range[1]:
-            return 'c == 0x{}'.format(self.range[1])
-        return '(c >= 0x{}) && (c <= 0x{})'.format(self.range[0], self.range[1])
+            return 'c == 0x{:04X}'.format(self.range[1])
+        return '(c >= 0x{:04X}) && (c <= 0x{:04X})'.format(self.range[0], self.range[1])
 
     def __str__(self):
-        return '{}..{}'.format(self.range[0], self.range[1])
+        return '{:04X}..{:04X}'.format(self.range[0], self.range[1])
+
+    def __contains__(self, item):
+        return item in range(range[0], self.range[1] + 1)
+
+    def __len__(self):
+        return self.range[1] - self.range[0] + 1
+
+    def __iter__(self):
+        for i in range(self.range[0], self.range[1]):
+            yield CodePointIter(i, self.range[1])
 
 
 def adjacent(first, last):
-    return int(first.range[1],  16) + 1 == int(last.range[0], 16)
+    return first.range[1] + 1 == last.range[0]
 
 
 def squash(first, last):
@@ -62,7 +91,7 @@ def squash(first, last):
     return CodePointRange([first.range[0], last.range[1]])
 
 
-class CodePointMapped(object):
+class MappedCodePoint(object):
 
     def __init__(self, code_point):
         self.code_point = code_point
@@ -75,17 +104,13 @@ class CodePointMapped(object):
 class CodePointTransform(object):
 
     def __init__(self, code_point):
-        self.__condition = CodePointRange(code_point[0])
+        self.range = CodePointRange(code_point[0])
         self.status = code_point[1]
-        self.__mapped = CodePointMapped(code_point)
+        self.__mapped = MappedCodePoint(code_point)
 
     @property
     def condition(self):
-        return self.__condition.condition
-
-    @property
-    def range(self):
-        return self.__condition
+        return self.range.condition
 
     @property
     def mapped(self):
@@ -110,7 +135,6 @@ def squeeze(code_points):
             else:
                 new_list.append(code_point)
         code_point_list[status] = new_list
-
     return code_point_list
 
 
@@ -125,7 +149,7 @@ if __name__ == '__main__':
                 continue
 
             code_point = parse_line(line)
-            entries.append(code_point)
+            entries.append(CodePointRange(code_point[0]))
 
             status = code_point[1]
             assert status in status_keys, line
@@ -138,7 +162,7 @@ if __name__ == '__main__':
         print(len(code_point_list))
         print('\n'.join(['{}: {}'.format(status, len(lst)) for status, lst in code_point_list.items()]))
 
-        template = jinja2.Template(
+        template_1 = jinja2.Template(
             """// Auto-generated.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -190,7 +214,40 @@ char32_t map(char32_t c) {
 }
 }  // namespace skyr
 """)
-        template.stream(
+
+        template_2 = jinja2.Template(
+            """// Auto-generated.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+#include "idna_table.hpp"
+
+namespace skyr {
+namespace {
+struct code_point {
+  char32_t c;
+  idna_status s;
+  char32_t m;
+};
+
+static const code_point code_points[] = {
+{% for code_point_range in entries %}{% for code_point in code_point_range %} { {{ code_point }}, idna_status::valid, {{ code_point }} },
+{% endfor %}{% endfor %}
+}
+}  // namespace
+
+idna_status map_status(char32_t c, bool use_std3_ascii_rules) {
+  return idna_status::valid;
+}
+
+char32_t map(char32_t c) {
+  return c;
+}
+}  // namespace skyr
+""")
+
+        template_1.stream(
             entries=entries,
             statuses=code_point_list,
             mapped=code_points['mapped'],

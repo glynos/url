@@ -5,11 +5,12 @@
 
 
 set(
-    EXAMPLES
-    example_01
-    example_02
-    example_03
-    example_04
+        EXAMPLES
+        example_01
+        example_02
+        example_03
+        example_04
+        example_05
     )
 
 foreach(example ${EXAMPLES})

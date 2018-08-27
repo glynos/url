@@ -5,10 +5,12 @@
 
 #include <gtest/gtest.h>
 #include <skyr/url_search_parameters.hpp>
+#include <skyr/url_parse.hpp>
 
 TEST(url_search_parameters_test, empty_query) {
   skyr::url_search_parameters parameters{};
   EXPECT_EQ("", parameters.to_string());
+  EXPECT_TRUE(parameters.empty());
   EXPECT_EQ(parameters.begin(), parameters.end());
 }
 
@@ -191,4 +193,30 @@ TEST(url_search_parameters_test, move_assignment_test) {
   EXPECT_EQ("d", it->second);
   ++it;
   EXPECT_EQ(it, copy.end());
+}
+
+TEST(url_search_parameters_test, to_string_test) {
+  auto parameters = skyr::url_search_parameters{{"key", "730d67"}};
+  ASSERT_EQ("key=730d67", parameters.to_string());
+}
+
+TEST(url_search_parameters_test, url_record_with_no_query_test) {
+  auto instance = skyr::parse("https://example.com/");
+  ASSERT_TRUE(instance);
+  auto parameters = skyr::url_search_parameters(instance.value());
+  EXPECT_EQ("", parameters.to_string());
+}
+
+TEST(url_search_parameters_test, url_record_with_empty_query_test) {
+  auto instance = skyr::parse("https://example.com/?");
+  ASSERT_TRUE(instance);
+  auto parameters = skyr::url_search_parameters(instance.value());
+  EXPECT_EQ("", parameters.to_string());
+}
+
+TEST(url_search_parameters_test, url_record_test) {
+  auto instance = skyr::parse("https://example.com/?a=b&c=d");
+  ASSERT_TRUE(instance);
+  auto parameters = skyr::url_search_parameters(instance.value());
+  EXPECT_EQ("a=b&c=d", parameters.to_string());
 }
