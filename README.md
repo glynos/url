@@ -36,6 +36,8 @@ make test
 
 ### Creating a URL without a base URL
 
+Parses a string, "https://example.org/💩", without using a base URL:
+
 ```c++
 auto url = skyr::make_url("http://example.org/\xf0\x9f\x92\xa9");
 std::cout << url.value().pathname() << std::endl;
@@ -45,6 +47,8 @@ Gives the output: `/%F0%9F%92%A9`
 
 ### Creating an non-absolute URL without a base URL
 
+This gives an error if the input, "/🍣🍺", is not an *absolute-URL-with-fragment-string*:
+
 ```c++
 auto url = skyr::make_url("\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
 if (!url) {
@@ -52,9 +56,11 @@ if (!url) {
 }
 ```
 
-Gives the output: `Parsing failed: Not an absolute URL with fragment`
+This gives the output: `Parsing failed: Not an absolute URL with fragment`
 
 ### Creating a non-absolute URL with a base URL
+
+Parses a string, "/🏳️‍🌈", using a base URL, "https://example.org/":
 
 ```c++
 auto base = skyr::make_url("https://example.org/");
@@ -64,7 +70,7 @@ if (url) {
 }
 ```
 
-Gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88`
+This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88`
 
 ## Dependencies
 
