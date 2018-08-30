@@ -283,7 +283,7 @@ void swap(url &lhs, url &rhs) noexcept;
 /// \exclude
 namespace details {
 expected<url, std::error_code> make_url(
-    std::string &&input, optional<url_record> base = nullopt);
+    std::string &&input, optional<url_record> base);
 }  // details
 
 /// Parses a URL string and constructs a `url` object.
@@ -291,8 +291,8 @@ expected<url, std::error_code> make_url(
 /// \param input The input string.
 /// \returns A `url` object on success, an error on failure.
 template <class Source>
-expected<url, std::error_code> make_url(url::string_type &&input) {
-  return details::make_url(std::move(input));
+inline expected<url, std::error_code> make_url(url::string_type &&input) {
+  return details::make_url(std::move(input), nullopt);
 }
 
 /// Parses a URL string and constructs a `url` object.
@@ -300,8 +300,8 @@ expected<url, std::error_code> make_url(url::string_type &&input) {
 /// \param input The input string.
 /// \returns A `url` object on success, an error on failure.
 template <class Source>
-expected<url, std::error_code> make_url(const Source &input) {
-  return details::make_url(details::translate(input));
+inline expected<url, std::error_code> make_url(const Source &input) {
+  return details::make_url(details::translate(input), nullopt);
 }
 
 /// Parses a URL string and constructs a `url` object.
@@ -310,7 +310,7 @@ expected<url, std::error_code> make_url(const Source &input) {
 /// \param base The base URL.
 /// \returns A `url` object on success, an error on failure.
 template <class Source>
-expected<url, std::error_code> make_url(url::string_type &&input, const url &base) {
+inline expected<url, std::error_code> make_url(url::string_type &&input, const url &base) {
   return details::make_url(std::move(input), base.record());
 }
 
@@ -320,7 +320,7 @@ expected<url, std::error_code> make_url(url::string_type &&input, const url &bas
 /// \param base The base URL.
 /// \returns A `url` object on success, an error on failure.
 template <class Source>
-expected<url, std::error_code> make_url(const Source &input, const url &base) {
+inline expected<url, std::error_code> make_url(const Source &input, const url &base) {
   return details::make_url(details::translate(input), base.record());
 }
 

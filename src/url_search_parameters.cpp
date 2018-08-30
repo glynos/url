@@ -41,7 +41,7 @@ void url_search_parameters::remove(
   auto first = std::begin(parameters_), last = std::end(parameters_);
   auto it = std::remove_if(
       first, last,
-      [&name](const value_type &parameter) -> bool {
+      [&name](const auto &parameter) -> bool {
         return name.compare(parameter.first) == 0;
       });
   parameters_.erase(it, last);
@@ -53,7 +53,7 @@ optional<url_search_parameters::string_type> url_search_parameters::get(
   auto first = std::begin(parameters_), last = std::end(parameters_);
   auto it = std::find_if(
       first, last,
-      [&name](const value_type &parameter) -> bool {
+      [&name](const auto &parameter) -> bool {
         return name.compare(parameter.first) == 0;
       });
   if (it == last) {
@@ -77,7 +77,7 @@ std::vector<url_search_parameters::string_type> url_search_parameters::get_all(
 bool url_search_parameters::contains(const string_type &name) const noexcept {
   auto first = std::begin(parameters_), last = std::end(parameters_);
   auto it = std::find_if(first, last,
-      [&name](const value_type &parameter) -> bool {
+      [&name](const auto &parameter) -> bool {
     return name.compare(parameter.first) == 0;
   });
   return it != last;
@@ -89,7 +89,7 @@ void url_search_parameters::set(
   auto first = std::begin(parameters_), last = std::end(parameters_);
   auto it = std::find_if(
       first, last,
-      [&name](const value_type &parameter) -> bool {
+      [&name](const auto &parameter) -> bool {
         return name.compare(parameter.first) == 0;
       });
   if (it != last) {
@@ -97,7 +97,7 @@ void url_search_parameters::set(
     ++it;
     it = std::remove_if(
         it, last,
-        [&name](const value_type &parameter) -> bool {
+        [&name](const auto &parameter) -> bool {
           return name.compare(parameter.first) == 0;
         });
     parameters_.erase(it, last);
@@ -111,13 +111,14 @@ void url_search_parameters::set(
 
 void url_search_parameters::clear() noexcept {
   parameters_.clear();
+  update();
 }
 
 void url_search_parameters::sort() {
   auto first = std::begin(parameters_), last = std::end(parameters_);
   std::sort(
       first, last,
-      [](const value_type &lhs, const value_type &rhs) -> bool {
+      [](const auto &lhs, const auto &rhs) -> bool {
         return lhs.first < rhs.first;
       });
   update();
@@ -163,9 +164,9 @@ void url_search_parameters::initialize(std::string_view query) {
   auto it = first;
   while (it != last) {
     auto sep_it = std::find_if(
-        it, last, [](char c) -> bool { return c == '&' || c == ';'; });
+        it, last, [](auto byte) -> bool { return byte == '&' || byte == ';'; });
     auto eq_it = std::find_if(
-        it, sep_it, [](char c) -> bool { return c == '='; });
+        it, sep_it, [](auto byte) -> bool { return byte == '='; });
 
     auto name = string_type(it, eq_it);
     if (eq_it != sep_it) {

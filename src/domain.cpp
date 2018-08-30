@@ -287,7 +287,7 @@ bool is_ascii(std::u32string_view input) noexcept {
   auto first = begin(input), last = end(input);
   auto it = std::find_if(
       first, last,
-      [] (char32_t c) -> bool {
+      [] (auto c) -> bool {
         return c > 0x007e;
       });
   return it == last;

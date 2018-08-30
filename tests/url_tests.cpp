@@ -622,6 +622,7 @@ TEST(url_test, pride_flag_test) {
 TEST(url_test, search_parameters_test_1) {
   auto instance = skyr::url("https://example.com/");
   auto search = instance.search_parameters();
+  EXPECT_TRUE(search.empty());
   EXPECT_EQ("", search.to_string());
   EXPECT_EQ("", instance.search());
 }
@@ -629,6 +630,7 @@ TEST(url_test, search_parameters_test_1) {
 TEST(url_test, search_parameters_test_2) {
   auto instance = skyr::url("https://example.com/?");
   auto search = instance.search_parameters();
+  EXPECT_TRUE(search.empty());
   EXPECT_EQ("", search.to_string());
   EXPECT_EQ("", instance.search());
 }
@@ -662,4 +664,13 @@ TEST(url_test, search_parameters_test_6) {
   search.sort();
   EXPECT_EQ("a=d&c=b", search.to_string());
   EXPECT_EQ("?a=d&c=b", instance.search());
+}
+
+TEST(url_test, search_parameters_test_7) {
+  auto instance = skyr::url("https://example.com/?c=b&a=d");
+  auto search = instance.search_parameters();
+  search.clear();
+  EXPECT_TRUE(search.empty());
+  EXPECT_EQ("", search.to_string());
+  EXPECT_EQ("", instance.search());
 }

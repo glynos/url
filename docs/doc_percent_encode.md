@@ -85,16 +85,16 @@ protected:
     virtual ~exclude_set();
 
 public:
-    virtual bool is_excluded(char in) const = 0;
+    virtual bool contains_impl(char in) const = 0;
 };
 ```
 
 Exclude code point set when percent encoding.
 
-### Function `skyr::exclude_set::is_excluded`
+### Function `skyr::exclude_set::contains_impl`
 
 ``` cpp
-virtual bool is_excluded(char in) const = 0;
+virtual bool contains_impl(char in) const = 0;
 ```
 
 Tests whether the byte is in the excluded set.
@@ -124,7 +124,7 @@ class c0_control_set
 public:
     virtual ~c0_control_set();
 
-    virtual bool is_excluded(char in) const;
+    virtual bool contains_impl(char in) const;
 };
 ```
 
@@ -141,7 +141,7 @@ class fragment_set
 public:
     virtual ~fragment_set();
 
-    virtual bool is_excluded(char in) const;
+    virtual bool contains_impl(char in) const;
 };
 ```
 
@@ -158,7 +158,7 @@ class query_set
 public:
     virtual ~query_set();
 
-    virtual bool is_excluded(char in) const;
+    virtual bool contains_impl(char in) const;
 };
 ```
 
@@ -175,7 +175,7 @@ class path_set
 public:
     virtual ~path_set();
 
-    virtual bool is_excluded(char in) const;
+    virtual bool contains_impl(char in) const;
 };
 ```
 
@@ -192,7 +192,7 @@ class userinfo_set
 public:
     virtual ~userinfo_set();
 
-    virtual bool is_excluded(char in) const;
+    virtual bool contains_impl(char in) const;
 };
 ```
 

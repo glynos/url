@@ -71,16 +71,16 @@ bool starts_with(
   return true;
 }
 
-inline std::uint16_t hex_to_dec(char c) noexcept {
-  assert(std::isxdigit(c, std::locale::classic()));
+inline std::uint16_t hex_to_dec(char byte) noexcept {
+  assert(std::isxdigit(byte, std::locale::classic()));
 
-  auto c_lower = std::tolower(c, std::locale::classic());
+  auto byte_lower = std::tolower(byte, std::locale::classic());
 
-  if (std::isdigit(c_lower, std::locale::classic())) {
-    return static_cast<std::uint16_t>(c_lower - '0');
+  if (std::isdigit(byte_lower, std::locale::classic())) {
+    return static_cast<std::uint16_t>(byte_lower - '0');
   }
 
-  return static_cast<std::uint16_t>(c_lower - 'a') + 10;
+  return static_cast<std::uint16_t>(byte_lower - 'a') + 10;
 }
 }  // namespace
 

@@ -65,7 +65,7 @@ bool remove_trailing_whitespace(std::string &input) {
 bool remove_tabs_and_newlines(std::string &input) {
   auto first = begin(input), last = end(input);
   auto it = std::remove_if(
-      first, last, [] (char c) -> bool { return is_in(c, "\t\r\n"); });
+      first, last, [] (auto byte) -> bool { return is_in(byte, "\t\r\n"); });
   input.erase(it, end(input));
   return it == last;
 }
@@ -103,8 +103,8 @@ bool starts_with(
 expected<std::string, url_parse_errc> parse_opaque_host(std::string_view input) {
   auto first = begin(input), last = end(input);
   auto it = std::find_if(
-      first, last, [] (char c) -> bool {
-        return (c != '%') && is_forbidden_host_point(c);
+      first, last, [] (auto byte) -> bool {
+        return (byte != '%') && is_forbidden_host_point(byte);
       });
   if (it != last) {
       // result.validation_error = true;
@@ -113,7 +113,7 @@ expected<std::string, url_parse_errc> parse_opaque_host(std::string_view input) 
 
   auto output = std::string();
   for (auto c : input) {
-    output += percent_encode_byte(c);
+    output += percent_encode_byte(static_cast<std::byte>(c));
   }
   return output;
 }
@@ -219,8 +219,8 @@ inline bool is_windows_drive_letter(std::string_view segment) noexcept {
 bool is_single_dot_path_segment(std::string_view segment) noexcept {
   auto lower = std::string(segment);
   std::transform(begin(lower), end(lower), begin(lower),
-                 [] (char ch) -> char {
-    return std::tolower(ch, std::locale::classic());
+                 [] (auto byte) -> decltype(byte) {
+    return std::tolower(byte, std::locale::classic());
   });
 
   return ((lower == ".") || (lower == "%2e"));
@@ -229,15 +229,15 @@ bool is_single_dot_path_segment(std::string_view segment) noexcept {
 bool is_double_dot_path_segment(std::string_view segment) noexcept {
   auto lower = std::string(segment);
   std::transform(begin(lower), end(lower), begin(lower),
-                 [] (char ch) -> char {
-    return std::tolower(ch, std::locale::classic());
+                 [] (auto byte) -> decltype(byte) {
+    return std::tolower(byte, std::locale::classic());
   });
 
   return (
       (lower == "..") ||
-          (lower == ".%2e") ||
-          (lower == "%2e.") ||
-          (lower == "%2e%2e"));
+      (lower == ".%2e") ||
+      (lower == "%2e.") ||
+      (lower == "%2e%2e"));
 }
 
 void shorten_path(std::string_view scheme, std::vector<std::string> &path) {
@@ -511,7 +511,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_authority(c
         continue;
       }
 
-      auto pct_encoded = percent_encode_byte(c, userinfo_set());
+      auto pct_encoded = percent_encode_byte(static_cast<std::byte>(c), userinfo_set());
       if (password_token_seen_flag) {
         url.password += pct_encoded;
       } else {
@@ -827,7 +827,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_path(char c
 //
 //    }
 
-    buffer += percent_encode_byte(c, path_set());
+    buffer += percent_encode_byte(static_cast<std::byte>(c), path_set());
   }
 
   return url_parse_action::increment;
@@ -849,7 +849,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_cannot_be_a
       validation_error = true;
     }
     if (!is_eof()) {
-      url.path[0] += percent_encode_byte(c);
+      url.path[0] += percent_encode_byte(static_cast<std::byte>(c));
     }
   }
   return url_parse_action::increment;
@@ -864,7 +864,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_query(char 
         (c > '~') ||
         (is_in(c, "\"#<>")) ||
         ((c == '\'') && url.is_special())) {
-      url.query.value() += percent_encode_byte(c, query_set());
+      url.query.value() += percent_encode_byte(static_cast<std::byte>(c), query_set());
     } else {
       url.query.value().push_back(c);
     }
@@ -876,7 +876,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_fragment(ch
   if (c == '\0') {
     validation_error = true;
   } else {
-    url.fragment.value() += percent_encode_byte(c, fragment_set());
+    url.fragment.value() += percent_encode_byte(static_cast<std::byte>(c), fragment_set());
   }
   return url_parse_action::increment;
 }

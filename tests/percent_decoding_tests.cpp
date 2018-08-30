@@ -14,7 +14,7 @@ TEST(percent_decode, decode_codepoints_set) {
     auto input = std::string("%") + buffer;
     auto decoded = skyr::percent_decode_byte(input);
     ASSERT_TRUE(decoded);
-    EXPECT_EQ(static_cast<char>(i), decoded.value());
+    EXPECT_EQ(static_cast<std::byte>(i), decoded.value());
   }
 }
 

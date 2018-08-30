@@ -93,7 +93,7 @@ expected<void, std::error_code> url::set_username(std::string username) {
 
   new_url.username.clear();
   for (auto c : username) {
-    auto pct_encoded = percent_encode_byte(c, userinfo_set());
+    auto pct_encoded = percent_encode_byte(static_cast<std::byte>(c), userinfo_set());
     new_url.username += pct_encoded;
   }
 
@@ -112,7 +112,7 @@ expected<void, std::error_code> url::set_password(std::string password) {
 
   new_url.password.clear();
   for (auto c : password) {
-    auto pct_encoded = percent_encode_byte(c, userinfo_set());
+    auto pct_encoded = percent_encode_byte(static_cast<std::byte>(c), userinfo_set());
     new_url.password += pct_encoded;
   }
 

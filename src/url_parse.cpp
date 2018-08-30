@@ -28,88 +28,88 @@ expected<url_record, std::error_code> basic_parse(
 
   auto parse_funcs = url_parse_funcs{
       {url_parse_state::scheme_start,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_scheme_start(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_scheme_start(byte);
        }},
       {url_parse_state::scheme,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_scheme(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_scheme(byte);
        }},
       {url_parse_state::no_scheme,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_no_scheme(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_no_scheme(byte);
        }},
       {url_parse_state::special_relative_or_authority,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_special_relative_or_authority(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_special_relative_or_authority(byte);
        }},
       {url_parse_state::path_or_authority,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_path_or_authority(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_path_or_authority(byte);
        }},
       {url_parse_state::relative,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_relative(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_relative(byte);
        }},
       {url_parse_state::relative_slash,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_relative_slash(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_relative_slash(byte);
        }},
       {url_parse_state::special_authority_slashes,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_special_authority_slashes(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_special_authority_slashes(byte);
        }},
       {url_parse_state::special_authority_ignore_slashes,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_special_authority_ignore_slashes(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_special_authority_ignore_slashes(byte);
        }},
       {url_parse_state::authority,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_authority(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_authority(byte);
        }},
       {url_parse_state::host,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_hostname(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_hostname(byte);
        }},
       {url_parse_state::hostname,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_hostname(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_hostname(byte);
        }},
       {url_parse_state::port,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_port(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_port(byte);
        }},
       {url_parse_state::file,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_file(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_file(byte);
        }},
       {url_parse_state::file_slash,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_file_slash(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_file_slash(byte);
        }},
       {url_parse_state::file_host,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_file_host(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_file_host(byte);
        }},
       {url_parse_state::path_start,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_path_start(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_path_start(byte);
        }},
       {url_parse_state::path,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_path(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_path(byte);
        }},
       {url_parse_state::cannot_be_a_base_url_path,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_cannot_be_a_base_url(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_cannot_be_a_base_url(byte);
        }},
       {url_parse_state::query,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_query(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_query(byte);
        }},
       {url_parse_state::fragment,
-       [](url_parser_context &context, char c) -> expected<url_parse_action, url_parse_errc> {
-         return context.parse_fragment(c);
+       [](auto &context, auto byte) -> expected<url_parse_action, url_parse_errc> {
+         return context.parse_fragment(byte);
        }}};
 
   auto context = url_parser_context(input, base, url, state_override);

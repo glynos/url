@@ -38,6 +38,7 @@ class url_search_parameters {
   url_search_parameters();
 
   /// Constructor.
+  /// \param parameters
   url_search_parameters(std::initializer_list<value_type> parameters)
     : url_search_parameters{std::vector<value_type>{parameters}} {}
 
@@ -52,9 +53,6 @@ class url_search_parameters {
   /// Constructor.
   /// \param url The URL record.
   explicit url_search_parameters(url_record &url);
-
-  /// Constructor.
-  /// \param
 
   /// Appends a name-value pair to the search string.
   /// \param name The parameter name.
@@ -87,10 +85,10 @@ class url_search_parameters {
   ///
   void sort();
 
-  ///
+  /// \returns
   bool empty() const noexcept;
 
-  ///
+  /// \returns
   size_type size() const noexcept;
 
   /// \returns

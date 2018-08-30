@@ -9,6 +9,8 @@
 #include <string>
 #include <string_view>
 #include <locale>
+#include <set>
+#include <cstddef>
 #include <skyr/expected.hpp>
 
 namespace skyr {
@@ -31,10 +33,15 @@ class exclude_set {
   virtual ~exclude_set() {}
 
  public:
+  bool contains(std::byte byte) const {
+    return contains_impl(static_cast<char>(byte));
+  }
+
+ private:
   /// Tests whether the byte is in the excluded set.
-  /// \param in Input byte.
+  /// \param byte Input byte.
   /// \returns `true` if `in` is in the excluded set, `c` false otherwise.
-  virtual bool is_excluded(char in) const = 0;
+  virtual bool contains_impl(char byte) const = 0;
 };
 
 /// Defines code points in the c0 control percent-encode set.
@@ -42,23 +49,27 @@ class c0_control_set : public exclude_set {
  public:
   virtual ~c0_control_set() {}
 
-  bool is_excluded(char in) const override {
-    return (in <= 0x1f) || (in > 0x7e);
+ private:
+  bool contains_impl(char byte) const override {
+    return (byte <= 0x1f) || (byte > 0x7e);
   }
 };
 
 /// Defines code points in the fragment percent-encode set.
 class fragment_set : public exclude_set {
  public:
+  fragment_set() : set_{0x20, 0x22, 0x3c, 0x3e, 0x60} {}
   virtual ~fragment_set() {}
 
-  bool is_excluded(char in) const override {
+ private:
+  bool contains_impl(char byte) const override {
     return
-      c0_control_set_.is_excluded(in) || (in == 0x20) || (in == 0x22) || (in == 0x3c) || (in == 0x3e) || (in == 0x60);
+        c0_control_set_.contains(std::byte(byte)) || (set_.find(byte) != set_.end());
   }
 
  private:
   c0_control_set c0_control_set_;
+  std::set<char> set_;
 };
 
 /// Defines code points in the fragment percent-encode set and U+0027 (').
@@ -66,9 +77,10 @@ class query_set : public exclude_set {
  public:
   virtual ~query_set() {}
 
-  bool is_excluded(char in) const override {
+ private:
+  bool contains_impl(char byte) const override {
     return
-      fragment_set_.is_excluded(in) || (in == 0x27);
+        fragment_set_.contains(std::byte(byte)) || (byte == 0x27);
   }
 
  private:
@@ -78,38 +90,44 @@ class query_set : public exclude_set {
 /// Defines code points in the path percent-encode set.
 class path_set : public exclude_set {
  public:
+  path_set() : set_{0x23, 0x3f, 0x7b, 0x7d} {}
   virtual ~path_set() {}
 
-  bool is_excluded(char in) const override {
+ private:
+  bool contains_impl(char byte) const override {
     return
-        fragment_set_.is_excluded(in) || (in == 0x23) || (in == 0x3f) || (in == 0x7b) || (in == 0x7d);
+        fragment_set_.contains(std::byte(byte)) || (set_.find(byte) != set_.end());
   }
 
  private:
   fragment_set fragment_set_;
+  std::set<char> set_;
 };
 
 /// Defines code points in the userinfo percent-encode set.
 class userinfo_set : public exclude_set {
  public:
+  userinfo_set()
+    : set_{0x2f, 0x3a, 0x3b, 0x3d, 0x40, 0x5b, 0x5c, 0x5d, 0x5e, 0x7c} {}
   virtual ~userinfo_set() {}
 
-  bool is_excluded(char in) const override {
+ private:
+  bool contains_impl(char byte) const override {
     return
-    path_set_.is_excluded(in) || (in == 0x2f) || (in == 0x3a) || (in == 0x3b) || (in == 0x3d) ||
-        (in == 0x40) || (in == 0x5b) || (in == 0x5c) || (in == 0x5d) || (in == 0x5e) || (in == 0x7c);
+        path_set_.contains(std::byte(byte)) || (set_.find(byte) != set_.end());
   }
 
  private:
   path_set path_set_;
+  std::set<char> set_;
 };
 
 /// Percent encode a byte if it is not in the exclude set.
-/// \param in The input byte.
+/// \param byte The input byte.
 /// \param excludes The set of code points to exclude when percent encoding.
 /// \returns A percent encoded string if `in` is not in the exclude set, `in` as a string otherwise.
 std::string percent_encode_byte(
-    char in, const exclude_set &excludes = c0_control_set());
+    std::byte byte, const exclude_set &excludes = c0_control_set());
 
 /// Percent encode a string.
 /// \param input A string of bytes.
@@ -128,7 +146,7 @@ expected<std::string, std::error_code> percent_encode(
 /// Percent decode an already encoded string into a byte value.
 /// \param input An string of the for %XX, where X is a hexadecimal value/
 /// \returns The percent decoded byte, or an error on failure.
-expected<char, std::error_code> percent_decode_byte(std::string_view input);
+expected<std::byte, std::error_code> percent_decode_byte(std::string_view input);
 
 /// Percent decodes a string.
 /// \param input An ASCII string.

@@ -51,7 +51,7 @@ expected<std::string, std::error_code> punycode_decode(std::string_view input);
 /// Converts a UTF-8 encoded domain to ASCII using [IDNA processing](https://www.unicode.org/reports/tr46/#Processing).
 /// \param domain A domain.
 /// \param be_strict Tells the processor to be strict.
-/// returns An ASCII domain, or an error.
+/// \returns An ASCII domain, or an error.
 expected<std::string, std::error_code> domain_to_ascii(
     std::string_view domain,
     bool be_strict = true);
@@ -59,7 +59,7 @@ expected<std::string, std::error_code> domain_to_ascii(
 /// Converts a UTF-32 encoded domain to ASCII using [IDNA processing](https://www.unicode.org/reports/tr46/#Processing).
 /// \param domain A domain.
 /// \param be_strict Tells the processor to be strict.
-/// returns An ASCII domain, or an error.
+/// \returns An ASCII domain, or an error.
 expected<std::string, std::error_code> domain_to_ascii(
     std::u32string_view domain,
     bool be_strict = true);
