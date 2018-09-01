@@ -6,6 +6,7 @@
 #ifndef SKYR_URL_CONTEXT_HPP
 #define SKYR_URL_CONTEXT_HPP
 
+#include <cassert>
 #include <string_view>
 #include <skyr/optional.hpp>
 #include <skyr/expected.hpp>
@@ -56,10 +57,12 @@ class url_parser_context {
   }
 
   void increment() noexcept {
+    assert(it != end(view));
     ++it;
   }
 
   void decrement() noexcept {
+    assert(it != begin(view));
     --it;
   }
 

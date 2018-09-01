@@ -445,6 +445,11 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_relative(ch
         url.path.pop_back();
       }
       state = url_parse_state::path;
+
+      if (it == begin(view)) {
+        return url_parse_action::continue_;
+      }
+
       decrement();
     }
   }
@@ -539,8 +544,11 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_authority(c
 
 expected<url_parse_action, url_parse_errc> url_parser_context::parse_hostname(char c) {
   if (state_override && (url.scheme.compare("file") == 0)) {
-    decrement();
     state = url_parse_state::file_host;
+    if (it == begin(view)) {
+      return url_parse_action::continue_;
+    }
+    decrement();
   } else if ((c == ':') && !square_braces_flag) {
     if (buffer.empty()) {
       validation_error = true;
@@ -561,6 +569,9 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_hostname(ch
   } else if (
       ((is_eof()) || (c == '/') || (c == '?') || (c == '#')) ||
           (url.is_special() && (c == '\\'))) {
+    if (it == begin(view)) {
+      return url_parse_action::continue_;
+    }
     decrement();
 
     if (url.is_special() && buffer.empty()) {
@@ -669,12 +680,18 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_file(char c
       else {
         validation_error = true;
       }
-      decrement();
       state = url_parse_state::path;
+      if (it == begin(view)) {
+        return url_parse_action::continue_;
+      }
+      decrement();
     }
   } else {
-    decrement();
     state = url_parse_state::path;
+    if (it == begin(view)) {
+      return url_parse_action::continue_;
+    }
+    decrement();
   }
 
   return url_parse_action::increment;
@@ -705,7 +722,10 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_file_slash(
 
 expected<url_parse_action, url_parse_errc> url_parser_context::parse_file_host(char c) {
   if ((is_eof()) || (c == '/') || (c == '\\') || (c == '?') || (c == '#')) {
-    decrement();
+    bool at_begin = (it == begin(view));
+    if (!at_begin) {
+      decrement();
+    }
 
     if (!state_override && is_windows_drive_letter(buffer)) {
       validation_error = true;
@@ -745,12 +765,16 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_file_host(c
 }
 
 expected<url_parse_action, url_parse_errc> url_parser_context::parse_path_start(char c) {
+  bool at_begin = (it == begin(view));
   if (url.is_special()) {
     if (c == '\\') {
       validation_error = true;
     }
     state = url_parse_state::path;
     if ((c != '/') && (c != '\\')) {
+      if (at_begin) {
+        return url_parse_action::continue_;
+      }
       decrement();
     }
   } else if (!state_override && (c == '?')) {
@@ -762,6 +786,9 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_path_start(
   } else if (!is_eof()) {
     state = url_parse_state::path;
     if (c != '/') {
+      if (at_begin) {
+        return url_parse_action::continue_;
+      }
       decrement();
     }
   }
