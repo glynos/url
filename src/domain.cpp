@@ -251,9 +251,25 @@ expected<std::u32string, std::error_code> process(
   auto it = first;
 
   while (it != last) {
-    switch (map_status(*it, use_std3_ascii_rules)) {
+    switch (map_status(*it)) {
       case idna_status::disallowed:
         error = true;
+        break;
+      case idna_status::disallowed_std3_valid:
+        if (use_std3_ascii_rules) {
+          error = true;
+        }
+        else {
+          result += *it;
+        }
+        break;
+      case idna_status::disallowed_std3_mapped:
+        if (use_std3_ascii_rules) {
+          error = true;
+        }
+        else {
+          result += map(*it);
+        }
         break;
       case idna_status::ignored:
         break;

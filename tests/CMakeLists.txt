@@ -18,6 +18,7 @@ set(
         url_search_parameters_tests
         ipv4_address_tests
         ipv6_address_tests
+        idna_table_tests
         punycode_tests
         domain_tests
         unicode_tests
