@@ -23,26 +23,6 @@ enum class unicode_errc {
 /// \returns A `std::error_code` object.
 std::error_code make_error_code(unicode_errc error);
 
-/// Converts a `std::wstring` (assuming UTF-16) string to UTF-8.
-/// \param input A UTF-16 string.
-/// \returns A UTF-8 `std::string` or an error on failure.
-expected<std::string, std::error_code> wstring_to_bytes(std::wstring_view input);
-
-/// Converts a `std::string` (assuming UTF-8) string to UTF-16.
-/// \param input A UTF-8 string.
-/// \returns A UTF-16 `std::wstring` or an error on failure.
-expected<std::wstring, std::error_code> wstring_from_bytes(std::string_view input);
-
-/// Converts a `std::u16string` string to UTF-8.
-/// \param input A UTF-16 string.
-/// \returns A UTF-8 `std::string` or an error on failure.
-expected<std::string, std::error_code> utf16_to_bytes(std::u16string_view input);
-
-/// Converts a `std::string` (assuming UTF-8) string to UTF-16.
-/// \param input A UTF-8 string.
-/// \returns A UTF-16 `std::u16string` or an error on failure.
-expected<std::u16string, std::error_code> utf16_from_bytes(std::string_view input);
-
 /// Converts a `std::u32string` string to UTF-8.
 /// \param input A UTF-32 string.
 /// \returns A UTF-8 `std::string` or an error on failure.

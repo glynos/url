@@ -74,8 +74,8 @@ This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F
 
 ## Dependencies
 
-This library uses [optional](https://github.com/TartanLlama/optional)
-and [expected](https://github.com/TartanLlama/expected).
+This library uses [optional](https://github.com/TartanLlama/optional),
+[expected](https://github.com/TartanLlama/expected) and [utfcpp](https://github.com/nemtrif/utfcpp).
 
 The tests are built using [Google Test](https://github.com/google/googletest).
 

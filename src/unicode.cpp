@@ -3,10 +3,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <codecvt>
-#include <locale>
-#include <clocale>
+
 #include "skyr/unicode.hpp"
+#include "utf8/checked.h"
 
 namespace skyr {
 namespace {
@@ -38,77 +37,24 @@ std::error_code make_error_code(unicode_errc error) {
   return std::error_code(static_cast<int>(error), category);
 }
 
-namespace {
-using wstring_convert = std::wstring_convert<std::codecvt_utf8<wchar_t>>;
-using utf16_convert = std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t>;
-using utf32_convert = std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t>;
-
-static wstring_convert &wstring() {
-  static wstring_convert conv;
-  return conv;
-}
-
-static utf16_convert &utf16() {
-  static utf16_convert conv;
-  return conv;
-}
-
-static utf32_convert &utf32() {
-  static utf32_convert conv;
-  return conv;
-}
-}  // namespace
-
-expected<std::string, std::error_code> wstring_to_bytes(std::wstring_view input) {
-  try {
-    return wstring().to_bytes(begin(input), end(input));
-  }
-  catch (std::range_error &) {
-    return make_unexpected(make_error_code(unicode_errc::overflow));
-  }
-}
-
-expected<std::wstring, std::error_code> wstring_from_bytes(std::string_view input) {
-  try {
-    return wstring().from_bytes(begin(input), end(input));
-  }
-  catch (std::range_error &) {
-    return make_unexpected(make_error_code(unicode_errc::overflow));
-  }
-}
-
-expected<std::string, std::error_code> utf16_to_bytes(std::u16string_view input) {
-  try {
-    return utf16().to_bytes(begin(input), end(input));
-  }
-  catch (std::range_error &) {
-    return make_unexpected(make_error_code(unicode_errc::overflow));
-  }
-}
-
-expected<std::u16string, std::error_code> utf16_from_bytes(std::string_view input) {
-  try {
-    return utf16().from_bytes(begin(input), end(input));
-  }
-  catch (std::range_error &) {
-    return make_unexpected(make_error_code(unicode_errc::overflow));
-  }
-}
-
 expected<std::u32string, std::error_code> utf32_from_bytes(std::string_view input) {
   try {
-    return utf32().from_bytes(begin(input), end(input));
+    std::u32string result;
+    utf8::utf8to32(begin(input), end(input),std::back_inserter(result));
+    return result;
   }
-  catch (std::range_error &) {
+  catch (utf8::exception &) {
     return make_unexpected(make_error_code(unicode_errc::overflow));
   }
 }
 
 expected<std::string, std::error_code> utf32_to_bytes(std::u32string_view input) {
   try {
-    return utf32().to_bytes(begin(input), end(input));
+    std::string result;
+    utf8::utf32to8(begin(input), end(input), std::back_inserter(result));
+    return result;
   }
-  catch (std::range_error &) {
+  catch (utf8::exception &) {
     return make_unexpected(make_error_code(unicode_errc::overflow));
   }
 }

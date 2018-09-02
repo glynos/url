@@ -247,21 +247,9 @@ class url {
   /// \returns A URL string.
   std::string string() const;
 
-  /// Returns the URL as a `std::wstring`.
-  /// \returns A URL string.
-  std::wstring wstring() const;
-
   /// Returns the URL as a `std::string`.
   /// \returns A URL string.
   std::string u8string() const;
-
-  /// Returns the URL as a `std::u16string`.
-  /// \returns A URL string.
-  std::u16string u16string() const;
-
-  /// Returns the URL as a `std::u32string`.
-  /// \returns A URL string.
-  std::u32string u32string() const;
 
  private:
 
