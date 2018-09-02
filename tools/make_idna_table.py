@@ -115,9 +115,13 @@ namespace {
 struct mapped_code_point {
   char32_t code_point;
   char32_t mapped;
-  
+
   bool operator < (const mapped_code_point &other) const {
     return code_point < other.code_point;
+  }
+
+  bool operator == (const mapped_code_point &other) const {
+    return code_point == other.code_point;
   }
 };
 

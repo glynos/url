@@ -74,26 +74,26 @@ class url_parser_context {
     it = it - buffer.size() - 1;
   }
 
-  expected<url_parse_action, url_parse_errc> parse_scheme_start(char c);
-  expected<url_parse_action, url_parse_errc> parse_scheme(char c);
-  expected<url_parse_action, url_parse_errc> parse_no_scheme(char c);
-  expected<url_parse_action, url_parse_errc> parse_special_relative_or_authority(char c);
-  expected<url_parse_action, url_parse_errc> parse_path_or_authority(char c);
-  expected<url_parse_action, url_parse_errc> parse_relative(char c);
-  expected<url_parse_action, url_parse_errc> parse_relative_slash(char c);
-  expected<url_parse_action, url_parse_errc> parse_special_authority_slashes(char c);
-  expected<url_parse_action, url_parse_errc> parse_special_authority_ignore_slashes(char c);
-  expected<url_parse_action, url_parse_errc> parse_authority(char c);
-  expected<url_parse_action, url_parse_errc> parse_hostname(char c);
-  expected<url_parse_action, url_parse_errc> parse_port(char c);
-  expected<url_parse_action, url_parse_errc> parse_file(char c);
-  expected<url_parse_action, url_parse_errc> parse_file_slash(char c);
-  expected<url_parse_action, url_parse_errc> parse_file_host(char c);
-  expected<url_parse_action, url_parse_errc> parse_path_start(char c);
-  expected<url_parse_action, url_parse_errc> parse_path(char c);
-  expected<url_parse_action, url_parse_errc> parse_cannot_be_a_base_url(char c);
-  expected<url_parse_action, url_parse_errc> parse_query(char c);
-  expected<url_parse_action, url_parse_errc> parse_fragment(char c);
+  expected<url_parse_action, url_parse_errc> parse_scheme_start(char byte);
+  expected<url_parse_action, url_parse_errc> parse_scheme(char byte);
+  expected<url_parse_action, url_parse_errc> parse_no_scheme(char byte);
+  expected<url_parse_action, url_parse_errc> parse_special_relative_or_authority(char byte);
+  expected<url_parse_action, url_parse_errc> parse_path_or_authority(char byte);
+  expected<url_parse_action, url_parse_errc> parse_relative(char byte);
+  expected<url_parse_action, url_parse_errc> parse_relative_slash(char byte);
+  expected<url_parse_action, url_parse_errc> parse_special_authority_slashes(char byte);
+  expected<url_parse_action, url_parse_errc> parse_special_authority_ignore_slashes(char byte);
+  expected<url_parse_action, url_parse_errc> parse_authority(char byte);
+  expected<url_parse_action, url_parse_errc> parse_hostname(char byte);
+  expected<url_parse_action, url_parse_errc> parse_port(char byte);
+  expected<url_parse_action, url_parse_errc> parse_file(char byte);
+  expected<url_parse_action, url_parse_errc> parse_file_slash(char byte);
+  expected<url_parse_action, url_parse_errc> parse_file_host(char byte);
+  expected<url_parse_action, url_parse_errc> parse_path_start(char byte);
+  expected<url_parse_action, url_parse_errc> parse_path(char byte);
+  expected<url_parse_action, url_parse_errc> parse_cannot_be_a_base_url(char byte);
+  expected<url_parse_action, url_parse_errc> parse_query(char byte);
+  expected<url_parse_action, url_parse_errc> parse_fragment(char byte);
 
 };
 }  // namespace skyr

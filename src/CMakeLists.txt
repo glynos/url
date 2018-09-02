@@ -23,7 +23,6 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/url_search_parameters.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/utf8/core.h
         ${CMAKE_CURRENT_SOURCE_DIR}/utf8/checked.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/utf8/unchecked.h
 
         ${CMAKE_SOURCE_DIR}/include/tl/optional.hpp
         ${CMAKE_SOURCE_DIR}/include/tl/expected.hpp
