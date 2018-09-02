@@ -177,7 +177,7 @@ void url_search_parameters::initialize(std::string_view query) {
     parameters_.emplace_back(name, value);
 
     it = sep_it;
-    if (*it == '&' || *it == ';') {
+    if ((it != last) && (*it == '&' || *it == ';')) {
       ++it;
     }
   }

@@ -111,6 +111,7 @@ idna_status map_status(char32_t c) {
   return it->status;
 }
 
+namespace {
 struct mapped_code_point {
   char32_t code_point;
   char32_t mapped;
@@ -120,7 +121,6 @@ struct mapped_code_point {
   }
 };
 
-namespace {
 static const mapped_code_point mapped[] = {
 {% for code_point in mapped_entries %}{% if code_point.status in ('mapped', 'disallowed_STD3_mapped') %}  { 0x{{ '%04x' % code_point.range[0] }}, 0x{{ '%04x' % code_point.mapped }} },
 {% endif %}{% endfor %}};

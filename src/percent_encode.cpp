@@ -93,14 +93,14 @@ expected<std::string, std::error_code> percent_encode(
   return result;
 }
 
-expected<std::string, std::error_code> percent_encode(
-    std::u32string_view input, const exclude_set &excludes) {
-  auto bytes = utf32_to_bytes(input);
-  if (!bytes) {
-    return make_unexpected(make_error_code(percent_encode_errc::overflow));
-  }
-  return percent_encode(bytes.value(), excludes);
-}
+//expected<std::string, std::error_code> percent_encode(
+//    std::u32string_view input, const exclude_set &excludes) {
+//  auto bytes = utf32_to_bytes(input);
+//  if (!bytes) {
+//    return make_unexpected(make_error_code(percent_encode_errc::overflow));
+//  }
+//  return percent_encode(bytes.value(), excludes);
+//}
 
 expected<std::byte, std::error_code> percent_decode_byte(std::string_view input) {
   if ((input.size() < 3) || (input.front() != '%')) {

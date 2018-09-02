@@ -61,18 +61,6 @@ TEST(url_tests, construct_url_like_long_ipv4_make) {
   EXPECT_TRUE(skyr::make_url("http://198.51.100.0.255/"));
 }
 
-TEST(url_tests, construct_url_from_wchar_t_array) {
-  EXPECT_NO_THROW(skyr::url(L"http://www.example.com/"));
-}
-
-TEST(url_tests, construct_url_from_ucs2_string) {
-  EXPECT_NO_THROW(skyr::url(u"http://你好你好.com/"));
-}
-
-TEST(url_tests, construct_url_from_ucs4_string) {
-  EXPECT_NO_THROW(skyr::url(U"http://你好你好.com/"));
-}
-
 TEST(url_tests, construct_url_from_string) {
   auto input = std::string("http://www.example.com/");
   EXPECT_NO_THROW((skyr::url(input)));
@@ -81,10 +69,6 @@ TEST(url_tests, construct_url_from_string) {
 TEST(url_tests, construct_url_from_string_make) {
   auto input = std::string("http://www.example.com/");
   EXPECT_TRUE(skyr::make_url(input));
-}
-
-TEST(url_tests, construct_url_from_wstring) {
-  EXPECT_NO_THROW(skyr::url(std::wstring(L"http://www.example.com/")));
 }
 
 TEST(url_tests, basic_url_protocol_test) {

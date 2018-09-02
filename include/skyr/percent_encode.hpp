@@ -136,12 +136,12 @@ std::string percent_encode_byte(
 expected<std::string, std::error_code> percent_encode(
     std::string_view input, const exclude_set &excludes = c0_control_set());
 
-/// Percent encode a string.
-/// \param input A UTF-32 string.
-/// \param excludes The set of code points to exclude when percent encoding.
-/// \returns A percent encoded ASCII string, or an error on failure.
-expected<std::string, std::error_code> percent_encode(
-  std::u32string_view input, const exclude_set &excludes = c0_control_set());
+///// Percent encode a string.
+///// \param input A UTF-32 string.
+///// \param excludes The set of code points to exclude when percent encoding.
+///// \returns A percent encoded ASCII string, or an error on failure.
+//expected<std::string, std::error_code> percent_encode(
+//  std::u32string_view input, const exclude_set &excludes = c0_control_set());
 
 /// Percent decode an already encoded string into a byte value.
 /// \param input An string of the for %XX, where X is a hexadecimal value/

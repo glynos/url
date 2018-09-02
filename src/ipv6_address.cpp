@@ -298,7 +298,7 @@ expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view inpu
       }
 
       break;
-    } else if (*it == ':') {
+    } else if ((it != last) && (*it == ':')) {
       ++it;
       if (it == last) {
         // validation_error = true;

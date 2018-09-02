@@ -2825,6 +2825,7 @@ idna_status map_status(char32_t c) {
   return it->status;
 }
 
+namespace {
 struct mapped_code_point {
   char32_t code_point;
   char32_t mapped;
@@ -2834,7 +2835,6 @@ struct mapped_code_point {
   }
 };
 
-namespace {
 static const mapped_code_point mapped[] = {
   { 0x0041, 0x0061 },
   { 0x0042, 0x0062 },
