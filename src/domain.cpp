@@ -59,8 +59,8 @@ static char32_t decode_digit(char32_t cp) {
                                   cp - 97 < 26 ? cp - 97 : base;
 }
 
-static char32_t encode_digit(char32_t d, int flag) {
-  return d + 22 + 75 * (d < 26) - ((flag != 0) << 5);
+static char encode_digit(char32_t d, int flag) {
+  return static_cast<char>(d + 22 + 75 * (d < 26) - ((flag != 0) << 5));
 }
 
 static char32_t adapt(
@@ -107,8 +107,8 @@ expected<std::string, std::error_code> punycode_encode(std::u32string_view input
     }
   }
 
-  auto h = result.size();
-  auto b = result.size();
+  auto h = static_cast<char32_t>(result.size());
+  auto b = static_cast<char32_t>(result.size());
 
   if (b > 0) {
     result += delimiter;
@@ -186,12 +186,12 @@ expected<std::string, std::error_code> punycode_decode(std::string_view input) {
     result += input[j];
   }
 
-  auto in = (basic > 0U) ? (basic + 1U) : 0U;
-  auto i = 0U;
+  auto in = static_cast<char32_t>((basic > 0U) ? (basic + 1U) : 0U);
+  auto i = static_cast<char32_t>(0U);
   while (in < input.size()) {
     auto oldi = i;
 
-    auto w = 1U;
+    auto w = static_cast<char32_t>(1U);
     auto k = base;
     while (true) {
       if (in >= input.size()) {
@@ -217,7 +217,7 @@ expected<std::string, std::error_code> punycode_decode(std::string_view input) {
       k += base;
     }
 
-    auto out = result.size() + 1U;
+    auto out = static_cast<char32_t>(result.size() + 1U);
     bias = adapt((i - oldi), out, (oldi == 0U));
 
     if ((i / out) > (std::numeric_limits<char32_t>::max() - n)) {

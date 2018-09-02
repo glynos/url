@@ -65,6 +65,8 @@ if (MSVC)
     endforeach(flag_var)
   endif(Skyr_USE_STATIC_CRT)
 
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest")
+
   add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE)
 endif(MSVC)
 
