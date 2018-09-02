@@ -56,6 +56,10 @@ bool starts_with(
   auto chars_first = chars, chars_last = chars + std::strlen(chars);
   auto chars_it = chars_first;
   auto it = first;
+  if (it == last) {
+    return false;
+  }
+
   while (chars_it != chars_last) {
     if (*it != *chars_it) {
       return false;

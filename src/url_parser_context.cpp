@@ -83,7 +83,14 @@ bool starts_with(
   auto chars_first = chars, chars_last = chars + std::strlen(chars);
   auto chars_it = chars_first;
   auto it = first;
+  if (it == last) {
+    return false;
+  }
   ++it;
+  if (it == last) {
+    return false;
+  }
+
   while (chars_it != chars_last) {
     if (*it != *chars_it) {
       return false;
@@ -120,7 +127,7 @@ expected<std::string, url_parse_errc> parse_opaque_host(std::string_view input) 
 
 expected<std::string, url_parse_errc> parse_host(
     std::string_view input, bool is_not_special = false) {
-  if (input.front() == '[') {
+  if (!input.empty() && (input.front() == '[')) {
     if (input.back() != ']') {
       // result.validation_error = true;
       return make_unexpected(url_parse_errc::invalid_ipv6_address);
