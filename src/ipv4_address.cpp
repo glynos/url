@@ -65,12 +65,14 @@ expected<std::uint64_t, std::error_code> parse_ipv4_number(
     auto pos = static_cast<std::size_t>(0);
     auto number = std::stoul(std::string(input), &pos, base);
     if (pos != input.length()) {
-      return make_unexpected(make_error_code(ipv4_address_errc::invalid_segment_number));
+      return make_unexpected(
+          make_error_code(ipv4_address_errc::invalid_segment_number));
     }
     return number;
   }
   catch (std::exception &) {
-    return make_unexpected(make_error_code(ipv4_address_errc::invalid_segment_number));
+    return make_unexpected(
+        make_error_code(ipv4_address_errc::invalid_segment_number));
   }
 }
 }  // namespace
@@ -113,19 +115,22 @@ expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view inpu
   }
 
   if (parts.size() > 4) {
-    return skyr::make_unexpected(make_error_code(ipv4_address_errc::more_than_4_segments));
+    return skyr::make_unexpected(
+        make_error_code(ipv4_address_errc::more_than_4_segments));
   }
 
   auto numbers = std::vector<std::uint64_t>();
 
   for (const auto &part : parts) {
     if (part.empty()) {
-      return skyr::make_unexpected(make_error_code(ipv4_address_errc::empty_segment));
+      return skyr::make_unexpected(
+          make_error_code(ipv4_address_errc::empty_segment));
     }
 
     auto number = parse_ipv4_number(std::string_view(part), validation_error_flag);
     if (!number) {
-      return skyr::make_unexpected(make_error_code(ipv4_address_errc::invalid_segment_number));
+      return skyr::make_unexpected(
+          make_error_code(ipv4_address_errc::invalid_segment_number));
     }
 
     numbers.push_back(number.value());
@@ -150,13 +155,15 @@ expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view inpu
   numbers_it = std::find_if(numbers_first, numbers_last_but_one,
                             [](auto number) -> bool { return number > 255; });
   if (numbers_it != numbers_last_but_one) {
-    return skyr::make_unexpected(make_error_code(ipv4_address_errc::validation_error));
+    return skyr::make_unexpected(
+        make_error_code(ipv4_address_errc::validation_error));
   }
 
   if (numbers.back() >=
       static_cast<std::uint64_t>(std::pow(256, 5 - numbers.size()))) {
     // validation_error = true;
-    return skyr::make_unexpected(make_error_code(ipv4_address_errc::validation_error));
+    return skyr::make_unexpected(
+        make_error_code(ipv4_address_errc::validation_error));
   }
 
   auto ipv4 = numbers.back();

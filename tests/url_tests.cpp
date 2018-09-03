@@ -515,66 +515,91 @@ TEST(url_tests, percent_encoding_fools_parser_3) {
   EXPECT_EQ("/", instance.pathname());
 }
 
-TEST(url_tests, web_platform_tests_42) {
+TEST(url_tests, web_platform_tests_1) {
   auto base = skyr::url("http://example.org/foo/bar");
   auto instance = skyr::url("http://foo.com/\\@", base);
   EXPECT_EQ("//@", instance.pathname());
 }
 
-TEST(url_tests, web_platform_tests_123) {
+TEST(url_tests, web_platform_tests_2) {
   auto base = skyr::url("about:blank");
   auto instance = skyr::url("http://example.com////../..", base);
   EXPECT_EQ("//", instance.pathname());
 }
 
-TEST(url_tests, web_platform_tests_233) {
+TEST(url_tests, web_platform_tests_3) {
   auto base = skyr::url("about:blank");
   auto instance = skyr::url("sc://faß.ExAmPlE/", base);
   EXPECT_EQ("fa%C3%9F.ExAmPlE", instance.host());
 }
 
-TEST(url_tests, web_platform_tests_277) {
+TEST(url_tests, web_platform_tests_4) {
   auto base = skyr::url("about:blank");
   auto instance = skyr::url("sc://%/", base);
   EXPECT_EQ("%", instance.host());
 }
 
-TEST(url_tests, web_platform_tests_283) {
+TEST(url_tests, web_platform_tests_5) {
   auto base = skyr::url("about:blank");
   auto instance = skyr::url("ftp://%e2%98%83", base);
   EXPECT_EQ("xn--n3h", instance.host());
 }
 
-TEST(url_tests, web_platform_tests_284) {
+TEST(url_tests, web_platform_tests_6) {
   auto base = skyr::url("about:blank");
   auto instance = skyr::url("https://%e2%98%83", base);
   EXPECT_EQ("xn--n3h", instance.host());
 }
 
-TEST(url_tests, web_platform_tests_349) {
+TEST(url_tests, web_platform_tests_7) {
   auto base = skyr::url("file://host/dir/file");
   auto instance = skyr::url("C|a", base);
   EXPECT_EQ("host", instance.host());
 }
 
-TEST(url_tests, web_platform_tests_33) {
+TEST(url_tests, web_platform_tests_8) {
   auto base = skyr::url("http://other.com/");
   ASSERT_THROW(skyr::url("http://GOO 　goo.com", base), skyr::url_parse_error);
 }
 
-TEST(url_tests, web_platform_tests_34) {
+TEST(url_tests, web_platform_tests_9) {
   auto base = skyr::url("http://other.com/");
   ASSERT_THROW(skyr::url(U"http://\uFDD0zyx.com", base), skyr::url_parse_error);
 }
 
-TEST(url_tests, web_platform_tests_36) {
+TEST(url_tests, web_platform_tests_10) {
   auto base = skyr::url("about:blank");
   ASSERT_THROW(skyr::url(U"https://\ufffd", base), skyr::url_parse_error);
 }
 
-TEST(url_tests, web_platform_tests_38) {
+TEST(url_tests, web_platform_tests_11) {
   auto base = skyr::url("about:blank");
   ASSERT_THROW(skyr::url("http://％００.com", base), skyr::url_parse_error);
+}
+
+TEST(url_tests, web_platform_tests_12) {
+  auto base = skyr::url("http://other.com/");
+  ASSERT_THROW(skyr::url("http://192.168.0.257", base), skyr::url_parse_error);
+}
+
+TEST(url_tests, web_platform_tests_13) {
+  auto base = skyr::url("http://other.com/");
+  ASSERT_THROW(skyr::url("http://10000000000", base), skyr::url_parse_error);
+}
+
+TEST(url_tests, web_platform_tests_14) {
+  auto base = skyr::url("http://other.com/");
+  ASSERT_THROW(skyr::url("http://0xffffffff1", base), skyr::url_parse_error);
+}
+
+TEST(url_tests, web_platform_tests_15) {
+  auto base = skyr::url("http://other.com/");
+  ASSERT_THROW(skyr::url("http://256.256.256.256", base), skyr::url_parse_error);
+}
+
+TEST(url_tests, web_platform_tests_16) {
+  auto base = skyr::url("http://other.com/");
+  ASSERT_THROW(skyr::url("http://4294967296", base), skyr::url_parse_error);
 }
 
 TEST(url_test, poo_test) {
