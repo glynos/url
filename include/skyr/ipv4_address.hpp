@@ -57,6 +57,11 @@ class ipv4_address {
 
 };
 
+/// \exclude
+namespace details {
+std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std::string_view input);
+}  // namespace details
+
 /// Parses an IPv4 address.
 /// \param input An input string.
 /// \returns An `ipv4_address` object or an error.

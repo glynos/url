@@ -163,9 +163,8 @@ std::string ipv6_address::to_string() const {
   return output;
 }
 
-expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view input) {
-  // auto validation_error = false;
-
+namespace details {
+std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std::string_view input) {
   auto address = std::array<unsigned short, 8>{{0, 0, 0, 0, 0, 0, 0, 0}};
   auto piece_index = 0;
   auto compress = optional<decltype(piece_index)>();
@@ -174,20 +173,22 @@ expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view inpu
   auto it = first;
 
   if (it == last) {
-    // validation_error = true;
-    return make_unexpected(
-        make_error_code(
-            ipv6_address_errc::does_not_start_with_double_colon));
+    return
+      std::make_pair(
+          make_unexpected(
+              make_error_code(
+                  ipv6_address_errc::does_not_start_with_double_colon)), true);
   }
 
   if (*it == ':') {
     auto next_it = it;
     ++next_it;
     if (!starts_with(next_it, last, ":")) {
-      // validation_error = true;
-      return make_unexpected(
-          make_error_code(
-              ipv6_address_errc::does_not_start_with_double_colon));
+      return
+        std::make_pair(
+            make_unexpected(
+                make_error_code(
+                    ipv6_address_errc::does_not_start_with_double_colon)), true);
     }
 
     it += 2;
@@ -197,16 +198,18 @@ expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view inpu
 
   while (it != last) {
     if (piece_index == 8) {
-      // validation_error = true;
-      return make_unexpected(
-          make_error_code(ipv6_address_errc::invalid_piece));
+      return
+        std::make_pair(
+            make_unexpected(
+                make_error_code(ipv6_address_errc::invalid_piece)), true);
     }
 
     if (*it == ':') {
       if (compress) {
-        // validation_error = true;
-        return make_unexpected(
-            make_error_code(ipv6_address_errc::compress_expected));
+        return
+          std::make_pair(
+              make_unexpected(
+                  make_error_code(ipv6_address_errc::compress_expected)), true);
       }
 
       ++it;
@@ -228,17 +231,20 @@ expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view inpu
 
     if ((it != last) && (*it == '.')) {
       if (length == 0) {
-        // validation_error = true;
-        return make_unexpected(
-            make_error_code(ipv6_address_errc::empty_ipv4_segment));
+        return
+          std::make_pair(
+              make_unexpected(
+                  make_error_code(ipv6_address_errc::empty_ipv4_segment)), true);
       }
 
       it -= length;
 
       if (piece_index > 6) {
-        // validation_error = true;
-        return make_unexpected(
-            make_error_code(ipv6_address_errc::invalid_ipv4_segment_number));
+        return
+          std::make_pair(
+              make_unexpected(
+                  make_error_code(
+                      ipv6_address_errc::invalid_ipv4_segment_number)), true);
       }
 
       auto numbers_seen = 0;
@@ -250,17 +256,20 @@ expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view inpu
           if ((*it == '.') && (numbers_seen < 4)) {
             ++it;
           } else {
-            // validation_error = true;
-            return make_unexpected(
-                make_error_code(
-                    ipv6_address_errc::invalid_ipv4_segment_number));
+            return
+              std::make_pair(
+                  make_unexpected(
+                      make_error_code(
+                          ipv6_address_errc::invalid_ipv4_segment_number)), true);
           }
         }
 
         if ((it == last) || !std::isdigit(*it, std::locale::classic())) {
-          // validation_error = true;
-          return make_unexpected(
-              make_error_code(ipv6_address_errc::invalid_ipv4_segment_number));
+          return
+            std::make_pair(
+                make_unexpected(
+                    make_error_code(
+                        ipv6_address_errc::invalid_ipv4_segment_number)), true);
         }
 
         while ((it != last) && std::isdigit(*it, std::locale::classic())) {
@@ -268,19 +277,21 @@ expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view inpu
           if (!ipv4_piece) {
             ipv4_piece = number;
           } else if (ipv4_piece.value() == 0) {
-            // validation_error = true;
-            return make_unexpected(
-                make_error_code(
-                    ipv6_address_errc::invalid_ipv4_segment_number));
+            return
+              std::make_pair(
+                  make_unexpected(
+                      make_error_code(
+                          ipv6_address_errc::invalid_ipv4_segment_number)), true);
           } else {
             ipv4_piece = ipv4_piece.value() * std::uint16_t(10) + number;
           }
 
           if (ipv4_piece.value() > 255) {
-            // validation_error = true;
-            return make_unexpected(
-                make_error_code(
-                    ipv6_address_errc::invalid_ipv4_segment_number));
+            return
+              std::make_pair(
+                  make_unexpected(
+                      make_error_code(
+                          ipv6_address_errc::invalid_ipv4_segment_number)), true);
           }
 
           ++it;
@@ -295,24 +306,27 @@ expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view inpu
       }
 
       if (numbers_seen != 4) {
-        // validation_error = true;
-        return make_unexpected(
-            make_error_code(
-                ipv6_address_errc::invalid_ipv4_segment_number));
+        return
+          std::make_pair(
+              make_unexpected(
+                  make_error_code(
+                      ipv6_address_errc::invalid_ipv4_segment_number)), true);
       }
 
       break;
     } else if ((it != last) && (*it == ':')) {
       ++it;
       if (it == last) {
-        // validation_error = true;
-        return make_unexpected(
-            make_error_code(ipv6_address_errc::invalid_piece));
+        return
+          std::make_pair(
+              make_unexpected(
+                  make_error_code(ipv6_address_errc::invalid_piece)), true);
       }
     } else if (it != last) {
-      // validation_error = true;
-      return make_unexpected(
-          make_error_code(ipv6_address_errc::invalid_piece));
+      return
+        std::make_pair(
+            make_unexpected(
+                make_error_code(ipv6_address_errc::invalid_piece)), true);
     }
     address[piece_index] = value;
     ++piece_index;
@@ -327,11 +341,18 @@ expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view inpu
       --swaps;
     }
   } else if (!compress && (piece_index != 8)) {
-    // validation_error = true;
-    return make_unexpected(
-        make_error_code(ipv6_address_errc::compress_expected));
+    return
+      std::make_pair(
+          make_unexpected(
+              make_error_code(ipv6_address_errc::compress_expected)), true);
   }
 
-  return ipv6_address(address);
+  return std::make_pair(ipv6_address(address), false);
+}
+}  // namespace details
+
+
+expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view input) {
+  return details::parse_ipv6_address(input).first;
 }
 }  // namespace skyr

@@ -2814,7 +2814,7 @@ static const code_point code_points[] = {
 };
 }  // namespace
 
-idna_status map_status(char32_t c) {
+idna_status map_idna_status(char32_t c) {
   auto first = std::addressof(code_points[0]);
   auto last = first + sizeof(code_points);
   auto it = std::find_if(
@@ -2829,9 +2829,13 @@ namespace {
 struct mapped_code_point {
   char32_t code_point;
   char32_t mapped;
-  
+
   bool operator < (const mapped_code_point &other) const {
     return code_point < other.code_point;
+  }
+
+  bool operator == (const mapped_code_point &other) const {
+    return code_point == other.code_point;
   }
 };
 
@@ -8562,7 +8566,7 @@ static const mapped_code_point mapped[] = {
 };
 }  // namespace
 
-char32_t map(char32_t c) {
+char32_t map_idna_char(char32_t c) {
   auto first = std::addressof(mapped[0]);
   auto last = first + sizeof(mapped);
   auto it = std::find_if(

@@ -18,9 +18,9 @@ enum class idna_status {
   valid,
 };
 
-idna_status map_status(char32_t c);
+idna_status map_idna_status(char32_t c);
 
-char32_t map(char32_t c);
+char32_t map_idna_char(char32_t c);
 }  // namespace skyr
 
 #endif //SKYR_IDNA_TABLE_HPP

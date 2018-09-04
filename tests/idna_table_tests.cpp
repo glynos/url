@@ -22,5 +22,5 @@ INSTANTIATE_TEST_CASE_P(
 
 TEST_P(code_point_tests, code_point_set) {
   auto code_point = GetParam();
-  ASSERT_EQ(code_point.second, skyr::map_status(code_point.first));
+  ASSERT_EQ(code_point.second, skyr::map_idna_status(code_point.first));
 }

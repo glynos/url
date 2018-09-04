@@ -251,7 +251,7 @@ expected<std::u32string, std::error_code> process(
   auto it = first;
 
   while (it != last) {
-    switch (map_status(*it)) {
+    switch (map_idna_status(*it)) {
       case idna_status::disallowed:
         error = true;
         break;
@@ -268,17 +268,17 @@ expected<std::u32string, std::error_code> process(
           error = true;
         }
         else {
-          result += map(*it);
+          result += map_idna_char(*it);
         }
         break;
       case idna_status::ignored:
         break;
       case idna_status::mapped:
-        result += map(*it);
+        result += map_idna_char(*it);
         break;
       case idna_status::deviation:
         if (transitional_processing) {
-          result += map(*it);
+          result += map_idna_char(*it);
         }
         else {
           result += *it;

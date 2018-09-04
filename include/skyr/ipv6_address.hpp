@@ -57,6 +57,11 @@ class ipv6_address {
 
 };
 
+/// \exclude
+namespace details {
+std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std::string_view input);
+}  // namespace details
+
 /// Parses an IPv6 address.
 /// \param input An input string.
 /// \returns An `ipv6_address` object or an error.

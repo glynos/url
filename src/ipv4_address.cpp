@@ -94,8 +94,10 @@ std::string ipv4_address::to_string() const {
   return output;
 }
 
-expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view input) {
+namespace details {
+std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std::string_view input) {
   auto validation_error_flag = false;
+  auto validation_error = false;
 
   std::vector<std::string> parts;
   parts.emplace_back();
@@ -115,29 +117,38 @@ expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view inpu
   }
 
   if (parts.size() > 4) {
-    return skyr::make_unexpected(
-        make_error_code(ipv4_address_errc::more_than_4_segments));
+    return
+      std::make_pair(
+          make_unexpected(
+              make_error_code(
+                  ipv4_address_errc::more_than_4_segments)), true);
   }
 
   auto numbers = std::vector<std::uint64_t>();
 
   for (const auto &part : parts) {
     if (part.empty()) {
-      return skyr::make_unexpected(
-          make_error_code(ipv4_address_errc::empty_segment));
+      return
+        std::make_pair(
+            make_unexpected(
+                make_error_code(
+                    ipv4_address_errc::empty_segment)), true);
     }
 
     auto number = parse_ipv4_number(std::string_view(part), validation_error_flag);
     if (!number) {
-      return skyr::make_unexpected(
-          make_error_code(ipv4_address_errc::invalid_segment_number));
+      return
+        std::make_pair(
+            make_unexpected(
+                make_error_code(
+                    ipv4_address_errc::invalid_segment_number)), validation_error_flag);
     }
 
     numbers.push_back(number.value());
   }
 
   if (validation_error_flag) {
-    // validation_error = true;
+    validation_error = true;
   }
 
   auto numbers_first = begin(numbers), numbers_last = end(numbers);
@@ -146,7 +157,7 @@ expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view inpu
       std::find_if(numbers_first, numbers_last,
                    [](auto number) -> bool { return number > 255; });
   if (numbers_it != numbers_last) {
-    // validation_error = true;
+    validation_error = true;
   }
 
   auto numbers_last_but_one = numbers_last;
@@ -155,15 +166,18 @@ expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view inpu
   numbers_it = std::find_if(numbers_first, numbers_last_but_one,
                             [](auto number) -> bool { return number > 255; });
   if (numbers_it != numbers_last_but_one) {
-    return skyr::make_unexpected(
-        make_error_code(ipv4_address_errc::validation_error));
+    return
+      std::make_pair(
+          make_unexpected(
+              make_error_code(ipv4_address_errc::validation_error)), true);
   }
 
   if (numbers.back() >=
       static_cast<std::uint64_t>(std::pow(256, 5 - numbers.size()))) {
-    // validation_error = true;
-    return skyr::make_unexpected(
-        make_error_code(ipv4_address_errc::validation_error));
+    return
+      std::make_pair(
+          make_unexpected(
+              make_error_code(ipv4_address_errc::validation_error)), true);
   }
 
   auto ipv4 = numbers.back();
@@ -175,6 +189,12 @@ expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view inpu
     ++counter;
   }
 
-  return {ipv4_address(static_cast<unsigned int>(ipv4))};
+  return std::make_pair(
+      ipv4_address(static_cast<unsigned int>(ipv4)), validation_error);
+}
+}  // namespace details
+
+expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view input) {
+  return details::parse_ipv4_address(input).first;
 }
 }  // namespace skyr

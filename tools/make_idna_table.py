@@ -85,27 +85,27 @@ if __name__ == '__main__':
 
 namespace skyr {
 namespace {
-struct code_point {
+struct code_point_range {
   char32_t first;
   char32_t last;
   idna_status status;
   
-  bool operator < (const code_point &other) const {
+  bool operator < (const code_point_range &other) const {
     return last < other.first;
   }
 };
 
-static const code_point code_points[] = {
+static const code_point_range statuses[] = {
 {% for code_point in entries %}  { 0x{{ '%04x' % code_point.range[0] }}, 0x{{ '%04x' % code_point.range[1] }}, idna_status::{{ code_point.status.lower() }} },
 {% endfor %}};
 }  // namespace
 
-idna_status map_status(char32_t c) {
-  auto first = std::addressof(code_points[0]);
-  auto last = first + sizeof(code_points);
+idna_status map_idna_status(char32_t c) {
+  auto first = std::addressof(statuses[0]);
+  auto last = first + sizeof(statuses);
   auto it = std::find_if(
     first, last,
-    [&c] (const code_point &cp) -> bool {
+    [&c] (const code_point_range &cp) -> bool {
       return (c >= cp.first) && (c <= cp.last);
     });
   return it->status;
@@ -130,7 +130,7 @@ static const mapped_code_point mapped[] = {
 {% endif %}{% endfor %}};
 }  // namespace
 
-char32_t map(char32_t c) {
+char32_t map_idna_char(char32_t c) {
   auto first = std::addressof(mapped[0]);
   auto last = first + sizeof(mapped);
   auto it = std::find_if(
