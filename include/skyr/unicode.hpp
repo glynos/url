@@ -15,7 +15,9 @@ namespace skyr {
 /// Enumerates Unicode errors.
 enum class unicode_errc {
   overflow,
+  invalid_lead,
   illegal_byte_sequence,
+  invalid_code_point,
 };
 
 /// Creates a `std::error_code` given a `skyr::unicode_errc` value.
