@@ -10,6 +10,7 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/ipv4_address.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ipv6_address.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/percent_encode.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/unicode_impl.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/unicode.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/idna_table.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/idna_table.hpp
@@ -21,8 +22,6 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/url.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_error.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_search_parameters.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/utf8/core.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/utf8/checked.h
 
         ${CMAKE_SOURCE_DIR}/include/tl/optional.hpp
         ${CMAKE_SOURCE_DIR}/include/tl/expected.hpp

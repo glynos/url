@@ -5,7 +5,7 @@
 
 
 #include "skyr/unicode.hpp"
-#include "utf8/checked.h"
+#include "unicode_impl.hpp"
 
 namespace skyr {
 namespace {
