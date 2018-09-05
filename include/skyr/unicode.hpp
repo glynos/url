@@ -14,9 +14,13 @@
 namespace skyr {
 /// Enumerates Unicode errors.
 enum class unicode_errc {
+  /// Overflow.
   overflow,
+  /// Invalid lead code point.
   invalid_lead,
+  /// Illegal byte sequence.
   illegal_byte_sequence,
+  /// Invalid code point.
   invalid_code_point,
 };
 

@@ -60,7 +60,7 @@ This gives the output: `Parsing failed: Not an absolute URL with fragment`
 
 ### Creating a non-absolute URL with a base URL
 
-Parses a string, "/🏳️‍🌈", using a base URL, "https://example.org/":
+Parses a string, "🏳️‍🌈", using a base URL, "https://example.org/":
 
 ```c++
 auto base = skyr::make_url("https://example.org/");
@@ -92,6 +92,10 @@ Linux:
 MacOS:
 
 * Clang 6
+
+Windows:
+
+* Microsoft Visual C++ 2017
 
 ## License
 
