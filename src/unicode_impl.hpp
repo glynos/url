@@ -35,7 +35,7 @@ namespace skyr {
 namespace utf8 {
 // Helper code - not intended to be directly called by the library users. May be
 // changed at any time
-namespace internal {
+namespace details {
 // Unicode constants
 // Leading (high) surrogates: 0xd800 - 0xdbff
 // Trailing (low) surrogates: 0xdc00 - 0xdfff
@@ -61,7 +61,7 @@ inline char16_t mask16(U16Type oc) {
 }
 template <typename OctetType>
 inline bool is_trail(OctetType oc) {
-    return ((utf8::internal::mask8(oc) >> 6) == 0x2);
+    return ((details::mask8(oc) >> 6) == 0x2);
 }
 
 inline bool is_lead_surrogate(char16_t cp) {
@@ -77,13 +77,13 @@ inline bool is_surrogate(char16_t cp) {
 }
 
 inline bool is_code_point_valid(char32_t cp) {
-  return (cp <= CODE_POINT_MAX && !utf8::internal::is_surrogate(cp));
+  return (cp <= CODE_POINT_MAX && !is_surrogate(cp));
 }
 
 template <typename OctetIterator>
 inline std::ptrdiff_t sequence_length(
     OctetIterator lead_it) {
-  auto lead = utf8::internal::mask8(*lead_it);
+  auto lead = details::mask8(*lead_it);
   if (lead < 0x80) {
     return 1;
   } else if ((lead >> 5) == 0x6) {
@@ -99,32 +99,12 @@ inline std::ptrdiff_t sequence_length(
 inline bool is_overlong_sequence(
     char32_t cp,
     std::ptrdiff_t length) {
-  if (cp < 0x80) {
-    if (length != 1) {
-      return true;
-    }
-  } else if (cp < 0x800) {
-    if (length != 2) {
-      return true;
-    }
-  } else if (cp < 0x10000) {
-    if (length != 3) {
-      return true;
-    }
-  }
-
-  return false;
+  bool result = false;
+  result &= (cp < 0x80) && (length != 1);
+  result &= (cp < 0x800) && (length != 2);
+  result &= (cp < 0x10000) && (length != 3);
+  return result;
 }
-
-//enum utf_error {
-////  UTF8_OK,
-//  OVERFLOW,
-//  INVALID_LEAD,
-////  INCOMPLETE_SEQUENCE,
-////  OVERLONG_SEQUENCE,
-//  ILLEGAL_BYTE_SEQUENCE,
-//  INVALID_CODE_POINT
-//};
 
 /// Helper for get_sequence_x
 template <typename OctetIterator>
@@ -135,7 +115,7 @@ expected<void, unicode_errc> increase_safely(
     return make_unexpected(unicode_errc::overflow);
   }
 
-  if (!utf8::internal::is_trail(*it)) {
+  if (!is_trail(*it)) {
     return make_unexpected(unicode_errc::illegal_byte_sequence);
   }
 
@@ -151,7 +131,7 @@ expected<void, unicode_errc> get_sequence_1(
   if (it == end) {
     return make_unexpected(unicode_errc::overflow);
   }
-  code_point = utf8::internal::mask8(*it);
+  code_point = mask8(*it);
   return {};
 }
 
@@ -164,7 +144,7 @@ expected<void, unicode_errc> get_sequence_2(
     return make_unexpected(unicode_errc::overflow);
   }
 
-  code_point = utf8::internal::mask8(*it);
+  code_point = mask8(*it);
 
   auto result = increase_safely(it, last);
   if (!result) {
@@ -172,7 +152,6 @@ expected<void, unicode_errc> get_sequence_2(
   }
 
   code_point = ((code_point << 6) & 0x7ff) + ((*it) & 0x3f);
-
   return {};
 }
 
@@ -185,7 +164,7 @@ expected<void, unicode_errc> get_sequence_3(
     return make_unexpected(unicode_errc::overflow);
   }
 
-  code_point = utf8::internal::mask8(*it);
+  code_point = mask8(*it);
 
   {
     auto result = increase_safely(it, last);
@@ -195,7 +174,7 @@ expected<void, unicode_errc> get_sequence_3(
   }
 
   code_point = ((code_point << 12) & 0xffff) +
-               ((utf8::internal::mask8(*it) << 6) & 0xfff);
+               ((mask8(*it) << 6) & 0xfff);
 
   {
     auto result = increase_safely(it, last);
@@ -205,7 +184,6 @@ expected<void, unicode_errc> get_sequence_3(
   }
 
   code_point += (*it) & 0x3f;
-
   return {};
 }
 
@@ -218,7 +196,7 @@ expected<void, unicode_errc> get_sequence_4(
     return make_unexpected(unicode_errc::overflow);
   }
 
-  code_point = utf8::internal::mask8(*it);
+  code_point = mask8(*it);
 
   {
     auto result = increase_safely(it, last);
@@ -228,7 +206,7 @@ expected<void, unicode_errc> get_sequence_4(
   }
 
   code_point = ((code_point << 18) & 0x1fffff) +
-               ((utf8::internal::mask8(*it) << 12) & 0x3ffff);
+               ((mask8(*it) << 12) & 0x3ffff);
 
   {
     auto result = increase_safely(it, last);
@@ -237,7 +215,7 @@ expected<void, unicode_errc> get_sequence_4(
     }
   }
 
-  code_point += (utf8::internal::mask8(*it) << 6) & 0xfff;
+  code_point += (mask8(*it) << 6) & 0xfff;
 
   {
     auto result = increase_safely(it, last);
@@ -247,7 +225,6 @@ expected<void, unicode_errc> get_sequence_4(
   }
 
   code_point += (*it) & 0x3f;
-
   return {};
 }
 
@@ -260,21 +237,16 @@ expected<void, unicode_errc> validate_next(
     return make_unexpected(unicode_errc::overflow);
   }
 
-  // Save the original value of it so we can go back in case of failure
-  // Of course, it does not make much sense with i.e. stream iterators
   auto original_it = it;
 
   char32_t cp = 0;
-  // Determine the sequence length based on the lead octet
-  const auto length = utf8::internal::sequence_length(it);
-
-  // Get trail octets and calculate the code point
+  const auto length = sequence_length(it);
   switch (length) {
     case 0:
       return make_unexpected(unicode_errc::overflow);
     case 1:
       {
-        auto result = utf8::internal::get_sequence_1(it, last, cp);
+        auto result = get_sequence_1(it, last, cp);
         if (!result) {
           return result;
         }
@@ -282,7 +254,7 @@ expected<void, unicode_errc> validate_next(
       break;
     case 2:
     {
-      auto result = utf8::internal::get_sequence_2(it, last, cp);
+      auto result = get_sequence_2(it, last, cp);
       if (!result) {
         return result;
       }
@@ -290,7 +262,7 @@ expected<void, unicode_errc> validate_next(
       break;
     case 3:
     {
-      auto result = utf8::internal::get_sequence_3(it, last, cp);
+      auto result = get_sequence_3(it, last, cp);
       if (!result) {
         return result;
       }
@@ -298,7 +270,7 @@ expected<void, unicode_errc> validate_next(
       break;
     case 4:
     {
-      auto result = utf8::internal::get_sequence_4(it, last, cp);
+      auto result = get_sequence_4(it, last, cp);
       if (!result) {
         return result;
       }
@@ -306,9 +278,8 @@ expected<void, unicode_errc> validate_next(
       break;
   }
 
-  // Decoding succeeded. Now, security checks...
-  if (utf8::internal::is_code_point_valid(cp)) {
-    if (utf8::internal::is_overlong_sequence(cp, length)) {
+  if (is_code_point_valid(cp)) {
+    if (is_overlong_sequence(cp, length)) {
       it = original_it;
       return make_unexpected(unicode_errc::illegal_byte_sequence);
     }
@@ -327,12 +298,9 @@ inline expected<void, unicode_errc> validate_next(
     OctetIterator& it,
     OctetIterator last) {
   char32_t ignored;
-  return utf8::internal::validate_next(it, last, ignored);
+  return validate_next(it, last, ignored);
 }
-
-}  // namespace internal
-
-/// The library API - functions intended to be called by the users
+}  // namespace details
 
 template <typename OctetIterator>
 OctetIterator find_invalid(
@@ -340,7 +308,7 @@ OctetIterator find_invalid(
     OctetIterator last) {
   auto it = first;
   while (it != last) {
-    auto err_code = utf8::internal::validate_next(it, last);
+    auto err_code = details::validate_next(it, last);
     if (!err_code) {
       return it;
     }
@@ -361,55 +329,17 @@ inline bool starts_with_bom(
     OctetIterator last) {
   // Byte order mark
   const uint8_t bom[] = {0xef, 0xbb, 0xbf};
-  return (((it != last) && (utf8::internal::mask8(*it++)) == bom[0]) &&
-        ((it != last) && (utf8::internal::mask8(*it++)) == bom[1]) &&
-        ((it != last) && (utf8::internal::mask8(*it)) == bom[2]));
+  return (((it != last) && (details::mask8(*it++)) == bom[0]) &&
+        ((it != last) && (details::mask8(*it++)) == bom[1]) &&
+        ((it != last) && (details::mask8(*it)) == bom[2]));
 }
 
-// Base for the exceptions that may be thrown from the library
-class exception : public ::std::exception {};
-
-// Exceptions that may be thrown from the library functions.
-class invalid_code_point : public exception {
-  char32_t cp;
-
- public:
-  invalid_code_point(char32_t codepoint) : cp(codepoint) {}
-  virtual const char* what() const throw() { return "Invalid code point"; }
-  char32_t code_point() const { return cp; }
-};
-
-class invalid_utf8 : public exception {
-  uint8_t u8;
-
- public:
-  invalid_utf8(uint8_t u) : u8(u) {}
-  virtual const char* what() const throw() { return "Invalid UTF-8"; }
-  uint8_t utf8_octet() const { return u8; }
-};
-
-class invalid_utf16 : public exception {
-  char16_t u16;
-
- public:
-  invalid_utf16(char16_t u) : u16(u) {}
-  virtual const char* what() const throw() { return "Invalid UTF-16"; }
-  char16_t utf16_word() const { return u16; }
-};
-
-class not_enough_room : public exception {
- public:
-  virtual const char* what() const throw() { return "Not enough space"; }
-};
-
-/// The library API - functions intended to be called by the users
-
 template <typename OctetIterator>
-OctetIterator append(
+expected<OctetIterator, unicode_errc> append(
     char32_t cp,
     OctetIterator result) {
-  if (!utf8::internal::is_code_point_valid(cp)) {
-    throw invalid_code_point(cp);
+  if (!details::is_code_point_valid(cp)) {
+    return make_unexpected(unicode_errc::invalid_code_point);
   }
 
   if (cp < 0x80) { // one octet
@@ -432,7 +362,7 @@ OctetIterator append(
 }
 
 template <typename OctetIterator, typename OutputIterator>
-OutputIterator replace_invalid(
+expected<OutputIterator, unicode_errc> replace_invalid(
     OctetIterator first,
     OctetIterator last,
     OutputIterator out,
@@ -440,196 +370,190 @@ OutputIterator replace_invalid(
   auto it = first;
   while (it != last) {
     auto seq_first = it;
-    auto result = utf8::internal::validate_next(it, last);
-    if (result) {
-      out = std::copy(seq_first, it, out);
-    }
-    else {
-      switch (result.error()) {
-        case unicode_errc::overflow:
-          throw not_enough_room();
-        case unicode_errc::invalid_lead:
-          out = utf8::append(replacement, out);
+    auto result = details::validate_next(it, last);
+    if (!result) {
+      if (result.error() == unicode_errc::invalid_lead) {
+        out = append(replacement, out);
+        ++it;
+      } else if (
+          (result.error() == unicode_errc::illegal_byte_sequence) ||
+          (result.error() == unicode_errc::invalid_code_point)) {
+        out = append(replacement, out);
+        ++it;
+        // just one replacement mark for the sequence
+        while ((it != last) && details::is_trail(*it)) {
           ++it;
-          break;
-        case unicode_errc::illegal_byte_sequence:
-        case unicode_errc::invalid_code_point:
-          out = utf8::append(replacement, out);
-          ++it;
-          // just one replacement mark for the sequence
-          while ((it != last) && utf8::internal::is_trail(*it)) {
-            ++it;
-          }
-          break;
+        }
+      } else {
+        return make_unexpected(std::move(result.error()));
       }
     }
+    out = std::copy(seq_first, it, out);
   }
   return out;
 }
 
 template <typename OctetIterator, typename OutputIterator>
-inline OutputIterator replace_invalid(
+inline expected<OutputIterator, unicode_errc> replace_invalid(
     OctetIterator first,
     OctetIterator last,
     OutputIterator out) {
-  static const auto replacement_marker = utf8::internal::mask16(0xfffd);
-  return utf8::replace_invalid(first, last, out, replacement_marker);
+  static const auto replacement_marker = details::mask16(0xfffd);
+  return replace_invalid(first, last, out, replacement_marker);
 }
 
 template <typename OctetIterator>
-char32_t next(
+expected<char32_t, unicode_errc> next(
     OctetIterator& it,
     OctetIterator last) {
   char32_t cp = 0;
-  auto result = utf8::internal::validate_next(it, last, cp);
+  auto result = details::validate_next(it, last, cp);
   if (!result) {
-    switch (result.error()) {
-      case unicode_errc::overflow:
-        throw not_enough_room();
-      case unicode_errc::invalid_lead:
-      case unicode_errc::illegal_byte_sequence:
-        throw invalid_utf8(*it);
-      case unicode_errc::invalid_code_point:
-        throw invalid_code_point(cp);
-    }
+    return make_unexpected(std::move(result.error()));
   }
   return cp;
 }
 
 template <typename OctetIterator>
-char32_t peek_next(
+expected<char32_t, unicode_errc> peek_next(
     OctetIterator it,
     OctetIterator last) {
-  return utf8::next(it, last);
+  return next(it, last);
 }
 
 template <typename OctetIterator>
-char32_t prior(
+expected<char32_t, unicode_errc> prior(
     OctetIterator& it,
     OctetIterator first) {
-  // can't do much if it == start
   if (it == first) {
-    throw not_enough_room();
+    return make_unexpected(unicode_errc::overflow);
   }
 
   auto last = it;
   // Go back until we hit either a lead octet or start
-  while (utf8::internal::is_trail(*(--it)))
+  while (details::is_trail(*(--it)))
     if (it == first) {
-      throw invalid_utf8(*it);  // error - no lead byte in the sequence
+      return make_unexpected(unicode_errc::invalid_code_point);
     }
-  return utf8::peek_next(it, last);
-}
-
-/// Deprecated in versions that include "prior"
-template <typename OctetIterator>
-char32_t previous(
-    OctetIterator& it,
-    OctetIterator pass_start) {
-  auto end = it;
-  while (utf8::internal::is_trail(*(--it)))
-    if (it == pass_start) {
-      throw invalid_utf8(*it);  // error - no lead byte in the sequence
-    }
-  auto temp = it;
-  return utf8::next(temp, end);
+  return peek_next(it, last);
 }
 
 template <typename OctetIterator>
-void advance(
+expected<void, unicode_errc> advance(
     OctetIterator& it,
     std::ptrdiff_t n,
     OctetIterator end) {
   while (n != 0) {
-    utf8::next(it, end);
+    auto result = next(it, end);
+    if (!result) {
+      return make_unexpected(std::move(result.error()));
+    }
     --n;
   }
 }
 
 template <typename OctetIterator>
-std::ptrdiff_t distance(
+expected<std::ptrdiff_t, unicode_errc> distance(
     OctetIterator first,
     OctetIterator last) {
   std::ptrdiff_t dist = 0;
   auto it = first;
   while (it != last) {
-    utf8::next(it, last);
+    auto result = next(it, last);
+    if (!result) {
+      return make_unexpected(std::move(result.error()));
+    }
     ++dist;
   }
   return dist;
 }
 
 template <typename U16BitIterator, typename OctetIterator>
-OctetIterator utf16to8(
+expected<OctetIterator, unicode_errc> utf16to8(
     U16BitIterator first,
     U16BitIterator last,
     OctetIterator result) {
   auto it = first;
   while (it != last) {
-    auto cp = utf8::internal::mask16(*it++);
+    auto cp = details::mask16(*it++);
     // Take care of surrogate pairs first
-    if (utf8::internal::is_lead_surrogate(cp)) {
+    if (details::is_lead_surrogate(cp)) {
       if (it != last) {
-        auto trail_surrogate = utf8::internal::mask16(*it++);
-        if (utf8::internal::is_trail_surrogate(trail_surrogate)) {
-          cp = (cp << 10) + trail_surrogate + internal::SURROGATE_OFFSET;
+        auto trail_surrogate = details::mask16(*it++);
+        if (details::is_trail_surrogate(trail_surrogate)) {
+          cp = (cp << 10) + trail_surrogate + details::SURROGATE_OFFSET;
         }
         else {
-          throw invalid_utf16(static_cast<char16_t>(trail_surrogate));
+          return make_unexpected(unicode_errc::invalid_code_point);
         }
       } else {
-        throw invalid_utf16(static_cast<char16_t>(cp));
+        return make_unexpected(unicode_errc::invalid_code_point);
       }
     }
     // Lone trail surrogate
-    else if (utf8::internal::is_trail_surrogate(cp)) {
-      throw invalid_utf16(static_cast<char16_t>(cp));
+    else if (details::is_trail_surrogate(cp)) {
+      return make_unexpected(unicode_errc::invalid_code_point);
     }
 
-    result = utf8::append(cp, result);
+    auto result_it = utf8::append(cp, result);
+    if (!result_it) {
+      return make_unexpected(std::move(result_it.error()));
+    }
   }
   return result;
 }
 
 template <typename U16BitIterator, typename OctetIterator>
-U16BitIterator utf8to16(
+expected<U16BitIterator, unicode_errc> utf8to16(
     OctetIterator first,
     OctetIterator last,
     U16BitIterator result) {
   auto it = first;
   while (it != last) {
     auto cp = utf8::next(it, last);
-    if (cp > 0xffff) {  // make a surrogate pair
-      *result++ = static_cast<char16_t>((cp >> 10) + internal::LEAD_OFFSET);
+    if (!cp) {
+      return make_unexpected(std::move(cp.error()));
+    }
+
+    if (cp.value() > 0xffff) {  // make a surrogate pair
+      *result++ = static_cast<char16_t>((cp.value() >> 10) + details::LEAD_OFFSET);
       *result++ =
-          static_cast<char16_t>((cp & 0x3ff) + internal::TRAIL_SURROGATE_MIN);
+          static_cast<char16_t>((cp.value() & 0x3ff) + details::TRAIL_SURROGATE_MIN);
     } else {
-      *result++ = static_cast<char16_t>(cp);
+      *result++ = static_cast<char16_t>(cp.value());
     }
   }
   return result;
 }
 
 template <typename OctetIterator, typename U32BitIterator>
-OctetIterator utf32to8(
+expected<OctetIterator, unicode_errc> utf32to8(
     U32BitIterator first,
     U32BitIterator last,
     OctetIterator result) {
   auto it = first;
   while (it != last) {
-    result = utf8::append(*(it++), result);
+    auto result_it = utf8::append(*(it++), result);
+    if (!result_it) {
+      return make_unexpected(std::move(result_it.error()));
+    }
+    result = result_it.value();
   }
   return result;
 }
 
 template <typename OctetIterator, typename U32BitIterator>
-U32BitIterator utf8to32(
+expected<U32BitIterator, unicode_errc> utf8to32(
     OctetIterator first,
     OctetIterator last,
     U32BitIterator result) {
   auto it = first;
   while (it != last) {
-    (*result++) = utf8::next(it, last);
+    auto next_it = next(it, last);
+    if (!next_it) {
+      return make_unexpected(std::move(next_it.error()));
+    }
+    (*result++) = next_it.value();
   }
   return result;
 }

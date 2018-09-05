@@ -23,8 +23,12 @@ std::string unicode_error_category::message(int error) const noexcept {
   switch (static_cast<unicode_errc>(error)) {
     case unicode_errc::overflow:
       return "Overflow";
+    case unicode_errc::invalid_lead:
+      return "Invalid lead";
     case unicode_errc::illegal_byte_sequence:
       return "Illegal byte sequence";
+    case unicode_errc::invalid_code_point:
+      return "Invalid code point";
     default:
       return "(Unknown error)";
   }
@@ -38,24 +42,20 @@ std::error_code make_error_code(unicode_errc error) {
 }
 
 expected<std::u32string, std::error_code> utf32_from_bytes(std::string_view input) {
-  try {
-    std::u32string result;
-    utf8::utf8to32(begin(input), end(input),std::back_inserter(result));
-    return result;
+  std::u32string result;
+  auto expected = utf8::utf8to32(begin(input), end(input),std::back_inserter(result));
+  if (!expected) {
+    return make_unexpected(std::error_code(expected.error()));
   }
-  catch (utf8::exception &) {
-    return make_unexpected(make_error_code(unicode_errc::overflow));
-  }
+  return result;
 }
 
 expected<std::string, std::error_code> utf32_to_bytes(std::u32string_view input) {
-  try {
-    std::string result;
-    utf8::utf32to8(begin(input), end(input), std::back_inserter(result));
-    return result;
+  std::string result;
+  auto expected = utf8::utf32to8(begin(input), end(input), std::back_inserter(result));
+  if (!expected) {
+    return make_unexpected(std::error_code(expected.error()));
   }
-  catch (utf8::exception &) {
-    return make_unexpected(make_error_code(unicode_errc::overflow));
-  }
+  return result;
 }
 }  // namespace skyr
