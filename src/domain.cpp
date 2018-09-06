@@ -268,17 +268,17 @@ expected<std::u32string, std::error_code> process(
           error = true;
         }
         else {
-          result += map_idna_char(*it);
+          result += map_idna_code_point(*it);
         }
         break;
       case idna_status::ignored:
         break;
       case idna_status::mapped:
-        result += map_idna_char(*it);
+        result += map_idna_code_point(*it);
         break;
       case idna_status::deviation:
         if (transitional_processing) {
-          result += map_idna_char(*it);
+          result += map_idna_code_point(*it);
         }
         else {
           result += *it;

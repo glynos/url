@@ -89,10 +89,6 @@ struct code_point_range {
   char32_t first;
   char32_t last;
   idna_status status;
-  
-  bool operator < (const code_point_range &other) const {
-    return last < other.first;
-  }
 };
 
 static const code_point_range statuses[] = {
@@ -100,13 +96,13 @@ static const code_point_range statuses[] = {
 {% endfor %}};
 }  // namespace
 
-idna_status map_idna_status(char32_t c) {
+idna_status map_idna_status(char32_t code_point) {
   auto first = std::addressof(statuses[0]);
-  auto last = first + sizeof(statuses);
-  auto it = std::find_if(
-    first, last,
-    [&c] (const code_point_range &cp) -> bool {
-      return (c >= cp.first) && (c <= cp.last);
+  auto last = first + (sizeof(statuses) / sizeof(statuses[0]));
+  auto it = std::lower_bound(
+    first, last, code_point,
+    [] (const auto &range, auto code_point) -> bool {
+      return range.last < code_point;
     });
   return it->status;
 }
@@ -115,14 +111,6 @@ namespace {
 struct mapped_code_point {
   char32_t code_point;
   char32_t mapped;
-
-  bool operator < (const mapped_code_point &other) const {
-    return code_point < other.code_point;
-  }
-
-  bool operator == (const mapped_code_point &other) const {
-    return code_point == other.code_point;
-  }
 };
 
 static const mapped_code_point mapped[] = {
@@ -130,18 +118,18 @@ static const mapped_code_point mapped[] = {
 {% endif %}{% endfor %}};
 }  // namespace
 
-char32_t map_idna_char(char32_t c) {
+char32_t map_idna_code_point(char32_t code_point) {
   auto first = std::addressof(mapped[0]);
-  auto last = first + sizeof(mapped);
-  auto it = std::find_if(
-    first, last,
-    [&c](const mapped_code_point &cp) -> bool {
-      return c == cp.code_point;
+  auto last = first + (sizeof(mapped) / sizeof(mapped[0]));
+  auto it = std::lower_bound(
+    first, last, code_point,
+    [](const auto &mapped, auto code_point) -> bool {
+      return mapped.code_point < code_point;
     });
   if (it != last) {
     return it->mapped;
   }
-  return c;
+  return code_point;
 }
 }  // namespace skyr
 """)

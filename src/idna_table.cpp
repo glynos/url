@@ -8,17 +8,13 @@
 
 namespace skyr {
 namespace {
-struct code_point {
+struct code_point_range {
   char32_t first;
   char32_t last;
   idna_status status;
-  
-  bool operator < (const code_point &other) const {
-    return last < other.first;
-  }
 };
 
-static const code_point code_points[] = {
+static const code_point_range statuses[] = {
   { 0x0000, 0x002c, idna_status::disallowed_std3_valid },
   { 0x002d, 0x002e, idna_status::valid },
   { 0x002f, 0x002f, idna_status::disallowed_std3_valid },
@@ -2814,13 +2810,13 @@ static const code_point code_points[] = {
 };
 }  // namespace
 
-idna_status map_idna_status(char32_t c) {
-  auto first = std::addressof(code_points[0]);
-  auto last = first + sizeof(code_points);
-  auto it = std::find_if(
-    first, last,
-    [&c] (const code_point &cp) -> bool {
-      return (c >= cp.first) && (c <= cp.last);
+idna_status map_idna_status(char32_t code_point) {
+  auto first = std::addressof(statuses[0]);
+  auto last = first + (sizeof(statuses) / sizeof(statuses[0]));
+  auto it = std::lower_bound(
+    first, last, code_point,
+    [] (const auto &range, auto code_point) -> bool {
+      return range.last < code_point;
     });
   return it->status;
 }
@@ -2829,14 +2825,6 @@ namespace {
 struct mapped_code_point {
   char32_t code_point;
   char32_t mapped;
-
-  bool operator < (const mapped_code_point &other) const {
-    return code_point < other.code_point;
-  }
-
-  bool operator == (const mapped_code_point &other) const {
-    return code_point == other.code_point;
-  }
 };
 
 static const mapped_code_point mapped[] = {
@@ -8566,17 +8554,17 @@ static const mapped_code_point mapped[] = {
 };
 }  // namespace
 
-char32_t map_idna_char(char32_t c) {
+char32_t map_idna_code_point(char32_t code_point) {
   auto first = std::addressof(mapped[0]);
-  auto last = first + sizeof(mapped);
-  auto it = std::find_if(
-    first, last,
-    [&c](const mapped_code_point &cp) -> bool {
-      return c == cp.code_point;
+  auto last = first + (sizeof(mapped) / sizeof(mapped[0]));
+  auto it = std::lower_bound(
+    first, last, code_point,
+    [](const auto &mapped, auto code_point) -> bool {
+      return mapped.code_point < code_point;
     });
   if (it != last) {
     return it->mapped;
   }
-  return c;
+  return code_point;
 }
 }  // namespace skyr
