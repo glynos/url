@@ -251,6 +251,18 @@ class url {
   /// \returns A URL string.
   std::string u8string() const;
 
+  /// Returns the URL as a `std::wstring`.
+  /// \returns A URL wstring.
+  std::wstring wstring() const;
+
+  /// Returns the URL as a `std::16string`.
+  /// \returns A URL string.
+  std::u16string u16string() const;
+
+  /// Returns the URL as a `std::u32string`.
+  /// \returns A URL u32string.
+  std::u32string u32string() const;
+
  private:
 
   void initialize(std::string &&input, optional<url_record> base = nullopt);

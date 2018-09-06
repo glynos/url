@@ -39,8 +39,13 @@ make test
 Parses a string, "https://example.org/💩", without using a base URL:
 
 ```c++
-auto url = skyr::make_url("http://example.org/\xf0\x9f\x92\xa9");
-std::cout << url.value().pathname() << std::endl;
+#include <skyr/url.hpp>
+#include <iostream>
+
+int main(int argc, char *argv[]) {
+  auto url = skyr::make_url("http://example.org/\xf0\x9f\x92\xa9");
+  std::cout << url.value().pathname() << std::endl;
+}
 ```
 
 Gives the output: `/%F0%9F%92%A9`
@@ -50,9 +55,14 @@ Gives the output: `/%F0%9F%92%A9`
 This gives an error if the input, "/🍣🍺", is not an *absolute-URL-with-fragment-string*:
 
 ```c++
-auto url = skyr::make_url("\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
-if (!url) {
-  std::cerr << "Parsing failed: " << url.error().message() << std::endl;
+#include <skyr/url.hpp>
+#include <iostream>
+
+int main(int argc, char *argv[]) {
+  auto url = skyr::make_url("\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba");
+  if (!url) {
+    std::cerr << "Parsing failed: " << url.error().message() << std::endl;
+  }
 }
 ```
 
@@ -63,10 +73,15 @@ This gives the output: `Parsing failed: Not an absolute URL with fragment`
 Parses a string, "🏳️‍🌈", using a base URL, "https://example.org/":
 
 ```c++
-auto base = skyr::make_url("https://example.org/");
-auto url = skyr::make_url("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88", base.value());
-if (url) {
-  std::cout << url.value().href() << std::endl;
+#include <skyr/url.hpp>
+#include <iostream>
+
+int main(int argc, char *argv[]) {
+  auto base = skyr::make_url("https://example.org/");
+  auto url = skyr::make_url("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88", base.value());
+  if (url) {
+    std::cout << url.value().href() << std::endl;
+  }
 }
 ```
 

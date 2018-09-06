@@ -40,6 +40,86 @@ struct translate_impl<const char[N]> {
 };
 
 template <>
+struct translate_impl<std::wstring> {
+  std::string operator()(const std::wstring &source) const {
+    auto bytes = wstring_to_bytes(source);
+    return bytes.value();
+  }
+};
+
+template <int N>
+struct translate_impl<const wchar_t[N]> {
+  std::string operator()(const wchar_t *source) const {
+    translate_impl<std::wstring> impl;
+    return impl(source);
+  }
+};
+
+template <int N>
+struct translate_impl<wchar_t[N]> {
+  std::string operator()(const wchar_t *source) const {
+    translate_impl<std::wstring> impl;
+    return impl(source);
+  }
+};
+
+template <>
+struct translate_impl<wchar_t *> {
+  std::string operator()(const wchar_t *source) const {
+    translate_impl<std::wstring> impl;
+    return impl(source);
+  }
+};
+
+template <>
+struct translate_impl<const wchar_t *> {
+  std::string operator()(const wchar_t *source) const {
+    translate_impl<std::wstring> impl;
+    return impl(source);
+  }
+};
+
+template <>
+struct translate_impl<std::u16string> {
+  std::string operator()(const std::u16string &source) const {
+    auto bytes = utf16_to_bytes(source);
+    return bytes.value();
+  }
+};
+
+template <int N>
+struct translate_impl<const char16_t[N]> {
+  std::string operator()(const char16_t *source) const {
+    translate_impl<std::u16string> impl;
+    return impl(source);
+  }
+};
+
+template <int N>
+struct translate_impl<char16_t[N]> {
+  std::string operator()(const char16_t *source) const {
+    translate_impl<std::u16string> impl;
+    return impl(source);
+  }
+};
+
+template <>
+struct translate_impl<char16_t *> {
+  std::string operator()(const char16_t *source) const {
+    translate_impl<std::u16string> impl;
+    return impl(source);
+  }
+};
+
+template <>
+struct translate_impl<const char16_t *> {
+  std::string operator()(const char16_t *source) const {
+    translate_impl<std::u16string> impl;
+    return impl(source);
+  }
+};
+
+template <>
 struct translate_impl<std::u32string> {
   std::string operator()(const std::u32string &source) const {
     auto bytes = utf32_to_bytes(source);
