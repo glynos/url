@@ -11,6 +11,7 @@
 #include <algorithm>
 #include "skyr/optional.hpp"
 #include "skyr/ipv6_address.hpp"
+#include "algorithms.hpp"
 
 namespace skyr {
 namespace {
@@ -49,33 +50,6 @@ std::error_code make_error_code(ipv6_address_errc error) {
 }
 
 namespace {
-bool starts_with(
-    std::string_view::const_iterator first,
-    std::string_view::const_iterator last,
-    const char *chars) noexcept {
-  auto chars_first = chars, chars_last = chars + std::strlen(chars);
-  auto chars_it = chars_first;
-  auto it = first;
-  if (it == last) {
-    return false;
-  }
-
-  while (chars_it != chars_last) {
-    if (*it != *chars_it) {
-      return false;
-    }
-
-    ++it;
-    ++chars_it;
-
-    if (it == last) {
-      return (chars_it == chars_last);
-    }
-  }
-
-  return true;
-}
-
 inline std::uint16_t hex_to_dec(char byte) noexcept {
   assert(std::isxdigit(byte, std::locale::classic()));
 

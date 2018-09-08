@@ -8,6 +8,7 @@
 #include <vector>
 #include "skyr/unicode.hpp"
 #include "skyr/domain.hpp"
+#include "algorithms.hpp"
 #include "idna_table.hpp"
 
 namespace skyr {
@@ -45,25 +46,25 @@ std::error_code make_error_code(domain_errc error) {
 }
 
 namespace {
-static const char32_t base = 36;
-static const char32_t tmin = 1;
-static const char32_t tmax = 26;
-static const char32_t skew = 38;
-static const char32_t damp = 700;
-static const char32_t initial_bias = 72;
-static const char32_t initial_n = 0x80;
-static const char32_t delimiter = 0x2D;
+const char32_t base = 36;
+const char32_t tmin = 1;
+const char32_t tmax = 26;
+const char32_t skew = 38;
+const char32_t damp = 700;
+const char32_t initial_bias = 72;
+const char32_t initial_n = 0x80;
+const char32_t delimiter = 0x2D;
 
-static char32_t decode_digit(char32_t cp) {
+char32_t decode_digit(char32_t cp) {
   return cp - 48 < 10 ? cp - 22 : cp - 65 < 26 ? cp - 65 :
                                   cp - 97 < 26 ? cp - 97 : base;
 }
 
-static char encode_digit(char32_t d, int flag) {
+char encode_digit(char32_t d, int flag) {
   return static_cast<char>(d + 22 + 75 * (d < 26) - ((flag != 0) << 5));
 }
 
-static char32_t adapt(
+char32_t adapt(
     char32_t delta, char32_t numpoints, bool firsttime) {
   delta = firsttime ? delta / damp : delta >> 1;
   delta += delta / numpoints;
@@ -300,44 +301,6 @@ expected<std::u32string, std::error_code> process(
   return result;
 }
 
-bool is_ascii(std::u32string_view input) noexcept {
-  auto first = begin(input), last = end(input);
-  auto it = std::find_if(
-      first, last,
-      [] (auto c) -> bool {
-        return c > 0x007e;
-      });
-  return it == last;
-}
-
-std::vector<std::u32string> split(std::u32string_view domain) noexcept {
-  auto labels = std::vector<std::u32string>{};
-  if (!domain.empty()) {
-    auto first = begin(domain), last = end(domain);
-    auto it = first;
-    auto prev = it;
-    while (it != last) {
-      if (*it == '.') {
-        labels.emplace_back(prev, it);
-        ++it;
-        prev = it;
-      } else {
-        ++it;
-      }
-    }
-    labels.emplace_back(prev, it);
-  }
-  return labels;
-}
-
-std::u32string join(const std::vector<std::u32string> &labels) {
-  auto domain = std::u32string();
-  for (const auto &label : labels) {
-    domain += label + U".";
-  }
-  return domain.substr(0, domain.length() - 1);
-}
-
 expected<std::string, std::error_code> unicode_to_ascii(
     std::u32string_view domain_name,
     bool check_hyphens,
@@ -358,7 +321,7 @@ expected<std::string, std::error_code> unicode_to_ascii(
     return make_unexpected(std::move(domain.error()));
   }
 
-  auto labels = split(domain.value());
+  auto labels = split(domain.value(), U'.');
 
   for (auto &label : labels) {
     if (!is_ascii(label)) {
@@ -384,7 +347,7 @@ expected<std::string, std::error_code> unicode_to_ascii(
 //    }
   }
 
-  auto ucs4_domain = join(labels);
+  auto ucs4_domain = join(labels, U'.');
   auto ascii_domain = utf32_to_bytes(ucs4_domain);
   if (!ascii_domain) {
     return make_unexpected(

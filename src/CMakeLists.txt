@@ -14,6 +14,7 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/unicode.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/idna_table.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/idna_table.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/algorithms.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/domain.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_parse.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_serialize.cpp

@@ -19,57 +19,10 @@
 #include "skyr/url_parse_state.hpp"
 #include "skyr/ipv4_address.hpp"
 #include "skyr/ipv6_address.hpp"
+#include "algorithms.hpp"
 
 namespace skyr {
 namespace {
-inline bool is_in(
-    std::string_view::value_type byte,
-    std::string_view view) noexcept {
-  auto first = begin(view), last = end(view);
-  return last != std::find(first, last, byte);
-}
-
-inline bool is_whitespace(char byte, const std::locale &locale = std::locale::classic()) noexcept {
-  static const char whitespace[] = "\0\x1b\x04\x12\x1f";
-
-  return
-      !(std::isspace(byte, locale) ||
-          is_in(byte, std::string_view(whitespace, sizeof(whitespace))));
-}
-
-bool remove_leading_whitespace(std::string &input) {
-  auto view = std::string_view(input);
-  auto first = begin(view), last = end(view);
-  auto it = std::find_if(
-      first, last,
-      [] (auto byte) -> bool {
-        return is_whitespace(byte);
-      });
-  if (it != first) {
-    input.assign(it, last);
-  }
-
-  return it == first;
-}
-
-bool remove_trailing_whitespace(std::string &input) {
-  using reverse_iterator = std::reverse_iterator<std::string::const_iterator>;
-
-  auto first = reverse_iterator(end(input)),
-      last = reverse_iterator(begin(input));
-  auto it = std::find_if(
-      first, last,
-      [] (auto byte) -> bool {
-        return is_whitespace(byte);
-      });
-  if (it != first) {
-    input = std::string(it, last);
-    std::reverse(begin(input), end(input));
-  }
-
-  return it == first;
-}
-
 bool remove_tabs_and_newlines(std::string &input) {
   auto first = begin(input), last = end(input);
   auto it = std::remove_if(
@@ -84,35 +37,16 @@ inline bool is_forbidden_host_point(std::string_view::value_type byte) noexcept 
   return last != std::find(first, last, byte);
 }
 
-bool starts_with(
+bool remaining_starts_with(
     std::string_view::const_iterator first,
     std::string_view::const_iterator last,
     const char *chars) noexcept {
-  auto chars_first = chars, chars_last = chars + std::strlen(chars);
-  auto chars_it = chars_first;
   auto it = first;
   if (it == last) {
     return false;
   }
   ++it;
-  if (it == last) {
-    return false;
-  }
-
-  while (chars_it != chars_last) {
-    if (*it != *chars_it) {
-      return false;
-    }
-
-    ++it;
-    ++chars_it;
-
-    if (it == last) {
-      return (chars_it == chars_last);
-    }
-  }
-
-  return true;
+  return starts_with(it, last, chars);
 }
 
 expected<std::string, url_parse_errc> parse_opaque_host(std::string_view input) {
@@ -342,7 +276,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_scheme(char
     buffer.clear();
 
     if (url.scheme.compare("file") == 0) {
-      if (!starts_with(it, end(view), "//")) {
+      if (!remaining_starts_with(it, end(view), "//")) {
         validation_error = true;
       }
       state = url_parse_state::file;
@@ -350,7 +284,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_scheme(char
       state = url_parse_state::special_relative_or_authority;
     } else if (url.is_special()) {
       state = url_parse_state::special_authority_slashes;
-    } else if (starts_with(it, end(view), "/")) {
+    } else if (remaining_starts_with(it, end(view), "/")) {
       state = url_parse_state::path_or_authority;
       increment();
     } else {
@@ -396,7 +330,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_no_scheme(c
 }
 
 expected<url_parse_action, url_parse_errc> url_parser_context::parse_special_relative_or_authority(char byte) {
-  if ((byte == '/') && starts_with(it, end(view), "/")) {
+  if ((byte == '/') && remaining_starts_with(it, end(view), "/")) {
     increment();
     state = url_parse_state::special_authority_ignore_slashes;
   } else {
@@ -495,7 +429,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_relative_sl
 }
 
 expected<url_parse_action, url_parse_errc> url_parser_context::parse_special_authority_slashes(char byte) {
-  if ((byte == '/') && starts_with(it, end(view), "/")) {
+  if ((byte == '/') && remaining_starts_with(it, end(view), "/")) {
     increment();
     state = url_parse_state::special_authority_ignore_slashes;
   } else {
@@ -864,10 +798,6 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_path(char b
     if (!is_url_code_point(byte) && (byte != '%')) {
       validation_error = true;
     }
-
-//    if ((c == '%') && starts_with(it, end(view), "") {
-//
-//    }
 
     buffer += percent_encode_byte(static_cast<std::byte>(byte), path_set());
   }
