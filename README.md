@@ -1,8 +1,17 @@
 # Skyr URL
 
+## Status
+
+### Clang and GCC
+
 [![Build Status](
     https://travis-ci.org/cpp-netlib/uri.png?branch=master "Build Status")](
     https://travis-ci.org/cpp-netlib/uri)
+
+### Visual C++
+![Build Status](
+    https://ci.appveyor.com/api/projects/status/k5x00xa11y3s5wsg?svg=true)](
+    https://ci.appveyor.com/project/cpp-netlib/uri)    
 
 [![License](
     https://img.shields.io/badge/license-boost-blue.svg "License")](

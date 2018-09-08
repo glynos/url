@@ -85,7 +85,9 @@ inline bool is_surrogate(char16_t code_point) {
 }
 
 inline bool is_code_point_valid(char32_t code_point) {
-  return (code_point <= constants::code_point_max) && !is_surrogate(code_point);
+  return
+    (code_point <= constants::code_point_max) &&
+    !is_surrogate(static_cast<char16_t>(code_point));
 }
 
 template <typename OctetIterator>
@@ -365,7 +367,7 @@ expected<OctetIterator, unicode_errc> utf16to8(
     OctetIterator result) {
   auto it = first;
   while (it != last) {
-    auto code_point = details::mask16(*it);
+    auto code_point = static_cast<std::uint32_t>(details::mask16(*it));
     ++it;
 
     // Take care of surrogate pairs first
