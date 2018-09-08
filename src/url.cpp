@@ -309,7 +309,7 @@ url_record url::record() const {
 
 bool url::is_special() const noexcept { return url_.is_special(); }
 
-bool url::validation_error() const noexcept { return false; }
+bool url::validation_error() const noexcept { return url_.validation_error; }
 
 optional<std::uint16_t> url::default_port(const std::string &scheme) noexcept {
   return details::default_port(string_view(scheme));

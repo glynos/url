@@ -87,13 +87,12 @@ inline bool is_in(
   return last != std::find(first, last, byte);
 }
 
-inline bool is_whitespace(
+inline bool is_c0_control_or_whitespace(
     char byte,
     const std::locale &locale = std::locale::classic()) noexcept {
-  static const char whitespace[] = "\0\x1b\x04\x12\x1f";
-  return
-      !(std::isspace(byte, locale) ||
-          is_in(byte, std::string_view(whitespace, sizeof(whitespace))));
+  static const char c0_control[] = "\0\x1b\x04\x12\x1f";
+  return std::isspace(byte) ||
+    is_in(byte, std::string_view(c0_control, sizeof(c0_control)));
 }
 
 inline bool remove_leading_whitespace(std::string &input) {
@@ -102,7 +101,7 @@ inline bool remove_leading_whitespace(std::string &input) {
   auto it = std::find_if(
       first, last,
       [] (auto byte) -> bool {
-        return is_whitespace(byte);
+        return !is_c0_control_or_whitespace(byte);
       });
   if (it != first) {
     input.assign(it, last);
@@ -119,7 +118,7 @@ inline bool remove_trailing_whitespace(std::string &input) {
   auto it = std::find_if(
       first, last,
       [] (auto byte) -> bool {
-        return is_whitespace(byte);
+        return !is_c0_control_or_whitespace(byte);
       });
   if (it != first) {
     input = std::string(it, last);

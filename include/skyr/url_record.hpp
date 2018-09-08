@@ -37,6 +37,9 @@ struct url_record {
   /// A Boolean value indicating whether this URL can be used as a base URL.
   bool cannot_be_a_base_url;
 
+  /// A Boolean value indicating whether a non-fatal validation error occurred during parsing.
+  bool validation_error;
+
   /// Default constructor.
   url_record()
     : cannot_be_a_base_url{false} {}

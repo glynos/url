@@ -44,8 +44,6 @@ class url_parser_context {
   bool square_braces_flag;
   bool password_token_seen_flag;
 
-  bool validation_error;
-
   url_parser_context(
       std::string input,
       const skyr::optional<url_record> &base,
