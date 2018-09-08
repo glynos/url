@@ -41,7 +41,7 @@ TEST(domain_tests, invalid_domain_1) {
 }
 
 TEST(domain_tests, invalid_domain_2) {
-  auto instance = skyr::domain_to_ascii(U"\uFDD0zyx.com");
+  auto instance = skyr::domain_to_ascii(U"\xfdD0zyx.com");
   ASSERT_FALSE(instance);
 }
 

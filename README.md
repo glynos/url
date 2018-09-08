@@ -1,6 +1,10 @@
 # Skyr URL
 
-## Status
+[![License](
+    https://img.shields.io/badge/license-boost-blue.svg "License")](
+    https://github.com/cpp-netlib/uri/blob/master/LICENSE_1_0.txt)
+
+## Build Status
 
 ### Clang and GCC
 
@@ -9,36 +13,47 @@
     https://travis-ci.org/cpp-netlib/uri)
 
 ### Visual C++
-![Build Status](
-    https://ci.appveyor.com/api/projects/status/k5x00xa11y3s5wsg?svg=true)](
-    https://ci.appveyor.com/project/cpp-netlib/uri)    
-
-[![License](
-    https://img.shields.io/badge/license-boost-blue.svg "License")](
-    https://github.com/cpp-netlib/uri/blob/master/LICENSE_1_0.txt)
+[![Build Status](
+    https://ci.appveyor.com/api/projects/status/6onbjomqn0p7vsvh?svg=true)](
+    https://ci.appveyor.com/project/glynos/uri)
 
 This library provides:
 
-* A ``skyr::url`` class that implements a generic URI parser,
+* A ``skyr::url`` class that implements a generic URL parser,
   compatible with the [WhatWG URL specification](https://url.spec.whatwg.org/#url-class)
+* URL serialization and comparison
 * Percent encoding and decoding functions
 * IDNA and Punycode functions for domain name parsing
 
 ## Building the project
 
+This project requires the availability of a C++17 compliant compiler.
+
 ### Building with `CMake` and `Make`
 
+From a terminal, execute the following sequence of commands:
+
 ```bash
-mkdir _build
-cd _build
-cmake ..
-make -j4
+$ mkdir _build
+$ cd _build
+$ cmake ..
+$ make -j4
 ```
+
+### Building with `CMake` and `Visual C++`
+
+```bash
+> mkdir _build
+> cd _build
+> cmake ..
+```
+
+The Visual Studio solution is available in `Skyr.sln`.
 
 ### Running the tests
 
 ```bash
-make test
+ctest
 ```
 
 ## Examples
@@ -59,7 +74,7 @@ int main(int argc, char *argv[]) {
 
 Gives the output: `/%F0%9F%92%A9`
 
-### Creating an non-absolute URL without a base URL
+### Creating a non-absolute URL without a base URL
 
 This gives an error if the input, "/🍣🍺", is not an *absolute-URL-with-fragment-string*:
 
@@ -105,7 +120,7 @@ The tests are built using [Google Test](https://github.com/google/googletest).
 
 ## Requirements
 
-This library has been tested using the following compilers:
+This library has been tested using the following platforms and compilers:
 
 Linux:
 
