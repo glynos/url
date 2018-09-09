@@ -18,17 +18,16 @@ dist:
 
 matrix:
   include:
-
 #    # 1/ Linux Clang Builds
 #    - os: linux
 #      compiler: clang
-#      addons:
+#      addons: &clang60
 #        apt:
-#          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
-#          packages: ['clang-6.0', 'libc++-dev']
+#          sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-6.0']
+#          packages: ['clang-6.0', 'libc++-6-dev']
 #      env: COMPILER='clang++-6.0'
 
-  # 2/ Linux GCC Builds
+    # 2/ Linux GCC Builds
     - os: linux
       compiler: gcc
       addons: &gcc7
@@ -45,11 +44,10 @@ matrix:
           packages: ['g++-8']
       env: COMPILER='g++-8'
 
-#    # 3/ OSX Clang Builds
-#    - os: osx
-#      osx_image: xcode8
-#      compiler: clang
-#      env: COMPILER='clang++-3.8'
+    # 3/ OSX Clang Builds
+    - os: osx
+      osx_image: xcode10
+      compiler: clang
 
 install:
     - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps_"
@@ -70,7 +68,7 @@ before_script:
 script:
     - mkdir _build
     - cd _build
-    - cmake -DSkyr_DISABLE_LIBCXX=OFF -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF ..
+    - cmake -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF ..
     - make -j 8
     - make test
 

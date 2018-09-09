@@ -27,17 +27,18 @@ This library provides:
 
 ## Building the project
 
-This project requires the availability of a C++17 compliant compiler.
+This project requires the availability of a C++17 compliant compiler
+and standard library.
 
 ### Building with `CMake` and `Make`
 
 From a terminal, execute the following sequence of commands:
 
 ```bash
-$ mkdir _build
-$ cd _build
-$ cmake ..
-$ make -j4
+> mkdir _build
+> cd _build
+> cmake ..
+> make -j4
 ```
 
 ### Building with `CMake` and `Visual C++`
@@ -76,7 +77,8 @@ Gives the output: `/%F0%9F%92%A9`
 
 ### Creating a non-absolute URL without a base URL
 
-This gives an error if the input, "/🍣🍺", is not an *absolute-URL-with-fragment-string*:
+This gives an error if the input, "/🍣🍺", is not an
+*absolute-URL-with-fragment-string*:
 
 ```c++
 #include <skyr/url.hpp>
@@ -111,6 +113,11 @@ int main(int argc, char *argv[]) {
 
 This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88`
 
+## Why *skyr*?
+
+This name was chosen by a random project name generator, which
+itself was randomly chosen.
+
 ## Dependencies
 
 This library uses [optional](https://github.com/TartanLlama/optional),
@@ -120,7 +127,8 @@ The tests are built using [Google Test](https://github.com/google/googletest).
 
 ## Requirements
 
-This library has been tested using the following platforms and compilers:
+This library has been tested using the following platforms and
+compilers:
 
 Linux:
 
