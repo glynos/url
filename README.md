@@ -2,20 +2,20 @@
 
 [![License](
     https://img.shields.io/badge/license-boost-blue.svg "License")](
-    https://github.com/cpp-netlib/uri/blob/master/LICENSE_1_0.txt)
+    https://github.com/glynos/url/blob/master/LICENSE_1_0.txt)
 
 ## Build Status
 
 ### Clang and GCC
 
 [![Build Status](
-    https://travis-ci.org/cpp-netlib/uri.png?branch=master "Build Status")](
-    https://travis-ci.org/cpp-netlib/uri)
+    https://travis-ci.org/glynos/url.svg?branch=master "Build Status")](
+    https://travis-ci.org/glynos/url)
 
 ### Visual C++
 [![Build Status](
-    https://ci.appveyor.com/api/projects/status/6onbjomqn0p7vsvh?svg=true)](
-    https://ci.appveyor.com/project/glynos/uri)
+    https://ci.appveyor.com/api/projects/status/8y5sd2k1nytxeya0?svg=true)](
+    https://ci.appveyor.com/project/glynos/url)
 
 This library provides:
 
