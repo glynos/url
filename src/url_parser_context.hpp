@@ -11,8 +11,8 @@
 #include <skyr/optional.hpp>
 #include <skyr/expected.hpp>
 #include "skyr/url_error.hpp"
-#include <skyr/url_parse_state.hpp>
 #include <skyr/url_record.hpp>
+#include "url_parse_impl.hpp"
 
 namespace skyr {
 enum class url_parse_action {
@@ -32,11 +32,11 @@ class url_parser_context {
 
   std::string_view::const_iterator it;
 
-  skyr::optional<url_record> base;
+  optional<url_record> base;
   url_record url;
 
-  skyr::url_parse_state state;
-  skyr::optional<skyr::url_parse_state> state_override;
+  url_parse_state state;
+  optional<url_parse_state> state_override;
 
   std::string buffer;
 
@@ -46,9 +46,9 @@ class url_parser_context {
 
   url_parser_context(
       std::string input,
-      const skyr::optional<url_record> &base,
-      const skyr::optional<url_record> &url,
-      skyr::optional<skyr::url_parse_state> state_override = skyr::nullopt);
+      const optional<url_record> &base,
+      const optional<url_record> &url,
+      optional<url_parse_state> state_override = skyr::nullopt);
 
   bool is_eof() const noexcept {
     return it == end(view);

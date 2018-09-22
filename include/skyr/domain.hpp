@@ -12,7 +12,7 @@
 #include <skyr/expected.hpp>
 
 namespace skyr {
-/// Enumerates domain processing errors.
+/// Enumerates domain processing errors
 enum class domain_errc {
   /// The domain code point is disallowed
   disallowed_code_point = 1,
@@ -22,53 +22,63 @@ enum class domain_errc {
   overflow,
   /// Unicode encoding error
   encoding_error,
-  // invalid_length,
 };
 
-/// Creates a `std::error_code` given a `skyr::domain_errc` value.
-/// \param error A domain error.
-/// \returns A `std::error_code` object.
+/// Creates a `std::error_code` given a `skyr::domain_errc` value
+/// \param error A domain error
+/// \returns A `std::error_code` object
 std::error_code make_error_code(domain_errc error);
 
-/// Performs punycode encoding based on a reference implementation defined in
-/// [RFC 3492](https://tools.ietf.org/html/rfc3492).
-/// \param input A UTF-8 encoded domain to be encoded.
-/// \returns The encoded ASCII domain, or an error.
-expected<std::string, std::error_code> punycode_encode(std::string_view input);
+/// Performs punycode encoding based on a reference implementation
+/// defined in [RFC 3492](https://tools.ietf.org/html/rfc3492)
+///
+/// \param input A UTF-8 encoded domain to be encoded
+/// \returns The encoded ASCII domain, or an error
+expected<std::string, std::error_code> punycode_encode(
+    std::string_view input);
 
-/// Performs punycode encoding based on a reference implementation defined in
-/// [RFC 3492](https://tools.ietf.org/html/rfc3492).
-/// \param input A UTF-32 encoded domain to be encoded.
-/// \returns The encoded ASCII domain, or an error.
-expected<std::string, std::error_code> punycode_encode(std::u32string_view input);
+/// Performs punycode encoding based on a reference implementation
+/// defined in [RFC 3492](https://tools.ietf.org/html/rfc3492)
+///
+/// \param input A UTF-32 encoded domain to be encoded
+/// \returns The encoded ASCII domain, or an error
+expected<std::string, std::error_code> punycode_encode(
+    std::u32string_view input);
 
-/// Performs punycode decoding based on a reference implementation defined in
-/// [RFC 3492](https://tools.ietf.org/html/rfc3492).
-/// \param input An ASCII encoded domain to be decoded.
-/// \returns The decoded UTF-8 domain, or an error.
-expected<std::string, std::error_code> punycode_decode(std::string_view input);
+/// Performs punycode decoding based on a reference implementation
+/// defined in [RFC 3492](https://tools.ietf.org/html/rfc3492)
+///
+/// \param input An ASCII encoded domain to be decoded
+/// \returns The decoded UTF-8 domain, or an error
+expected<std::string, std::error_code> punycode_decode(
+    std::string_view input);
 
-/// Converts a UTF-8 encoded domain to ASCII using [IDNA processing](https://www.unicode.org/reports/tr46/#Processing).
-/// \param domain A domain.
-/// \param be_strict Tells the processor to be strict.
-/// \returns An ASCII domain, or an error.
+/// Converts a UTF-8 encoded domain to ASCII using
+/// [IDNA processing](https://www.unicode.org/reports/tr46/#Processing)
+///
+/// \param domain A domain
+/// \param be_strict Tells the processor to be strict
+/// \returns An ASCII domain, or an error
 expected<std::string, std::error_code> domain_to_ascii(
     std::string_view domain,
     bool be_strict = true);
 
-/// Converts a UTF-32 encoded domain to ASCII using [IDNA processing](https://www.unicode.org/reports/tr46/#Processing).
-/// \param domain A domain.
-/// \param be_strict Tells the processor to be strict.
-/// \returns An ASCII domain, or an error.
+/// Converts a UTF-32 encoded domain to ASCII using
+/// [IDNA processing](https://www.unicode.org/reports/tr46/#Processing)
+///
+/// \param domain A domain
+/// \param be_strict Tells the processor to be strict
+/// \returns An ASCII domain, or an error
 expected<std::string, std::error_code> domain_to_ascii(
     std::u32string_view domain,
     bool be_strict = true);
 }  // namespace skyr
 
-/// \exclude
+#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace std {
 template <>
 struct is_error_code_enum<skyr::domain_errc> : true_type {};
 }  // namespace std
+#endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
 
 #endif //SKYR_DOMAIN_HPP

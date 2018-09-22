@@ -16,7 +16,6 @@
 #include "skyr/domain.hpp"
 #include "url_schemes.hpp"
 #include "skyr/percent_encode.hpp"
-#include "skyr/url_parse_state.hpp"
 #include "skyr/ipv4_address.hpp"
 #include "skyr/ipv6_address.hpp"
 #include "algorithms.hpp"
@@ -108,7 +107,7 @@ expected<std::string, url_parse_errc> parse_host(
 
   auto host = parse_ipv4_address(ascii_domain.value());
   if (!host) {
-    if (host.error() == make_error_code(ipv4_address_errc::validation_error)) {
+    if (host.error() == make_error_code(ipv4_address_errc::overflow)) {
       return make_unexpected(url_parse_errc::invalid_ipv4_address);
     }
     else {

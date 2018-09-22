@@ -6,34 +6,20 @@
 #ifndef SKYR_URL_PARSE_INC
 #define SKYR_URL_PARSE_INC
 
-#include <string>
+#include <system_error>
 #include <skyr/optional.hpp>
 #include <skyr/expected.hpp>
 #include <skyr/url_record.hpp>
-#include <skyr/url_parse_state.hpp>
-#include <skyr/url_error.hpp>
+#include <skyr/details/translate.hpp>
 
 namespace skyr {
-/// \exclude
-namespace details {
-/// \param input The input string that will be parsed
+/// Parses a URL and returns a `url_record`
+///
+/// \param input The input string
 /// \param base An optional base URL
-/// \param url An optional `url_record`
-/// \param state_override
-/// \returns A `url_record` on success and an error code on failure.
-expected<url_record, std::error_code> basic_parse(
-    std::string input,
-    const optional<url_record> &base = nullopt,
-    const optional<url_record> &url = nullopt,
-    optional<url_parse_state> state_override = nullopt);
-}  // namespace details
-
-/// Parses a URL and returns a `url_record`.
-/// \param input The input string.
-/// \param base An optional base URL.
-/// \returns A `url_record` on success and an error code on failure.
+/// \returns A `url_record` on success and an error code on failure
 expected<url_record, std::error_code> parse(
-    std::string input,
+    url_record::string_type input,
     const optional<url_record> &base = nullopt);
 }  // namespace skyr
 

@@ -111,7 +111,8 @@ inline bool remove_leading_whitespace(std::string &input) {
 }
 
 inline bool remove_trailing_whitespace(std::string &input) {
-  using reverse_iterator = std::reverse_iterator<std::string::const_iterator>;
+  using reverse_iterator =
+      std::reverse_iterator<std::string::const_iterator>;
 
   auto first = reverse_iterator(end(input)),
       last = reverse_iterator(begin(input));

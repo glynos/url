@@ -1,21 +1,18 @@
 # Skyr URL
 
+## Status
+
 [![License](
     https://img.shields.io/badge/license-boost-blue.svg "License")](
     https://github.com/glynos/url/blob/master/LICENSE_1_0.txt)
-
-## Build Status
-
-### Clang and GCC
-
-[![Build Status](
+[![Travis Build Status](
     https://travis-ci.org/glynos/url.svg?branch=master "Build Status")](
     https://travis-ci.org/glynos/url)
-
-### Visual C++
-[![Build Status](
+[![AppVeyor Build Status](
     https://ci.appveyor.com/api/projects/status/8y5sd2k1nytxeya0?svg=true)](
     https://ci.appveyor.com/project/glynos/url)
+    
+## Introduction
 
 This library provides:
 

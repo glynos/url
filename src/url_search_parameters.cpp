@@ -16,7 +16,7 @@ url_search_parameters::url_search_parameters(
 }
 
 url_search_parameters::url_search_parameters(
-    string_view query) {
+    std::string_view query) {
   initialize(query);
   update();
 }
@@ -126,10 +126,6 @@ void url_search_parameters::sort() {
 
 bool url_search_parameters::empty() const noexcept {
   return parameters_.empty();
-}
-
-url_search_parameters::size_type url_search_parameters::size() const noexcept {
-  return parameters_.size();
 }
 
 url_search_parameters::const_iterator url_search_parameters::begin() const noexcept {

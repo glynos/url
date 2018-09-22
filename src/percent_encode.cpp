@@ -12,26 +12,28 @@
 
 namespace skyr {
 namespace {
-class percent_encode_error_category : public std::error_category {
+class ipv4_address_error_category : public std::error_category {
  public:
   const char *name() const noexcept override;
   std::string message(int error) const noexcept override;
 };
 
-const char *percent_encode_error_category::name() const noexcept {
-  return "domain";
+const char *ipv4_address_error_category::name() const noexcept {
+  return "percent encoding";
 }
 
-std::string percent_encode_error_category::message(int error) const noexcept {
+std::string ipv4_address_error_category::message(int error) const noexcept {
   switch (static_cast<percent_encode_errc>(error)) {
     case percent_encode_errc::non_hex_input:
       return "Non hex input";
+    case percent_encode_errc::overflow:
+      return "Overflow";
     default:
       return "(Unknown error)";
   }
 }
 
-static const percent_encode_error_category category{};
+static const ipv4_address_error_category category{};
 }  // namespace
 
 std::error_code make_error_code(percent_encode_errc error) {

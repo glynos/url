@@ -17,9 +17,9 @@ TEST(unicode_tests, utf32_to_bytes_poo_emoji_test) {
 
 TEST(unicode_tests, bytes_to_utf32_poo_emoji_test) {
   auto input = std::string("\xf0\x9f\x92\xa9");
-  auto ucs4 = skyr::utf32_from_bytes(input);
-  ASSERT_TRUE(ucs4);
-  EXPECT_EQ(U"\x1F4A9", ucs4.value());
+  auto utf32 = skyr::utf32_from_bytes(input);
+  ASSERT_TRUE(utf32);
+  EXPECT_EQ(U"\x1F4A9", utf32.value());
 }
 
 TEST(unicode_tests, utf32_rainbow_flag_test) {

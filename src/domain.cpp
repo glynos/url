@@ -87,11 +87,11 @@ inline bool delim(char32_t c) {
 }  // namespace
 
 expected<std::string, std::error_code> punycode_encode(std::string_view input) {
-  auto ucs4 = utf32_from_bytes(input);
-  if (!ucs4) {
+  auto utf32 = utf32_from_bytes(input);
+  if (!utf32) {
     return make_unexpected(make_error_code(domain_errc::bad_input));
   }
-  return punycode_encode(ucs4.value());
+  return punycode_encode(utf32.value());
 }
 
 expected<std::string, std::error_code> punycode_encode(std::u32string_view input) {
@@ -347,8 +347,8 @@ expected<std::string, std::error_code> unicode_to_ascii(
 //    }
   }
 
-  auto ucs4_domain = join(labels, U'.');
-  auto ascii_domain = utf32_to_bytes(ucs4_domain);
+  auto utf32_domain = join(labels, U'.');
+  auto ascii_domain = utf32_to_bytes(utf32_domain);
   if (!ascii_domain) {
     return make_unexpected(
         make_error_code(domain_errc::encoding_error));
@@ -360,12 +360,12 @@ expected<std::string, std::error_code> unicode_to_ascii(
 expected<std::string, std::error_code> domain_to_ascii(
     std::string_view domain,
     bool be_strict) {
-  auto ucs4 = utf32_from_bytes(domain);
-  if (!ucs4) {
+  auto utf32 = utf32_from_bytes(domain);
+  if (!utf32) {
     return make_unexpected(
         make_error_code(domain_errc::encoding_error));
   }
-  return domain_to_ascii(ucs4.value(), be_strict);
+  return domain_to_ascii(utf32.value(), be_strict);
 }
 
 expected<std::string, std::error_code> domain_to_ascii(

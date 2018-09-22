@@ -17,6 +17,7 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/algorithms.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/domain.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_parse.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/url_parse_impl.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_serialize.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_schemes.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_schemes.cpp
@@ -24,8 +25,8 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/url_error.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_search_parameters.cpp
 
-        ${CMAKE_SOURCE_DIR}/include/tl/optional.hpp
-        ${CMAKE_SOURCE_DIR}/include/tl/expected.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/external/tl/optional.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/external/tl/expected.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/config.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/optional.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/expected.hpp
@@ -33,7 +34,6 @@ set(Skyr_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/details/translate.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/unicode.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/domain.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/url_parse_state.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_record.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/ipv4_address.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/ipv6_address.hpp
@@ -59,8 +59,8 @@ endif()
 #propagate sources to parent scope for one-lib-build
 set(Skyr_SRCS ${Skyr_SRCS} PARENT_SCOPE)
 
-install(
-  TARGETS skyr
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-)
+install(DIRECTORY include DESTINATION ".")
+install(TARGETS skyr
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        )

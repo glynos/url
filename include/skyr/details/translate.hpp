@@ -43,6 +43,9 @@ template <>
 struct translate_impl<std::wstring> {
   std::string operator()(const std::wstring &source) const {
     auto bytes = wstring_to_bytes(source);
+    if (!bytes) {
+      throw unicode_error(std::move(bytes.error()));
+    }
     return bytes.value();
   }
 };
@@ -83,6 +86,9 @@ template <>
 struct translate_impl<std::u16string> {
   std::string operator()(const std::u16string &source) const {
     auto bytes = utf16_to_bytes(source);
+    if (!bytes) {
+      throw unicode_error(std::move(bytes.error()));
+    }
     return bytes.value();
   }
 };
@@ -123,6 +129,9 @@ template <>
 struct translate_impl<std::u32string> {
   std::string operator()(const std::u32string &source) const {
     auto bytes = utf32_to_bytes(source);
+    if (!bytes) {
+      throw unicode_error(std::move(bytes.error()));
+    }
     return bytes.value();
   }
 };

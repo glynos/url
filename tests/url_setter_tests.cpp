@@ -275,13 +275,13 @@ TEST(url_setter_tests, test_port_existing_port_no_port_2) {
   EXPECT_EQ("http://example.com/", instance.href());
 }
 
-TEST(url_setter_tests, test_port_no_port_int) {
-  auto instance = skyr::url{"http://example.com/"};
-
-  auto result = instance.set_port(8080);
-  ASSERT_TRUE(result);
-  EXPECT_EQ("http://example.com:8080/", instance.href());
-}
+//TEST(url_setter_tests, test_port_no_port_int) {
+//  auto instance = skyr::url{"http://example.com/"};
+//
+//  auto result = instance.set_port(8080);
+//  ASSERT_TRUE(result);
+//  EXPECT_EQ("http://example.com:8080/", instance.href());
+//}
 
 TEST(url_setter_tests, test_pathname_1) {
   auto instance = skyr::url{"http://example.com/"};

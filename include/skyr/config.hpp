@@ -7,7 +7,8 @@
 
 /**
  * \file
- * \brief Contains macros to configure compiler or platform-specific workarounds.
+ * \brief Contains macros to configure compiler or platform-specific
+ *        workarounds
  */
 
 #ifndef SKYR_CONFIG_INC

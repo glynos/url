@@ -6,7 +6,7 @@
 #include "skyr/url_serialize.hpp"
 
 namespace skyr {
-std::string serialize(
+url_record::string_type serialize(
     const url_record &url, bool exclude_fragment) {
   auto output = url.scheme + ":";
 

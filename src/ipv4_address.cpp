@@ -14,27 +14,32 @@
 
 namespace skyr {
 namespace {
-class percent_encode_error_category : public std::error_category {
+class ipv4_address_error_category : public std::error_category {
  public:
   const char *name() const noexcept override;
   std::string message(int error) const noexcept override;
 };
 
-const char *percent_encode_error_category::name() const noexcept {
-  return "domain";
+const char *ipv4_address_error_category::name() const noexcept {
+  return "ipv4 address";
 }
 
-std::string percent_encode_error_category::message(int error) const noexcept {
+std::string ipv4_address_error_category::message(int error) const noexcept {
   switch (static_cast<ipv4_address_errc>(error)) {
-    case ipv4_address_errc::more_than_4_segments:return "Input contains more than 4 segments";
-    case ipv4_address_errc::empty_segment:return "Empty input";
-    case ipv4_address_errc::invalid_segment_number:return "Invalid segment number";
-    case ipv4_address_errc::validation_error:return "Validation error";
-    default:return "(Unknown error)";
+    case ipv4_address_errc::more_than_4_segments:
+      return "Input contains more than 4 segments";
+    case ipv4_address_errc::empty_segment:
+      return "Empty input";
+    case ipv4_address_errc::invalid_segment_number:
+      return "Invalid segment number";
+    case ipv4_address_errc::overflow:
+      return "Overflow";
+    default:
+      return "(Unknown error)";
   }
 }
 
-static const percent_encode_error_category category{};
+static const ipv4_address_error_category category{};
 }  // namespace
 
 std::error_code make_error_code(ipv4_address_errc error) {
@@ -95,6 +100,7 @@ std::string ipv4_address::to_string() const {
 }
 
 namespace details {
+namespace {
 std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std::string_view input) {
   auto validation_error_flag = false;
   auto validation_error = false;
@@ -169,7 +175,7 @@ std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std:
     return
       std::make_pair(
           make_unexpected(
-              make_error_code(ipv4_address_errc::validation_error)), true);
+              make_error_code(ipv4_address_errc::overflow)), true);
   }
 
   if (numbers.back() >=
@@ -177,7 +183,7 @@ std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std:
     return
       std::make_pair(
           make_unexpected(
-              make_error_code(ipv4_address_errc::validation_error)), true);
+              make_error_code(ipv4_address_errc::overflow)), true);
   }
 
   auto ipv4 = numbers.back();
@@ -192,6 +198,7 @@ std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std:
   return std::make_pair(
       ipv4_address(static_cast<unsigned int>(ipv4)), validation_error);
 }
+}  // namespace
 }  // namespace details
 
 expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view input) {

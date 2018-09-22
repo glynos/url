@@ -11,15 +11,17 @@
 #include <map>
 #include <sstream>
 #include "skyr/url_error.hpp"
-#include "skyr/url_parse_state.hpp"
 #include "skyr/url_serialize.hpp"
+#include "url_parse_impl.hpp"
 #include "url_parser_context.hpp"
 
 namespace skyr {
 namespace details {
 expected<url_record, std::error_code> basic_parse(
-    std::string input, const optional<url_record> &base,
-    const optional<url_record> &url, optional<url_parse_state> state_override) {
+    url_record::string_type input,
+    const optional<url_record> &base,
+    const optional<url_record> &url,
+    optional<url_parse_state> state_override) {
   using return_type = expected<url_parse_action, url_parse_errc>;
   using url_parse_func = std::function<return_type(url_parser_context &, char)>;
   using url_parse_funcs = std::map<url_parse_state, url_parse_func>;
@@ -160,8 +162,9 @@ expected<url_record, std::error_code> basic_parse(
 }
 }  // namespace details
 
-expected<url_record, std::error_code> parse(std::string input,
-                                            const optional<url_record> &base) {
+expected<url_record, std::error_code> parse(
+    url_record::string_type input,
+    const optional<url_record> &base) {
   auto url = details::basic_parse(input, base);
 
   if (!url) {
