@@ -41,41 +41,42 @@ std::error_code make_error_code(percent_encode_errc error) {
 }
 
 namespace {
-inline std::byte hex_to_letter(std::byte byte) {
-  if ((static_cast<char>(byte) >= 0) && (static_cast<char>(byte) < 10)) {
-    return static_cast<std::byte>(static_cast<char>(byte) + '0');
+inline char hex_to_letter(char byte) {
+  if ((byte >= 0) && (byte < 10)) {
+    return byte + '0';
   }
 
-  if ((static_cast<char>(byte) >= 10) && (static_cast<char>(byte) < 16)) {
-    return static_cast<std::byte>(static_cast<char>(byte) - char(10) + 'A');
+  if ((byte >= 10) && (byte < 16)) {
+    return byte - char(10) + 'A';
   }
 
   return byte;
 }
 
-inline expected<std::byte, std::error_code> letter_to_hex(std::byte byte) {
-  if ((static_cast<char>(byte) >= '0') && (static_cast<char>(byte) <= '9')) {
-    return static_cast<std::byte>(static_cast<char>(byte) - '0');
+inline expected<char, std::error_code> letter_to_hex(char byte) {
+  if ((byte >= '0') && (byte <= '9')) {
+    return byte - '0';
   }
 
-  if ((static_cast<char>(byte) >= 'a') && (static_cast<char>(byte) <= 'f')) {
-    return static_cast<std::byte>(static_cast<char>(byte) + char(10) - 'a');
+  if ((byte >= 'a') && (byte <= 'f')) {
+    return byte + char(10) - 'a';
   }
 
-  if ((static_cast<char>(byte) >= 'A') && (static_cast<char>(byte) <= 'F')) {
-    return static_cast<std::byte>(static_cast<char>(byte) + char(10) - 'A');
+  if ((byte >= 'A') && (byte <= 'F')) {
+    return byte + char(10) - 'A';
   }
 
-  return make_unexpected(make_error_code(percent_encode_errc::non_hex_input));
+  return make_unexpected(make_error_code(
+      percent_encode_errc::non_hex_input));
 }
 }  // namespace
 
-std::string percent_encode_byte(std::byte byte, const exclude_set &excludes) {
+std::string percent_encode_byte(char byte, const exclude_set &excludes) {
   auto encoded = std::string{};
   if (excludes.contains(byte)) {
     encoded += '%';
-    encoded += static_cast<char>(hex_to_letter((byte >> 4) & std::byte(0x0f)));
-    encoded += static_cast<char>(hex_to_letter(byte & std::byte(0x0f)));
+    encoded += hex_to_letter((byte >> 4) & 0x0f);
+    encoded += hex_to_letter(byte & 0x0f);
   }
   else {
     encoded += static_cast<char>(byte);
@@ -89,7 +90,7 @@ expected<std::string, std::error_code> percent_encode(
   auto first = begin(input), last = end(input);
   auto it = first;
   while (it != last) {
-    result += percent_encode_byte(static_cast<std::byte>(*it), excludes);
+    result += percent_encode_byte(*it, excludes);
     ++it;
   }
   return result;
@@ -99,33 +100,34 @@ expected<std::string, std::error_code> percent_encode(
     std::u32string_view input, const exclude_set &excludes) {
   auto bytes = utf32_to_bytes(input);
   if (!bytes) {
-    return make_unexpected(make_error_code(percent_encode_errc::overflow));
+    return make_unexpected(make_error_code(
+        percent_encode_errc::overflow));
   }
   return percent_encode(bytes.value(), excludes);
 }
 
-expected<std::byte, std::error_code> percent_decode_byte(std::string_view input) {
+expected<char, std::error_code> percent_decode_byte(std::string_view input) {
   if ((input.size() < 3) || (input.front() != '%')) {
-    return make_unexpected(make_error_code(percent_encode_errc::non_hex_input));
+    return make_unexpected(make_error_code(
+        percent_encode_errc::non_hex_input));
   }
 
   auto it = begin(input);
   ++it;
   auto h0 = *it;
-  auto v0 = letter_to_hex(static_cast<std::byte>(h0));
+  auto v0 = letter_to_hex(h0);
   if (!v0) {
     return make_unexpected(std::move(v0.error()));
   }
 
   ++it;
   auto h1 = *it;
-  auto v1 = letter_to_hex(static_cast<std::byte>(h1));
+  auto v1 = letter_to_hex(h1);
   if (!v1) {
     return make_unexpected(std::move(v1.error()));
   }
 
-  return static_cast<std::byte>(
-      (0x10 * static_cast<char>(v0.value())) + static_cast<char>(v1.value()));
+  return (0x10 * v0.value()) + v1.value();
 }
 
 expected<std::string, std::error_code> percent_decode(std::string_view input) {
@@ -142,7 +144,7 @@ expected<std::string, std::error_code> percent_decode(std::string_view input) {
       if (!byte) {
         return make_unexpected(std::move(byte.error()));
       }
-      result.push_back(static_cast<char>(byte.value()));
+      result.push_back(byte.value());
       it += 3;
     } else {
       result.push_back(*it++);

@@ -59,7 +59,7 @@ expected<std::string, url_parse_errc> parse_opaque_host(std::string_view input) 
 
   auto output = std::string();
   for (auto c : input) {
-    output += percent_encode_byte(static_cast<std::byte>(c));
+    output += percent_encode_byte(c);
   }
   return output;
 }
@@ -461,7 +461,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_authority(c
         continue;
       }
 
-      auto pct_encoded = percent_encode_byte(static_cast<std::byte>(byte), userinfo_set());
+      auto pct_encoded = percent_encode_byte(byte, userinfo_set());
       if (password_token_seen_flag) {
         url.password += pct_encoded;
       } else {
@@ -795,7 +795,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_path(char b
       url.validation_error = true;
     }
 
-    buffer += percent_encode_byte(static_cast<std::byte>(byte), path_set());
+    buffer += percent_encode_byte(byte, path_set());
   }
 
   return url_parse_action::increment;
@@ -817,7 +817,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_cannot_be_a
       url.validation_error = true;
     }
     if (!is_eof()) {
-      url.path[0] += percent_encode_byte(static_cast<std::byte>(byte));
+      url.path[0] += percent_encode_byte(byte);
     }
   }
   return url_parse_action::increment;
@@ -832,7 +832,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_query(char 
         (byte > '~') ||
         (is_in(byte, "\"#<>")) ||
         ((byte == '\'') && url.is_special())) {
-      url.query.value() += percent_encode_byte(static_cast<std::byte>(byte), query_set());
+      url.query.value() += percent_encode_byte(byte, query_set());
     } else {
       url.query.value().push_back(byte);
     }
@@ -844,7 +844,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_fragment(ch
   if (byte == '\0') {
     url.validation_error = true;
   } else {
-    url.fragment.value() += percent_encode_byte(static_cast<std::byte>(byte), fragment_set());
+    url.fragment.value() += percent_encode_byte(byte, fragment_set());
   }
   return url_parse_action::increment;
 }

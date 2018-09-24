@@ -6,69 +6,40 @@
 #include <gtest/gtest.h>
 #include <skyr/percent_encode.hpp>
 
-class encode_fragment_tests : public ::testing::TestWithParam<std::byte> {};
+class encode_fragment_tests : public ::testing::TestWithParam<char> {};
 
 INSTANTIATE_TEST_CASE_P(
     encode_fragment,
     encode_fragment_tests,
     ::testing::Values(
-        std::byte(' '),
-        std::byte('\"'),
-        std::byte('<'),
-        std::byte('>'),
-        std::byte('`')));
+        ' ', '\"', '<', '>', '`'));
 
 TEST_P(encode_fragment_tests, encode_fragment_set) {
   auto encoded = skyr::percent_encode_byte(GetParam(), skyr::fragment_set());
   ASSERT_TRUE(skyr::is_percent_encoded(encoded));
 }
 
-class encode_path_tests : public ::testing::TestWithParam<std::byte> {};
+class encode_path_tests : public ::testing::TestWithParam<char> {};
 
 INSTANTIATE_TEST_CASE_P(
     encode_path,
     encode_path_tests,
     ::testing::Values(
-        std::byte(' '),
-        std::byte('\"'),
-        std::byte('<'),
-        std::byte('>'),
-        std::byte('`'),
-        std::byte('#'),
-        std::byte('?'),
-        std::byte('{'),
-        std::byte('}')));
+        ' ', '\"', '<', '>', '`', '#', '?', '{', '}'));
 
 TEST_P(encode_path_tests, encode_path_set) {
   auto encoded = skyr::percent_encode_byte(GetParam(), skyr::path_set());
   ASSERT_TRUE(skyr::is_percent_encoded(encoded));
 }
 
-class encode_userinfo_tests : public ::testing::TestWithParam<std::byte> {};
+class encode_userinfo_tests : public ::testing::TestWithParam<char> {};
 
 INSTANTIATE_TEST_CASE_P(
     encode_userinfo,
     encode_userinfo_tests,
     ::testing::Values(
-        std::byte(' '),
-        std::byte('\"'),
-        std::byte('<'),
-        std::byte('>'),
-        std::byte('`'),
-        std::byte('#'),
-        std::byte('?'),
-        std::byte('{'),
-        std::byte('}'),
-        std::byte('/'),
-        std::byte(':'),
-        std::byte(';'),
-        std::byte('='),
-        std::byte('@'),
-        std::byte('['),
-        std::byte('\\'),
-        std::byte(']'),
-        std::byte('^'),
-        std::byte('|')));
+        ' ', '\"', '<', '>', '`', '#', '?', '{', '}', '/',
+        ':', ';', '=', '@', '[', '\\', ']', '^', '|'));
 
 TEST_P(encode_userinfo_tests, encode_userinfo_set) {
   auto encoded = skyr::percent_encode_byte(GetParam(), skyr::userinfo_set());
@@ -77,7 +48,7 @@ TEST_P(encode_userinfo_tests, encode_userinfo_set) {
 
 TEST(encode_tests, encode_codepoints_before_0x20_set) {
   for (auto i = 0; i < 0x20; ++i) {
-    auto encoded = skyr::percent_encode_byte(static_cast<std::byte>(i));
+    auto encoded = skyr::percent_encode_byte(i);
     char buffer[8];
     std::snprintf(buffer, sizeof(buffer), "%02X", i);
     auto output = std::string("%") + buffer;
@@ -87,7 +58,7 @@ TEST(encode_tests, encode_codepoints_before_0x20_set) {
 
 TEST(encode_tests, encode_codepoints_before_0x7e_set) {
   for (auto i = 0x7f; i <= 0xff; ++i) {
-    auto encoded = skyr::percent_encode_byte(static_cast<std::byte>(i));
+    auto encoded = skyr::percent_encode_byte(i);
     char buffer[8];
     std::snprintf(buffer, sizeof(buffer), "%02X", i);
     auto output = std::string("%") + buffer;

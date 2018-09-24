@@ -36,9 +36,10 @@ class exclude_set {
  public:
   /// Tests whether the byte is in the excluded set
   /// \param byte Input byte
-  /// \returns `true` if `in` is in the excluded set, `false` otherwise
-  bool contains(std::byte byte) const {
-    return contains_impl(static_cast<char>(byte));
+  /// \returns `true` if `in` is in the excluded set, `false`
+  ///          otherwise
+  bool contains(char byte) const {
+    return contains_impl(byte);
   }
 
  private:
@@ -65,7 +66,8 @@ class fragment_set : public exclude_set {
  private:
   bool contains_impl(char byte) const override {
     return
-        c0_control_set_.contains(std::byte(byte)) || (set_.find(byte) != set_.end());
+        c0_control_set_.contains(byte) ||
+        (set_.find(byte) != set_.end());
   }
 
  private:
@@ -82,7 +84,7 @@ class query_set : public exclude_set {
  private:
   bool contains_impl(char byte) const override {
     return
-        fragment_set_.contains(std::byte(byte)) || (byte == 0x27);
+        fragment_set_.contains(byte) || (byte == 0x27);
   }
 
  private:
@@ -98,7 +100,7 @@ class path_set : public exclude_set {
  private:
   bool contains_impl(char byte) const override {
     return
-        fragment_set_.contains(std::byte(byte)) ||
+        fragment_set_.contains(byte) ||
         (set_.find(byte) != set_.end());
   }
 
@@ -117,7 +119,7 @@ class userinfo_set : public exclude_set {
  private:
   bool contains_impl(char byte) const override {
     return
-        path_set_.contains(std::byte(byte)) ||
+        path_set_.contains(byte) ||
         (set_.find(byte) != set_.end());
   }
 
@@ -133,7 +135,7 @@ class userinfo_set : public exclude_set {
 /// \returns A percent encoded string if `in` is not in the
 ///          exclude set, `in` as a string otherwise
 std::string percent_encode_byte(
-    std::byte byte, const exclude_set &excludes = c0_control_set());
+    char byte, const exclude_set &excludes = c0_control_set());
 
 /// Percent encodes a string
 /// \param input A string of bytes
@@ -155,7 +157,7 @@ expected<std::string, std::error_code> percent_encode(
 /// \param input An string of the for %XX, where X is a hexadecimal
 ///        value
 /// \returns The percent decoded byte, or an error on failure
-expected<std::byte, std::error_code> percent_decode_byte(
+expected<char, std::error_code> percent_decode_byte(
     std::string_view input);
 
 /// Percent decodes a string
