@@ -31,7 +31,7 @@ set(Skyr_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/optional.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/expected.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/percent_encode.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/details/translate.hpp
+        ${CMAKE_SOURCE_DIR}/include/skyr/details/to_bytes.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/unicode.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/domain.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_record.hpp

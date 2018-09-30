@@ -10,12 +10,6 @@ namespace skyr {
 url_search_parameters::url_search_parameters() {}
 
 url_search_parameters::url_search_parameters(
-    const std::vector<value_type> &parameters)
-  : parameters_(parameters) {
-  update();
-}
-
-url_search_parameters::url_search_parameters(
     std::string_view query) {
   initialize(query);
   update();

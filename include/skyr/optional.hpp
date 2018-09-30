@@ -26,34 +26,16 @@ namespace skyr {
 /// initialized, and may be destroyed before the optional object has been
 /// destroyed. The initialization state of the contained object is tracked by
 /// the optional object.
+///
+/// The full documentation for this implementation can be found
+/// [here](https://optional.tartanllama.xyz/).
 template <class T>
-class optional {
- public:
-  /// Constructor
-  optional();
-
-  /// Constructor
-  optional(const T &value);
-
-  /// \returns whether or not the optional has a value
-  operator bool () const;
-
-  ///
-  /// \returns The contained value if there is one
-  /// \throws bad_optional_access
-  T &value();
-
-  ///
-  /// \returns The contained value if there is one
-  /// \throws bad_optional_access
-  const T &value() const;
-};
+class optional;
 
 /// Thrown when accessing an optional object that does not contain
 /// a value
 class bad_optional_access {
  public:
-  bad_optional_access();
 };
 }  // namespace skyr
 #endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)

@@ -176,11 +176,9 @@ bool is_percent_encoded(
     const std::locale &locale = std::locale::classic());
 }  // namespace skyr
 
-#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace std {
 template <>
 struct is_error_code_enum<skyr::percent_encode_errc> : true_type {};
 }  // namespace std
-#endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
 
 #endif  // SKYR_URL_PERCENT_ENCODE_INC

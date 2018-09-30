@@ -9,3 +9,5 @@
 .. doxygenfunction:: skyr::parse
 
 .. doxygenfunction:: skyr::serialize
+
+.. doxygenenum:: skyr::url_parse_errc

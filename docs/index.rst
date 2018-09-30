@@ -15,12 +15,4 @@ API
     url_search_parameters
     optional
     expected
-    url_record
-    url_parse_error
-    unicode_error
-    ipv4_address
-    ipv6_address
-    unicode
-    domain
-    percent_encode
     changelog

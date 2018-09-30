@@ -330,29 +330,6 @@ url::operator url::string_type() const {
   return href_;
 }
 
-std::string url::string() const {
-  return href_;
-}
-
-std::string url::u8string() const {
-  return href_;
-}
-
-std::wstring url::wstring() const {
-  auto result = wstring_from_bytes(view_);
-  return result? result.value() : std::wstring();
-}
-
-std::u16string url::u16string() const {
-  auto result = utf16_from_bytes(view_);
-  return result? result.value() : std::u16string();
-}
-
-std::u32string url::u32string() const {
-  auto result = utf32_from_bytes(view_);
-  return result? result.value() : std::u32string();
-}
-
 void swap(url &lhs, url &rhs) noexcept {
   lhs.swap(rhs);
 }

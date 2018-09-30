@@ -10,7 +10,7 @@
 #include <skyr/url_record.hpp>
 
 namespace skyr {
-/// \brief Serializes a URL record according to the
+/// Serializes a URL record according to the
 /// [WhatWG specification](https://url.spec.whatwg.org/#url-serializing)
 ///
 /// \param url A URL record

@@ -10,3 +10,5 @@ Domain name processing
 .. doxygenfunction:: skyr::domain_to_ascii(std::string_view, bool)
 
 .. doxygenfunction:: skyr::domain_to_ascii(std::u32string_view, bool)
+
+.. doxygenenum:: skyr::domain_errc

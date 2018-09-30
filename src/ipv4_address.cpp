@@ -26,7 +26,7 @@ const char *ipv4_address_error_category::name() const noexcept {
 
 std::string ipv4_address_error_category::message(int error) const noexcept {
   switch (static_cast<ipv4_address_errc>(error)) {
-    case ipv4_address_errc::more_than_4_segments:
+    case ipv4_address_errc::too_many_segments:
       return "Input contains more than 4 segments";
     case ipv4_address_errc::empty_segment:
       return "Empty input";
@@ -127,7 +127,7 @@ std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std:
       std::make_pair(
           make_unexpected(
               make_error_code(
-                  ipv4_address_errc::more_than_4_segments)), true);
+                  ipv4_address_errc::too_many_segments)), true);
   }
 
   auto numbers = std::vector<std::uint64_t>();

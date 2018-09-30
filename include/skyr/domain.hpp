@@ -74,11 +74,9 @@ expected<std::string, std::error_code> domain_to_ascii(
     bool be_strict = true);
 }  // namespace skyr
 
-#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace std {
 template <>
 struct is_error_code_enum<skyr::domain_errc> : true_type {};
 }  // namespace std
-#endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
 
 #endif //SKYR_DOMAIN_HPP

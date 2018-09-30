@@ -4,6 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
+#include <skyr/url.hpp>
 #include <skyr/url_search_parameters.hpp>
 #include <skyr/url_parse.hpp>
 
@@ -196,7 +197,7 @@ TEST(url_search_parameters_test, move_assignment_test) {
 }
 
 TEST(url_search_parameters_test, to_string_test) {
-  auto parameters = skyr::url_search_parameters{{"key", "730d67"}};
+  auto parameters = skyr::url_search_parameters{"key=730d67"};
   ASSERT_EQ("key=730d67", parameters.to_string());
 }
 
@@ -219,4 +220,12 @@ TEST(url_search_parameters_test, url_record_test) {
   ASSERT_TRUE(instance);
   auto parameters = skyr::url_search_parameters(instance.value());
   EXPECT_EQ("a=b&c=d", parameters.to_string());
+}
+
+TEST(url_search_parameters_test, url_search_parameters) {
+  // https://url.spec.whatwg.org/#example-searchparams-sort
+  auto url = skyr::url(
+      "https://example.org/?q=\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88&key=e1f7bc78");
+  url.search_parameters().sort();
+  EXPECT_EQ("?key=e1f7bc78&q=%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88", url.search());
 }

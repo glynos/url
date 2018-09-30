@@ -66,11 +66,9 @@ expected<ipv6_address, std::error_code> parse_ipv6_address(
     std::string_view input);
 }  // namespace skyr
 
-#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace std {
 template <>
 struct is_error_code_enum<skyr::ipv6_address_errc> : true_type {};
 }  // namespace std
-#endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
 
 #endif //SKYR_IPV6_ADDRESS_INC

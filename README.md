@@ -56,6 +56,8 @@ ctest
 
 ## Examples
 
+These examples are based on the [WhatWG API specification](https://url.spec.whatwg.org/#example-5434421b)
+
 ### Creating a URL without a base URL
 
 Parses a string, "https://example.org/💩", without using a base URL:
@@ -111,11 +113,6 @@ int main(int argc, char *argv[]) {
 
 This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88`
 
-## Why *skyr*?
-
-This name was chosen by a random project name generator, which
-itself was randomly chosen.
-
 ## Dependencies
 
 This library uses [optional](https://github.com/TartanLlama/optional),
@@ -147,6 +144,11 @@ Windows:
 This library is released under the Boost Software License (please see
 http://boost.org/LICENSE_1_0.txt or the accompanying LICENSE_1_0.txt
 file for the full text.
+
+## Why *skyr*?
+
+This name was chosen by a random project name generator, which
+itself was randomly chosen.
 
 ## Contact
 

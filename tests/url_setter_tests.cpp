@@ -200,13 +200,6 @@ TEST(url_setter_tests, test_hostname_with_port_number) {
   EXPECT_EQ("elpmaxe.com", instance.hostname());
 }
 
-TEST(url_setter_tests, DISABLED_test_hostname_with_port_number) {
-  auto instance = skyr::url{"http://example.com/"};
-
-  auto result = instance.set_hostname("elpmaxe.com:8080");
-  ASSERT_FALSE(result);
-}
-
 TEST(url_setter_tests, test_hostname_file_set_non_empty_host) {
   auto instance = skyr::url{"file:///path/to/helicon/"};
 

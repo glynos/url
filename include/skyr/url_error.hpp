@@ -11,8 +11,10 @@
 namespace skyr {
 /// Enumerates URL parser errors
 enum class url_parse_errc {
+  /// String contains an invalid Unicode character
+  invalid_unicode_character=1,
   /// Character is not a valid scheme character
-  invalid_scheme_character=1,
+  invalid_scheme_character,
   // URL is not an absolute URL with fragment
   not_an_absolute_url_with_fragment,
   // Cannot set scheme value
@@ -43,11 +45,9 @@ enum class url_parse_errc {
 std::error_code make_error_code(url_parse_errc error);
 }  // namespace skyr
 
-#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace std {
 template <>
 struct is_error_code_enum<skyr::url_parse_errc> : true_type {};
 }  // namespace std
-#endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
 
 #endif // SKYR_URL_ERROR_INC

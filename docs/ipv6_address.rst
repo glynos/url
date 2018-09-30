@@ -5,3 +5,5 @@
     :members:
 
 .. doxygenfunction:: skyr::parse_ipv6_address
+
+.. doxygenenum:: skyr::ipv6_address_errc

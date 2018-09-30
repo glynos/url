@@ -16,7 +16,7 @@ namespace skyr {
 /// Enumerates IPv4 address parsing errors
 enum class ipv4_address_errc {
   /// The input contains more than 4 segments
-  more_than_4_segments,
+  too_many_segments,
   /// The input contains an empty segment
   empty_segment,
   /// The segment numers invalid
@@ -65,11 +65,9 @@ expected<ipv4_address, std::error_code> parse_ipv4_address(
     std::string_view input);
 }  // namespace skyr
 
-#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace std {
 template <>
 struct is_error_code_enum<skyr::ipv4_address_errc> : true_type {};
 }  // namespace std
-#endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
 
 #endif //SKYR_IPV4_ADDRESS_INC

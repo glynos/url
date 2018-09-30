@@ -31,35 +31,17 @@ namespace skyr {
 /// has been initialized, and may not be destroyed before the expected object
 /// has been destroyed. The initialization state of the contained object is
 /// tracked by the expected object.
+///
+/// The full documentation for this implementation can be found
+/// [here](https://expected.tartanllama.xyz/).
 template <class T, class E>
-class expected {
- public:
-
-  /// Constructor
-  expected();
-
-  /// \returns whether or not the optional has a value
-  operator bool () const;
-};
-
-/// Used as a wrapper to store the unexpected value
-template <class E>
-class unexpected {
- public:
-
-  /// Constructor
-  unexpected();
-};
+class expected;
 
 /// Thrown when accessing an expected object that contains an
 /// unexpected value
 class bad_expected_access {
  public:
 };
-
-/// Makes an unexpected value.
-template <class E>
-unexpected<E> make_unexpected(E &&e);
 }  // namespace skyr
 #endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
 

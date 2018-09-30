@@ -12,3 +12,5 @@ Unicode encoding
 .. doxygenfunction:: skyr::utf32_to_bytes
 
 .. doxygenfunction:: skyr::utf32_from_bytes
+
+.. doxygenenum:: skyr::unicode_errc

@@ -13,7 +13,7 @@
 #include <skyr/url_record.hpp>
 #include <skyr/url_error.hpp>
 #include <skyr/url_search_parameters.hpp>
-#include <skyr/details/translate.hpp>
+#include <skyr/details/to_bytes.hpp>
 
 #ifdef SKYR_URI_MSVC
 #pragma warning(push)
@@ -45,10 +45,21 @@ class url_parse_error : public std::runtime_error {
 
 /// Represents a URL. Parsing is performed according to the
 /// [WhatWG specification](https://url.spec.whatwg.org/)
+///
+/// The API follows closely the
+/// [WhatWG IDL specification](https://url.spec.whatwg.org/#url-class).
+///
+/// For example:
+/// ```
+/// auto url = skyr::make_url("http://example.org/");
+/// assert("http:" == url.value().scheme());
+/// assert("example.org" == url.value().hostname());
+/// assert("/" == url.value().pathname());
+/// ```
 class url {
  public:
 
-  /// The underyling ASCII string type, or `std::basic_string<value_type>`
+  /// The internal ASCII string type, or `std::basic_string<value_type>`
   using string_type = std::string;
   /// The internal string_view, or `std::basic_string_view<value_type>`
   using string_view = std::string_view;
@@ -65,27 +76,22 @@ class url {
 
   /// Constructs an empty `url` object
   ///
-  /// \post `empty()`
+  /// \post `empty() == true`
   url();
-
-  /// Parses a URL from the input string
-  ///
-  /// \param input The input string
-  /// \throws url_parse_error on parse errors
-  explicit url(string_type &&input) {
-    initialize(std::move(input));
-  }
 
   /// Parses a URL from the input string. The input string can be
   /// any unicode encoded string (UTF-8, UTF-16 or UTF-32).
   ///
   /// \tparam Source The input string type
   /// \param input The input string
-  /// \throws unicode_error on unicode decoding errors
   /// \throws url_parse_error on parse errors
   template<class Source>
   explicit url(const Source &input) {
-    initialize(details::translate(input));
+    auto bytes = details::to_bytes(input);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    initialize(std::move(bytes.value()));
   }
 
   /// Parses a URL from the input string. The input string can be
@@ -94,11 +100,14 @@ class url {
   /// \tparam Source The input string type
   /// \param input The input string
   /// \param base A base URL
-  /// \throws unicode_error on unicode decoding errors
   /// \throws url_parse_error on parse errors
   template<class Source>
   url(const Source &input, const url &base) {
-    initialize(details::translate(input), base.url_);
+    auto bytes = details::to_bytes(input);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    initialize(std::move(bytes.value()), base.record());
   }
 
   /// Constructs a URL from an existing record
@@ -113,83 +122,123 @@ class url {
 
   /// The URL string
   ///
+  /// Equivalent to `skyr::serialize(url_).value()`
+  ///
   /// \returns The underlying URL string
   string_type href() const;
 
   ///
-  /// \tparam Source The input string type.
-  /// \param input The input string.
-  /// \returns An error if the input is invalid.
+  /// \tparam Source The input string type
+  /// \param input The input string
+  /// \returns An error if the input is invalid
+  /// \throws url_parse_error on parse errors
   template <class Source>
   expected<void, std::error_code> set_href(const Source &input) {
-    return set_href(details::translate(input));
+    auto bytes = details::to_bytes(input);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_href(std::move(bytes.value()));
   }
 
+  /// The URL string
   ///
-  /// \returns
+  /// Equivalent to `skyr::serialize(url_).value()`
+  ///
+  /// \returns The underlying URL string
+  /// \sa href()
   string_type to_json() const;
 
+  /// The URL scheme + `":"`
   ///
-  /// \returns
+  /// \returns The [URL protocol](https://url.spec.whatwg.org/#dom-url-protocol)
   string_type protocol() const;
 
+  /// Sets the [URL protocol](https://url.spec.whatwg.org/#dom-url-protocol)
   ///
-  /// \param protocol
+  /// \param protocol The new URL protocol
+  /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_protocol(const Source &protocol) {
-    return set_protocol(details::translate(protocol));
+    auto bytes = details::to_bytes(protocol);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_protocol(std::move(bytes.value()));
   }
 
-  ///
-  /// \returns
+  /// \returns The [URL username](https://url.spec.whatwg.org/#dom-url-username)
   string_type username() const;
 
+  /// Sets the [URL username](https://url.spec.whatwg.org/#dom-url-username)
   ///
-  /// \param username
+  /// \param username The new username
+  /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_username(const Source &username) {
-    return set_username(details::translate(username));
+    auto bytes = details::to_bytes(username);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_username(std::move(bytes.value()));
   }
 
+  /// The [URL password](https://url.spec.whatwg.org/#dom-url-password)
   ///
-  /// \returns
+  /// Equivalent to: `url_.password? url_.password.value() : string_type()`
+  ///
+  /// \returns The URL password
   string_type password() const;
 
+  /// Sets the [URL password](https://url.spec.whatwg.org/#dom-url-password)
   ///
-  /// \param password
+  /// \param password The new password
+  /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_password(const Source &password) {
-    return set_password(details::translate(password));
+    auto bytes = details::to_bytes(password);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_password(std::move(bytes.value()));
   }
 
-  ///
-  /// \returns
+  /// \returns The [URL host](https://url.spec.whatwg.org/#dom-url-host)
   string_type host() const;
 
+  /// Sets the [URL host](https://url.spec.whatwg.org/#dom-url-host)
   ///
-  /// \param host
+  /// \param host The new URL host
+  /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_host(const Source &host) {
-    return set_host(details::translate(host));
+    auto bytes = details::to_bytes(host);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_host(std::move(bytes.value()));
   }
 
-  ///
-  /// \returns
+  /// \returns The [URL hostname](https://url.spec.whatwg.org/#dom-url-hostname)
   string_type hostname() const;
 
+  /// Sets the [URL hostname](https://url.spec.whatwg.org/#dom-url-hostname)
   ///
-  /// \param hostname
+  /// \param hostname The new URL host name
+  /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_hostname(const Source &hostname) {
-    return set_hostname(details::translate(hostname));
+    auto bytes = details::to_bytes(hostname);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_hostname(std::move(bytes.value()));
   }
 
-  ///
-  /// \returns
+  /// \returns The [URL port](https://url.spec.whatwg.org/#dom-url-port)
   string_type port() const;
 
-  ///
-  /// \returns
+  /// \returns The [URL port](https://url.spec.whatwg.org/#dom-url-port)
   template<typename intT>
   intT port(typename std::is_integral<intT>::type * = nullptr) const {
     auto p = port();
@@ -199,82 +248,101 @@ class url {
         std::strtoul(port_first, &port_last, 10));
   }
 
+  /// Sets the [URL port](https://url.spec.whatwg.org/#dom-url-port)
   ///
-  /// \param port
-  /// \returns
+  /// \param port The new port
+  /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_port(const Source &port) {
-    return set_port(details::translate(port));
+    auto bytes = details::to_bytes(port);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_port(std::move(bytes.value()));
   }
 
+  /// Returns the [URL pathname](https://url.spec.whatwg.org/#dom-url-pathname)
   ///
-  /// \returns
+  /// \returns The URL pathname
   string_type pathname() const;
 
+  /// Sets the [URL pathname](https://url.spec.whatwg.org/#dom-url-pathname)
   ///
-  /// \param pathname
-  /// \returns
+  /// \param pathname The new pathname
+  /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_pathname(const Source &pathname) {
-    return set_pathname(details::translate(pathname));
+    auto bytes = details::to_bytes(pathname);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_pathname(std::move(bytes.value()));
   }
 
+  /// Returns the [URL search string](https://url.spec.whatwg.org/#dom-url-search)
   ///
-  /// \returns
+  /// \returns The URL search string
   string_type search() const;
 
+  /// Sets the [URL search string](https://url.spec.whatwg.org/#dom-url-search)
   ///
-  /// \param search
-  /// \returns
+  /// \param search The new search string
+  /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_search(const Source &search) {
-    return set_search(details::translate(search));
+    auto bytes = details::to_bytes(search);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_search(std::move(bytes.value()));
   }
 
-  ///
-  /// \returns
+  /// \returns A reference to the search parameters
   url_search_parameters &search_parameters();
 
+  /// Returns the [URL hash string](https://url.spec.whatwg.org/#dom-url-hash)
   ///
-  /// \returns
+  /// \returns The URL hash string
   string_type hash() const;
 
+  /// Sets the [URL hash string](https://url.spec.whatwg.org/#dom-url-hash)
   ///
-  /// \param hash
-  /// \returns
+  /// \param hash The new hash string
+  /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_hash(const Source &hash) {
-    return set_hash(details::translate(hash));
+    auto bytes = details::to_bytes(hash);
+    if (!bytes) {
+      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_hash(std::move(bytes.value()));
   }
 
-  ///
-  /// \returns
+  /// \returns A copy to the underlying `url_record` implementation.
   url_record record() const;
 
+  /// Tests whether the URL uses a
+  /// [special scheme](https://url.spec.whatwg.org/#special-scheme)
   ///
-  /// \returns
+  /// \returns `true` if the URL scheme is special, `false`
+  ///          otherwise
   bool is_special() const noexcept;
 
+  /// A [validation error](https://url.spec.whatwg.org/#validation-error)
+  /// indicates a mismatch between input and valid input
   ///
-  /// \returns
+  /// \returns `true` if there was a validation error during
+  ///          parsing, `false` otherwise
   bool validation_error() const noexcept;
 
-  ///
-  /// \returns
+  /// \returns An iterator to the beginning of the URL string
   const_iterator begin() const noexcept {
     return view_.begin();
   }
 
-  ///
-  /// \returns
+  /// \returns An iterator to the end of the URL string
   const_iterator end() const noexcept {
     return view_.end();
-  }
-
-  ///
-  /// \returns
-  string_view view() const noexcept {
-    return view_;
   }
 
   /// Tests whether the URL is an empty string
@@ -293,12 +361,18 @@ class url {
     return view_.compare(other.view_);
   }
 
+  /// Returns the default port for
+  /// [special schemes](https://url.spec.whatwg.org/#special-scheme)
   ///
   /// \param scheme
-  /// \returns
-  static optional<std::uint16_t> default_port(const string_type &scheme) noexcept;
+  /// \returns The default port if the scheme is special, `nullopt`
+  ///          otherwise
+  static optional<std::uint16_t> default_port(
+      const string_type &scheme) noexcept;
 
   /// Clears the underlying URL string
+  ///
+  /// \post `empty() == true`
   void clear();
 
   /// Returns the underyling byte buffer
@@ -310,27 +384,6 @@ class url {
   ///
   /// \returns `href_`
   operator string_type() const;
-
-  /// Returns the URL as a `std::string`
-  ///
-  /// \returns A URL string
-  std::string string() const;
-
-  /// Returns the URL as a `std::string`
-  /// \returns A URL string
-  std::string u8string() const;
-
-  /// Returns the URL as a `std::wstring`
-  /// \returns A URL wstring
-  std::wstring wstring() const;
-
-  /// Returns the URL as a `std::16string`
-  /// \returns A URL string
-  std::u16string u16string() const;
-
-  /// Returns the URL as a `std::u32string`
-  /// \returns A URL u32string
-  std::u32string u32string() const;
 
  private:
 
@@ -363,21 +416,10 @@ class url {
 /// \param rhs The second `url` object
 void swap(url &lhs, url &rhs) noexcept;
 
-#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace details {
 expected<url, std::error_code> make_url(
     url::string_type &&input, optional<url_record> base);
 }  // namespace details
-#endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
-
-/// Parses a URL string and constructs a `url` object
-///
-/// \param input The input string
-/// \returns A `url` object on success, an error on failure
-inline expected<url, std::error_code> make_url(
-    url::string_type &&input) {
-  return details::make_url(std::move(input), nullopt);
-}
 
 /// Parses a URL string and constructs a `url` object
 ///
@@ -387,21 +429,15 @@ inline expected<url, std::error_code> make_url(
 template<class Source>
 inline expected<url, std::error_code> make_url(
     const Source &input) {
-  return details::make_url(details::translate(input), nullopt);
+  auto bytes = details::to_bytes(input);
+  if (!bytes) {
+    throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+  }
+  return details::make_url(std::move(bytes.value()), nullopt);
 }
 
 /// Parses a URL string and constructs a `url` object
 ///
-/// \param input The input string
-/// \param base The base URL
-/// \returns A `url` object on success, an error on failure
-inline expected<url, std::error_code> make_url(
-    url::string_type &&input, const url &base) {
-  return details::make_url(std::move(input), base.record());
-}
-
-/// Parses a URL string and constructs a `url` object
-////
 /// \tparam Source The input string type
 /// \param input The input string
 /// \param base The base URL
@@ -409,7 +445,11 @@ inline expected<url, std::error_code> make_url(
 template<class Source>
 inline expected<url, std::error_code> make_url(
     const Source &input, const url &base) {
-  return details::make_url(details::translate(input), base.record());
+  auto bytes = details::to_bytes(input);
+  if (!bytes) {
+    throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+  }
+  return details::make_url(std::move(bytes.value()), base.record());
 }
 
 /// Tests two URLs for equality according to the
@@ -423,14 +463,16 @@ inline bool operator == (const url &lhs, const url &rhs) noexcept {
 }
 
 /// Tests two URLs for inequality
+///
 /// \param lhs A `url` object
 /// \param rhs A `url` object
-/// \returns !(lhs == rhs
+/// \returns `!(lhs == rhs)`
 inline bool operator != (const url &lhs, const url &rhs) noexcept {
   return !(lhs == rhs);
 }
 
 /// Comparison operator
+///
 /// \param lhs A `url` object
 /// \param rhs A `url` object
 /// \returns `lhs.compare(rhs) < 0`
@@ -439,6 +481,7 @@ inline bool operator < (const url &lhs, const url &rhs) noexcept {
 }
 
 /// Comparison operator
+///
 /// \param lhs A `url` object
 /// \param rhs A `url` object
 /// \returns `lhs.compare(rhs) > 0`
@@ -447,6 +490,7 @@ inline bool operator > (const url &lhs, const url &rhs) noexcept {
 }
 
 /// Comparison operator
+///
 /// \param lhs A `url` object
 /// \param rhs A `url` object
 /// \returns `!(lhs > rhs)
@@ -455,6 +499,7 @@ inline bool operator <= (const url &lhs, const url &rhs) noexcept {
 }
 
 /// Comparison operator
+///
 /// \param lhs A `url` object
 /// \param rhs A `url` object
 /// \returns !(lhs < rhs)

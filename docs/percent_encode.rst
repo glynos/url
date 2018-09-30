@@ -10,3 +10,5 @@ Percent encoding
 .. doxygenfunction:: skyr::percent_decode_byte
 
 .. doxygenfunction:: skyr::percent_decode
+
+.. doxygenenum:: skyr::percent_encode_errc

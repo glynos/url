@@ -29,26 +29,6 @@ enum class unicode_errc {
 /// \returns A `std::error_code` object
 std::error_code make_error_code(unicode_errc error);
 
-/// Thrown when there is a Unicode encoding or decoding error
-class unicode_error : public std::runtime_error {
- public:
-  /// Constructor
-  /// \param error An error code value
-  explicit unicode_error(std::error_code error) noexcept
-      : runtime_error("Unicode error")
-      , error_(std::move(error)) {}
-
-  /// \returns An error code
-  std::error_code error() const noexcept {
-    return error_;
-  }
-
- private:
-
-  std::error_code error_;
-
-};
-
 /// Converts a `std::string` (assuming UTF-8) string to UTF-16
 /// \param input A UTF-8 string
 /// \returns A UTF-16 `std::wstring` or an error on failure
@@ -91,11 +71,9 @@ expected<std::string, std::error_code> utf32_to_bytes(
     std::u32string_view input);
 }  // namespace skyr
 
-#if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace std {
 template <>
 struct is_error_code_enum<skyr::unicode_errc> : true_type {};
 }  // namespace std
-#endif  // !defined(DOXYGEN_SHOULD_SKIP_THIS)
 
 #endif //SKYR_UNICODE_HPP
