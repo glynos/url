@@ -43,24 +43,24 @@ set(Skyr_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/url_error.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_search_parameters.hpp)
 
-add_library(skyr ${Skyr_SRCS})
-target_link_libraries(skyr)
+add_library(skyr-url ${Skyr_SRCS})
+target_link_libraries(skyr-url)
 if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-  if (NOT Skyr_DISABLE_LIBCXX)
-    target_link_libraries(skyr "c++")
-  endif()
+    if (NOT Skyr_DISABLE_LIBCXX)
+        target_link_libraries(skyr-url "c++")
+    endif()
 endif()
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU OR
     ${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wmissing-declarations")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wmissing-declarations")
 endif()
 
 #propagate sources to parent scope for one-lib-build
 set(Skyr_SRCS ${Skyr_SRCS} PARENT_SCOPE)
 
-install(DIRECTORY include DESTINATION ".")
-install(TARGETS skyr
+# Install
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include DESTINATION ".")
+install(TARGETS skyr-url
         ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib
-        )
+        LIBRARY DESTINATION lib)
