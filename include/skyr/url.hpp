@@ -130,13 +130,13 @@ class url {
   ///
   /// \tparam Source The input string type
   /// \param input The input string
-  /// \returns An error if the input is invalid
-  /// \throws url_parse_error on parse errors
+  /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_href(const Source &input) {
     auto bytes = details::to_bytes(input);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_href(std::move(bytes.value()));
   }
@@ -162,7 +162,8 @@ class url {
   expected<void, std::error_code> set_protocol(const Source &protocol) {
     auto bytes = details::to_bytes(protocol);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_protocol(std::move(bytes.value()));
   }
@@ -178,7 +179,8 @@ class url {
   expected<void, std::error_code> set_username(const Source &username) {
     auto bytes = details::to_bytes(username);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_username(std::move(bytes.value()));
   }
@@ -198,7 +200,8 @@ class url {
   expected<void, std::error_code> set_password(const Source &password) {
     auto bytes = details::to_bytes(password);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_password(std::move(bytes.value()));
   }
@@ -214,7 +217,8 @@ class url {
   expected<void, std::error_code> set_host(const Source &host) {
     auto bytes = details::to_bytes(host);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_host(std::move(bytes.value()));
   }
@@ -230,7 +234,8 @@ class url {
   expected<void, std::error_code> set_hostname(const Source &hostname) {
     auto bytes = details::to_bytes(hostname);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_hostname(std::move(bytes.value()));
   }
@@ -256,7 +261,8 @@ class url {
   expected<void, std::error_code> set_port(const Source &port) {
     auto bytes = details::to_bytes(port);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_port(std::move(bytes.value()));
   }
@@ -274,7 +280,8 @@ class url {
   expected<void, std::error_code> set_pathname(const Source &pathname) {
     auto bytes = details::to_bytes(pathname);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_pathname(std::move(bytes.value()));
   }
@@ -292,7 +299,8 @@ class url {
   expected<void, std::error_code> set_search(const Source &search) {
     auto bytes = details::to_bytes(search);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_search(std::move(bytes.value()));
   }
@@ -313,7 +321,8 @@ class url {
   expected<void, std::error_code> set_hash(const Source &hash) {
     auto bytes = details::to_bytes(hash);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_hash(std::move(bytes.value()));
   }
@@ -431,7 +440,8 @@ inline expected<url, std::error_code> make_url(
     const Source &input) {
   auto bytes = details::to_bytes(input);
   if (!bytes) {
-    throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    return make_unexpected(
+        make_error_code(url_parse_errc::invalid_unicode_character));
   }
   return details::make_url(std::move(bytes.value()), nullopt);
 }
@@ -447,7 +457,8 @@ inline expected<url, std::error_code> make_url(
     const Source &input, const url &base) {
   auto bytes = details::to_bytes(input);
   if (!bytes) {
-    throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+    return make_unexpected(
+        make_error_code(url_parse_errc::invalid_unicode_character));
   }
   return details::make_url(std::move(bytes.value()), base.record());
 }
