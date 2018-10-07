@@ -51,16 +51,24 @@ The Visual Studio solution is available in `Skyr.sln`.
 ### Running the tests
 
 ```bash
-ctest
+> ctest
 ```
 
 ## Examples
 
-These examples are based on the [WhatWG API specification](https://url.spec.whatwg.org/#example-5434421b)
+These examples are based on the
+[WhatWG API specification](https://url.spec.whatwg.org/#example-5434421b)
+
+To build the examples, run `cmake` as follows:
+
+```bash
+> cmake .. -DSkyr_BUILD_EXAMPLES=ON
+```
 
 ### Creating a URL without a base URL
 
-Parses a string, "https://example.org/💩", without using a base URL:
+This example parses a string, "https://example.org/💩",
+without using a base URL:
 
 ```c++
 #include <skyr/url.hpp>
@@ -95,7 +103,8 @@ This gives the output: `Parsing failed: Not an absolute URL with fragment`
 
 ### Creating a non-absolute URL with a base URL
 
-Parses a string, "🏳️‍🌈", using a base URL, "https://example.org/":
+This example parses a string, "🏳️‍🌈", using a base URL, 
+"https://example.org/":
 
 ```c++
 #include <skyr/url.hpp>
@@ -112,6 +121,19 @@ int main(int argc, char *argv[]) {
 ```
 
 This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88`
+
+## Installation
+
+```bash
+> cmake .. DCMAKE_INSTALL_PREFIX=$PREFIX
+> make -j4
+> make test      # optional
+> make install
+```
+
+Where `$PREFIX` is the location where you want to install the
+library. Depending on the location of `$PREFIX`, you may need to run
+the install command using as an administrator (on Linux as `sudo`).
 
 ## Dependencies
 
