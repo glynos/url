@@ -133,7 +133,7 @@ This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F
 
 Where `$PREFIX` is the location where you want to install the
 library. Depending on the location of `$PREFIX`, you may need to run
-the install command using as an administrator (on Linux as `sudo`).
+the install command as an administrator (e.g. on Linux as `sudo`).
 
 ## Dependencies
 
