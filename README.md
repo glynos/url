@@ -167,6 +167,10 @@ This library is released under the Boost Software License (please see
 http://boost.org/LICENSE_1_0.txt or the accompanying LICENSE_1_0.txt
 file for the full text.
 
+[`optional`](https://github.com/TartanLlama/optional/blob/master/COPYING)
+and [`expected`](https://github.com/TartanLlama/expected/blob/master/COPYING)
+are each released under the CCO 1.0 License.
+
 ## Why *skyr*?
 
 This name was chosen by a random project name generator, which
