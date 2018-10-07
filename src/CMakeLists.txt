@@ -59,7 +59,7 @@ endif()
 #propagate sources to parent scope for one-lib-build
 set(Skyr_SRCS ${Skyr_SRCS} PARENT_SCOPE)
 
-install(DIRECTORY include DESTINATION ".")
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include DESTINATION ".")
 install(TARGETS skyr
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
