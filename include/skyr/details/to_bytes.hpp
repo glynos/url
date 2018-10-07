@@ -11,148 +11,75 @@
 
 namespace skyr {
 namespace details {
-template <typename Source>
+template <class T, class charT>
+using is_basic_string =
+    std::is_same<typename std::remove_cv<T>::type, std::basic_string<charT>>;
+
+template <class T, class charT>
+using is_basic_string_view =
+    std::is_same<typename std::remove_cv<T>::type, std::basic_string_view<charT>>;
+
+template <class T, class charT>
+using is_char_array =
+    std::conjunction<
+        std::is_array<T>,
+        std::is_same<typename std::remove_cv<typename std::remove_extent<T>::type>::type, charT>>;
+
+template <class T, class charT>
+using is_char_pointer =
+    std::conjunction<
+        std::is_pointer<T>,
+        std::is_same<typename std::remove_pointer<T>::type, charT>>;
+
+template <class T, class charT>
+using is_string_convertible =
+    std::disjunction<
+        is_basic_string<T, charT>,
+        is_basic_string_view<T, charT>,
+        is_char_array<T, charT>,
+        is_char_pointer<T, charT>>
+        ;
+
+template <class T>
+using is_any_string_convertible =
+    std::disjunction<
+        is_string_convertible<T, char>,
+        is_string_convertible<T, wchar_t>,
+        is_string_convertible<T, char16_t>,
+        is_string_convertible<T, char32_t>>;
+
+template <class Source, class Enable = void>
 struct to_bytes_impl;
 
-template <>
-struct to_bytes_impl<std::string> {
-  expected<std::string, std::error_code> operator()(const std::string &source) const { return source; }
+template <class Source>
+struct to_bytes_impl<
+    Source, typename std::enable_if<is_string_convertible<Source, char>::value>::type> {
+  expected<std::string, std::error_code> operator()(const Source &source) const {
+    return source;
+  }
 };
 
-template <int N>
-struct to_bytes_impl<char[N]> {
-  expected<std::string, std::error_code> operator()(const char *source) const { return source; }
-};
-
-template <>
-struct to_bytes_impl<char *> {
-  expected<std::string, std::error_code> operator()(const char *source) const { return source; }
-};
-
-template <>
-struct to_bytes_impl<const char *> {
-  expected<std::string, std::error_code> operator()(const char *source) const { return source; }
-};
-
-template <int N>
-struct to_bytes_impl<const char[N]> {
-  expected<std::string, std::error_code> operator()(const char *source) const { return source; }
-};
-
-template <>
-struct to_bytes_impl<std::wstring> {
-  expected<std::string, std::error_code> operator()(const std::wstring &source) const {
+template <class Source>
+struct to_bytes_impl<
+    Source, typename std::enable_if<is_string_convertible<Source, wchar_t>::value>::type> {
+  expected<std::string, std::error_code> operator()(const Source &source) const {
     return wstring_to_bytes(source);
   }
 };
 
-template <int N>
-struct to_bytes_impl<const wchar_t[N]> {
-  expected<std::string, std::error_code> operator()(const wchar_t *source) const {
-    to_bytes_impl<std::wstring> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <int N>
-struct to_bytes_impl<wchar_t[N]> {
-  expected<std::string, std::error_code> operator()(const wchar_t *source) const {
-    to_bytes_impl<std::wstring> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <>
-struct to_bytes_impl<wchar_t *> {
-  expected<std::string, std::error_code> operator()(const wchar_t *source) const {
-    to_bytes_impl<std::wstring> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <>
-struct to_bytes_impl<const wchar_t *> {
-  expected<std::string, std::error_code> operator()(const wchar_t *source) const {
-    to_bytes_impl<std::wstring> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <>
-struct to_bytes_impl<std::u16string> {
-  expected<std::string, std::error_code> operator()(const std::u16string &source) const {
+template <class Source>
+struct to_bytes_impl<
+    Source, typename std::enable_if<is_string_convertible<Source, char16_t>::value>::type> {
+  expected<std::string, std::error_code> operator()(const Source &source) const {
     return utf16_to_bytes(source);
   }
 };
 
-template <int N>
-struct to_bytes_impl<const char16_t[N]> {
-  expected<std::string, std::error_code> operator()(const char16_t *source) const {
-    to_bytes_impl<std::u16string> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <int N>
-struct to_bytes_impl<char16_t[N]> {
-  expected<std::string, std::error_code> operator()(const char16_t *source) const {
-    to_bytes_impl<std::u16string> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <>
-struct to_bytes_impl<char16_t *> {
-  expected<std::string, std::error_code> operator()(const char16_t *source) const {
-    to_bytes_impl<std::u16string> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <>
-struct to_bytes_impl<const char16_t *> {
-  expected<std::string, std::error_code> operator()(const char16_t *source) const {
-    to_bytes_impl<std::u16string> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <>
-struct to_bytes_impl<std::u32string> {
-  expected<std::string, std::error_code> operator()(const std::u32string &source) const {
+template <class Source>
+struct to_bytes_impl<
+    Source, typename std::enable_if<is_string_convertible<Source, char32_t>::value>::type> {
+  expected<std::string, std::error_code> operator()(const Source &source) const {
     return utf32_to_bytes(source);
-  }
-};
-
-template <int N>
-struct to_bytes_impl<const char32_t[N]> {
-  expected<std::string, std::error_code> operator()(const char32_t *source) const {
-    to_bytes_impl<std::u32string> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <int N>
-struct to_bytes_impl<char32_t[N]> {
-  expected<std::string, std::error_code> operator()(const char32_t *source) const {
-    to_bytes_impl<std::u32string> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <>
-struct to_bytes_impl<char32_t *> {
-  expected<std::string, std::error_code> operator()(const char32_t *source) const {
-    to_bytes_impl<std::u32string> to_bytes;
-    return to_bytes(source);
-  }
-};
-
-template <>
-struct to_bytes_impl<const char32_t *> {
-  expected<std::string, std::error_code> operator()(const char32_t *source) const {
-    to_bytes_impl<std::u32string> to_bytes;
-    return to_bytes(source);
   }
 };
 

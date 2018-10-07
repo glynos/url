@@ -8,6 +8,7 @@
 
 #include <string>
 #include <string_view>
+#include <type_traits>
 #include <skyr/config.hpp>
 #include <skyr/expected.hpp>
 #include <skyr/url_record.hpp>
@@ -245,7 +246,7 @@ class url {
 
   /// \returns The [URL port](https://url.spec.whatwg.org/#dom-url-port)
   template<typename intT>
-  intT port(typename std::is_integral<intT>::type * = nullptr) const {
+  intT port(typename std::enable_if<std::is_integral<intT>::value>::type * = nullptr) const {
     auto p = port();
     const char *port_first = p.data();
     char *port_last = nullptr;
@@ -259,12 +260,7 @@ class url {
   /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_port(const Source &port) {
-    auto bytes = details::to_bytes(port);
-    if (!bytes) {
-      return make_unexpected(
-          make_error_code(url_parse_errc::invalid_unicode_character));
-    }
-    return set_port(std::move(bytes.value()));
+    return set_port_impl(port);
   }
 
   /// Returns the [URL pathname](https://url.spec.whatwg.org/#dom-url-pathname)
@@ -410,6 +406,25 @@ class url {
   expected<void, std::error_code> set_pathname(string_type &&pathname);
   expected<void, std::error_code> set_search(string_type &&search);
   expected<void, std::error_code> set_hash(string_type &&hash);
+
+  template <class Source>
+  expected<void, std::error_code> set_port_impl(
+      const Source &port,
+      typename std::enable_if<details::is_any_string_convertible<Source>::value>::type * = nullptr) {
+    auto bytes = details::to_bytes(port);
+    if (!bytes) {
+      return make_unexpected(
+          make_error_code(url_parse_errc::invalid_unicode_character));
+    }
+    return set_port(std::move(bytes.value()));
+  }
+
+  template <typename intT>
+  expected<void, std::error_code> set_port_impl(
+      intT port,
+      typename std::enable_if<std::is_integral<intT>::value>::type * = nullptr) {
+    return set_port(std::to_string(port));
+  }
 
   url_record url_;
   std::string href_;
