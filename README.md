@@ -38,21 +38,22 @@ From a terminal, execute the following sequence of commands:
 > make -j4
 ```
 
-### Building with `CMake` and `Visual C++`
-
-```bash
-> mkdir _build
-> cd _build
-> cmake ..
-```
-
-The Visual Studio solution is available in `Skyr.sln`.
-
-### Running the tests
+To run the tests, run `ctest` from the terminal while in the
+`_build` directory:
 
 ```bash
 > ctest
 ```
+
+### Building with `CMake` and `Visual Studio 2017`
+
+Open Visual Studio 2017, and click on `File`->`Open`->`Folder`, or
+use the shortcut `Ctrl+Shift+Alt+O`. Open the root folder of this
+project. This will load the project in the explorer. To build,
+simply open the `CMake` menu and click `Build All`.
+
+To run the tests, open the `CMake` menu, click `Tests` and then run
+`Run Skyr CTests`.
 
 ## Examples
 
@@ -124,6 +125,8 @@ This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F
 
 ## Installation
 
+### Installing with `CMake` and `Make`
+
 ```bash
 > cmake .. DCMAKE_INSTALL_PREFIX=$PREFIX
 > make -j4
@@ -134,6 +137,10 @@ This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F
 Where `$PREFIX` is the location where you want to install the
 library. Depending on the location of `$PREFIX`, you may need to run
 the install command as an administrator (e.g. on Linux as `sudo`).
+
+### Installing with `CMake` and `Visual Studio 2017`
+
+Open the `CMake` menu, click `Install`, then `Skyr`.
 
 ## Dependencies
 
