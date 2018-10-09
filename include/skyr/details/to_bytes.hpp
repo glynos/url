@@ -79,7 +79,7 @@ template <class Source>
 struct to_bytes_impl<
     Source, typename std::enable_if<is_string_convertible<Source, char32_t>::value>::type> {
   expected<std::string, std::error_code> operator()(const Source &source) const {
-    return utf32_to_bytes(source);
+    return unicode::utf32_to_bytes(source);
   }
 };
 

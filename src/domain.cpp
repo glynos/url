@@ -87,7 +87,7 @@ inline bool delim(char32_t c) {
 }  // namespace
 
 expected<std::string, std::error_code> punycode_encode(std::string_view input) {
-  auto utf32 = utf32_from_bytes(input);
+  auto utf32 = unicode::utf32_from_bytes(input);
   if (!utf32) {
     return make_unexpected(make_error_code(domain_errc::bad_input));
   }
@@ -230,7 +230,7 @@ expected<std::string, std::error_code> punycode_decode(std::string_view input) {
     result.insert(i++, 1, n);
   }
 
-  auto bytes = utf32_to_bytes(result);
+  auto bytes = unicode::utf32_to_bytes(result);
   if (!bytes) {
     return make_unexpected(make_error_code(domain_errc::bad_input));
   }
@@ -348,7 +348,7 @@ expected<std::string, std::error_code> unicode_to_ascii(
   }
 
   auto utf32_domain = join(labels, U'.');
-  auto ascii_domain = utf32_to_bytes(utf32_domain);
+  auto ascii_domain = unicode::utf32_to_bytes(utf32_domain);
   if (!ascii_domain) {
     return make_unexpected(
         make_error_code(domain_errc::encoding_error));
@@ -360,7 +360,7 @@ expected<std::string, std::error_code> unicode_to_ascii(
 expected<std::string, std::error_code> domain_to_ascii(
     std::string_view domain,
     bool be_strict) {
-  auto utf32 = utf32_from_bytes(domain);
+  auto utf32 = unicode::utf32_from_bytes(domain);
   if (!utf32) {
     return make_unexpected(
         make_error_code(domain_errc::encoding_error));

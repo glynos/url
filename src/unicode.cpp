@@ -8,6 +8,7 @@
 #include "unicode_impl.hpp"
 
 namespace skyr {
+namespace unicode {
 namespace {
 class unicode_error_category : public std::error_category {
  public:
@@ -21,16 +22,11 @@ const char *unicode_error_category::name() const noexcept {
 
 std::string unicode_error_category::message(int error) const noexcept {
   switch (static_cast<unicode_errc>(error)) {
-    case unicode_errc::overflow:
-      return "Overflow";
-    case unicode_errc::invalid_lead:
-      return "Invalid lead";
-    case unicode_errc::illegal_byte_sequence:
-      return "Illegal byte sequence";
-    case unicode_errc::invalid_code_point:
-      return "Invalid code point";
-    default:
-      return "(Unknown error)";
+    case unicode_errc::overflow:return "Overflow";
+    case unicode_errc::invalid_lead:return "Invalid lead";
+    case unicode_errc::illegal_byte_sequence:return "Illegal byte sequence";
+    case unicode_errc::invalid_code_point:return "Invalid code point";
+    default:return "(Unknown error)";
   }
 }
 
@@ -45,7 +41,7 @@ expected<std::wstring, std::error_code> wstring_from_bytes(
     std::string_view input) {
   std::wstring result;
   auto expected = utf8::utf8to16(
-      begin(input), end(input),std::back_inserter(result));
+      begin(input), end(input), std::back_inserter(result));
   if (!expected) {
     return make_unexpected(std::error_code(expected.error()));
   }
@@ -67,7 +63,7 @@ expected<std::u16string, std::error_code> utf16_from_bytes(
     std::string_view input) {
   std::u16string result;
   auto expected = utf8::utf8to16(
-      begin(input), end(input),std::back_inserter(result));
+      begin(input), end(input), std::back_inserter(result));
   if (!expected) {
     return make_unexpected(std::error_code(expected.error()));
   }
@@ -89,7 +85,7 @@ expected<std::u32string, std::error_code> utf32_from_bytes(
     std::string_view input) {
   std::u32string result;
   auto expected = utf8::utf8to32(
-      begin(input), end(input),std::back_inserter(result));
+      begin(input), end(input), std::back_inserter(result));
   if (!expected) {
     return make_unexpected(std::error_code(expected.error()));
   }
@@ -106,4 +102,5 @@ expected<std::string, std::error_code> utf32_to_bytes(
   }
   return result;
 }
+}  // namespace unicode
 }  // namespace skyr
