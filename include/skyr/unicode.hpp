@@ -12,17 +12,19 @@
 #include <skyr/expected.hpp>
 
 namespace skyr {
+/// \namespace unicode
+/// Unicode encoding functions
 namespace unicode {
 /// Enumerates Unicode errors
 enum class unicode_errc {
   /// Overflow
-      overflow,
+  overflow,
   /// Invalid lead code point
-      invalid_lead,
+  invalid_lead,
   /// Illegal byte sequence
-      illegal_byte_sequence,
+  illegal_byte_sequence,
   /// Invalid code point
-      invalid_code_point,
+  invalid_code_point,
 };
 
 /// Creates a `std::error_code` given a `skyr::unicode_errc` value
