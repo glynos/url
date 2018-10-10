@@ -98,7 +98,7 @@ expected<std::string, std::error_code> percent_encode(
 
 expected<std::string, std::error_code> percent_encode(
     std::u32string_view input, const exclude_set &excludes) {
-  auto bytes = utf32_to_bytes(input);
+  auto bytes = unicode::utf32_to_bytes(input);
   if (!bytes) {
     return make_unexpected(make_error_code(
         percent_encode_errc::overflow));

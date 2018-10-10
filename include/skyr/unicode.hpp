@@ -12,6 +12,9 @@
 #include <skyr/expected.hpp>
 
 namespace skyr {
+/// \namespace unicode
+/// Unicode encoding functions
+namespace unicode {
 /// Enumerates Unicode errors
 enum class unicode_errc {
   /// Overflow
@@ -69,11 +72,12 @@ expected<std::u32string, std::error_code> utf32_from_bytes(
 /// \returns A UTF-8 `std::string` or an error on failure
 expected<std::string, std::error_code> utf32_to_bytes(
     std::u32string_view input);
+}  // namespace unicode
 }  // namespace skyr
 
 namespace std {
 template <>
-struct is_error_code_enum<skyr::unicode_errc> : true_type {};
+struct is_error_code_enum<skyr::unicode::unicode_errc> : true_type {};
 }  // namespace std
 
 #endif //SKYR_UNICODE_HPP

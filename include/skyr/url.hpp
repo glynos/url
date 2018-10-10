@@ -88,9 +88,14 @@ class url {
   /// \throws url_parse_error on parse errors
   template<class Source>
   explicit url(const Source &input) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(input);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      throw url_parse_error(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     initialize(std::move(bytes.value()));
   }
@@ -104,6 +109,10 @@ class url {
   /// \throws url_parse_error on parse errors
   template<class Source>
   url(const Source &input, const url &base) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(input);
     if (!bytes) {
       throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
@@ -134,6 +143,10 @@ class url {
   /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_href(const Source &input) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(input);
     if (!bytes) {
       return make_unexpected(
@@ -161,6 +174,10 @@ class url {
   /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_protocol(const Source &protocol) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(protocol);
     if (!bytes) {
       return make_unexpected(
@@ -178,6 +195,10 @@ class url {
   /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_username(const Source &username) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(username);
     if (!bytes) {
       return make_unexpected(
@@ -199,6 +220,10 @@ class url {
   /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_password(const Source &password) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(password);
     if (!bytes) {
       return make_unexpected(
@@ -216,6 +241,10 @@ class url {
   /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_host(const Source &host) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(host);
     if (!bytes) {
       return make_unexpected(
@@ -233,6 +262,10 @@ class url {
   /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_hostname(const Source &hostname) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(hostname);
     if (!bytes) {
       return make_unexpected(
@@ -274,6 +307,10 @@ class url {
   /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_pathname(const Source &pathname) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(pathname);
     if (!bytes) {
       return make_unexpected(
@@ -293,6 +330,10 @@ class url {
   /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_search(const Source &search) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(search);
     if (!bytes) {
       return make_unexpected(
@@ -315,6 +356,10 @@ class url {
   /// \returns An error on failure to parse the new URL
   template <class Source>
   expected<void, std::error_code> set_hash(const Source &hash) {
+    static_assert(
+        is_url_convertible<Source>::value,
+        "Source is not a valid URL string type");
+
     auto bytes = details::to_bytes(hash);
     if (!bytes) {
       return make_unexpected(
@@ -410,7 +455,7 @@ class url {
   template <class Source>
   expected<void, std::error_code> set_port_impl(
       const Source &port,
-      typename std::enable_if<details::is_any_string_convertible<Source>::value>::type * = nullptr) {
+      typename std::enable_if<is_url_convertible<Source>::value>::type * = nullptr) {
     auto bytes = details::to_bytes(port);
     if (!bytes) {
       return make_unexpected(
