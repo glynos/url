@@ -17,7 +17,7 @@
 This library provides:
 
 * A ``skyr::url`` class that implements a generic URL parser,
-  compatible with the [WhatWG URL specification](https://url.spec.whatwg.org/#url-class)
+  conforming with the [WhatWG URL specification](https://url.spec.whatwg.org/#url-class)
 * URL serialization and comparison
 * Percent encoding and decoding functions
 * IDNA and Punycode functions for domain name parsing
