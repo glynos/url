@@ -24,6 +24,10 @@ set(
         unicode_tests
     )
 
+if (MSVC)
+		LIST(APPEND TESTS filesystem_path_tests)
+endif()
+
 foreach (test ${TESTS})
     add_executable(${test} ${test}.cpp)
     add_dependencies(${test} skyr-url gtest_main)

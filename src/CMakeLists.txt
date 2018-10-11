@@ -44,6 +44,11 @@ set(Skyr_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/url_error.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_search_parameters.hpp)
 
+if (MSVC)
+		LIST(APPEND Skyr_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/filesystem.cpp)
+		LIST(APPEND Skyr_SRCS ${CMAKE_SOURCE_DIR}/include/skyr/filesystem.hpp)
+endif()
+
 add_library(skyr-url ${Skyr_SRCS})
 target_link_libraries(skyr-url)
 if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
