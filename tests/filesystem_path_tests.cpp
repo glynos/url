@@ -9,7 +9,9 @@
 
 TEST(filesystem_path_tests, empty_path) {
   auto instance = skyr::url{};
-  ASSERT_FALSE(skyr::filesystem::to_path(instance));
+  auto path = skyr::filesystem::to_path(instance);
+  ASSERT_TRUE(path);
+  EXPECT_TRUE(path.value().empty());
 }
 
 TEST(filesystem_path_tests, file_path) {
@@ -25,3 +27,6 @@ TEST(filesystem_path_tests, http_path) {
   ASSERT_TRUE(path);
   EXPECT_EQ(path.value().generic_string(), "/path/to/file.txt");
 }
+
+// TODO: add test with percent encoding
+// TODO: add test with unicode

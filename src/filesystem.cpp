@@ -4,6 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include "skyr/filesystem.hpp"
+#include "skyr/percent_encode.hpp"
 
 namespace skyr {
 namespace filesystem {
@@ -20,10 +21,10 @@ const char *path_error_category::name() const noexcept {
 
 std::string path_error_category::message(int error) const noexcept {
   switch (static_cast<path_errc>(error)) {
-    case path_errc::empty_path:
-      return "Empty path";
     case path_errc::invalid_path:
       return "Invalid path";
+    case path_errc::percent_decoding_error:
+      return "Percent decoding error";
     default:
       return "(Unknown error)";
   }
@@ -49,10 +50,11 @@ expected<url, std::error_code> from_path(const std::filesystem::path &path) {
 
 expected<std::filesystem::path, std::error_code> to_path(const url &input) {
   auto pathname = input.pathname();
-  if (pathname.empty()) {
-    return make_unexpected(make_error_code(path_errc::empty_path));
+  auto decoded = percent_decode(pathname);
+  if (!decoded) {
+    return make_unexpected(make_error_code(path_errc::percent_decoding_error));
   }
-  return std::filesystem::u8path(pathname);
+  return std::filesystem::u8path(decoded.value());
 }
 }  // namespace filesystem
 }  // namespace skyr

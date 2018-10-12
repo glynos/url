@@ -8,12 +8,12 @@ cmake_minimum_required(VERSION 3.8)
 project(Skyr)
 
 option(Skyr_BUILD_TESTS "Build the URL tests." ON)
-option(Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS "Build the filesystem path functions" OFF)
 option(Skyr_BUILD_DOCS "Build the URL documentation." OFF)
 option(Skyr_BUILD_EXAMPLES "Build the URL examples." OFF)
 option(Skyr_FULL_WARNINGS "Build the library with all warnings turned on." ON)
 option(Skyr_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(Skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
+option(Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS "Build the filesystem path functions" OFF)
 
 find_package(Threads REQUIRED)
 
@@ -66,8 +66,6 @@ if (MSVC)
 
     add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE)
 endif(MSVC)
-
-set(Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS ON)
 
 include_directories(${Skyr_SOURCE_DIR}/src ${Skyr_SOURCE_DIR}/include)
 

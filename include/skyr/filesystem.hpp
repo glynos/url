@@ -14,8 +14,8 @@
 namespace skyr {
 namespace filesystem {
 enum class path_errc {
-  empty_path = 1,
-  invalid_path,
+  invalid_path=1,
+  percent_decoding_error=2,
 };
 
 std::error_code make_error_code(path_errc error);

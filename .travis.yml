@@ -42,7 +42,7 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-8']
-      env: COMPILER='g++-8'
+      env: [COMPILER='g++-8', BUILD_FILESYSTEM_PATH_FUNCTION='ON']
 
     # 3/ OSX Clang Builds
     - os: osx
@@ -68,7 +68,7 @@ before_script:
 script:
     - mkdir _build
     - cd _build
-    - cmake -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF --DSkyr_BUILD_FILESYSTEM_PATH_FUNCTIONS=ON ..
+    - cmake -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF -DSkyr_BUILD_FILESYSTEM_PATH_FUNCTIONS=$BUILD_FILESYSTEM_PATH_FUNCTIONS ..
     - make -j 8
     - make test
 

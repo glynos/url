@@ -58,7 +58,9 @@ if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
 endif()
 
 if(${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    target_link_libraries(skyr-url "stdc++fs")
+	if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
+	    target_link_libraries(skyr-url "stdc++fs")
+	endif()
 endif()
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU OR
