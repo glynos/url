@@ -137,7 +137,7 @@ class url {
   /// \returns The underlying URL string
   string_type href() const;
 
-  ///
+  /// @{
   /// \tparam Source The input string type
   /// \param input The input string
   /// \returns An error on failure to parse the new URL
@@ -155,6 +155,9 @@ class url {
     return set_href(std::move(bytes.value()));
   }
 
+  expected<void, std::error_code> set_href(string_type &&href);
+  /// @}
+
   /// The URL string
   ///
   /// Equivalent to `skyr::serialize(url_).value()`
@@ -168,6 +171,7 @@ class url {
   /// \returns The [URL protocol](https://url.spec.whatwg.org/#dom-url-protocol)
   string_type protocol() const;
 
+  /// @{
   /// Sets the [URL protocol](https://url.spec.whatwg.org/#dom-url-protocol)
   ///
   /// \param protocol The new URL protocol
@@ -186,9 +190,13 @@ class url {
     return set_protocol(std::move(bytes.value()));
   }
 
+  expected<void, std::error_code> set_protocol(string_type &&protocol);
+  /// @}
+
   /// \returns The [URL username](https://url.spec.whatwg.org/#dom-url-username)
   string_type username() const;
 
+  /// @{
   /// Sets the [URL username](https://url.spec.whatwg.org/#dom-url-username)
   ///
   /// \param username The new username
@@ -207,6 +215,9 @@ class url {
     return set_username(std::move(bytes.value()));
   }
 
+  expected<void, std::error_code> set_username(string_type &&username);
+  /// @}
+
   /// The [URL password](https://url.spec.whatwg.org/#dom-url-password)
   ///
   /// Equivalent to: `url_.password? url_.password.value() : string_type()`
@@ -214,6 +225,7 @@ class url {
   /// \returns The URL password
   string_type password() const;
 
+  /// @{
   /// Sets the [URL password](https://url.spec.whatwg.org/#dom-url-password)
   ///
   /// \param password The new password
@@ -231,10 +243,14 @@ class url {
     }
     return set_password(std::move(bytes.value()));
   }
+  
+  expected<void, std::error_code> set_password(string_type &&password);
+  /// @}
 
   /// \returns The [URL host](https://url.spec.whatwg.org/#dom-url-host)
   string_type host() const;
 
+  /// @{
   /// Sets the [URL host](https://url.spec.whatwg.org/#dom-url-host)
   ///
   /// \param host The new URL host
@@ -253,9 +269,13 @@ class url {
     return set_host(std::move(bytes.value()));
   }
 
+  expected<void, std::error_code> set_host(string_type &&host);
+  /// @}
+
   /// \returns The [URL hostname](https://url.spec.whatwg.org/#dom-url-hostname)
   string_type hostname() const;
 
+  /// @{
   /// Sets the [URL hostname](https://url.spec.whatwg.org/#dom-url-hostname)
   ///
   /// \param hostname The new URL host name
@@ -274,6 +294,9 @@ class url {
     return set_hostname(std::move(bytes.value()));
   }
 
+  expected<void, std::error_code> set_hostname(string_type &&hostname);
+  /// @}
+
   /// \returns The [URL port](https://url.spec.whatwg.org/#dom-url-port)
   string_type port() const;
 
@@ -287,6 +310,7 @@ class url {
         std::strtoul(port_first, &port_last, 10));
   }
 
+  /// @{
   /// Sets the [URL port](https://url.spec.whatwg.org/#dom-url-port)
   ///
   /// \param port The new port
@@ -296,11 +320,15 @@ class url {
     return set_port_impl(port);
   }
 
+  expected<void, std::error_code> set_port(string_type &&port);
+  /// @}
+
   /// Returns the [URL pathname](https://url.spec.whatwg.org/#dom-url-pathname)
   ///
   /// \returns The URL pathname
   string_type pathname() const;
 
+  /// @{
   /// Sets the [URL pathname](https://url.spec.whatwg.org/#dom-url-pathname)
   ///
   /// \param pathname The new pathname
@@ -319,11 +347,15 @@ class url {
     return set_pathname(std::move(bytes.value()));
   }
 
+  expected<void, std::error_code> set_pathname(string_type &&pathname);
+  /// @}
+
   /// Returns the [URL search string](https://url.spec.whatwg.org/#dom-url-search)
   ///
   /// \returns The URL search string
   string_type search() const;
 
+  /// @{
   /// Sets the [URL search string](https://url.spec.whatwg.org/#dom-url-search)
   ///
   /// \param search The new search string
@@ -342,6 +374,9 @@ class url {
     return set_search(std::move(bytes.value()));
   }
 
+  expected<void, std::error_code> set_search(string_type &&search);
+  /// @}
+
   /// \returns A reference to the search parameters
   url_search_parameters &search_parameters();
 
@@ -350,6 +385,7 @@ class url {
   /// \returns The URL hash string
   string_type hash() const;
 
+  /// @{
   /// Sets the [URL hash string](https://url.spec.whatwg.org/#dom-url-hash)
   ///
   /// \param hash The new hash string
@@ -367,6 +403,9 @@ class url {
     }
     return set_hash(std::move(bytes.value()));
   }
+
+  expected<void, std::error_code> set_hash(string_type &&hash);
+  /// @}
 
   /// \returns A copy to the underlying `url_record` implementation.
   url_record record() const;
@@ -441,16 +480,6 @@ class url {
       string_type &&input,
       optional<url_record> base = nullopt);
   void update_record(url_record &&record);
-  expected<void, std::error_code> set_href(string_type &&href);
-  expected<void, std::error_code> set_protocol(string_type &&protocol);
-  expected<void, std::error_code> set_username(string_type &&username);
-  expected<void, std::error_code> set_password(string_type &&password);
-  expected<void, std::error_code> set_host(string_type &&host);
-  expected<void, std::error_code> set_hostname(string_type &&hostname);
-  expected<void, std::error_code> set_port(string_type &&port);
-  expected<void, std::error_code> set_pathname(string_type &&pathname);
-  expected<void, std::error_code> set_search(string_type &&search);
-  expected<void, std::error_code> set_hash(string_type &&hash);
 
   template <class Source>
   expected<void, std::error_code> set_port_impl(

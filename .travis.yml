@@ -34,7 +34,7 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-7']
-      env: COMPILER='g++-7'
+      env: [COMPILER='g++-7', BUILD_FILESYSTEM_PATH_FUNCTION='OFF']
 
     - os: linux
       compiler: gcc
@@ -42,12 +42,13 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-8']
-      env: COMPILER='g++-8'
+      env: [COMPILER='g++-8', BUILD_FILESYSTEM_PATH_FUNCTION='ON']
 
     # 3/ OSX Clang Builds
     - os: osx
       osx_image: xcode10
       compiler: clang
+      env: [BUILD_FILESYSTEM_PATH_FUNCTION='OFF']
 
 install:
     - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps_"
@@ -68,7 +69,7 @@ before_script:
 script:
     - mkdir _build
     - cd _build
-    - cmake -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF ..
+    - cmake -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF -DSkyr_BUILD_FILESYSTEM_PATH_FUNCTIONS=$BUILD_FILESYSTEM_PATH_FUNCTIONS ..
     - make -j 8
     - make test
 
