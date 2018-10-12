@@ -27,22 +27,22 @@ This library provides:
 This project requires the availability of a C++17 compliant compiler
 and standard library.
 
-### Building with `CMake` and `Make`
+### Building with `CMake` and `Ninja`
 
 From a terminal, execute the following sequence of commands:
 
 ```bash
 > mkdir _build
 > cd _build
-> cmake ..
-> make -j4
+> cmake .. -G "Ninja"
+> ninja
 ```
 
-To run the tests, run `ctest` from the terminal while in the
+To run the tests, run `ninja test` from the terminal while in the
 `_build` directory:
 
 ```bash
-> ctest
+> ninja test
 ```
 
 ### Building with `CMake` and `Visual Studio 2017`
@@ -63,7 +63,7 @@ These examples are based on the
 To build the examples, run `cmake` as follows:
 
 ```bash
-> cmake .. -DSkyr_BUILD_EXAMPLES=ON
+> cmake .. -G "Ninja" -DSkyr_BUILD_EXAMPLES=ON
 ```
 
 ### Creating a URL without a base URL
@@ -125,13 +125,13 @@ This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F
 
 ## Installation
 
-### Installing with `CMake` and `Make`
+### Installing with `CMake` and `Ninja`
 
 ```bash
-> cmake .. DCMAKE_INSTALL_PREFIX=$PREFIX
-> make -j4
-> make test      # optional
-> make install
+> cmake .. -G "Ninja" -DCMAKE_INSTALL_PREFIX=$PREFIX
+> ninja
+> ninja test      # optional
+> ninja install
 ```
 
 Where `$PREFIX` is the location where you want to install the
