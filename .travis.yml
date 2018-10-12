@@ -34,7 +34,7 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-7']
-      env: [COMPILER='g++-7',, BUILD_FILESYSTEM_PATH_FUNCTION='OFF']
+      env: [COMPILER='g++-7', BUILD_FILESYSTEM_PATH_FUNCTION='OFF']
 
     - os: linux
       compiler: gcc
