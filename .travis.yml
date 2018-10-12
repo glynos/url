@@ -34,7 +34,7 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-7']
-      env: COMPILER='g++-7'
+      env: [COMPILER='g++-7',, BUILD_FILESYSTEM_PATH_FUNCTION='OFF']
 
     - os: linux
       compiler: gcc
@@ -48,6 +48,7 @@ matrix:
     - os: osx
       osx_image: xcode10
       compiler: clang
+      env: [BUILD_FILESYSTEM_PATH_FUNCTION='OFF']
 
 install:
     - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps_"
