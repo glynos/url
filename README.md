@@ -172,7 +172,7 @@ Windows:
 
 This library is released under the Boost Software License (please see
 http://boost.org/LICENSE_1_0.txt or the accompanying LICENSE_1_0.txt
-file for the full text.
+file for the full text).
 
 [`optional`](https://github.com/TartanLlama/optional/blob/master/COPYING)
 and [`expected`](https://github.com/TartanLlama/expected/blob/master/COPYING)
