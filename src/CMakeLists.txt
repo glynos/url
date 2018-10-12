@@ -44,7 +44,7 @@ set(Skyr_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/url_error.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_search_parameters.hpp)
 
-if (MSVC)
+if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
 		LIST(APPEND Skyr_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/filesystem.cpp)
 		LIST(APPEND Skyr_SRCS ${CMAKE_SOURCE_DIR}/include/skyr/filesystem.hpp)
 endif()
@@ -55,6 +55,10 @@ if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     if (NOT Skyr_DISABLE_LIBCXX)
         target_link_libraries(skyr-url "c++")
     endif()
+endif()
+
+if(${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+    target_link_libraries(skyr-url "stdc++fs")
 endif()
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU OR

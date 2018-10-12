@@ -24,7 +24,7 @@ set(
         unicode_tests
     )
 
-if (MSVC)
+if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
 		LIST(APPEND TESTS filesystem_path_tests)
 endif()
 

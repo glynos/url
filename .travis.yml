@@ -68,7 +68,7 @@ before_script:
 script:
     - mkdir _build
     - cd _build
-    - cmake -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF ..
+    - cmake -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF --DSkyr_BUILD_FILESYSTEM_PATH_FUNCTIONS=ON ..
     - make -j 8
     - make test
 
