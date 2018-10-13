@@ -30,7 +30,9 @@ struct test_case {
 
     if (!failure) {
       href = object["href"].get<std::string>();
-      // origin = object["origin"].get<std::string>();
+      if (object.find("origin") != object.end()) {
+        origin = object["origin"].get<std::string>();
+      }
       protocol = object["protocol"].get<std::string>();
       username = object["username"].get<std::string>();
       password = object["password"].get<std::string>();
@@ -85,8 +87,10 @@ INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls,
 TEST_P(test_parse_urls_using_base_urls, parse_using_constructor) {
   auto test_case_data = test_case{GetParam()};
   auto instance = skyr::url(test_case_data.input, skyr::url(test_case_data.base));
+  EXPECT_EQ(test_case_data.href, instance.href())
+            << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.protocol, instance.protocol())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
+            << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.username, instance.username())
     << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
   EXPECT_EQ(test_case_data.password, instance.password())
