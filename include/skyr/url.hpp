@@ -166,6 +166,9 @@ class url {
   /// \sa href()
   string_type to_json() const;
 
+  /// \returns The [URL origin](https://url.spec.whatwg.org/#origin)
+  string_type origin() const;
+
   /// The URL scheme + `":"`
   ///
   /// \returns The [URL protocol](https://url.spec.whatwg.org/#dom-url-protocol)

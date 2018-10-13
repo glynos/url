@@ -70,6 +70,25 @@ url::string_type url::to_json() const {
   return href_;
 }
 
+url::string_type url::origin() const {
+  if (url_.scheme == "blob") {
+    auto url = details::make_url(pathname(), nullopt);
+    return url? url.value().origin() : "";
+  }
+  else if ((url_.scheme == "ftp") ||
+      (url_.scheme == "gopher") ||
+      (url_.scheme == "http") ||
+      (url_.scheme == "https") ||
+      (url_.scheme == "ws") ||
+      (url_.scheme == "wss")) {
+    return protocol() + "//" + host();
+  }
+  else if (url_.scheme == "file") {
+    return "";
+  }
+  return "null";
+}
+
 url::string_type url::protocol() const { return url_.scheme + ":"; }
 
 expected<void, std::error_code> url::set_protocol(string_type &&protocol) {
