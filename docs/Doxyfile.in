@@ -794,6 +794,7 @@ WARN_LOGFILE           =
 INPUT                  = @CMAKE_SOURCE_DIR@/include/skyr/config.hpp \
                          @CMAKE_SOURCE_DIR@/include/skyr/domain.hpp \
                          @CMAKE_SOURCE_DIR@/include/skyr/expected.hpp \
+                         @CMAKE_SOURCE_DIR@/include/skyr/filesystem.hpp \
                          @CMAKE_SOURCE_DIR@/include/skyr/ipv4_address.hpp \
                          @CMAKE_SOURCE_DIR@/include/skyr/ipv6_address.hpp \
                          @CMAKE_SOURCE_DIR@/include/skyr/optional.hpp \

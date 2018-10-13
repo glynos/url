@@ -10,6 +10,7 @@
 #include <string_view>
 #include <type_traits>
 #include <skyr/config.hpp>
+#include <skyr/version.hpp>
 #include <skyr/expected.hpp>
 #include <skyr/url_record.hpp>
 #include <skyr/url_error.hpp>

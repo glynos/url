@@ -34,4 +34,7 @@
 #define SKYR_URI_MSVC _MSC_VER
 #endif  // defined(_MSC_VER)
 
+#define SKYR_PREPROCESSOR_TO_STRING_X(arg) #arg
+#define SKYR_PREPROCESSOR_TO_STRING(arg) SKYR_PREPROCESSOR_TO_STRING_X(arg)
+
 #endif // SKYR_CONFIG_INC

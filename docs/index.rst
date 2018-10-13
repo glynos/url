@@ -15,4 +15,8 @@ API
     url_search_parameters
     optional
     expected
+    percent_encode
+    domain
+    filesystem
+    unicode
     changelog
