@@ -187,6 +187,6 @@ itself was randomly chosen.
 
 Any questions about this library can be addressed to the cpp-netlib
 [developers mailing list]. Issues can be filed using Github at
-http://github.com/cpp-netlib/uri/issues.
+http://github.com/cpp-netlib/url/issues.
 
 [developers mailing list]: cpp-netlib@googlegroups.com
