@@ -1,7 +1,5 @@
 `std::filesystem::path`
-======================
-
-.. doxygennamespace:: skyr::filesystem
+=======================
 
 .. doxygenfunction:: skyr::filesystem::from_path
 

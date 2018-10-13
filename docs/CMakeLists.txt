@@ -21,6 +21,10 @@ if (DOXYGEN_FOUND)
   file(COPY url_search_parameters.rst DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
   file(COPY optional.rst DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
   file(COPY expected.rst DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  file(COPY percent_encode.rst DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  file(COPY domain.rst DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  file(COPY filesystem.rst DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  file(COPY unicode.rst DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
   configure_file(
           ${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in
           ${CMAKE_CURRENT_BINARY_DIR}/conf.py @ONLY)

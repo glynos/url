@@ -15,7 +15,7 @@ set(
 
 foreach(example ${EXAMPLES})
         add_executable(${example} ${example}.cpp)
-        add_dependencies(${example} skyr)
-        target_link_libraries(${example} skyr)
+        add_dependencies(${example} skyr-url)
+        target_link_libraries(${example} skyr-url)
         set_target_properties(${example} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${Skyr_BINARY_DIR}/examples)
 endforeach (example)

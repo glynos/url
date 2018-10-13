@@ -1,8 +1,6 @@
 Unicode encoding
 ================
 
-.. doxygennamespace:: skyr::unicode
-
 .. doxygenfunction:: skyr::unicode::wstring_to_bytes
 
 .. doxygenfunction:: skyr::unicode::wstring_from_bytes
