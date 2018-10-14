@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Skyr URL &#8212; Skyr URL 0.5 documentation</title>
+    <title>Skyr URL &#8212; Skyr URL 1.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="#">
           Skyr URL</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -57,6 +57,10 @@
 <li class="toctree-l1"><a class="reference internal" href="url_search_parameters.html"><cite>skyr::url_search_parameters</cite></a></li>
 <li class="toctree-l1"><a class="reference internal" href="optional.html"><cite>skyr::optional</cite></a></li>
 <li class="toctree-l1"><a class="reference internal" href="expected.html"><cite>skyr::expected</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encode.html">Percent encoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain name processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html"><cite>std::filesystem::path</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="unicode.html">Unicode encoding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 </ul>
 </ul>
@@ -75,15 +79,19 @@
 <li><a class="reference internal" href="#status">Status</a></li>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#building-the-project">Building the project</a><ul>
-<li><a class="reference internal" href="#building-with-cmake-and-make">Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Make</span></code></a></li>
-<li><a class="reference internal" href="#building-with-cmake-and-visual-c">Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">C++</span></code></a></li>
-<li><a class="reference internal" href="#running-the-tests">Running the tests</a></li>
+<li><a class="reference internal" href="#building-with-cmake-and-ninja">Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Ninja</span></code></a></li>
+<li><a class="reference internal" href="#building-with-cmake-and-visual-studio-2017">Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">Studio</span> <span class="pre">2017</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#examples">Examples</a><ul>
 <li><a class="reference internal" href="#creating-a-url-without-a-base-url">Creating a URL without a base URL</a></li>
 <li><a class="reference internal" href="#creating-a-non-absolute-url-without-a-base-url">Creating a non-absolute URL without a base URL</a></li>
 <li><a class="reference internal" href="#creating-a-non-absolute-url-with-a-base-url">Creating a non-absolute URL with a base URL</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#installation">Installation</a><ul>
+<li><a class="reference internal" href="#installing-with-cmake-and-ninja">Installing with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Ninja</span></code></a></li>
+<li><a class="reference internal" href="#installing-with-cmake-and-visual-studio-2017">Installing with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">Studio</span> <span class="pre">2017</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#dependencies">Dependencies</a></li>
@@ -141,14 +149,14 @@
 <h1>Skyr URL<a class="headerlink" href="#skyr-url" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="status">
 <h2>Status<a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://github.com/glynos/url/blob/master/LICENSE_1_0.txt"><img alt="License" src="https://img.shields.io/badge/license-boost-blue.svg" /></a> <a class="reference external" href="https://travis-ci.org/glynos/url"><img alt="Travis Build Status" src="https://travis-ci.org/glynos/url.svg?branch=master" /></a> <a class="reference external" href="https://ci.appveyor.com/project/glynos/url"><img alt="AppVeyor Build Status" src="https://ci.appveyor.com/api/projects/status/8y5sd2k1nytxeya0?svg=true" /></a></p>
+<p><a class="reference external" href="https://github.com/cpp-netlib/url/blob/master/LICENSE_1_0.txt"><img alt="License" src="https://img.shields.io/badge/license-boost-blue.svg" /></a> <a class="reference external" href="https://travis-ci.org/cpp-netlib/url"><img alt="Travis Build Status" src="https://travis-ci.org/cpp-netlib/url.svg?branch=master" /></a> <a class="reference external" href="https://ci.appveyor.com/project/glynos/url-3aeqd"><img alt="AppVeyor" src="https://ci.appveyor.com/api/projects/status/hc10ha6ugl6ea90u?svg=true" /></a></p>
 </div>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This library provides:</p>
 <ul class="simple">
 <li>A <code class="docutils literal notranslate"><span class="pre">skyr::url</span></code> class that implements a generic URL parser,
-compatible with the <a class="reference external" href="https://url.spec.whatwg.org/#url-class">WhatWG URL
+conforming with the <a class="reference external" href="https://url.spec.whatwg.org/#url-class">WhatWG URL
 specification</a></li>
 <li>URL serialization and comparison</li>
 <li>Percent encoding and decoding functions</li>
@@ -159,39 +167,43 @@ specification</a></li>
 <h2>Building the project<a class="headerlink" href="#building-the-project" title="Permalink to this headline">¶</a></h2>
 <p>This project requires the availability of a C++17 compliant compiler and
 standard library.</p>
-<div class="section" id="building-with-cmake-and-make">
-<h3>Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Make</span></code><a class="headerlink" href="#building-with-cmake-and-make" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="building-with-cmake-and-ninja">
+<h3>Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Ninja</span></code><a class="headerlink" href="#building-with-cmake-and-ninja" title="Permalink to this headline">¶</a></h3>
 <p>From a terminal, execute the following sequence of commands:</p>
 <div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">mkdir</span> <span class="n">_build</span>
 <span class="o">&gt;</span> <span class="n">cd</span> <span class="n">_build</span>
-<span class="o">&gt;</span> <span class="n">cmake</span> <span class="o">..</span>
-<span class="o">&gt;</span> <span class="n">make</span> <span class="o">-</span><span class="n">j4</span>
+<span class="o">&gt;</span> <span class="n">cmake</span> <span class="o">..</span> <span class="o">-</span><span class="n">G</span> <span class="s2">&quot;Ninja&quot;</span>
+<span class="o">&gt;</span> <span class="n">ninja</span>
+</pre></div>
+</div>
+<p>To run the tests, run <code class="docutils literal notranslate"><span class="pre">ninja</span> <span class="pre">test</span></code> from the terminal while in the
+<code class="docutils literal notranslate"><span class="pre">_build</span></code> directory:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">ninja</span> <span class="n">test</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="building-with-cmake-and-visual-c">
-<h3>Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">C++</span></code><a class="headerlink" href="#building-with-cmake-and-visual-c" title="Permalink to this headline">¶</a></h3>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">mkdir</span> <span class="n">_build</span>
-<span class="o">&gt;</span> <span class="n">cd</span> <span class="n">_build</span>
-<span class="o">&gt;</span> <span class="n">cmake</span> <span class="o">..</span>
-</pre></div>
-</div>
-<p>The Visual Studio solution is available in <code class="docutils literal notranslate"><span class="pre">Skyr.sln</span></code>.</p>
-</div>
-<div class="section" id="running-the-tests">
-<h3>Running the tests<a class="headerlink" href="#running-the-tests" title="Permalink to this headline">¶</a></h3>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ctest</span>
-</pre></div>
-</div>
+<div class="section" id="building-with-cmake-and-visual-studio-2017">
+<h3>Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">Studio</span> <span class="pre">2017</span></code><a class="headerlink" href="#building-with-cmake-and-visual-studio-2017" title="Permalink to this headline">¶</a></h3>
+<p>Open Visual Studio 2017, and click on <code class="docutils literal notranslate"><span class="pre">File</span></code>-&gt;``Open``-&gt;``Folder``, or
+use the shortcut <code class="docutils literal notranslate"><span class="pre">Ctrl+Shift+Alt+O</span></code>. Open the root folder of this
+project. This will load the project in the explorer. To build, simply
+open the <code class="docutils literal notranslate"><span class="pre">CMake</span></code> menu and click <code class="docutils literal notranslate"><span class="pre">Build</span> <span class="pre">All</span></code>.</p>
+<p>To run the tests, open the <code class="docutils literal notranslate"><span class="pre">CMake</span></code> menu, click <code class="docutils literal notranslate"><span class="pre">Tests</span></code> and then run
+<code class="docutils literal notranslate"><span class="pre">Run</span> <span class="pre">Skyr</span> <span class="pre">CTests</span></code>.</p>
 </div>
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>These examples are based on the <a class="reference external" href="https://url.spec.whatwg.org/#example-5434421b">WhatWG API
 specification</a></p>
+<p>To build the examples, run <code class="docutils literal notranslate"><span class="pre">cmake</span></code> as follows:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">cmake</span> <span class="o">..</span> <span class="o">-</span><span class="n">G</span> <span class="s2">&quot;Ninja&quot;</span> <span class="o">-</span><span class="n">DSkyr_BUILD_EXAMPLES</span><span class="o">=</span><span class="n">ON</span>
+</pre></div>
+</div>
 <div class="section" id="creating-a-url-without-a-base-url">
 <h3>Creating a URL without a base URL<a class="headerlink" href="#creating-a-url-without-a-base-url" title="Permalink to this headline">¶</a></h3>
-<p>Parses a string, “<a class="reference external" href="https://example.org">https://example.org</a>/💩”, without using a base URL:</p>
+<p>This example parses a string, “<a class="reference external" href="https://example.org">https://example.org</a>/💩”, without using a
+base URL:</p>
 <div class="code cpp highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;skyr/url.hpp&gt;</span>
 <span class="c1">#include &lt;iostream&gt;</span>
 
@@ -223,7 +235,8 @@ int main(int argc, char *argv[]) {
 </div>
 <div class="section" id="creating-a-non-absolute-url-with-a-base-url">
 <h3>Creating a non-absolute URL with a base URL<a class="headerlink" href="#creating-a-non-absolute-url-with-a-base-url" title="Permalink to this headline">¶</a></h3>
-<p>Parses a string, “🏳️‍🌈”, using a base URL, “<a class="reference external" href="https://example.org/">https://example.org/</a>”:</p>
+<p>This example parses a string, “🏳️‍🌈”, using a base URL,
+“<a class="reference external" href="https://example.org/">https://example.org/</a>”:</p>
 <div class="code cpp highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;skyr/url.hpp&gt;</span>
 <span class="c1">#include &lt;iostream&gt;</span>
 
@@ -239,6 +252,25 @@ int main(int argc, char *argv[]) {
 </div>
 <p>This gives the output:
 <code class="docutils literal notranslate"><span class="pre">https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88</span></code></p>
+</div>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installing-with-cmake-and-ninja">
+<h3>Installing with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Ninja</span></code><a class="headerlink" href="#installing-with-cmake-and-ninja" title="Permalink to this headline">¶</a></h3>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>&gt; cmake .. -G &quot;Ninja&quot; -DCMAKE_INSTALL_PREFIX=$PREFIX
+&gt; ninja
+&gt; ninja test      # optional
+&gt; ninja install
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">$PREFIX</span></code> is the location where you want to install the library.
+Depending on the location of <code class="docutils literal notranslate"><span class="pre">$PREFIX</span></code>, you may need to run the
+install command as an administrator (e.g. on Linux as <code class="docutils literal notranslate"><span class="pre">sudo</span></code>).</p>
+</div>
+<div class="section" id="installing-with-cmake-and-visual-studio-2017">
+<h3>Installing with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">Studio</span> <span class="pre">2017</span></code><a class="headerlink" href="#installing-with-cmake-and-visual-studio-2017" title="Permalink to this headline">¶</a></h3>
+<p>Open the <code class="docutils literal notranslate"><span class="pre">CMake</span></code> menu, click <code class="docutils literal notranslate"><span class="pre">Install</span></code>, then <code class="docutils literal notranslate"><span class="pre">Skyr</span></code>.</p>
 </div>
 </div>
 <div class="section" id="dependencies">
@@ -273,7 +305,11 @@ compilers:</p>
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
 <p>This library is released under the Boost Software License (please see
 <a class="reference external" href="http://boost.org/LICENSE_1_0.txt">http://boost.org/LICENSE_1_0.txt</a> or the accompanying LICENSE_1_0.txt
-file for the full text.</p>
+file for the full text).</p>
+<p><code class="docutils literal notranslate"><span class="pre">`optional</span></code> &lt;<a class="reference external" href="https://github.com/TartanLlama/optional/blob/master/COPYING">https://github.com/TartanLlama/optional/blob/master/COPYING</a>&gt;`__
+and
+<code class="docutils literal notranslate"><span class="pre">`expected</span></code> &lt;<a class="reference external" href="https://github.com/TartanLlama/expected/blob/master/COPYING">https://github.com/TartanLlama/expected/blob/master/COPYING</a>&gt;`__
+are each released under the CCO 1.0 License.</p>
 </div>
 <div class="section" id="why-skyr">
 <h2>Why <em>skyr</em>?<a class="headerlink" href="#why-skyr" title="Permalink to this headline">¶</a></h2>
@@ -294,8 +330,13 @@ filed using Github at <a class="reference external" href="http://github.com/cpp-
 <li class="toctree-l1"><a class="reference internal" href="url_search_parameters.html"><cite>skyr::url_search_parameters</cite></a></li>
 <li class="toctree-l1"><a class="reference internal" href="optional.html"><cite>skyr::optional</cite></a></li>
 <li class="toctree-l1"><a class="reference internal" href="expected.html"><cite>skyr::expected</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encode.html">Percent encoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain name processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html"><cite>std::filesystem::path</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="unicode.html">Unicode encoding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[0.5] - 2018-09-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.0] - 2018-10-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">[0.5] - 2018-09-30</a></li>
 </ul>
 </li>
 </ul>

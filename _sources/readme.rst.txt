@@ -4,7 +4,7 @@ Skyr URL
 Status
 ------
 
-|License| |Travis Build Status| |AppVeyor Build Status|
+|License| |Travis Build Status| |AppVeyor|
 
 Introduction
 ------------
@@ -12,7 +12,7 @@ Introduction
 This library provides:
 
 -  A ``skyr::url`` class that implements a generic URL parser,
-   compatible with the `WhatWG URL
+   conforming with the `WhatWG URL
    specification <https://url.spec.whatwg.org/#url-class>`__
 -  URL serialization and comparison
 -  Percent encoding and decoding functions
@@ -24,8 +24,8 @@ Building the project
 This project requires the availability of a C++17 compliant compiler and
 standard library.
 
-Building with ``CMake`` and ``Make``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Building with ``CMake`` and ``Ninja``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 From a terminal, execute the following sequence of commands:
 
@@ -33,26 +33,26 @@ From a terminal, execute the following sequence of commands:
 
     > mkdir _build
     > cd _build
-    > cmake ..
-    > make -j4
+    > cmake .. -G "Ninja"
+    > ninja
 
-Building with ``CMake`` and ``Visual C++``
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code:: bash
-
-    > mkdir _build
-    > cd _build
-    > cmake ..
-
-The Visual Studio solution is available in ``Skyr.sln``.
-
-Running the tests
-~~~~~~~~~~~~~~~~~
+To run the tests, run ``ninja test`` from the terminal while in the
+``_build`` directory:
 
 .. code:: bash
 
-    ctest
+    > ninja test
+
+Building with ``CMake`` and ``Visual Studio 2017``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Open Visual Studio 2017, and click on ``File``->``Open``->``Folder``, or
+use the shortcut ``Ctrl+Shift+Alt+O``. Open the root folder of this
+project. This will load the project in the explorer. To build, simply
+open the ``CMake`` menu and click ``Build All``.
+
+To run the tests, open the ``CMake`` menu, click ``Tests`` and then run
+``Run Skyr CTests``.
 
 Examples
 --------
@@ -60,10 +60,17 @@ Examples
 These examples are based on the `WhatWG API
 specification <https://url.spec.whatwg.org/#example-5434421b>`__
 
+To build the examples, run ``cmake`` as follows:
+
+.. code:: bash
+
+    > cmake .. -G "Ninja" -DSkyr_BUILD_EXAMPLES=ON
+
 Creating a URL without a base URL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Parses a string, "https://example.org/💩", without using a base URL:
+This example parses a string, "https://example.org/💩", without using a
+base URL:
 
 .. code:: cpp
 
@@ -101,7 +108,8 @@ This gives the output:
 Creating a non-absolute URL with a base URL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Parses a string, "🏳️‍🌈", using a base URL, "https://example.org/":
+This example parses a string, "🏳️‍🌈", using a base URL,
+"https://example.org/":
 
 .. code:: cpp
 
@@ -119,6 +127,28 @@ Parses a string, "🏳️‍🌈", using a base URL, "https://example.org/":
 
 This gives the output:
 ``https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88``
+
+Installation
+------------
+
+Installing with ``CMake`` and ``Ninja``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: bash
+
+    > cmake .. -G "Ninja" -DCMAKE_INSTALL_PREFIX=$PREFIX
+    > ninja
+    > ninja test      # optional
+    > ninja install
+
+Where ``$PREFIX`` is the location where you want to install the library.
+Depending on the location of ``$PREFIX``, you may need to run the
+install command as an administrator (e.g. on Linux as ``sudo``).
+
+Installing with ``CMake`` and ``Visual Studio 2017``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Open the ``CMake`` menu, click ``Install``, then ``Skyr``.
 
 Dependencies
 ------------
@@ -156,7 +186,12 @@ License
 
 This library is released under the Boost Software License (please see
 http://boost.org/LICENSE\_1\_0.txt or the accompanying LICENSE\_1\_0.txt
-file for the full text.
+file for the full text).
+
+```optional`` <https://github.com/TartanLlama/optional/blob/master/COPYING>`__
+and
+```expected`` <https://github.com/TartanLlama/expected/blob/master/COPYING>`__
+are each released under the CCO 1.0 License.
 
 Why *skyr*?
 -----------
@@ -172,8 +207,8 @@ Any questions about this library can be addressed to the cpp-netlib
 filed using Github at http://github.com/cpp-netlib/uri/issues.
 
 .. |License| image:: https://img.shields.io/badge/license-boost-blue.svg
-   :target: https://github.com/glynos/url/blob/master/LICENSE_1_0.txt
-.. |Travis Build Status| image:: https://travis-ci.org/glynos/url.svg?branch=master
-   :target: https://travis-ci.org/glynos/url
-.. |AppVeyor Build Status| image:: https://ci.appveyor.com/api/projects/status/8y5sd2k1nytxeya0?svg=true
-   :target: https://ci.appveyor.com/project/glynos/url
+   :target: https://github.com/cpp-netlib/url/blob/master/LICENSE_1_0.txt
+.. |Travis Build Status| image:: https://travis-ci.org/cpp-netlib/url.svg?branch=master
+   :target: https://travis-ci.org/cpp-netlib/url
+.. |AppVeyor| image:: https://ci.appveyor.com/api/projects/status/hc10ha6ugl6ea90u?svg=true
+   :target: https://ci.appveyor.com/project/glynos/url-3aeqd

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Domain name processing &#8212; Skyr URL 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="std::filesystem::path" href="filesystem.html" />
+    <link rel="prev" title="Percent encoding" href="percent_encode.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          Skyr URL</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="url.html"><cite>skyr::url</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="url_search_parameters.html"><cite>skyr::url_search_parameters</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="optional.html"><cite>skyr::optional</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="expected.html"><cite>skyr::expected</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encode.html">Percent encoding</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Domain name processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html"><cite>std::filesystem::path</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="unicode.html">Unicode encoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Domain name processing</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="percent_encode.html" title="Previous Chapter: Percent encoding"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Percent encoding</span>
+    </a>
+  </li>
+  <li>
+    <a href="filesystem.html" title="Next Chapter: std::filesystem::path"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">std::filesystem::path &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/domain.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="domain-name-processing">
+<h1>Domain name processing<a class="headerlink" href="#domain-name-processing" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="_CPPv3N4skyr15punycode_encodeENSt11string_viewE">
+<span id="_CPPv2N4skyr15punycode_encodeENSt11string_viewE"></span><span id="skyr::punycode_encode__std::string_view"></span><span class="target" id="namespaceskyr_1a8ce1c2e48cc8d3e51f49ebfa565a4f95"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;std::string, std::error_code&gt; <code class="descclassname">skyr<code class="descclassname">::</code></code><code class="descname">punycode_encode</code><span class="sig-paren">(</span>std::string_view <em>input</em><span class="sig-paren">)</span><br /></dt>
+<dd><p>Performs punycode encoding based on a reference implementation defined in <a class="reference external" href="https://tools.ietf.org/html/rfc3492">RFC 3492</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The encoded ASCII domain, or an error </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: A UTF-8 encoded domain to be encoded </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N4skyr15punycode_encodeENSt14u32string_viewE">
+<span id="_CPPv2N4skyr15punycode_encodeENSt14u32string_viewE"></span><span id="skyr::punycode_encode__std::u32string_view"></span><span class="target" id="namespaceskyr_1aa124952d187bdef996cd56cadb3f037c"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;std::string, std::error_code&gt; <code class="descclassname">skyr<code class="descclassname">::</code></code><code class="descname">punycode_encode</code><span class="sig-paren">(</span>std::u32string_view <em>input</em><span class="sig-paren">)</span><br /></dt>
+<dd><p>Performs punycode encoding based on a reference implementation defined in <a class="reference external" href="https://tools.ietf.org/html/rfc3492">RFC 3492</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The encoded ASCII domain, or an error </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: A UTF-32 encoded domain to be encoded </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N4skyr15punycode_decodeENSt11string_viewE">
+<span id="_CPPv2N4skyr15punycode_decodeENSt11string_viewE"></span><span id="skyr::punycode_decode__std::string_view"></span><span class="target" id="namespaceskyr_1a4c6913ee026d08be864395035a4f2e3c"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;std::string, std::error_code&gt; <code class="descclassname">skyr<code class="descclassname">::</code></code><code class="descname">punycode_decode</code><span class="sig-paren">(</span>std::string_view <em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr15punycode_decodeENSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Performs punycode decoding based on a reference implementation defined in <a class="reference external" href="https://tools.ietf.org/html/rfc3492">RFC 3492</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The decoded UTF-8 domain, or an error </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: An ASCII encoded domain to be decoded </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N4skyr15domain_to_asciiENSt11string_viewEb">
+<span id="_CPPv2N4skyr15domain_to_asciiENSt11string_viewEb"></span><span id="skyr::domain_to_ascii__std::string_view.b"></span><span class="target" id="namespaceskyr_1a0c3fbc280120ef7798488bbcb1ef430d"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;std::string, std::error_code&gt; <code class="descclassname">skyr<code class="descclassname">::</code></code><code class="descname">domain_to_ascii</code><span class="sig-paren">(</span>std::string_view <em>domain</em>, bool <em>be_strict</em> = true<span class="sig-paren">)</span><br /></dt>
+<dd><p>Converts a UTF-8 encoded domain to ASCII using <a class="reference external" href="https://www.unicode.org/reports/tr46/#Processing">IDNA processing</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An ASCII domain, or an error </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">domain</span></code>: A domain </li>
+<li><code class="docutils literal notranslate"><span class="pre">be_strict</span></code>: Tells the processor to be strict </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3N4skyr15domain_to_asciiENSt14u32string_viewEb">
+<span id="_CPPv2N4skyr15domain_to_asciiENSt14u32string_viewEb"></span><span id="skyr::domain_to_ascii__std::u32string_view.b"></span><span class="target" id="namespaceskyr_1a0e4f6cbfc6fa8820a49e713c30449879"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;std::string, std::error_code&gt; <code class="descclassname">skyr<code class="descclassname">::</code></code><code class="descname">domain_to_ascii</code><span class="sig-paren">(</span>std::u32string_view <em>domain</em>, bool <em>be_strict</em> = true<span class="sig-paren">)</span><br /></dt>
+<dd><p>Converts a UTF-32 encoded domain to ASCII using <a class="reference external" href="https://www.unicode.org/reports/tr46/#Processing">IDNA processing</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An ASCII domain, or an error </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">domain</span></code>: A domain </li>
+<li><code class="docutils literal notranslate"><span class="pre">be_strict</span></code>: Tells the processor to be strict </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv3N4skyr11domain_errcE">
+<span id="_CPPv2N4skyr11domain_errcE"></span><span id="skyr::domain_errc"></span><span class="target" id="namespaceskyr_1a205a6a37ed002c6c031d04c398a2e1f1"></span><em class="property">enum </em><code class="descclassname">skyr<code class="descclassname">::</code></code><code class="descname">domain_errc</code><a class="headerlink" href="#_CPPv3N4skyr11domain_errcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enumerates domain processing errors. </p>
+<p><em>Values:</em></p>
+<dl class="enumerator">
+<dt id="_CPPv3N4skyr21disallowed_code_pointE">
+<span id="_CPPv2N4skyr21disallowed_code_pointE"></span><span class="target" id="namespaceskyr_1a205a6a37ed002c6c031d04c398a2e1f1a5519c05fefd25643c25832b9bad720e7"></span><code class="descname">disallowed_code_point</code> = 1<a class="headerlink" href="#_CPPv3N4skyr21disallowed_code_pointE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The domain code point is disallowed. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv3N4skyr9bad_inputE">
+<span id="_CPPv2N4skyr9bad_inputE"></span><span class="target" id="namespaceskyr_1a205a6a37ed002c6c031d04c398a2e1f1a26d9177468aaf8f5715f1b710d747a0c"></span><code class="descname">bad_input</code><a class="headerlink" href="#_CPPv3N4skyr9bad_inputE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The encoder or decoder received bad input. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv3N4skyr8overflowE">
+<span id="_CPPv2N4skyr8overflowE"></span><span class="target" id="namespaceskyr_1a205a6a37ed002c6c031d04c398a2e1f1a0bd9f6dd716003f3818d15d2e211ee73"></span><code class="descname">overflow</code><br /></dt>
+<dd><p>Overflow. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv3N4skyr14encoding_errorE">
+<span id="_CPPv2N4skyr14encoding_errorE"></span><span class="target" id="namespaceskyr_1a205a6a37ed002c6c031d04c398a2e1f1a878c902a855687ea9259edd2379ab5db"></span><code class="descname">encoding_error</code><a class="headerlink" href="#_CPPv3N4skyr14encoding_errorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Unicode encoding error. </p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018, Glyn Matthews.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

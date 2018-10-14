@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Index &#8212; Skyr URL 0.5 documentation</title>
+    <title>Index &#8212; Skyr URL 1.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -37,7 +37,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           Skyr URL</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -57,6 +57,10 @@
 <li class="toctree-l1"><a class="reference internal" href="url_search_parameters.html"><cite>skyr::url_search_parameters</cite></a></li>
 <li class="toctree-l1"><a class="reference internal" href="optional.html"><cite>skyr::optional</cite></a></li>
 <li class="toctree-l1"><a class="reference internal" href="expected.html"><cite>skyr::expected</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encode.html">Percent encoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain name processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html"><cite>std::filesystem::path</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="unicode.html">Unicode encoding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 </ul>
 </ul>
@@ -116,15 +120,75 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="expected.html#_CPPv3N4skyr19bad_expected_accessE">skyr::bad_expected_access (C++ class)</a>
 </li>
+      <li><a href="domain.html#_CPPv3N4skyr9bad_inputE">skyr::bad_input (C++ enumerator)</a>
+</li>
       <li><a href="optional.html#_CPPv3N4skyr19bad_optional_accessE">skyr::bad_optional_access (C++ class)</a>
+</li>
+      <li><a href="domain.html#_CPPv3N4skyr21disallowed_code_pointE">skyr::disallowed_code_point (C++ enumerator)</a>
+</li>
+      <li><a href="domain.html#_CPPv3N4skyr11domain_errcE">skyr::domain_errc (C++ type)</a>
+</li>
+      <li><a href="domain.html#_CPPv3N4skyr15domain_to_asciiENSt11string_viewEb">skyr::domain_to_ascii (C++ function)</a>, <a href="domain.html#_CPPv3N4skyr15domain_to_asciiENSt14u32string_viewEb">[1]</a>
+</li>
+      <li><a href="domain.html#_CPPv3N4skyr14encoding_errorE">skyr::encoding_error (C++ enumerator)</a>
 </li>
       <li><a href="expected.html#_CPPv3N4skyr8expectedE">skyr::expected (C++ class)</a>
 </li>
+      <li><a href="filesystem.html#_CPPv3N4skyr10filesystem9from_pathERKNSt10filesystem4pathE">skyr::filesystem::from_path (C++ function)</a>
+</li>
+      <li><a href="filesystem.html#_CPPv3N4skyr10filesystem12invalid_pathE">skyr::filesystem::invalid_path (C++ enumerator)</a>
+</li>
+      <li><a href="filesystem.html#_CPPv3N4skyr10filesystem9path_errcE">skyr::filesystem::path_errc (C++ type)</a>
+</li>
+      <li><a href="filesystem.html#_CPPv3N4skyr10filesystem22percent_decoding_errorE">skyr::filesystem::percent_decoding_error (C++ enumerator)</a>
+</li>
+      <li><a href="filesystem.html#_CPPv3N4skyr10filesystem7to_pathERK3url">skyr::filesystem::to_path (C++ function)</a>
+</li>
       <li><a href="url.html#_CPPv3N4skyr8make_urlERK6Source">skyr::make_url (C++ function)</a>, <a href="url.html#_CPPv3N4skyr8make_urlERK6SourceRK3url">[1]</a>
+</li>
+      <li><a href="percent_encode.html#_CPPv3N4skyr13non_hex_inputE">skyr::non_hex_input (C++ enumerator)</a>
 </li>
       <li><a href="optional.html#_CPPv3N4skyr8optionalE">skyr::optional (C++ class)</a>
 </li>
+      <li><a href="domain.html#_CPPv3N4skyr8overflowE">skyr::overflow (C++ enumerator)</a>, <a href="percent_encode.html#_CPPv3N4skyr8overflowE">[1]</a>
+</li>
+      <li><a href="percent_encode.html#_CPPv3N4skyr14percent_decodeENSt11string_viewE">skyr::percent_decode (C++ function)</a>
+</li>
+      <li><a href="percent_encode.html#_CPPv3N4skyr19percent_decode_byteENSt11string_viewE">skyr::percent_decode_byte (C++ function)</a>
+</li>
+      <li><a href="percent_encode.html#_CPPv3N4skyr14percent_encodeENSt11string_viewERK11exclude_set">skyr::percent_encode (C++ function)</a>, <a href="percent_encode.html#_CPPv3N4skyr14percent_encodeENSt14u32string_viewERK11exclude_set">[1]</a>
+</li>
+      <li><a href="percent_encode.html#_CPPv3N4skyr19percent_encode_byteEcRK11exclude_set">skyr::percent_encode_byte (C++ function)</a>
+</li>
+      <li><a href="percent_encode.html#_CPPv3N4skyr19percent_encode_errcE">skyr::percent_encode_errc (C++ type)</a>
+</li>
+      <li><a href="domain.html#_CPPv3N4skyr15punycode_decodeENSt11string_viewE">skyr::punycode_decode (C++ function)</a>
+</li>
+      <li><a href="domain.html#_CPPv3N4skyr15punycode_encodeENSt11string_viewE">skyr::punycode_encode (C++ function)</a>, <a href="domain.html#_CPPv3N4skyr15punycode_encodeENSt14u32string_viewE">[1]</a>
+</li>
       <li><a href="url.html#_CPPv3N4skyr4swapER3urlR3url">skyr::swap (C++ function)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode21illegal_byte_sequenceE">skyr::unicode::illegal_byte_sequence (C++ enumerator)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode18invalid_code_pointE">skyr::unicode::invalid_code_point (C++ enumerator)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode12invalid_leadE">skyr::unicode::invalid_lead (C++ enumerator)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode8overflowE">skyr::unicode::overflow (C++ enumerator)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode12unicode_errcE">skyr::unicode::unicode_errc (C++ type)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode16utf16_from_bytesENSt11string_viewE">skyr::unicode::utf16_from_bytes (C++ function)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode14utf16_to_bytesENSt14u16string_viewE">skyr::unicode::utf16_to_bytes (C++ function)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode16utf32_from_bytesENSt11string_viewE">skyr::unicode::utf32_from_bytes (C++ function)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode14utf32_to_bytesENSt14u32string_viewE">skyr::unicode::utf32_to_bytes (C++ function)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode18wstring_from_bytesENSt11string_viewE">skyr::unicode::wstring_from_bytes (C++ function)</a>
+</li>
+      <li><a href="unicode.html#_CPPv3N4skyr7unicode16wstring_to_bytesENSt12wstring_viewE">skyr::unicode::wstring_to_bytes (C++ function)</a>
 </li>
       <li><a href="url.html#_CPPv3N4skyr3urlE">skyr::url (C++ class)</a>
 </li>
@@ -154,17 +218,21 @@
 </li>
       <li><a href="url.html#_CPPv3NK4skyr3url4hrefEv">skyr::url::href (C++ function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="url.html#_CPPv3NK4skyr3url10is_specialEv">skyr::url::is_special (C++ function)</a>
 </li>
       <li><a href="url.html#_CPPv3N4skyr3url8iteratorE">skyr::url::iterator (C++ type)</a>
 </li>
       <li><a href="url.html#_CPPv3NK4skyr3urlcv11string_typeEv">skyr::url::operator string_type (C++ function)</a>
 </li>
+      <li><a href="url.html#_CPPv3NK4skyr3url6originEv">skyr::url::origin (C++ function)</a>
+</li>
       <li><a href="url.html#_CPPv3NK4skyr3url8passwordEv">skyr::url::password (C++ function)</a>
 </li>
       <li><a href="url.html#_CPPv3NK4skyr3url8pathnameEv">skyr::url::pathname (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url4portEPNSt11is_integralI4intTE4typeE">skyr::url::port (C++ function)</a>, <a href="url.html#_CPPv3NK4skyr3url4portEv">[1]</a>
+      <li><a href="url.html#_CPPv3NK4skyr3url4portEPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE">skyr::url::port (C++ function)</a>, <a href="url.html#_CPPv3NK4skyr3url4portEv">[1]</a>
 </li>
       <li><a href="url.html#_CPPv3NK4skyr3url8protocolEv">skyr::url::protocol (C++ function)</a>
 </li>
@@ -182,8 +250,6 @@
 </li>
       <li><a href="url.html#_CPPv3N4skyr3url12set_hostnameERK6Source">skyr::url::set_hostname (C++ function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="url.html#_CPPv3N4skyr3url8set_hrefERK6Source">skyr::url::set_href (C++ function)</a>
 </li>
       <li><a href="url.html#_CPPv3N4skyr3url12set_passwordERK6Source">skyr::url::set_password (C++ function)</a>

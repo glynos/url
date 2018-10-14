@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>skyr::url &#8212; Skyr URL 0.5 documentation</title>
+    <title>skyr::url &#8212; Skyr URL 1.0 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -38,7 +38,7 @@
         </button>
         <a class="navbar-brand" href="index.html">
           Skyr URL</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -58,6 +58,10 @@
 <li class="toctree-l1"><a class="reference internal" href="url_search_parameters.html"><cite>skyr::url_search_parameters</cite></a></li>
 <li class="toctree-l1"><a class="reference internal" href="optional.html"><cite>skyr::optional</cite></a></li>
 <li class="toctree-l1"><a class="reference internal" href="expected.html"><cite>skyr::expected</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encode.html">Percent encoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain name processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html"><cite>std::filesystem::path</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="unicode.html">Unicode encoding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 </ul>
 </ul>
@@ -134,6 +138,200 @@
 </pre></div>
 </div>
  </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
+<dl class="function">
+<dt id="_CPPv3N4skyr3url8set_hrefERK6Source">
+<span id="_CPPv2N4skyr3url8set_hrefERK6Source"></span><span id="skyr::url::set_href__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a93685791b748d0d5f8aad7d7e283d59c"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_href</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_hrefERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An error on failure to parse the new URL </dd>
+<dt><strong>Template Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
+<dl class="function">
+<dt id="_CPPv3N4skyr3url12set_protocolERK6Source">
+<span id="_CPPv2N4skyr3url12set_protocolERK6Source"></span><span id="skyr::url::set_protocol__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1aeaa6e0fd2dc45ea406e4ef50bd27099b"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_protocol</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>protocol</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_protocolERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-protocol">URL protocol</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An error on failure to parse the new URL </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">protocol</span></code>: The new URL protocol </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
+<dl class="function">
+<dt id="_CPPv3N4skyr3url12set_usernameERK6Source">
+<span id="_CPPv2N4skyr3url12set_usernameERK6Source"></span><span id="skyr::url::set_username__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1abc1a82566363687a5fba41c5aedc926c"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_username</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_usernameERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-username">URL username</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An error on failure to parse the new URL </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">username</span></code>: The new username </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
+<dl class="function">
+<dt id="_CPPv3N4skyr3url12set_passwordERK6Source">
+<span id="_CPPv2N4skyr3url12set_passwordERK6Source"></span><span id="skyr::url::set_password__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1ac699e87539db3cba7a3c1177356bbf34"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_password</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>password</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_passwordERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-password">URL password</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An error on failure to parse the new URL </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">password</span></code>: The new password </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
+<dl class="function">
+<dt id="_CPPv3N4skyr3url8set_hostERK6Source">
+<span id="_CPPv2N4skyr3url8set_hostERK6Source"></span><span id="skyr::url::set_host__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a396cd0f422f515087cae9149854f175d"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_host</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>host</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_hostERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-host">URL host</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An error on failure to parse the new URL </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">host</span></code>: The new URL host </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
+<dl class="function">
+<dt id="_CPPv3N4skyr3url12set_hostnameERK6Source">
+<span id="_CPPv2N4skyr3url12set_hostnameERK6Source"></span><span id="skyr::url::set_hostname__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1ae7270958c3c6b1013773a2fcf6bc10d9"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_hostname</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>hostname</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_hostnameERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hostname">URL hostname</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An error on failure to parse the new URL </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">hostname</span></code>: The new URL host name </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
+<dl class="function">
+<dt id="_CPPv3N4skyr3url8set_portERK6Source">
+<span id="_CPPv2N4skyr3url8set_portERK6Source"></span><span id="skyr::url::set_port__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a17bc9169465e09cb3a986687e6866664"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_port</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_portERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An error on failure to parse the new URL </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">port</span></code>: The new port </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
+<dl class="function">
+<dt id="_CPPv3N4skyr3url12set_pathnameERK6Source">
+<span id="_CPPv2N4skyr3url12set_pathnameERK6Source"></span><span id="skyr::url::set_pathname__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1aa8dd4e3fb42f9168939ac70ae8a28776"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_pathname</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>pathname</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_pathnameERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-pathname">URL pathname</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An error on failure to parse the new URL </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">pathname</span></code>: The new pathname </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
+<dl class="function">
+<dt id="_CPPv3N4skyr3url10set_searchERK6Source">
+<span id="_CPPv2N4skyr3url10set_searchERK6Source"></span><span id="skyr::url::set_search__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1ada2df84e51167a78fe6d41216c0c7119"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_search</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>search</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url10set_searchERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-search">URL search string</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An error on failure to parse the new URL </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">search</span></code>: The new search string </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
+<dl class="function">
+<dt id="_CPPv3N4skyr3url8set_hashERK6Source">
+<span id="_CPPv2N4skyr3url8set_hashERK6Source"></span><span id="skyr::url::set_hash__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a4f6e9ef4d727cc666e9d07358b4336e2"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_hash</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>hash</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_hashERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hash">URL hash string</a></p>
+<p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>An error on failure to parse the new URL </dd>
+<dt><strong>Parameters</strong></dt>
+<dd><ul class="breatheparameterlist first last simple">
+<li><code class="docutils literal notranslate"><span class="pre">hash</span></code>: The new hash string </li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Types</p>
 <dl class="type">
@@ -282,31 +480,6 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr3url8set_hrefERK6Source">
-<span id="_CPPv2N4skyr3url8set_hrefERK6Source"></span><span id="skyr::url::set_href__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a93685791b748d0d5f8aad7d7e283d59c"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_href</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_hrefERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error if the input is invalid </dd>
-<dt><strong>Template Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </li>
-</ul>
-</dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </li>
-</ul>
-</dd>
-<dt><strong>Exceptions</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1url__parse__error"><span class="std std-ref"><span class="pre">url_parse_error</span></span></a></code>: on parse errors </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="_CPPv3NK4skyr3url7to_jsonEv">
 <span id="_CPPv2NK4skyr3url7to_jsonEv"></span><span id="skyr::url::to_jsonC"></span><span class="target" id="classskyr_1_1url_1a01630031f041b5482b0372c2544f51e9"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url7to_jsonEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>The URL string</p>
@@ -316,6 +489,16 @@
 <dd>The underlying URL string </dd>
 <dt><strong>See</strong></dt>
 <dd><a class="reference internal" href="#classskyr_1_1url_1a07175705f0e237ec46ad3298c6dd7789"><span class="std std-ref">href()</span></a> </dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv3NK4skyr3url6originEv">
+<span id="_CPPv2NK4skyr3url6originEv"></span><span id="skyr::url::originC"></span><span class="target" id="classskyr_1_1url_1a13f82e33728c2d50a4e14a2206325d00"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">origin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url6originEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="docutils">
+<dt><strong>Return</strong></dt>
+<dd>The <a class="reference external" href="https://url.spec.whatwg.org/#origin">URL origin</a> </dd>
 </dl>
 </p>
 </dd></dl>
@@ -332,43 +515,11 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr3url12set_protocolERK6Source">
-<span id="_CPPv2N4skyr3url12set_protocolERK6Source"></span><span id="skyr::url::set_protocol__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1aeaa6e0fd2dc45ea406e4ef50bd27099b"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_protocol</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>protocol</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_protocolERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-protocol">URL protocol</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">protocol</span></code>: The new URL protocol </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="_CPPv3NK4skyr3url8usernameEv">
 <span id="_CPPv2NK4skyr3url8usernameEv"></span><span id="skyr::url::usernameC"></span><span class="target" id="classskyr_1_1url_1a1a96f3403b12af5a364789ba6e5996bc"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">username</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url8usernameEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-username">URL username</a> </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3N4skyr3url12set_usernameERK6Source">
-<span id="_CPPv2N4skyr3url12set_usernameERK6Source"></span><span id="skyr::url::set_username__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1abc1a82566363687a5fba41c5aedc926c"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_username</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_usernameERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-username">URL username</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">username</span></code>: The new username </li>
-</ul>
-</dd>
 </dl>
 </p>
 </dd></dl>
@@ -386,43 +537,11 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr3url12set_passwordERK6Source">
-<span id="_CPPv2N4skyr3url12set_passwordERK6Source"></span><span id="skyr::url::set_password__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1ac699e87539db3cba7a3c1177356bbf34"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_password</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>password</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_passwordERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-password">URL password</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">password</span></code>: The new password </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="_CPPv3NK4skyr3url4hostEv">
 <span id="_CPPv2NK4skyr3url4hostEv"></span><span id="skyr::url::hostC"></span><span class="target" id="classskyr_1_1url_1afb9793a29911952127180745ff11b441"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">host</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url4hostEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-host">URL host</a> </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3N4skyr3url8set_hostERK6Source">
-<span id="_CPPv2N4skyr3url8set_hostERK6Source"></span><span id="skyr::url::set_host__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a396cd0f422f515087cae9149854f175d"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_host</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>host</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_hostERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-host">URL host</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">host</span></code>: The new URL host </li>
-</ul>
-</dd>
 </dl>
 </p>
 </dd></dl>
@@ -438,22 +557,6 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr3url12set_hostnameERK6Source">
-<span id="_CPPv2N4skyr3url12set_hostnameERK6Source"></span><span id="skyr::url::set_hostname__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1ae7270958c3c6b1013773a2fcf6bc10d9"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_hostname</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>hostname</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_hostnameERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hostname">URL hostname</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">hostname</span></code>: The new URL host name </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="_CPPv3NK4skyr3url4portEv">
 <span id="_CPPv2NK4skyr3url4portEv"></span><span id="skyr::url::portC"></span><span class="target" id="classskyr_1_1url_1a04ddc965a040dd25ec47b9a94b486275"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">port</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url4portEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p><dl class="docutils">
@@ -464,27 +567,11 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3NK4skyr3url4portEPNSt11is_integralI4intTE4typeE">
-<span id="_CPPv2NK4skyr3url4portEPNSt11is_integralI4intTE4typeE"></span><span id="skyr::url::port__std::is_integral:intT:::typePC"></span><em class="property">template </em>&lt;<em class="property">typename</em> intT&gt;<br /><span class="target" id="classskyr_1_1url_1a9072744383fc342816c577ad8eb50206"></span>intT <code class="descname">port</code><span class="sig-paren">(</span><em class="property">typename</em> std::is_integral&lt;intT&gt;::type * = nullptr<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url4portEPNSt11is_integralI4intTE4typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv3NK4skyr3url4portEPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE">
+<span id="_CPPv2NK4skyr3url4portEPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE"></span><span id="skyr::url::port__std::enable_if:std::is_integral:intT:::value:::typePC"></span><em class="property">template </em>&lt;<em class="property">typename</em> intT&gt;<br /><span class="target" id="classskyr_1_1url_1a12a493408b4a35dc9521fa0220fb7b1c"></span>intT <code class="descname">port</code><span class="sig-paren">(</span><em class="property">typename</em> std::enable_if&lt;std::is_integral&lt;intT&gt;::value&gt;::type * = nullptr<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url4portEPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a> </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3N4skyr3url8set_portERK6Source">
-<span id="_CPPv2N4skyr3url8set_portERK6Source"></span><span id="skyr::url::set_port__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a17bc9169465e09cb3a986687e6866664"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_port</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_portERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">port</span></code>: The new port </li>
-</ul>
-</dd>
 </dl>
 </p>
 </dd></dl>
@@ -501,44 +588,12 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr3url12set_pathnameERK6Source">
-<span id="_CPPv2N4skyr3url12set_pathnameERK6Source"></span><span id="skyr::url::set_pathname__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1aa8dd4e3fb42f9168939ac70ae8a28776"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_pathname</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>pathname</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_pathnameERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-pathname">URL pathname</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">pathname</span></code>: The new pathname </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="_CPPv3NK4skyr3url6searchEv">
 <span id="_CPPv2NK4skyr3url6searchEv"></span><span id="skyr::url::searchC"></span><span class="target" id="classskyr_1_1url_1a6ced6a0f1a0465d2e1ab46d1ad1a47d4"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">search</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url6searchEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-search">URL search string</a></p>
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd>The URL search string </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3N4skyr3url10set_searchERK6Source">
-<span id="_CPPv2N4skyr3url10set_searchERK6Source"></span><span id="skyr::url::set_search__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1ada2df84e51167a78fe6d41216c0c7119"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_search</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>search</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url10set_searchERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-search">URL search string</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">search</span></code>: The new search string </li>
-</ul>
-</dd>
 </dl>
 </p>
 </dd></dl>
@@ -560,22 +615,6 @@
 <p><dl class="docutils">
 <dt><strong>Return</strong></dt>
 <dd>The URL hash string </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3N4skyr3url8set_hashERK6Source">
-<span id="_CPPv2N4skyr3url8set_hashERK6Source"></span><span id="skyr::url::set_hash__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a4f6e9ef4d727cc666e9d07358b4336e2"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_hash</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>hash</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_hashERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hash">URL hash string</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">hash</span></code>: The new hash string </li>
-</ul>
-</dd>
 </dl>
 </p>
 </dd></dl>
