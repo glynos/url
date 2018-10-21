@@ -10,7 +10,7 @@
 #include <locale>
 #include <algorithm>
 #include "skyr/optional.hpp"
-#include "skyr/ipv6_address.hpp"
+#include "ipv6_address.hpp"
 #include "algorithms.hpp"
 
 namespace skyr {

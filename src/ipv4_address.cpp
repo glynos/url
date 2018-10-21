@@ -10,7 +10,7 @@
 #include <sstream>
 #include <algorithm>
 #include <skyr/optional.hpp>
-#include "skyr/ipv4_address.hpp"
+#include "ipv4_address.hpp"
 
 namespace skyr {
 namespace {

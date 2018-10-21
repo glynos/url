@@ -16,8 +16,8 @@
 #include "skyr/domain.hpp"
 #include "url_schemes.hpp"
 #include "skyr/percent_encode.hpp"
-#include "skyr/ipv4_address.hpp"
-#include "skyr/ipv6_address.hpp"
+#include "ipv4_address.hpp"
+#include "ipv6_address.hpp"
 #include "algorithms.hpp"
 
 namespace skyr {

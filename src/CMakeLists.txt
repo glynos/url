@@ -8,7 +8,9 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/url_parser_context.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_record.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ipv4_address.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ipv4_address.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/ipv6_address.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ipv6_address.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/percent_encode.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/unicode_impl.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/unicode.cpp
@@ -25,6 +27,7 @@ set(Skyr_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/url_error.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/url_search_parameters.cpp
 
+        ${CMAKE_SOURCE_DIR}/include/skyr/details/to_bytes.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/external/tl/optional.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/external/tl/expected.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/config.hpp
@@ -32,12 +35,9 @@ set(Skyr_SRCS
         ${CMAKE_SOURCE_DIR}/include/skyr/expected.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/string_traits.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/percent_encode.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/details/to_bytes.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/unicode.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/domain.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_record.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/ipv4_address.hpp
-        ${CMAKE_SOURCE_DIR}/include/skyr/ipv6_address.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_parse.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url_serialize.hpp
         ${CMAKE_SOURCE_DIR}/include/skyr/url.hpp

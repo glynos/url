@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include <skyr/ipv6_address.hpp>
+#include "../src/ipv6_address.hpp"
 
 
 TEST(ipv6_address_tests, zero_test) {
