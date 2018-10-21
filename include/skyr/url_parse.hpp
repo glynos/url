@@ -10,7 +10,6 @@
 #include <skyr/optional.hpp>
 #include <skyr/expected.hpp>
 #include <skyr/url_record.hpp>
-#include <skyr/details/to_bytes.hpp>
 
 namespace skyr {
 /// Parses a URL and returns a `url_record`

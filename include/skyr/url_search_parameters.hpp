@@ -57,16 +57,12 @@ class url_search_parameters {
   /// \param name The name of the parameter to remove
   void remove(const string_type &name);
 
-  ///
-  ///
   /// \param name
-  /// \returns
+  /// \returns The first search parameter value with the given name
   optional<string_type> get(const string_type &name) const noexcept;
 
-  ///
-  ///
   /// \param name
-  /// \returns
+  /// \returns All search parameter values with the given name
   std::vector<string_type> get_all(const string_type &name) const;
 
   /// Tests if there is a parameter with the given name
