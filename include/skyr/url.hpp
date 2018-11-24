@@ -116,7 +116,8 @@ class url {
 
     auto bytes = details::to_bytes(input);
     if (!bytes) {
-      throw url_parse_error(make_error_code(url_parse_errc::invalid_unicode_character));
+      throw url_parse_error(
+          make_error_code(url_parse_errc::invalid_unicode_character));
     }
     initialize(std::move(bytes.value()), base.record());
   }
