@@ -8,8 +8,9 @@
 [![Travis Build Status](
     https://travis-ci.org/cpp-netlib/url.svg?branch=master "Build Status")](
     https://travis-ci.org/cpp-netlib/url)
-[![AppVeyor ](https://ci.appveyor.com/api/projects/status/hc10ha6ugl6ea90u?svg=true)](
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/hc10ha6ugl6ea90u?svg=true)](
     https://ci.appveyor.com/project/glynos/url-3aeqd)
+[![CircleCI](https://circleci.com/gh/cpp-netlib/url/tree/master.svg?style=svg)](https://circleci.com/gh/cpp-netlib/url/tree/master)
 
     
 ## Introduction
