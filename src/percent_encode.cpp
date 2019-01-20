@@ -42,12 +42,12 @@ std::error_code make_error_code(percent_encode_errc error) {
 
 namespace {
 inline char hex_to_letter(char byte) {
-  if ((byte >= 0) && (byte < 10)) {
+  if ((byte >= 0x00) && (byte < 0x0a)) {
     return byte + '0';
   }
 
-  if ((byte >= 10) && (byte < 16)) {
-    return byte - char(10) + 'A';
+  if ((byte >= 0x0a) && (byte < 0x10)) {
+    return byte - static_cast<char>(0x0a) + 'A';
   }
 
   return byte;
@@ -59,11 +59,11 @@ inline expected<char, std::error_code> letter_to_hex(char byte) {
   }
 
   if ((byte >= 'a') && (byte <= 'f')) {
-    return byte + char(10) - 'a';
+    return byte + static_cast<char>(0x0a) - 'a';
   }
 
   if ((byte >= 'A') && (byte <= 'F')) {
-    return byte + char(10) - 'A';
+    return byte + static_cast<char>(0x0a) - 'A';
   }
 
   return make_unexpected(make_error_code(

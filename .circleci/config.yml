@@ -1,0 +1,36 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: "debian:buster"
+    steps:
+      - run:
+          name: Installing Dependencies
+          command: 'apt-get update && apt-get install -y sudo git wget ninja-build && rm -rf /var/lib/apt/lists/*'
+      - run:
+          name: Installing GCC
+          command: |
+            apt-get update && apt-get install -y gcc g++ gcc-8 g++-8
+            echo 'export CC=/usr/bin/gcc-8' >> $BASH_ENV
+            echo 'export CXX=/usr/bin/g++-8' >> $BASH_ENV
+      - run:
+          name: Install CMAKE
+          command: |
+            cd /tmp
+            wget "https://github.com/Kitware/CMake/releases/download/v3.13.3/cmake-3.13.3-Linux-x86_64.tar.gz"
+            tar -xzf cmake-3.13.3-Linux-x86_64.tar.gz
+            echo 'export PATH="/tmp/cmake-3.13.3-Linux-x86_64/bin:$PATH"' >> $BASH_ENV
+      - checkout
+      - run:
+          name: Updating Submodules
+          command: 'git submodule init && git submodule update'
+      - run:
+          name: Creating Build Files
+          command: 'cmake -GNinja -H. -Bbuild'
+      - run:
+          name: Creating Binary Files
+          command: 'cmake --build build'
+      - run:
+          name: Running All Unit Tests
+          command: 'cd build && ctest'
