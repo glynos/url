@@ -36,6 +36,11 @@ enum class encode_set {
 /// \returns A `std::error_code` object
 std::error_code make_error_code(percent_encode_errc error);
 
+/// Percent encodes a byte
+/// \param byte The input byte
+/// \returns A percent encoded string
+std::string percent_encode_byte(char byte);
+
 /// Percent encodes a byte if it is not in the exclude set
 /// \param byte The input byte
 /// \param excludes The set of code points to exclude when percent

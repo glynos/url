@@ -70,133 +70,63 @@ inline expected<char, std::error_code> letter_to_hex(char byte) {
       percent_encode_errc::non_hex_input));
 }
 
-
-/// Exclude code point set when percent encoding
-class exclude_set_base {
- protected:
-  virtual ~exclude_set_base() {}
-
- public:
-  /// Tests whether the byte is in the excluded set
-  /// \param byte Input byte
-  /// \returns `true` if `in` is in the excluded set, `false`
-  ///          otherwise
-  bool contains(char byte) const {
-    return contains_impl(byte);
-  }
-
- private:
-  virtual bool contains_impl(char byte) const = 0;
-};
-
-/// Defines code points in the c0 control percent-encode set
-class c0_control_set : public exclude_set_base {
- public:
-  virtual ~c0_control_set() {}
-
- private:
-  bool contains_impl(char byte) const override {
-    return (byte <= 0x1f) || (byte > 0x7e);
-  }
-};
-
-/// Defines code points in the fragment percent-encode set
-class fragment_set : public exclude_set_base {
- public:
-  fragment_set() : set_{0x20, 0x22, 0x3c, 0x3e, 0x60} {}
-  virtual ~fragment_set() {}
-
- private:
-  bool contains_impl(char byte) const override {
-    return
-        c0_control_set_.contains(byte) ||
-            (set_.find(byte) != set_.end());
-  }
-
- private:
-  c0_control_set c0_control_set_;
-  std::set<char> set_;
-};
-
-/// Defines code points in the fragment percent-encode set and
-/// U+0027 (')
-class query_set : public exclude_set_base {
- public:
-  virtual ~query_set() {}
-
- private:
-  bool contains_impl(char byte) const override {
-    return
-        fragment_set_.contains(byte) || (byte == 0x27);
-  }
-
- private:
-  fragment_set fragment_set_;
-};
-
-/// Defines code points in the path percent-encode set
-class path_set : public exclude_set_base {
- public:
-  path_set() : set_{0x23, 0x3f, 0x7b, 0x7d} {}
-  virtual ~path_set() {}
-
- private:
-  bool contains_impl(char byte) const override {
-    return
-        fragment_set_.contains(byte) ||
-            (set_.find(byte) != set_.end());
-  }
-
- private:
-  fragment_set fragment_set_;
-  std::set<char> set_;
-};
-
-/// Defines code points in the userinfo percent-encode set
-class userinfo_set : public exclude_set_base {
- public:
-  userinfo_set()
-      : set_{0x2f, 0x3a, 0x3b, 0x3d, 0x40, 0x5b, 0x5c, 0x5d, 0x5e, 0x7c} {}
-  virtual ~userinfo_set() {}
-
- private:
-  bool contains_impl(char byte) const override {
-    return
-        path_set_.contains(byte) ||
-            (set_.find(byte) != set_.end());
-  }
-
- private:
-  path_set path_set_;
-  std::set<char> set_;
-};
-
-std::string percent_encode_byte(char byte, const exclude_set_base &excludes) {
+std::string percent_encode_byte(char byte) {
   auto encoded = std::string{};
-  if (excludes.contains(byte)) {
-    encoded += '%';
-    encoded += hex_to_letter((byte >> 4) & 0x0f);
-    encoded += hex_to_letter(byte & 0x0f);
+  encoded += '%';
+  encoded += hex_to_letter((byte >> 4) & 0x0f);
+  encoded += hex_to_letter(byte & 0x0f);
+  return encoded;
+}
+
+inline bool is_c0_control_byte(char byte) {
+  return (byte <= 0x1f) || (byte > 0x7e);
+}
+
+inline bool is_fragment_byte(char byte) {
+  static const auto set = std::set<char>{0x20, 0x22, 0x3c, 0x3e, 0x60};
+  return is_c0_control_byte(byte) || (set.find(byte) != set.end());
+}
+
+inline bool is_query_byte(char byte) {
+  return is_fragment_byte(byte) || (byte == 0x27);
+}
+
+inline bool is_path_byte(char byte) {
+  static const auto set = std::set<char>{0x23, 0x3f, 0x7b, 0x7d};
+  return is_fragment_byte(byte) || (set.find(byte) != set.end());
+}
+
+inline bool is_userinfo_byte(char byte) {
+  static const auto set = std::set<char>{
+    0x2f, 0x3a, 0x3b, 0x3d, 0x40, 0x5b, 0x5c, 0x5d, 0x5e, 0x7c};
+  return is_path_byte(byte) || (set.find(byte) != set.end());
+}
+
+template <class Pred>
+std::string percent_encode_byte(char byte, Pred pred) {
+  auto result = std::string{};
+  if (pred(byte)) {
+    result = percent_encode_byte(byte);
   }
   else {
-    encoded += static_cast<char>(byte);
+    result = {byte};
   }
-  return encoded;
+  return result;
 }
 }  // namespace
 
 std::string percent_encode_byte(char byte, encode_set excludes) {
   switch (excludes) {
     case encode_set::c0_control:
-      return percent_encode_byte(byte, c0_control_set());
+      return percent_encode_byte(byte, is_c0_control_byte);
     case encode_set::userinfo:
-      return percent_encode_byte(byte, userinfo_set());
+      return percent_encode_byte(byte, is_userinfo_byte);
     case encode_set::path:
-      return percent_encode_byte(byte, path_set());
+      return percent_encode_byte(byte, is_path_byte);
     case encode_set::query:
-      return percent_encode_byte(byte, query_set());
+      return percent_encode_byte(byte, is_query_byte);
     case encode_set::fragment:
-      return percent_encode_byte(byte, fragment_set());
+      return percent_encode_byte(byte, is_fragment_byte);
   }
   return {};
 }
@@ -230,18 +160,12 @@ expected<char, std::error_code> percent_decode_byte(std::string_view input) {
   }
 
   auto it = begin(input);
-  ++it;
-  auto h0 = *it;
-  auto v0 = letter_to_hex(h0);
-  if (!v0) {
-    return make_unexpected(std::move(v0.error()));
-  }
+  auto v0 = letter_to_hex(*++it);
+  auto v1 = letter_to_hex(*++it);
 
-  ++it;
-  auto h1 = *it;
-  auto v1 = letter_to_hex(h1);
-  if (!v1) {
-    return make_unexpected(std::move(v1.error()));
+  if (!v0 || !v1) {
+    return make_unexpected(make_error_code(
+        percent_encode_errc::non_hex_input));
   }
 
   return (0x10 * v0.value()) + v1.value();
