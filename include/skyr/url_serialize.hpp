@@ -6,7 +6,6 @@
 #ifndef SKYR_URL_SERIALIZE_INC
 #define SKYR_URL_SERIALIZE_INC
 
-#include <string>
 #include <skyr/url_record.hpp>
 
 namespace skyr {

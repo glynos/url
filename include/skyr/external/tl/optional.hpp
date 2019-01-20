@@ -16,7 +16,7 @@
 #define TL_OPTIONAL_HPP
 
 #define TL_OPTIONAL_VERSION_MAJOR 0
-#define TL_OPTIONAL_VERSION_MINOR 2
+#define TL_OPTIONAL_VERSION_MINOR 5
 
 #include <exception>
 #include <functional>
@@ -54,6 +54,31 @@
 #define TL_OPTIONAL_IS_TRIVIALLY_COPY_ASSIGNABLE(T) std::has_trivial_copy_assign<T>::value
 
 // This one will be different for GCC 5.7 if it's ever supported
+#define TL_OPTIONAL_IS_TRIVIALLY_DESTRUCTIBLE(T) std::is_trivially_destructible<T>::value
+
+// GCC 5 < v < 8 has a bug in is_trivially_copy_constructible which breaks std::vector
+// for non-copyable types
+#elif (defined(__GNUC__) && __GNUC__ < 8 &&                                                \
+     !defined(__clang__))
+#ifndef TL_GCC_LESS_8_TRIVIALLY_COPY_CONSTRUCTIBLE_MUTEX
+#define TL_GCC_LESS_8_TRIVIALLY_COPY_CONSTRUCTIBLE_MUTEX
+namespace tl {
+  namespace detail {
+      template<class T>
+      struct is_trivially_copy_constructible : std::is_trivially_copy_constructible<T>{};
+#ifdef _GLIBCXX_VECTOR
+      template<class T, class A>
+      struct is_trivially_copy_constructible<std::vector<T,A>>
+          : std::is_trivially_copy_constructible<T>{};
+#endif      
+  }
+}
+#endif
+
+#define TL_OPTIONAL_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)                                     \
+    tl::detail::is_trivially_copy_constructible<T>::value
+#define TL_OPTIONAL_IS_TRIVIALLY_COPY_ASSIGNABLE(T)                                        \
+  std::is_trivially_copy_assignable<T>::value
 #define TL_OPTIONAL_IS_TRIVIALLY_DESTRUCTIBLE(T) std::is_trivially_destructible<T>::value
 #else
 #define TL_OPTIONAL_IS_TRIVIALLY_COPY_CONSTRUCTIBLE(T)                                     \
@@ -114,10 +139,41 @@ template <class B, class... Bs>
 struct conjunction<B, Bs...>
     : std::conditional<bool(B::value), conjunction<Bs...>, B>::type {};
 
+#if defined(_LIBCPP_VERSION) && __cplusplus == 201103L
+#define TL_OPTIONAL_LIBCXX_MEM_FN_WORKAROUND
+#endif
+
+// In C++11 mode, there's an issue in libc++'s std::mem_fn
+// which results in a hard-error when using it in a noexcept expression
+// in some cases. This is a check to workaround the common failing case.
+#ifdef TL_OPTIONAL_LIBCXX_MEM_FN_WORKAROUND
+template <class T> struct is_pointer_to_non_const_member_func : std::false_type{};
+template <class T, class Ret, class... Args>
+struct is_pointer_to_non_const_member_func<Ret (T::*) (Args...)> : std::true_type{};
+template <class T, class Ret, class... Args>
+struct is_pointer_to_non_const_member_func<Ret (T::*) (Args...)&> : std::true_type{};
+template <class T, class Ret, class... Args>
+struct is_pointer_to_non_const_member_func<Ret (T::*) (Args...)&&> : std::true_type{};        
+template <class T, class Ret, class... Args>
+struct is_pointer_to_non_const_member_func<Ret (T::*) (Args...) volatile> : std::true_type{};
+template <class T, class Ret, class... Args>
+struct is_pointer_to_non_const_member_func<Ret (T::*) (Args...) volatile&> : std::true_type{};
+template <class T, class Ret, class... Args>
+struct is_pointer_to_non_const_member_func<Ret (T::*) (Args...) volatile&&> : std::true_type{};        
+
+template <class T> struct is_const_or_const_ref : std::false_type{};
+template <class T> struct is_const_or_const_ref<T const&> : std::true_type{};
+template <class T> struct is_const_or_const_ref<T const> : std::true_type{};    
+#endif
+
 // std::invoke from C++17
 // https://stackoverflow.com/questions/38288042/c11-14-invoke-workaround
 template <typename Fn, typename... Args,
-          typename = enable_if_t<std::is_member_pointer<decay_t<Fn>>{}>,
+#ifdef TL_OPTIONAL_LIBCXX_MEM_FN_WORKAROUND
+          typename = enable_if_t<!(is_pointer_to_non_const_member_func<Fn>::value 
+                                 && is_const_or_const_ref<Args...>::value)>, 
+#endif
+          typename = enable_if_t<std::is_member_pointer<decay_t<Fn>>::value>,
           int = 0>
 constexpr auto invoke(Fn &&f, Args &&... args) noexcept(
     noexcept(std::mem_fn(f)(std::forward<Args>(args)...)))
@@ -126,7 +182,7 @@ constexpr auto invoke(Fn &&f, Args &&... args) noexcept(
 }
 
 template <typename Fn, typename... Args,
-          typename = enable_if_t<!std::is_member_pointer<decay_t<Fn>>{}>>
+          typename = enable_if_t<!std::is_member_pointer<decay_t<Fn>>::value>>
 constexpr auto invoke(Fn &&f, Args &&... args) noexcept(
     noexcept(std::forward<Fn>(f)(std::forward<Args>(args)...)))
     -> decltype(std::forward<Fn>(f)(std::forward<Args>(args)...)) {
@@ -296,8 +352,8 @@ struct is_nothrow_swappable
 #endif
 
 // The storage base manages the actual storage, and correctly propagates
-// trivial destruction from T This case is for when T is trivially
-// destructible
+// trivial destruction from T. This case is for when T is not trivially
+// destructible.
 template <class T, bool = ::std::is_trivially_destructible<T>::value>
 struct optional_storage_base {
   TL_OPTIONAL_11_CONSTEXPR optional_storage_base() noexcept
@@ -323,7 +379,7 @@ struct optional_storage_base {
   bool m_has_value;
 };
 
-// This case is for when T is not trivially destructible
+// This case is for when T is trivially destructible.
 template <class T> struct optional_storage_base<T, true> {
   TL_OPTIONAL_11_CONSTEXPR optional_storage_base() noexcept
       : m_dummy(), m_has_value(false) {}
@@ -368,7 +424,7 @@ template <class T> struct optional_operations_base : optional_storage_base<T> {
       }
     }
 
-    if (rhs.has_value()) {
+    else if (rhs.has_value()) {
       construct(std::forward<Opt>(rhs).get());
     }
   }
@@ -1258,6 +1314,7 @@ public:
 
     *this = nullopt;
     this->construct(std::forward<Args>(args)...);
+    return value();
   }
 
   /// \group emplace
@@ -1269,6 +1326,7 @@ public:
   emplace(std::initializer_list<U> il, Args &&... args) {
     *this = nullopt;
     this->construct(il, std::forward<Args>(args)...);
+    return value();    
   }
 
   /// Swaps this optional with the other.
@@ -1612,7 +1670,7 @@ template <class Opt, class F,
 constexpr auto optional_map_impl(Opt &&opt, F &&f) {
   return opt.has_value()
              ? detail::invoke(std::forward<F>(f), *std::forward<Opt>(opt))
-             : optional<detail::decay_t<Ret>>(nullopt);
+             : optional<Ret>(nullopt);
 }
 
 template <class Opt, class F,
@@ -1633,10 +1691,10 @@ template <class Opt, class F,
                                               *std::declval<Opt>())),
           detail::enable_if_t<!std::is_void<Ret>::value> * = nullptr>
 
-constexpr auto optional_map_impl(Opt &&opt, F &&f) -> optional<detail::decay_t<Ret>> {
+constexpr auto optional_map_impl(Opt &&opt, F &&f) -> optional<Ret> {
   return opt.has_value()
              ? detail::invoke(std::forward<F>(f), *std::forward<Opt>(opt))
-             : optional<detail::decay_t<Ret>>(nullopt);
+             : optional<Ret>(nullopt);
 }
 
 template <class Opt, class F,

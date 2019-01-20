@@ -13,13 +13,10 @@ import jinja2
 
 
 def parse_line(line):
-    tokens = [token.strip() for token in line.split(';')]
-    if tokens and '#' in tokens[-1]:
-        tokens[-1] = tokens[-1][0:tokens[-1].find('#')].strip()
-        if tokens[-1] == '':
-            tokens = tokens[:-1]
+    line = line[0:line.find('#')]
+    tokens = [token.strip() for token in line.split(';')] if line else []
     if len(tokens) == 3:
-        tokens[2] = tokens[2].split()[0]
+        tokens[2] = tokens[2].split(' ')[0]
     return tokens
 
 
@@ -42,33 +39,30 @@ class CodePointRange(object):
         if type(range[0]) == str:
             range = [int(range[0], 16), int(range[1], 16)]
         self.range = range
-        self.__i = self.range[0]
         self.status = status
         self.mapped = int(mapped, 16) if mapped else None
 
 
 def squeeze(code_points):
     code_points_copy = [code_points[0]]
-    for index in range(1, len(code_points)):
-        if code_points_copy[-1].status == code_points[index].status:
-            code_points_copy[-1].range[1] = code_points[index].range[1]
+    for code_point in code_points[1:]:
+        if code_points_copy[-1].status == code_point.status:
+            code_points_copy[-1].range[1] = code_point.range[1]
         else:
-            code_points_copy.append((code_points[index]))
+            code_points_copy.append(code_point)
     return code_points_copy
 
 
-if __name__ == '__main__':
+def main():
     input, output = sys.argv[1], sys.argv[2]
 
-    code_points = []
     with open(input, 'r') as input_file, open(output, 'w+') as output_file:
+        code_points = []
         for line in input_file.readlines():
-            if line.startswith('#') or line == '\n':
-                continue
-
             code_point = parse_line(line)
-            code_points.append(CodePointRange(
-                code_point[0], code_point[1], code_point[2] if len(code_point) > 2 else None))
+            if code_point:
+                code_points.append(CodePointRange(
+                    code_point[0], code_point[1], code_point[2] if len(code_point) > 2 else None))
 
         mapped_code_points = [
             entry for entry in code_points if entry.status in ('mapped', 'disallowed_STD3_mapped')]
@@ -137,3 +131,7 @@ char32_t map_idna_code_point(char32_t code_point) {
         template.stream(
             entries=code_points,
             mapped_entries=mapped_code_points).dump(output_file)
+
+
+if __name__ == '__main__':
+    main()

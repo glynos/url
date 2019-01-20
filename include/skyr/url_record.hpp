@@ -73,7 +73,7 @@ class url_record {
 
 };
 
-/// Swaps to `url_record` objects
+/// Swaps two `url_record` objects
 ///
 /// Equivalent to `lhs.swap(rhs)`
 ///
