@@ -5,7 +5,7 @@
 
 #include <fstream>
 #include <gtest/gtest.h>
-#include <skyr/url_parse.hpp>
+#include <skyr/url/url_parse.hpp>
 
 // http://formvalidation.io/validators/uri/
 

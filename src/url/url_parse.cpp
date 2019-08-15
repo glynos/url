@@ -3,15 +3,15 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "skyr/url_parse.hpp"
+#include "skyr/url/url_parse.hpp"
 #include <cmath>
 #include <deque>
 #include <iterator>
 #include <limits>
 #include <map>
 #include <sstream>
-#include "skyr/url_error.hpp"
-#include "skyr/url_serialize.hpp"
+#include "skyr/url/url_error.hpp"
+#include "skyr/url/url_serialize.hpp"
 #include "url_parse_impl.hpp"
 #include "url_parser_context.hpp"
 

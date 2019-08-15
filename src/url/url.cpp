@@ -10,9 +10,9 @@
 #include <vector>
 #include <cassert>
 #include "skyr/url.hpp"
-#include "skyr/url_parse.hpp"
-#include "skyr/url_serialize.hpp"
-#include "skyr/percent_encode.hpp"
+#include "skyr/url/url_parse.hpp"
+#include "skyr/url/url_serialize.hpp"
+#include "skyr/url/percent_encode.hpp"
 #include "url_parse_impl.hpp"
 #include "url_schemes.hpp"
 

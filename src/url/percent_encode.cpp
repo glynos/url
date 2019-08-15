@@ -7,8 +7,8 @@
 #include <cstring>
 #include <cassert>
 #include <algorithm>
-#include "skyr/percent_encode.hpp"
-#include "skyr/unicode.hpp"
+#include "skyr/url/percent_encode.hpp"
+#include "skyr/unicode/unicode.hpp"
 
 namespace skyr {
 namespace {

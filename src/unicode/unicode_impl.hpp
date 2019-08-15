@@ -29,7 +29,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <stdexcept>
 #include <algorithm>
-#include <skyr/unicode.hpp>
+#include <skyr/unicode/unicode.hpp>
 
 namespace skyr {
 namespace utf8 {

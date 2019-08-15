@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <string>
-#include "skyr/url_error.hpp"
+#include "skyr/url/url_error.hpp"
 
 namespace skyr {
 namespace {

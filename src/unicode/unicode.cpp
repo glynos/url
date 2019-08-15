@@ -4,8 +4,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#include "skyr/unicode.hpp"
-#include "unicode_impl.hpp"
+#include "skyr/unicode/unicode.hpp"
+#include "unicode/unicode_impl.hpp"
 
 namespace skyr {
 namespace unicode {

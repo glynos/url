@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "skyr/url_serialize.hpp"
+#include "skyr/url/url_serialize.hpp"
 
 namespace skyr {
 url_record::string_type serialize(

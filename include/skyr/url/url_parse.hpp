@@ -9,7 +9,7 @@
 #include <system_error>
 #include <skyr/optional.hpp>
 #include <skyr/expected.hpp>
-#include <skyr/url_record.hpp>
+#include <skyr/url/url_record.hpp>
 
 namespace skyr {
 /// Parses a URL and returns a `url_record`

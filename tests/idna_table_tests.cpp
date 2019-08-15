@@ -4,7 +4,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include "../src/idna_table.hpp"
+#include "../src/url/idna_table.hpp"
 
 using code_point = std::pair<char32_t, skyr::idna_status>;
 

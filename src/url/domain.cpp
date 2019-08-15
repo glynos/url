@@ -6,8 +6,8 @@
 #include <cstring>
 #include <algorithm>
 #include <vector>
-#include "skyr/unicode.hpp"
-#include "skyr/domain.hpp"
+#include "skyr/unicode/unicode.hpp"
+#include "skyr/url/domain.hpp"
 #include "algorithms.hpp"
 #include "idna_table.hpp"
 

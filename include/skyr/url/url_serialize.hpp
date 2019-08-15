@@ -6,7 +6,7 @@
 #ifndef SKYR_URL_SERIALIZE_INC
 #define SKYR_URL_SERIALIZE_INC
 
-#include <skyr/url_record.hpp>
+#include <skyr/url/url_record.hpp>
 
 namespace skyr {
 /// Serializes a URL record according to the

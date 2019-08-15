@@ -11,7 +11,7 @@
 #include <vector>
 #include <functional>
 #include <skyr/optional.hpp>
-#include <skyr/url_record.hpp>
+#include <skyr/url/url_record.hpp>
 
 namespace skyr {
 /// Supports iterating through

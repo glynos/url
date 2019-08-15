@@ -5,8 +5,8 @@
 
 #include <gtest/gtest.h>
 #include <skyr/url.hpp>
-#include <skyr/url_search_parameters.hpp>
-#include <skyr/url_parse.hpp>
+#include <skyr/url/url_search_parameters.hpp>
+#include <skyr/url/url_parse.hpp>
 
 TEST(url_search_parameters_test, empty_query) {
   skyr::url_search_parameters parameters{};

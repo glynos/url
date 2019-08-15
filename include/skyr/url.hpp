@@ -12,10 +12,10 @@
 #include <skyr/config.hpp>
 #include <skyr/version.hpp>
 #include <skyr/expected.hpp>
-#include <skyr/url_record.hpp>
-#include <skyr/url_error.hpp>
-#include <skyr/url_search_parameters.hpp>
-#include <skyr/details/to_bytes.hpp>
+#include <skyr/url/url_record.hpp>
+#include <skyr/url/url_error.hpp>
+#include <skyr/url/url_search_parameters.hpp>
+#include <skyr/url/details/to_bytes.hpp>
 
 #ifdef SKYR_URI_MSVC
 #pragma warning(push)

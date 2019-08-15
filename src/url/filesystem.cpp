@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "skyr/filesystem.hpp"
-#include "skyr/percent_encode.hpp"
+#include "skyr/url/filesystem.hpp"
+#include "skyr/url/percent_encode.hpp"
 
 namespace skyr {
 namespace filesystem {

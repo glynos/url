@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <algorithm>
-#include "skyr/url_search_parameters.hpp"
+#include "skyr/url/url_search_parameters.hpp"
 
 namespace skyr {
 url_search_parameters::url_search_parameters() {}

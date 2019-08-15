@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include "../src/ipv4_address.hpp"
+#include "../src/url/ipv4_address.hpp"
 
 
 TEST(ipv4_address_tests, zero_test) {

@@ -4,7 +4,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <gtest/gtest.h>
-#include <skyr/percent_encode.hpp>
+#include <skyr/url/percent_encode.hpp>
 
 
 TEST(percent_decode, decode_codepoints_set) {

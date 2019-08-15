@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include <skyr/domain.hpp>
+#include <skyr/url/domain.hpp>
 
 using param = std::pair<std::string, std::string>;
 

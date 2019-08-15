@@ -5,8 +5,8 @@
 
 #include <fstream>
 #include <gtest/gtest.h>
-#include <skyr/url_parse.hpp>
-#include <skyr/url_serialize.hpp>
+#include <skyr/url/url_parse.hpp>
+#include <skyr/url/url_serialize.hpp>
 
 /// https://url.spec.whatwg.org/#example-url-parsing
 

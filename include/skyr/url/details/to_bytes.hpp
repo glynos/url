@@ -7,8 +7,8 @@
 #define SKYR_URL_DETAILS_TRANSLATE_INC
 
 #include <string>
-#include <skyr/string_traits.hpp>
-#include <skyr/unicode.hpp>
+#include <skyr/traits/string_traits.hpp>
+#include <skyr/unicode/unicode.hpp>
 
 namespace skyr {
 namespace details {

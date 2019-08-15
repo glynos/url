@@ -14,7 +14,7 @@ struct code_point_range {
   idna_status status;
 };
 
-static const code_point_range statuses[] = {
+const code_point_range statuses[] = {
   { 0x0000, 0x002c, idna_status::disallowed_std3_valid },
   { 0x002d, 0x002e, idna_status::valid },
   { 0x002f, 0x002f, idna_status::disallowed_std3_valid },
@@ -2827,7 +2827,7 @@ struct mapped_code_point {
   char32_t mapped;
 };
 
-static const mapped_code_point mapped[] = {
+const mapped_code_point mapped[] = {
   { 0x0041, 0x0061 },
   { 0x0042, 0x0062 },
   { 0x0043, 0x0063 },

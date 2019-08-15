@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <skyr/url.hpp>
-#include <skyr/filesystem.hpp>
+#include <skyr/url/filesystem.hpp>
 
 TEST(filesystem_path_tests, empty_path) {
   auto instance = skyr::url{};

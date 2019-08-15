@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <string>
-#include "skyr/unicode.hpp"
+#include "skyr/unicode/unicode.hpp"
 
 
 TEST(unicode_tests, utf32_to_bytes_poo_emoji_test) {
