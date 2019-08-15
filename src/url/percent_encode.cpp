@@ -14,8 +14,8 @@ namespace skyr {
 namespace {
 class percent_encode_error_category : public std::error_category {
  public:
-  const char *name() const noexcept override;
-  std::string message(int error) const noexcept override;
+  [[nodiscard]] const char *name() const noexcept override;
+  [[nodiscard]] std::string message(int error) const noexcept override;
 };
 
 const char *percent_encode_error_category::name() const noexcept {
@@ -33,7 +33,7 @@ std::string percent_encode_error_category::message(int error) const noexcept {
   }
 }
 
-static const percent_encode_error_category category{};
+const percent_encode_error_category category{};
 }  // namespace
 
 std::error_code make_error_code(percent_encode_errc error) {
@@ -104,14 +104,10 @@ inline bool is_userinfo_byte(char byte) {
 
 template <class Pred>
 std::string percent_encode_byte(char byte, Pred pred) {
-  auto result = std::string{};
   if (pred(byte)) {
-    result = percent_encode_byte(byte);
+    return percent_encode_byte(byte);
   }
-  else {
-    result = {byte};
-  }
-  return result;
+  return {byte};
 }
 }  // namespace
 

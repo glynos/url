@@ -42,7 +42,7 @@ std::string ipv6_address_error_category::message(int error) const noexcept {
   }
 }
 
-static const ipv6_address_error_category category{};
+const ipv6_address_error_category category{};
 }  // namespace
 
 std::error_code make_error_code(ipv6_address_errc error) {

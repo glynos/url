@@ -10,7 +10,7 @@
 #include <skyr/config.hpp>
 
 #define SKYR_VERSION_MAJOR 1
-#define SKYR_VERSION_MINOR 0
+#define SKYR_VERSION_MINOR 2
 #define SKYR_VERSION_PATCH 0
 
 #define SKYR_VERSION_STRING \

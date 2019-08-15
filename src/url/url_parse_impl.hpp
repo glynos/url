@@ -68,7 +68,7 @@ namespace details {
 /// \returns A `url_record` on success and an error code on failure
 expected<url_record, std::error_code> basic_parse(
     url_record::string_type input,
-    const optional<url_record> &base = nullopt,
+    optional<url_record> base = nullopt,
     const optional<url_record> &url = nullopt,
     optional<url_parse_state> state_override = nullopt);
 }  // namespace details

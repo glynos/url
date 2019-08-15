@@ -30,7 +30,7 @@ std::string path_error_category::message(int error) const noexcept {
   }
 }
 
-static const path_error_category category{};
+const path_error_category category{};
 }  // namespace
 
 std::error_code make_error_code(path_errc error) {

@@ -46,7 +46,7 @@ class url_parser_context {
 
   url_parser_context(
       std::string input,
-      const optional<url_record> &base,
+      optional<url_record> base,
       const optional<url_record> &url,
       optional<url_parse_state> state_override = skyr::nullopt);
 

@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <cassert>
 #include <functional>
-#include <locale>
 #include <vector>
 #include <cassert>
 #include "skyr/url.hpp"
@@ -39,7 +38,7 @@ void url::swap(url &other) noexcept {
   other.parameters_.url_ = std::ref(other.url_);
 }
 
-void url::initialize(string_type &&input, optional<url_record> base) {
+void url::initialize(string_type &&input, optional<url_record> &&base) {
   auto parsed_url = parse(input, base);
   if (!parsed_url) {
     throw url_parse_error(parsed_url.error());
@@ -343,8 +342,8 @@ void swap(url &lhs, url &rhs) noexcept {
 namespace details {
 expected<url, std::error_code> make_url(
     url::string_type &&input,
-    optional<url_record> base) {
-  auto parsed_url = parse(std::move(input), std::move(base));
+    const optional<url_record> &base) {
+  auto parsed_url = parse(std::move(input), base);
   if (!parsed_url) {
     return make_unexpected(std::move(parsed_url.error()));
   }

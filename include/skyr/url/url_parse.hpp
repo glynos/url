@@ -19,7 +19,7 @@ namespace skyr {
 /// \returns A `url_record` on success and an error code on failure
 expected<url_record, std::error_code> parse(
     url_record::string_type input,
-    const optional<url_record> &base = nullopt);
+    optional<url_record> base = nullopt);
 }  // namespace skyr
 
 #endif  // SKYR_URL_PARSE_INC

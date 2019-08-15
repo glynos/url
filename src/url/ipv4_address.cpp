@@ -39,7 +39,7 @@ std::string ipv4_address_error_category::message(int error) const noexcept {
   }
 }
 
-static const ipv4_address_error_category category{};
+const ipv4_address_error_category category{};
 }  // namespace
 
 std::error_code make_error_code(ipv4_address_errc error) {

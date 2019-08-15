@@ -3,13 +3,9 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include "skyr/url/url_parse.hpp"
-#include <cmath>
 #include <deque>
-#include <iterator>
-#include <limits>
 #include <map>
-#include <sstream>
+#include "skyr/url/url_parse.hpp"
 #include "skyr/url/url_error.hpp"
 #include "skyr/url/url_serialize.hpp"
 #include "url_parse_impl.hpp"
@@ -19,7 +15,7 @@ namespace skyr {
 namespace details {
 expected<url_record, std::error_code> basic_parse(
     url_record::string_type input,
-    const optional<url_record> &base,
+    optional<url_record> base,
     const optional<url_record> &url,
     optional<url_parse_state> state_override) {
   using return_type = expected<url_parse_action, url_parse_errc>;
@@ -133,7 +129,8 @@ expected<url_record, std::error_code> basic_parse(
          return context.parse_fragment(byte);
        }}};
 
-  auto context = url_parser_context(input, base, url, state_override);
+  auto context = url_parser_context
+      (std::move(input), std::move(base), url, state_override);
 
   while (true) {
     auto func = parse_funcs[context.state];
@@ -164,14 +161,14 @@ expected<url_record, std::error_code> basic_parse(
 
 expected<url_record, std::error_code> parse(
     url_record::string_type input,
-    const optional<url_record> &base) {
-  auto url = details::basic_parse(input, base);
+    optional<url_record> base) {
+  auto url = details::basic_parse(std::move(input), std::move(base));
 
   if (!url) {
     return url;
   }
 
-  if (url.value().scheme.compare("blob") != 0) {
+  if (url.value().scheme == "blob") {
     return url;
   }
 

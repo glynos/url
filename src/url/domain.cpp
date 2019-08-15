@@ -3,9 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <cstring>
 #include <algorithm>
-#include <vector>
 #include "skyr/unicode/unicode.hpp"
 #include "skyr/url/domain.hpp"
 #include "algorithms.hpp"
@@ -15,8 +13,8 @@ namespace skyr {
 namespace {
 class domain_error_category : public std::error_category {
  public:
-  const char *name() const noexcept override;
-  std::string message(int error) const noexcept override;
+  [[nodiscard]] const char *name() const noexcept override;
+  [[nodiscard]] std::string message(int error) const noexcept override;
 };
 
 const char *domain_error_category::name() const noexcept {
@@ -38,7 +36,7 @@ std::string domain_error_category::message(int error) const noexcept {
   }
 }
 
-static const domain_error_category category{};
+const domain_error_category category{};
 }  // namespace
 
 std::error_code make_error_code(domain_errc error) {
@@ -77,7 +75,7 @@ char32_t adapt(
   return k + (base - tmin + 1) * delta / (delta + skew);
 }
 
-std::string to_ascii(std::string input) {
+std::string to_ascii(const std::string &input) {
   return "xn--" + input;
 }
 
@@ -200,7 +198,7 @@ expected<std::string, std::error_code> punycode_decode(std::string_view input) {
       }
       auto digit = decode_digit(input[in++]);
       if (digit >= base) {
-        return make_unexpected(domain_errc::bad_input);
+        return make_unexpected(make_error_code(domain_errc::bad_input));
       }
       if (digit > ((std::numeric_limits<char32_t>::max() - i) / w)) {
         return make_unexpected(make_error_code(domain_errc::overflow));

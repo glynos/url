@@ -47,7 +47,7 @@ std::string url_parse_error_category::message(int error) const noexcept {
   }
 }
 
-static const url_parse_error_category category{};
+const url_parse_error_category category{};
 }  // namespace
 
 std::error_code make_error_code(url_parse_errc error) {

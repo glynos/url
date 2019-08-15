@@ -32,10 +32,10 @@ class url_parse_error : public std::runtime_error {
   /// Constructor
   /// \param error An error code value
   explicit url_parse_error(std::error_code error) noexcept
-      : runtime_error("URL parse error"), error_(std::move(error)) {}
+      : runtime_error("URL parse error"), error_(error) {}
 
   /// \returns An error code
-  std::error_code error() const noexcept {
+  [[nodiscard]] std::error_code error() const noexcept {
     return error_;
   }
 
@@ -137,7 +137,7 @@ class url {
   /// Equivalent to `skyr::serialize(url_).value()`
   ///
   /// \returns The underlying URL string
-  string_type href() const;
+  [[nodiscard]] string_type href() const;
 
   /// @{
   /// \tparam Source The input string type
@@ -166,15 +166,15 @@ class url {
   ///
   /// \returns The underlying URL string
   /// \sa href()
-  string_type to_json() const;
+  [[nodiscard]] string_type to_json() const;
 
   /// \returns The [URL origin](https://url.spec.whatwg.org/#origin)
-  string_type origin() const;
+  [[nodiscard]] string_type origin() const;
 
   /// The URL scheme + `":"`
   ///
   /// \returns The [URL protocol](https://url.spec.whatwg.org/#dom-url-protocol)
-  string_type protocol() const;
+  [[nodiscard]] string_type protocol() const;
 
   /// @{
   /// Sets the [URL protocol](https://url.spec.whatwg.org/#dom-url-protocol)
@@ -199,7 +199,7 @@ class url {
   /// @}
 
   /// \returns The [URL username](https://url.spec.whatwg.org/#dom-url-username)
-  string_type username() const;
+  [[nodiscard]] string_type username() const;
 
   /// @{
   /// Sets the [URL username](https://url.spec.whatwg.org/#dom-url-username)
@@ -228,7 +228,7 @@ class url {
   /// Equivalent to: `url_.password? url_.password.value() : string_type()`
   ///
   /// \returns The URL password
-  string_type password() const;
+  [[nodiscard]] string_type password() const;
 
   /// @{
   /// Sets the [URL password](https://url.spec.whatwg.org/#dom-url-password)
@@ -253,7 +253,7 @@ class url {
   /// @}
 
   /// \returns The [URL host](https://url.spec.whatwg.org/#dom-url-host)
-  string_type host() const;
+  [[nodiscard]] string_type host() const;
 
   /// @{
   /// Sets the [URL host](https://url.spec.whatwg.org/#dom-url-host)
@@ -278,7 +278,7 @@ class url {
   /// @}
 
   /// \returns The [URL hostname](https://url.spec.whatwg.org/#dom-url-hostname)
-  string_type hostname() const;
+  [[nodiscard]] string_type hostname() const;
 
   /// @{
   /// Sets the [URL hostname](https://url.spec.whatwg.org/#dom-url-hostname)
@@ -303,11 +303,12 @@ class url {
   /// @}
 
   /// \returns The [URL port](https://url.spec.whatwg.org/#dom-url-port)
-  string_type port() const;
+  [[nodiscard]] string_type port() const;
 
   /// \returns The [URL port](https://url.spec.whatwg.org/#dom-url-port)
   template<typename intT>
-  intT port(typename std::enable_if<std::is_integral<intT>::value>::type * = nullptr) const {
+  [[nodiscard]] intT port(
+      typename std::enable_if<std::is_integral<intT>::value>::type * = nullptr) const {
     auto p = port();
     const char *port_first = p.data();
     char *port_last = nullptr;
@@ -331,7 +332,7 @@ class url {
   /// Returns the [URL pathname](https://url.spec.whatwg.org/#dom-url-pathname)
   ///
   /// \returns The URL pathname
-  string_type pathname() const;
+  [[nodiscard]] string_type pathname() const;
 
   /// @{
   /// Sets the [URL pathname](https://url.spec.whatwg.org/#dom-url-pathname)
@@ -358,7 +359,7 @@ class url {
   /// Returns the [URL search string](https://url.spec.whatwg.org/#dom-url-search)
   ///
   /// \returns The URL search string
-  string_type search() const;
+  [[nodiscard]] string_type search() const;
 
   /// @{
   /// Sets the [URL search string](https://url.spec.whatwg.org/#dom-url-search)
@@ -388,7 +389,7 @@ class url {
   /// Returns the [URL hash string](https://url.spec.whatwg.org/#dom-url-hash)
   ///
   /// \returns The URL hash string
-  string_type hash() const;
+  [[nodiscard]] string_type hash() const;
 
   /// @{
   /// Sets the [URL hash string](https://url.spec.whatwg.org/#dom-url-hash)
@@ -413,7 +414,7 @@ class url {
   /// @}
 
   /// \returns The underlying `url_record` implementation.
-  const url_record &record() const & noexcept {
+  [[nodiscard]] const url_record &record() const & noexcept {
     return url_;
   }
 
@@ -427,7 +428,7 @@ class url {
   ///
   /// \returns `true` if the URL scheme is special, `false`
   ///          otherwise
-  bool is_special() const noexcept {
+  [[nodiscard]] bool is_special() const noexcept {
     return url_.is_special();
   }
 
@@ -436,17 +437,17 @@ class url {
   ///
   /// \returns `true` if there was a validation error during
   ///          parsing, `false` otherwise
-  bool validation_error() const noexcept {
+  [[nodiscard]] bool validation_error() const noexcept {
     return url_.validation_error;
   }
 
   /// \returns An iterator to the beginning of the URL string
-  const_iterator begin() const noexcept {
+  [[nodiscard]] const_iterator begin() const noexcept {
     return view_.begin();
   }
 
   /// \returns An iterator to the end of the URL string
-  const_iterator end() const noexcept {
+  [[nodiscard]] const_iterator end() const noexcept {
     return view_.end();
   }
 
@@ -454,7 +455,7 @@ class url {
   ///
   /// \returns `true` if the URL is an empty string, `false`
   ///          otherwise
-  bool empty() const noexcept {
+  [[nodiscard]] bool empty() const noexcept {
     return view_.empty();
   }
 
@@ -462,7 +463,7 @@ class url {
   ///
   /// \param other The other `url` object
   /// \returns `href_.compare(other.href_)`
-  int compare(const url &other) const noexcept {
+  [[nodiscard]] int compare(const url &other) const noexcept {
     return view_.compare(other.view_);
   }
 
@@ -483,7 +484,7 @@ class url {
   /// Returns the underyling byte buffer
   ///
   /// \returns `href_.c_str()`
-  const char *c_str() const noexcept {
+  [[nodiscard]] const char *c_str() const noexcept {
     return href_.c_str();
   }
 
@@ -498,7 +499,7 @@ class url {
 
   void initialize(
       string_type &&input,
-      optional<url_record> base = nullopt);
+      optional<url_record> &&base = nullopt);
   void update_record(url_record &&record);
 
   template <class Source>
@@ -536,7 +537,7 @@ void swap(url &lhs, url &rhs) noexcept;
 
 namespace details {
 expected<url, std::error_code> make_url(
-    url::string_type &&input, optional<url_record> base);
+    url::string_type &&input, const optional<url_record> &base);
 }  // namespace details
 
 /// Parses a URL string and constructs a `url` object

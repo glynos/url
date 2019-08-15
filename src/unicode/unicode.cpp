@@ -7,8 +7,7 @@
 #include "skyr/unicode/unicode.hpp"
 #include "unicode/unicode_impl.hpp"
 
-namespace skyr {
-namespace unicode {
+namespace skyr::unicode {
 namespace {
 class unicode_error_category : public std::error_category {
  public:
@@ -30,7 +29,7 @@ std::string unicode_error_category::message(int error) const noexcept {
   }
 }
 
-static const unicode_error_category category{};
+const unicode_error_category category{};
 }  // namespace
 
 std::error_code make_error_code(unicode_errc error) {
@@ -102,5 +101,4 @@ expected<std::string, std::error_code> utf32_to_bytes(
   }
   return result;
 }
-}  // namespace unicode
-}  // namespace skyr
+}  // namespace skyr::unicode

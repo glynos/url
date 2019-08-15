@@ -124,7 +124,7 @@ bool is_valid_port(std::string_view port) noexcept {
 
   auto first = begin(port);
   const char* port_first = std::addressof(*first);
-  char* port_last = 0;
+  char* port_last = nullptr;
   auto value = std::strtoul(port_first, &port_last, 10);
   return
       (port_first != port_last) &&
@@ -191,7 +191,7 @@ void shorten_path(std::string_view scheme, std::vector<std::string> &path) {
     return;
   }
 
-  if ((scheme.compare("file") == 0) &&
+  if ((scheme == "file") &&
       (path.size() == 1) &&
       is_windows_drive_letter(path.front())) {
     return;
@@ -203,11 +203,11 @@ void shorten_path(std::string_view scheme, std::vector<std::string> &path) {
 
 url_parser_context::url_parser_context(
     std::string input,
-    const optional<url_record> &base,
+    optional<url_record> base,
     const optional<url_record> &url,
     optional<url_parse_state> state_override)
-    : input(input)
-    , base(base)
+    : input(std::move(input))
+    , base(std::move(base))
     , url(url? url.value() : url_record{})
     , state(state_override? state_override.value() : url_parse_state::scheme_start)
     , state_override(state_override)
@@ -254,11 +254,11 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_scheme(char
         return make_unexpected(url_parse_errc::cannot_override_scheme);
       }
 
-      if ((url.includes_credentials() || url.port) &&(buffer.compare("file") == 0)) {
+      if ((url.includes_credentials() || url.port) &&(buffer == "file")) {
         return make_unexpected(url_parse_errc::cannot_override_scheme);
       }
 
-      if ((url.scheme.compare("file") == 0) && (!url.host || url.host.value().empty())) {
+      if ((url.scheme == "file") && (!url.host || url.host.value().empty())) {
         return make_unexpected(url_parse_errc::cannot_override_scheme);
       }
     }
@@ -271,7 +271,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_scheme(char
     }
     buffer.clear();
 
-    if (url.scheme.compare("file") == 0) {
+    if (url.scheme == "file") {
       if (!remaining_starts_with(it, end(view), "//")) {
         url.validation_error = true;
       }
@@ -313,7 +313,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_no_scheme(c
 
     url.cannot_be_a_base_url = true;
     state = url_parse_state::fragment;
-  } else if (base.value().scheme.compare("file") != 0) {
+  } else if (base.value().scheme != "file") {
     state = url_parse_state::relative;
     reset();
     return url_parse_action::continue_;
@@ -488,7 +488,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_authority(c
 }
 
 expected<url_parse_action, url_parse_errc> url_parser_context::parse_hostname(char byte) {
-  if (state_override && (url.scheme.compare("file") == 0)) {
+  if (state_override && (url.scheme == "file")) {
     state = url_parse_state::file_host;
     if (it == begin(view)) {
       return url_parse_action::continue_;
@@ -567,7 +567,9 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_port(char b
       }
 
       auto view = std::string_view(url.scheme.data(), url.scheme.length());
-      auto port = std::atoi(buffer.c_str());
+      auto first = buffer.data();
+      decltype(first) last = nullptr;
+      auto port = std::strtol(first, &last, 10);
       if (details::is_default_port(view, port)) {
         url.port = nullopt;
       }
@@ -599,7 +601,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_file(char b
       url.validation_error = true;
     }
     state = url_parse_state::file_slash;
-  } else if (base && (base.value().scheme.compare("file") == 0)) {
+  } else if (base && (base.value().scheme == "file")) {
     if (is_eof()) {
       url.host = base.value().host;
       url.path = base.value().path;
@@ -650,7 +652,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_file_slash(
     state = url_parse_state::file_host;
   } else {
     if (base &&
-            ((base.value().scheme.compare("file") == 0) && !is_windows_drive_letter(it, end(view)))) {
+            ((base.value().scheme == "file") && !is_windows_drive_letter(it, end(view)))) {
       if (!base.value().path.empty() && is_windows_drive_letter(base.value().path[0])) {
         url.path.push_back(base.value().path[0]);
       } else {
@@ -758,7 +760,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_path(char b
             !((byte == '/') || (url.is_special() && (byte == '\\')))) {
       url.path.emplace_back();
     } else if (!is_single_dot_path_segment(buffer)) {
-      if ((url.scheme.compare("file") == 0) &&
+      if ((url.scheme == "file") &&
           url.path.empty() && is_windows_drive_letter(buffer)) {
         if (!url.host || !url.host.value().empty()) {
           url.validation_error = true;
@@ -772,7 +774,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_path(char b
 
     buffer.clear();
 
-    if ((url.scheme.compare("file") == 0) && (is_eof() || (byte == '?') || (byte == '#'))) {
+    if ((url.scheme == "file") && (is_eof() || (byte == '?') || (byte == '#'))) {
       auto path = std::deque<std::string>(begin(url.path), end(url.path));
       while ((path.size() > 1) && path[0].empty()) {
         url.validation_error = true;
