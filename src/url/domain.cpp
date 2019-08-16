@@ -3,6 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#include <cstring>
 #include <algorithm>
 #include "skyr/unicode/unicode.hpp"
 #include "skyr/url/domain.hpp"
