@@ -473,7 +473,7 @@ class url {
   /// \param scheme
   /// \returns The default port if the scheme is special, `nullopt`
   ///          otherwise
-  static optional<std::uint16_t> default_port(
+  static std::optional<std::uint16_t> default_port(
       const string_type &scheme) noexcept;
 
   /// Clears the underlying URL string
@@ -499,11 +499,11 @@ class url {
 
   void initialize(
       string_type &&input,
-      optional<url_record> &&base = nullopt);
+      std::optional<url_record> &&base = std::nullopt);
   void update_record(url_record &&record);
 
   template <class Source>
-  expected<void, std::error_code> set_port_impl(
+  tl::expected<void, std::error_code> set_port_impl(
       const Source &port,
       typename std::enable_if<is_url_convertible<Source>::value>::type * = nullptr) {
     auto bytes = details::to_bytes(port);
@@ -558,8 +558,8 @@ class url {
 void swap(url &lhs, url &rhs) noexcept;
 
 namespace details {
-expected<url, std::error_code> make_url(
-    url::string_type &&input, const optional<url_record> &base);
+tl::expected<url, std::error_code> make_url(
+    url::string_type &&input, const std::optional<url_record> &base);
 }  // namespace details
 
 /// Parses a URL string and constructs a `url` object
@@ -568,14 +568,14 @@ expected<url, std::error_code> make_url(
 /// \param input The input string
 /// \returns A `url` object on success, an error on failure
 template<class Source>
-inline expected<url, std::error_code> make_url(
+inline tl::expected<url, std::error_code> make_url(
     const Source &input) {
   auto bytes = details::to_bytes(input);
   if (!bytes) {
-    return make_unexpected(
+    return tl::make_unexpected(
         make_error_code(url_parse_errc::invalid_unicode_character));
   }
-  return details::make_url(std::move(bytes.value()), nullopt);
+  return details::make_url(std::move(bytes.value()), std::nullopt);
 }
 
 /// Parses a URL string and constructs a `url` object

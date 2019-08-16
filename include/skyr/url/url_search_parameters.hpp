@@ -10,7 +10,7 @@
 #include <string_view>
 #include <vector>
 #include <functional>
-#include <skyr/optional.hpp>
+#include <optional>
 #include <skyr/url/url_record.hpp>
 
 namespace skyr {
@@ -61,7 +61,7 @@ class url_search_parameters {
 
   /// \param name
   /// \returns The first search parameter value with the given name
-  optional<string_type> get(const string_type &name) const noexcept;
+  std::optional<string_type> get(const string_type &name) const noexcept;
 
   /// \param name
   /// \returns All search parameter values with the given name
@@ -121,7 +121,7 @@ class url_search_parameters {
   void update();
 
   std::vector<value_type> parameters_;
-  optional<std::reference_wrapper<url_record>> url_;
+  std::optional<std::reference_wrapper<url_record>> url_;
 };
 }  // namespace skyr
 

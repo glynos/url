@@ -9,7 +9,7 @@
 #include <cstring>
 #include <locale>
 #include <algorithm>
-#include "skyr/optional.hpp"
+#include <optional>
 #include "ipv6_address.hpp"
 #include "algorithms.hpp"
 
@@ -65,7 +65,7 @@ inline std::uint16_t hex_to_dec(char byte) noexcept {
 
 std::string ipv6_address::to_string() const {
   auto output = std::string();
-  auto compress = skyr::optional<size_t>();
+  auto compress = std::optional<size_t>();
 
   auto sequences = std::vector<std::pair<size_t, size_t>>();
   auto in_sequence = false;
@@ -142,7 +142,7 @@ namespace {
 std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std::string_view input) {
   auto address = std::array<unsigned short, 8>{{0, 0, 0, 0, 0, 0, 0, 0}};
   auto piece_index = 0;
-  auto compress = optional<decltype(piece_index)>();
+  auto compress = std::optional<decltype(piece_index)>();
 
   auto first = begin(input), last = end(input);
   auto it = first;
@@ -225,7 +225,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
       auto numbers_seen = 0;
 
       while (it != last) {
-        auto ipv4_piece = optional<std::uint16_t>();
+        auto ipv4_piece = std::optional<std::uint16_t>();
 
         if (numbers_seen > 0) {
           if ((*it == '.') && (numbers_seen < 4)) {

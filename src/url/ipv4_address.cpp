@@ -9,7 +9,7 @@
 #include <vector>
 #include <sstream>
 #include <algorithm>
-#include <skyr/optional.hpp>
+#include <optional>
 #include "ipv4_address.hpp"
 
 namespace skyr {
@@ -47,7 +47,7 @@ std::error_code make_error_code(ipv4_address_errc error) {
 }
 
 namespace {
-expected<std::uint64_t, std::error_code> parse_ipv4_number(
+tl::expected<std::uint64_t, std::error_code> parse_ipv4_number(
     std::string_view input,
     bool &validation_error_flag) {
   auto base = 10;
@@ -70,13 +70,13 @@ expected<std::uint64_t, std::error_code> parse_ipv4_number(
     auto pos = static_cast<std::size_t>(0);
     auto number = std::stoull(std::string(input), &pos, base);
     if (pos != input.length()) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(ipv4_address_errc::invalid_segment_number));
     }
     return number;
   }
   catch (std::exception &) {
-    return make_unexpected(
+    return tl::make_unexpected(
         make_error_code(ipv4_address_errc::invalid_segment_number));
   }
 }
@@ -101,7 +101,7 @@ std::string ipv4_address::to_string() const {
 
 namespace details {
 namespace {
-std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std::string_view input) {
+std::pair<tl::expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std::string_view input) {
   auto validation_error_flag = false;
   auto validation_error = false;
 
@@ -125,7 +125,7 @@ std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std:
   if (parts.size() > 4) {
     return
       std::make_pair(
-          make_unexpected(
+          tl::make_unexpected(
               make_error_code(
                   ipv4_address_errc::too_many_segments)), true);
   }
@@ -136,7 +136,7 @@ std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std:
     if (part.empty()) {
       return
         std::make_pair(
-            make_unexpected(
+            tl::make_unexpected(
                 make_error_code(
                     ipv4_address_errc::empty_segment)), true);
     }
@@ -145,7 +145,7 @@ std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std:
     if (!number) {
       return
         std::make_pair(
-            make_unexpected(
+            tl::make_unexpected(
                 make_error_code(
                     ipv4_address_errc::invalid_segment_number)), validation_error_flag);
     }
@@ -174,7 +174,7 @@ std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std:
   if (numbers_it != numbers_last_but_one) {
     return
       std::make_pair(
-          make_unexpected(
+          tl::make_unexpected(
               make_error_code(ipv4_address_errc::overflow)), true);
   }
 
@@ -182,7 +182,7 @@ std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std:
       static_cast<std::uint64_t>(std::pow(256, 5 - numbers.size()))) {
     return
       std::make_pair(
-          make_unexpected(
+          tl::make_unexpected(
               make_error_code(ipv4_address_errc::overflow)), true);
   }
 
@@ -201,7 +201,7 @@ std::pair<expected<ipv4_address, std::error_code>, bool> parse_ipv4_address(std:
 }  // namespace
 }  // namespace details
 
-expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view input) {
+tl::expected<ipv4_address, std::error_code> parse_ipv4_address(std::string_view input) {
   return details::parse_ipv4_address(input).first;
 }
 }  // namespace skyr

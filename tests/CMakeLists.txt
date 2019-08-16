@@ -4,7 +4,8 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 
-include_directories(${gtest_SOURCE_DIR}/include)
+enable_testing()
+find_package(GTest MODULE REQUIRED)
 
 set(
         TESTS
@@ -31,8 +32,8 @@ endif()
 
 foreach (test ${TESTS})
     add_executable(${test} ${test}.cpp)
-    add_dependencies(${test} skyr-url gtest_main)
-    target_link_libraries(${test} ${CMAKE_THREAD_LIBS_INIT} skyr-url gtest_main)
+    add_dependencies(${test} skyr-url)
+    target_link_libraries(${test} PRIVATE ${CMAKE_THREAD_LIBS_INIT} skyr-url GTest::GTest GTest::Main)
     set_target_properties(${test} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${Skyr_BINARY_DIR}/tests)
     add_test(${test} ${Skyr_BINARY_DIR}/tests/${test}
     )

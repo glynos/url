@@ -81,8 +81,8 @@ std::vector<test_case> load_test_data(bool failing) {
 
 class test_parse_urls_using_base_urls : public ::testing::TestWithParam<test_case> {};
 
-INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls,
-                        testing::ValuesIn(load_test_data(false)));
+INSTANTIATE_TEST_SUITE_P(url_web_platform_tests, test_parse_urls_using_base_urls,
+                         testing::ValuesIn(load_test_data(false)));
 
 TEST_P(test_parse_urls_using_base_urls, parse_using_constructor) {
   auto test_case_data = test_case{GetParam()};
@@ -137,8 +137,8 @@ TEST_P(test_parse_urls_using_base_urls, parse_using_make) {
 
 class test_parse_urls_using_base_urls_failing : public ::testing::TestWithParam<test_case> {};
 
-INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls_failing,
-                        testing::ValuesIn(load_test_data(true)));
+INSTANTIATE_TEST_SUITE_P(url_web_platform_tests, test_parse_urls_using_base_urls_failing,
+                         testing::ValuesIn(load_test_data(true)));
 
 TEST_P(test_parse_urls_using_base_urls_failing, parse_using_constructor) {
   auto test_case_data = test_case{GetParam()};

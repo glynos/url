@@ -7,8 +7,8 @@
 #define SKYR_URL_PARSE_INC
 
 #include <system_error>
-#include <skyr/optional.hpp>
-#include <skyr/expected.hpp>
+#include <optional>
+#include <tl/expected.hpp>
 #include <skyr/url/url_record.hpp>
 
 namespace skyr {
@@ -17,9 +17,9 @@ namespace skyr {
 /// \param input The input string
 /// \param base An optional base URL
 /// \returns A `url_record` on success and an error code on failure
-expected<url_record, std::error_code> parse(
+tl::expected<url_record, std::error_code> parse(
     url_record::string_type input,
-    optional<url_record> base = nullopt);
+    std::optional<url_record> base = std::nullopt);
 }  // namespace skyr
 
 #endif  // SKYR_URL_PARSE_INC

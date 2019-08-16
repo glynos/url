@@ -8,8 +8,8 @@
 
 #include <string>
 #include <system_error>
-#include "skyr/optional.hpp"
-#include "skyr/expected.hpp"
+#include <optional>
+#include <tl/expected.hpp>
 #include "skyr/url/url_record.hpp"
 
 namespace skyr {
@@ -66,11 +66,11 @@ namespace details {
 /// \param url An optional `url_record`
 /// \param state_override
 /// \returns A `url_record` on success and an error code on failure
-expected<url_record, std::error_code> basic_parse(
+tl::expected<url_record, std::error_code> basic_parse(
     url_record::string_type input,
-    optional<url_record> base = nullopt,
-    const optional<url_record> &url = nullopt,
-    optional<url_parse_state> state_override = nullopt);
+    std::optional<url_record> base = std::nullopt,
+    const std::optional<url_record> &url = std::nullopt,
+    std::optional<url_parse_state> state_override = std::nullopt);
 }  // namespace details
 }  // namespace skyr
 

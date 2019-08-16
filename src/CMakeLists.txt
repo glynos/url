@@ -28,11 +28,7 @@ set(Skyr_SRCS
 		url/url_search_parameters.cpp
 
         ${Skyr_SOURCE_DIR}/include/skyr/url/details/to_bytes.hpp
-        ${Skyr_SOURCE_DIR}/include/skyr/external/tl/optional.hpp
-        ${Skyr_SOURCE_DIR}/include/skyr/external/tl/expected.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/config.hpp
-        ${Skyr_SOURCE_DIR}/include/skyr/optional.hpp
-        ${Skyr_SOURCE_DIR}/include/skyr/expected.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/traits/string_traits.hpp
 		${Skyr_SOURCE_DIR}/include/skyr/unicode/unicode.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/url/percent_encode.hpp
@@ -53,8 +49,12 @@ add_library(skyr-url ${Skyr_SRCS})
 target_link_libraries(skyr-url)
 if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     if (NOT Skyr_DISABLE_LIBCXX)
-        target_link_libraries(skyr-url "c++")
+        target_link_libraries(skyr-url "c++" tl::expected)
     endif()
+elseif(${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
+	if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
+		target_link_libraries(skyr-url "stdc++fs")
+	endif()
 endif()
 
 set_target_properties(skyr-url PROPERTIES
@@ -68,12 +68,6 @@ target_include_directories(skyr-url
         $<BUILD_INTERFACE:${Skyr_SOURCE_DIR}/include>
     PRIVATE
         ${Skyr_SOURCE_DIR}/src)
-
-if(${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-	if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
-	    target_link_libraries(skyr-url "stdc++fs")
-	endif()
-endif()
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU OR
     ${CMAKE_CXX_COMPILER_ID} MATCHES Clang)

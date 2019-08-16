@@ -8,7 +8,7 @@
 
 class encode_fragment_tests : public ::testing::TestWithParam<char> {};
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     encode_fragment,
     encode_fragment_tests,
     ::testing::Values(
@@ -21,7 +21,7 @@ TEST_P(encode_fragment_tests, encode_fragment_set) {
 
 class encode_path_tests : public ::testing::TestWithParam<char> {};
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     encode_path,
     encode_path_tests,
     ::testing::Values(
@@ -34,7 +34,7 @@ TEST_P(encode_path_tests, encode_path_set) {
 
 class encode_userinfo_tests : public ::testing::TestWithParam<char> {};
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     encode_userinfo,
     encode_userinfo_tests,
     ::testing::Values(

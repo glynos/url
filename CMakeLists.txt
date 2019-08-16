@@ -70,17 +70,18 @@ if (MSVC)
     add_definitions(-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE)
 endif(MSVC)
 
+find_package(tl-expected CONFIG REQUIRED)
+
 add_subdirectory(src)
 
 # Testing
 if (Skyr_BUILD_TESTS)
     message(STATUS "Configuring tests")
-    enable_testing()
-    set(BUILD_GMOCK OFF)
-    set(BUILD_GTEST ON)
-    set(INSTALL_GMOCK OFF)
-    set(INSTALL_GTEST OFF)
-    add_subdirectory(deps/googletest)
+#    set(BUILD_GMOCK OFF)
+#    set(BUILD_GTEST ON)
+#    set(INSTALL_GMOCK OFF)
+#    set(INSTALL_GTEST OFF)
+#    add_subdirectory(deps/googletest)
     add_subdirectory(tests)
 endif()
 

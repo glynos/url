@@ -8,8 +8,8 @@
 
 #include <cassert>
 #include <string_view>
-#include <skyr/optional.hpp>
-#include <skyr/expected.hpp>
+#include <optional>
+#include <tl/expected.hpp>
 #include "skyr/url/url_error.hpp"
 #include <skyr/url/url_record.hpp>
 #include "url_parse_impl.hpp"
@@ -32,11 +32,11 @@ class url_parser_context {
 
   std::string_view::const_iterator it;
 
-  optional<url_record> base;
+  std::optional<url_record> base;
   url_record url;
 
   url_parse_state state;
-  optional<url_parse_state> state_override;
+  std::optional<url_parse_state> state_override;
 
   std::string buffer;
 
@@ -46,9 +46,9 @@ class url_parser_context {
 
   url_parser_context(
       std::string input,
-      optional<url_record> base,
-      const optional<url_record> &url,
-      optional<url_parse_state> state_override = skyr::nullopt);
+      std::optional<url_record> base,
+      const std::optional<url_record> &url,
+      std::optional<url_parse_state> state_override = std::nullopt);
 
   bool is_eof() const noexcept {
     return it == end(view);
@@ -72,26 +72,26 @@ class url_parser_context {
     it = it - buffer.size() - 1;
   }
 
-  expected<url_parse_action, url_parse_errc> parse_scheme_start(char byte);
-  expected<url_parse_action, url_parse_errc> parse_scheme(char byte);
-  expected<url_parse_action, url_parse_errc> parse_no_scheme(char byte);
-  expected<url_parse_action, url_parse_errc> parse_special_relative_or_authority(char byte);
-  expected<url_parse_action, url_parse_errc> parse_path_or_authority(char byte);
-  expected<url_parse_action, url_parse_errc> parse_relative(char byte);
-  expected<url_parse_action, url_parse_errc> parse_relative_slash(char byte);
-  expected<url_parse_action, url_parse_errc> parse_special_authority_slashes(char byte);
-  expected<url_parse_action, url_parse_errc> parse_special_authority_ignore_slashes(char byte);
-  expected<url_parse_action, url_parse_errc> parse_authority(char byte);
-  expected<url_parse_action, url_parse_errc> parse_hostname(char byte);
-  expected<url_parse_action, url_parse_errc> parse_port(char byte);
-  expected<url_parse_action, url_parse_errc> parse_file(char byte);
-  expected<url_parse_action, url_parse_errc> parse_file_slash(char byte);
-  expected<url_parse_action, url_parse_errc> parse_file_host(char byte);
-  expected<url_parse_action, url_parse_errc> parse_path_start(char byte);
-  expected<url_parse_action, url_parse_errc> parse_path(char byte);
-  expected<url_parse_action, url_parse_errc> parse_cannot_be_a_base_url(char byte);
-  expected<url_parse_action, url_parse_errc> parse_query(char byte);
-  expected<url_parse_action, url_parse_errc> parse_fragment(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_scheme_start(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_scheme(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_no_scheme(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_special_relative_or_authority(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_path_or_authority(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_relative(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_relative_slash(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_special_authority_slashes(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_special_authority_ignore_slashes(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_authority(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_hostname(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_port(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_file(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_file_slash(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_file_host(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_path_start(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_path(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_cannot_be_a_base_url(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_query(char byte);
+  tl::expected<url_parse_action, url_parse_errc> parse_fragment(char byte);
 
 };
 }  // namespace skyr

@@ -10,7 +10,7 @@ using code_point = std::pair<char32_t, skyr::idna_status>;
 
 class code_point_tests : public ::testing::TestWithParam<code_point> {};
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     idna_table_tests,
     code_point_tests,
     ::testing::Values(

@@ -41,7 +41,7 @@ void url_search_parameters::remove(
   update();
 }
 
-optional<url_search_parameters::string_type> url_search_parameters::get(
+std::optional<url_search_parameters::string_type> url_search_parameters::get(
     const string_type &name) const noexcept {
   auto first = std::begin(parameters_), last = std::end(parameters_);
   auto it = std::find_if(
@@ -50,7 +50,7 @@ optional<url_search_parameters::string_type> url_search_parameters::get(
         return name.compare(parameter.first) == 0;
       });
   if (it == last) {
-    return nullopt;
+    return std::nullopt;
   }
 
   return it->second;
@@ -166,7 +166,7 @@ void url_search_parameters::update() {
     if (!query.empty()) {
       url_.value().get().query = query;
     } else {
-      url_.value().get().query = nullopt;
+      url_.value().get().query = std::nullopt;
     }
   }
 }

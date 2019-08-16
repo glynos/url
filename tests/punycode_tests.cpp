@@ -13,7 +13,7 @@ using param = std::pair<std::string, std::string>;
 
 class punycode_tests : public ::testing::TestWithParam<param> {};
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     encode_tests,
     punycode_tests,
     ::testing::Values(

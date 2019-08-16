@@ -26,7 +26,7 @@ std::vector<std::string> create_urls(const std::string &filename) {
 // All valid URLs in the list should pass
 class test_valid_urls : public ::testing::TestWithParam<std::string> {};
 
-INSTANTIATE_TEST_CASE_P(uri_parse_tests, test_valid_urls,
+INSTANTIATE_TEST_SUITE_P(uri_parse_tests, test_valid_urls,
                         testing::ValuesIn(create_urls("valid_urls.txt")));
 
 TEST_P(test_valid_urls, parse) {

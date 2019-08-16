@@ -9,8 +9,8 @@
 #include <string>
 #include <string_view>
 #include <system_error>
-#include <skyr/expected.hpp>
-#include <skyr/optional.hpp>
+#include <optional>
+#include <tl/expected.hpp>
 
 namespace skyr {
 /// Enumerates IPv4 address parsing errors
@@ -61,7 +61,7 @@ class ipv4_address {
 /// Parses an IPv4 address
 /// \param input An input string
 /// \returns An `ipv4_address` object or an error
-expected<ipv4_address, std::error_code> parse_ipv4_address(
+tl::expected<ipv4_address, std::error_code> parse_ipv4_address(
     std::string_view input);
 }  // namespace skyr
 

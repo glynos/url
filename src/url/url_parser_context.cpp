@@ -203,9 +203,9 @@ void shorten_path(std::string_view scheme, std::vector<std::string> &path) {
 
 url_parser_context::url_parser_context(
     std::string input,
-    optional<url_record> base,
-    const optional<url_record> &url,
-    optional<url_parse_state> state_override)
+    std::optional<url_record> base,
+    const std::optional<url_record> &url,
+    std::optional<url_parse_state> state_override)
     : input(std::move(input))
     , base(std::move(base))
     , url(url? url.value() : url_record{})
@@ -571,7 +571,7 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_port(char b
       decltype(first) last = nullptr;
       auto port = std::strtol(first, &last, 10);
       if (details::is_default_port(view, port)) {
-        url.port = nullopt;
+        url.port = std::nullopt;
       }
       else {
         url.port = port;

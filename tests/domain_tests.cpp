@@ -11,7 +11,7 @@ using param = std::pair<std::string, std::string>;
 
 class domain_tests : public ::testing::TestWithParam<param> {};
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     domain_to_ascii_tests,
     domain_tests,
     ::testing::Values(

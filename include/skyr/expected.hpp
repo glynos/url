@@ -6,7 +6,7 @@
 #ifndef SKYR_EXPECTED_INC
 #define SKYR_EXPECTED_INC
 
-#include <skyr/external/tl/expected.hpp>
+#include <tl/expected.hpp>
 
 #if !defined(DOXYGEN_SHOULD_SKIP_THIS)
 namespace skyr {
