@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1,2] - 2019-08-16
+
+### Added
+- Changed CMake scripts to make the library usable by downstream
+  projects
+
+### Changed
+- Reordered some of the internal headers
+
+### Fixed
+- Fixed bug when setting the port from a string type
+
 ## [1.1] - 2019-07-22
 
 ### Changed
