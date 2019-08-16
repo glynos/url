@@ -244,7 +244,7 @@ TEST(url_setter_tests, test_port_existing_port_no_port_1) {
   EXPECT_EQ("http://example.com/", instance.href());
 }
 
-TEST(url_setter_tests, DISABLED_test_port_invalid_port_1) {
+TEST(url_setter_tests, test_port_invalid_port_1) {
   auto instance = skyr::url{"http://example.com/"};
 
   auto result = instance.set_port("Ceci n'est pas un port");
@@ -256,6 +256,22 @@ TEST(url_setter_tests, test_port_invalid_port_2) {
   auto instance = skyr::url{"http://example.com/"};
 
   auto result = instance.set_port("1234567890");
+  ASSERT_FALSE(result);
+  EXPECT_EQ("http://example.com/", instance.href());
+}
+
+TEST(url_setter_tests, test_port_invalid_port_3) {
+  auto instance = skyr::url{"http://example.com/"};
+
+  auto result = instance.set_port("8080C");
+  ASSERT_FALSE(result);
+  EXPECT_EQ("http://example.com/", instance.href());
+}
+
+TEST(url_setter_tests, test_port_invalid_port_4) {
+  auto instance = skyr::url{"http://example.com/"};
+
+  auto result = instance.set_port("-1");
   ASSERT_FALSE(result);
   EXPECT_EQ("http://example.com/", instance.href());
 }

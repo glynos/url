@@ -141,15 +141,15 @@ class url {
 
   /// @{
   /// \tparam Source The input string type
-  /// \param input The input string
+  /// \param href The input string
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_href(const Source &input) {
+  expected<void, std::error_code> set_href(const Source &href) {
     static_assert(
         is_url_convertible<Source>::value,
         "Source is not a valid URL string type");
 
-    auto bytes = details::to_bytes(input);
+    auto bytes = details::to_bytes(href);
     if (!bytes) {
       return make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
@@ -511,6 +511,28 @@ class url {
       return make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
+
+    if (!bytes.value().empty()) {
+      const char *first = bytes.value().data();
+      char *last = nullptr;
+      auto value = std::strtol(first, &last, 10);
+      if (first == last) {
+        return make_unexpected(
+            make_error_code(url_parse_errc::invalid_port));
+      }
+
+      if (last != first + bytes.value().size()) {
+        return make_unexpected(
+            make_error_code(url_parse_errc::invalid_port));
+      }
+
+      if ((value <= 0) ||
+          (value >= static_cast<long>(std::numeric_limits<unsigned short>::max()))) {
+        return make_unexpected(
+            make_error_code(url_parse_errc::invalid_port));
+      }
+    }
+
     return set_port(std::move(bytes.value()));
   }
 

@@ -8,6 +8,7 @@ include_directories(${gtest_SOURCE_DIR}/include)
 
 set(
         TESTS
+        byte_conversion_tests
         percent_decoding_tests
         percent_encoding_tests
         url_tests
