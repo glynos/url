@@ -6,7 +6,7 @@
     https://img.shields.io/badge/license-boost-blue.svg "License")](
     https://github.com/cpp-netlib/url/blob/master/LICENSE_1_0.txt)
 [![Travis Build Status](
-    https://travis-ci.org/cpp-netlib/url.svg?branch=master "Build Status")](
+    https://travis-ci.org/glynos/url.svg?branch=vcpkg_integration "Build Status")](
     https://travis-ci.org/cpp-netlib/url)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/hc10ha6ugl6ea90u?svg=true)](
     https://ci.appveyor.com/project/glynos/url-3aeqd)

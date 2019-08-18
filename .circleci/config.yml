@@ -7,7 +7,11 @@ jobs:
     steps:
       - run:
           name: Installing Dependencies
-          command: 'apt-get update && apt-get install -y sudo git wget ninja-build && rm -rf /var/lib/apt/lists/*'
+          command: |
+            apt-get update
+            apt-get install -y sudo git wget ninja-build curl unzip tar
+            rm -rf /var/lib/apt/lists/*
+            echo 'export CMAKE_BUILD_PARALLEL_LEVEL=4' >> $BASH_ENV
       - run:
           name: Installing GCC
           command: |
@@ -18,19 +22,39 @@ jobs:
           name: Install CMAKE
           command: |
             cd /tmp
-            wget "https://github.com/Kitware/CMake/releases/download/v3.13.3/cmake-3.13.3-Linux-x86_64.tar.gz"
-            tar -xzf cmake-3.13.3-Linux-x86_64.tar.gz
-            echo 'export PATH="/tmp/cmake-3.13.3-Linux-x86_64/bin:$PATH"' >> $BASH_ENV
+            wget "https://github.com/Kitware/CMake/releases/download/v3.15.2/cmake-3.15.2-Linux-x86_64.tar.gz"
+            tar -xzf cmake-3.15.2-Linux-x86_64.tar.gz
+            echo 'export PATH="/tmp/cmake-3.15.2-Linux-x86_64/bin:$PATH"' >> $BASH_ENV
+      - run:
+          name: Installing VCPKG
+          command: |
+            cd /tmp
+            mkdir -p vcpkg
+            pushd vcpkg
+            git init
+            git remote add origin https://github.com/Microsoft/vcpkg.git
+            git fetch origin master
+            git checkout -b master origin/master
+            ./bootstrap-vcpkg.sh
+            ./vcpkg install gtest tl-expected
+            popd
       - checkout
       - run:
-          name: Updating Submodules
-          command: 'git submodule init && git submodule update'
-      - run:
           name: Creating Build Files
-          command: 'cmake -GNinja -H. -Bbuild'
+          command: |
+            mkdir _build
+            pushd _build
+            cmake -G Ninja -DSkyr_BUILD_TESTS=ON -DSkyr_BUILD_DOCS=OFF -DSkyr_BUILD_EXAMPLES=OFF -DCMAKE_TOOLCHAIN_FILE=/tmp/vcpkg/scripts/buildsystems/vcpkg.cmake ..
+            popd
       - run:
           name: Creating Binary Files
-          command: 'cmake --build build'
+          command: |
+            pushd _build
+            ninja
+            popd
       - run:
           name: Running All Unit Tests
-          command: 'cd build && ctest'
+          command: |
+            pushd _build
+            ctest
+            popd

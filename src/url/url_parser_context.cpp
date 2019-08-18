@@ -569,7 +569,8 @@ expected<url_parse_action, url_parse_errc> url_parser_context::parse_port(char b
       auto view = std::string_view(url.scheme.data(), url.scheme.length());
       auto first = buffer.data();
       decltype(first) last = nullptr;
-      auto port = std::strtol(first, &last, 10);
+      auto port = static_cast<std::uint16_t>(
+          std::strtol(first, &last, 10));
       if (details::is_default_port(view, port)) {
         url.port = std::nullopt;
       }

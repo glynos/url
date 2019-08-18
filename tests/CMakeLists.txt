@@ -4,7 +4,6 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 
-enable_testing()
 find_package(GTest MODULE REQUIRED)
 
 set(
