@@ -26,7 +26,15 @@ enum class unicode_errc {
   /// Invalid code point
   invalid_code_point,
 };
+}  // namespace unicode
+}  // namespace skyr
 
+namespace std {
+template <>
+struct is_error_code_enum<skyr::unicode::unicode_errc> : true_type {};
+}  // namespace std
+
+namespace skyr::unicode {
 /// Creates a `std::error_code` given a `skyr::unicode_errc` value
 /// \param error A Unicode error
 /// \returns A `std::error_code` object
@@ -72,12 +80,6 @@ expected<std::u32string, std::error_code> utf32_from_bytes(
 /// \returns A UTF-8 `std::string` or an error on failure
 expected<std::string, std::error_code> utf32_to_bytes(
     std::u32string_view input);
-}  // namespace unicode
-}  // namespace skyr
-
-namespace std {
-template <>
-struct is_error_code_enum<skyr::unicode::unicode_errc> : true_type {};
-}  // namespace std
+}  // namespace skyr::unicode
 
 #endif //SKYR_UNICODE_HPP

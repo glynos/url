@@ -16,8 +16,8 @@ namespace skyr {
 namespace {
 class ipv4_address_error_category : public std::error_category {
  public:
-  const char *name() const noexcept override;
-  std::string message(int error) const noexcept override;
+  [[nodiscard]] const char *name() const noexcept override;
+  [[nodiscard]] std::string message(int error) const noexcept override;
 };
 
 const char *ipv4_address_error_category::name() const noexcept {

@@ -77,11 +77,6 @@ add_subdirectory(src)
 # Testing
 if (Skyr_BUILD_TESTS)
     message(STATUS "Configuring tests")
-#    set(BUILD_GMOCK OFF)
-#    set(BUILD_GTEST ON)
-#    set(INSTALL_GMOCK OFF)
-#    set(INSTALL_GTEST OFF)
-#    add_subdirectory(deps/googletest)
     add_subdirectory(tests)
 endif()
 

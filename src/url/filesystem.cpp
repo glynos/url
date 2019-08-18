@@ -6,13 +6,12 @@
 #include "skyr/url/filesystem.hpp"
 #include "skyr/url/percent_encode.hpp"
 
-namespace skyr {
-namespace filesystem {
+namespace skyr::filesystem {
 namespace {
 class path_error_category : public std::error_category {
  public:
-  const char *name() const noexcept override;
-  std::string message(int error) const noexcept override;
+  [[nodiscard]] const char *name() const noexcept override;
+  [[nodiscard]] std::string message(int error) const noexcept override;
 };
 
 const char *path_error_category::name() const noexcept {
@@ -56,5 +55,4 @@ expected<std::filesystem::path, std::error_code> to_path(const url &input) {
   }
   return std::filesystem::u8path(decoded.value());
 }
-}  // namespace filesystem
-}  // namespace skyr
+}  // namespace skyr::filesystem
