@@ -29,6 +29,11 @@ if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
 		LIST(APPEND TESTS filesystem_path_tests)
 endif()
 
+if (MSVC)
+    # For json.hpp
+    add_definitions(-D_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING)
+endif(MSVC)
+
 foreach (test ${TESTS})
     add_executable(${test} ${test}.cpp)
     add_dependencies(${test} skyr-url)
