@@ -30,6 +30,7 @@ if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
 endif()
 
 if (MSVC)
+	add_definitions(-DDGTEST_LINKED_AS_SHARED_LIBRARY=1)
     # For json.hpp
     add_definitions(-D_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING)
 endif(MSVC)
