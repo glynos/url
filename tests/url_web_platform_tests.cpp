@@ -17,15 +17,13 @@ using json = nlohmann::json;
 
 namespace {
 struct test_case {
-  test_case(json object)
-    : failure(false) {
+  test_case(json object) {
     input = object["input"].get<std::string>();
     base = object["base"].get<std::string>();
 
-    if (object.find("failure") != object.end()) {
-      failure = object["failure"].get<bool>();
-    }
-
+    failure =
+        (object.find("failure") != object.end()) &&
+        object["failure"].get<bool>();
     if (!failure) {
       href = object["href"].get<std::string>();
       if (object.find("origin") != object.end()) {
@@ -61,8 +59,8 @@ struct test_case {
 
 class TestCaseGenerator : public Catch::Generators::IGenerator<test_case> {
  public:
-  explicit TestCaseGenerator(const std::string &filename, bool failure)
-  : failure_(failure) {
+  explicit TestCaseGenerator(
+      const std::string &filename, bool failure) {
     std::ifstream fs{filename};
     json tests;
     fs >> tests;
@@ -70,13 +68,13 @@ class TestCaseGenerator : public Catch::Generators::IGenerator<test_case> {
     for (auto &&test_case_object : tests) {
       if (!test_case_object.is_string()) {
       auto test_case_data = test_case{test_case_object};
-        if (failure_ == test_case_data.failure) {
+        if (failure == test_case_data.failure) {
           test_case_data_.emplace_back(test_case_data);
         }
       }
     }
 
-    it_ = std::begin(test_case_data_);
+    it_ = begin(test_case_data_);
   }
 
   const test_case &get() const override {
@@ -92,7 +90,6 @@ class TestCaseGenerator : public Catch::Generators::IGenerator<test_case> {
 
  private:
   std::vector<test_case> test_case_data_;
-  bool failure_;
   std::vector<test_case>::const_iterator it_;
 };
 

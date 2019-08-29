@@ -36,7 +36,7 @@ jobs:
             git fetch origin master
             git checkout -b master origin/master
             ./bootstrap-vcpkg.sh
-            ./vcpkg install gtest tl-expected
+            ./vcpkg install catch2 tl-expected
             popd
       - checkout
       - run:

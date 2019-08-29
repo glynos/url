@@ -30,6 +30,8 @@ and standard library.
 
 ### Installing `vcpkg`
 
+Follow the instructions to install `vcpkg` on your platform.
+
 ### Building with `CMake` and `Ninja`
 
 From a terminal, execute the following sequence of commands:
@@ -179,6 +181,7 @@ MacOS:
 Windows:
 
 * Microsoft Visual C++ 2017
+* Microsoft Visual C++ 2019
 
 ## License
 

@@ -6,14 +6,14 @@ platform:
   - x64
 
 configuration:
-  # - Debug
+  - Debug
   - Release
 
 install:
   - cd C:\Tools\vcpkg
   - git pull
   - .\bootstrap-vcpkg.bat
-  - vcpkg install gtest:x86-windows-static tl-expected
+  - vcpkg install catch2 tl-expected
   - vcpkg integrate install
   - cd %APPVEYOR_BUILD_FOLDER%
 
@@ -28,7 +28,5 @@ build_script:
 
 cache: c:\Tools\vcpkg\installed\
 
-#matrix:
-#  fast_finish: true
-#  allow_failures:
-#    - configuration: Debug
+matrix:
+  fast_finish: true

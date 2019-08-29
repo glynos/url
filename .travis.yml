@@ -76,7 +76,7 @@ install:
   - ${CXX} --version
   - export
   - ./bootstrap-vcpkg.sh
-  - ./vcpkg install gtest tl-expected
+  - ./vcpkg install catch2 tl-expected
   - popd
 
 cache:
