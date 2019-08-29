@@ -4,7 +4,8 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 
-find_package(GTest MODULE REQUIRED)
+find_path(CATCH_INCLUDE_DIR catch.hpp)
+include_directories(${CATCH_INCLUDE_DIR})
 
 set(
         TESTS
@@ -30,7 +31,6 @@ if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
 endif()
 
 if (MSVC)
-	add_definitions(-DDGTEST_LINKED_AS_SHARED_LIBRARY=1)
     # For json.hpp
     add_definitions(-D_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING)
 endif(MSVC)
@@ -38,7 +38,7 @@ endif(MSVC)
 foreach (test ${TESTS})
     add_executable(${test} ${test}.cpp)
     add_dependencies(${test} skyr-url)
-    target_link_libraries(${test} PRIVATE ${CMAKE_THREAD_LIBS_INIT} skyr-url GTest::GTest GTest::Main)
+    target_link_libraries(${test} PRIVATE ${CMAKE_THREAD_LIBS_INIT} skyr-url)
     set_target_properties(${test} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${Skyr_BINARY_DIR}/tests)
     add_test(${test} ${Skyr_BINARY_DIR}/tests/${test}
     )
