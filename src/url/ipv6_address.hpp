@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <iterator>
 #include <system_error>
-#include <skyr/expected.hpp>
+#include <tl/expected.hpp>
 
 namespace skyr {
 /// Enumerates IPv6 address parsing errors
@@ -51,18 +51,18 @@ class ipv6_address {
 
   /// Constructor
   /// \param address Sets the IPv6 address to `address`
-  ipv6_address(std::array<unsigned short, 8> address)
+  explicit ipv6_address(std::array<unsigned short, 8> address)
       : address_(address) {}
 
    /// \returns The IPv4 address as a string
-  std::string to_string() const;
+  [[nodiscard]] std::string to_string() const;
 
 };
 
 /// Parses an IPv6 address
 /// \param input An input string
 /// \returns An `ipv6_address` object or an error
-expected<ipv6_address, std::error_code> parse_ipv6_address(
+tl::expected<ipv6_address, std::error_code> parse_ipv6_address(
     std::string_view input);
 }  // namespace skyr
 

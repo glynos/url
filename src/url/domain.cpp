@@ -85,15 +85,15 @@ inline bool delim(char32_t c) {
 }
 }  // namespace
 
-expected<std::string, std::error_code> punycode_encode(std::string_view input) {
+tl::expected<std::string, std::error_code> punycode_encode(std::string_view input) {
   auto utf32 = unicode::utf32_from_bytes(input);
   if (!utf32) {
-    return make_unexpected(make_error_code(domain_errc::bad_input));
+    return tl::make_unexpected(make_error_code(domain_errc::bad_input));
   }
   return punycode_encode(utf32.value());
 }
 
-expected<std::string, std::error_code> punycode_encode(std::u32string_view input) {
+tl::expected<std::string, std::error_code> punycode_encode(std::u32string_view input) {
   auto result = std::string{};
   result.reserve(256);
 
@@ -123,7 +123,7 @@ expected<std::string, std::error_code> punycode_encode(std::u32string_view input
     }
 
     if ((m - n) > ((std::numeric_limits<char32_t>::max() - delta) / (h + 1))) {
-      return make_unexpected(make_error_code(domain_errc::overflow));
+      return tl::make_unexpected(make_error_code(domain_errc::overflow));
     }
     delta += (m - n) * (h + 1);
     n = m;
@@ -131,7 +131,7 @@ expected<std::string, std::error_code> punycode_encode(std::u32string_view input
     for (auto c : input) {
       if (c < n) {
         if (++delta == 0) {
-          return make_unexpected(make_error_code(domain_errc::overflow));
+          return tl::make_unexpected(make_error_code(domain_errc::overflow));
         }
       }
 
@@ -162,7 +162,7 @@ expected<std::string, std::error_code> punycode_encode(std::u32string_view input
   return to_ascii(result);
 }
 
-expected<std::string, std::error_code> punycode_decode(std::string_view input) {
+tl::expected<std::string, std::error_code> punycode_decode(std::string_view input) {
   auto result = std::u32string();
   result.reserve(256);
 
@@ -195,14 +195,14 @@ expected<std::string, std::error_code> punycode_decode(std::string_view input) {
     auto k = base;
     while (true) {
       if (in >= input.size()) {
-        return make_unexpected(make_error_code(domain_errc::bad_input));
+        return tl::make_unexpected(make_error_code(domain_errc::bad_input));
       }
       auto digit = decode_digit(input[in++]);
       if (digit >= base) {
-        return make_unexpected(make_error_code(domain_errc::bad_input));
+        return tl::make_unexpected(make_error_code(domain_errc::bad_input));
       }
       if (digit > ((std::numeric_limits<char32_t>::max() - i) / w)) {
-        return make_unexpected(make_error_code(domain_errc::overflow));
+        return tl::make_unexpected(make_error_code(domain_errc::overflow));
       }
       i += digit * w;
       auto t = (k <= bias) ? tmin :
@@ -211,7 +211,7 @@ expected<std::string, std::error_code> punycode_decode(std::string_view input) {
         break;
       }
       if (w > (std::numeric_limits<char32_t>::max() / (base - t))) {
-        return make_unexpected(make_error_code(domain_errc::overflow));
+        return tl::make_unexpected(make_error_code(domain_errc::overflow));
       }
       w *= (base - t);
       k += base;
@@ -221,7 +221,7 @@ expected<std::string, std::error_code> punycode_decode(std::string_view input) {
     bias = adapt((i - oldi), out, (oldi == 0U));
 
     if ((i / out) > (std::numeric_limits<char32_t>::max() - n)) {
-      return make_unexpected(make_error_code(domain_errc::overflow));
+      return tl::make_unexpected(make_error_code(domain_errc::overflow));
     }
     n += i / out;
     i %= out;
@@ -231,13 +231,13 @@ expected<std::string, std::error_code> punycode_decode(std::string_view input) {
 
   auto bytes = unicode::utf32_to_bytes(result);
   if (!bytes) {
-    return make_unexpected(make_error_code(domain_errc::bad_input));
+    return tl::make_unexpected(make_error_code(domain_errc::bad_input));
   }
   return bytes.value();
 }
 
 namespace {
-expected<std::u32string, std::error_code> process(
+tl::expected<std::u32string, std::error_code> process(
     std::u32string_view domain_name,
     bool use_std3_ascii_rules,
     bool check_hyphens,
@@ -293,14 +293,14 @@ expected<std::u32string, std::error_code> process(
   }
 
   if (error) {
-    return make_unexpected(
+    return tl::make_unexpected(
         make_error_code(domain_errc::disallowed_code_point));
   }
 
   return result;
 }
 
-expected<std::string, std::error_code> unicode_to_ascii(
+tl::expected<std::string, std::error_code> unicode_to_ascii(
     std::u32string_view domain_name,
     bool check_hyphens,
     bool check_bidi,
@@ -317,7 +317,7 @@ expected<std::string, std::error_code> unicode_to_ascii(
       transitional_processing);
 
   if (!domain) {
-    return make_unexpected(std::move(domain.error()));
+    return tl::make_unexpected(std::move(domain.error()));
   }
 
   auto labels = split(domain.value(), U'.');
@@ -326,7 +326,7 @@ expected<std::string, std::error_code> unicode_to_ascii(
     if (!is_ascii(label)) {
       auto encoded = punycode_encode(label);
       if (!encoded) {
-        return make_unexpected(std::move(encoded.error()));
+        return tl::make_unexpected(std::move(encoded.error()));
       }
       label.assign(begin(encoded.value()), end(encoded.value()));
     }
@@ -349,32 +349,32 @@ expected<std::string, std::error_code> unicode_to_ascii(
   auto utf32_domain = join(labels, U'.');
   auto ascii_domain = unicode::utf32_to_bytes(utf32_domain);
   if (!ascii_domain) {
-    return make_unexpected(
+    return tl::make_unexpected(
         make_error_code(domain_errc::encoding_error));
   }
   return ascii_domain.value();
 }
 }  // namespace
 
-expected<std::string, std::error_code> domain_to_ascii(
+tl::expected<std::string, std::error_code> domain_to_ascii(
     std::string_view domain,
     bool be_strict) {
   auto utf32 = unicode::utf32_from_bytes(domain);
   if (!utf32) {
-    return make_unexpected(
+    return tl::make_unexpected(
         make_error_code(domain_errc::encoding_error));
   }
   return domain_to_ascii(utf32.value(), be_strict);
 }
 
-expected<std::string, std::error_code> domain_to_ascii(
+tl::expected<std::string, std::error_code> domain_to_ascii(
     std::u32string_view domain,
     bool be_strict) {
   auto result = unicode_to_ascii(
       domain, false, true, true, be_strict, false, be_strict);
   if (!result) {
     // validation error
-    return make_unexpected(std::move(result.error()));
+    return tl::make_unexpected(std::move(result.error()));
   }
   return result;
 }

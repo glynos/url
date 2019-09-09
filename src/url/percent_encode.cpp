@@ -53,7 +53,7 @@ inline char hex_to_letter(char byte) {
   return byte;
 }
 
-inline expected<char, std::error_code> letter_to_hex(char byte) {
+inline tl::expected<char, std::error_code> letter_to_hex(char byte) {
   if ((byte >= '0') && (byte <= '9')) {
     return byte - '0';
   }
@@ -66,7 +66,7 @@ inline expected<char, std::error_code> letter_to_hex(char byte) {
     return byte + static_cast<char>(0x0a) - 'A';
   }
 
-  return make_unexpected(make_error_code(
+  return tl::make_unexpected(make_error_code(
       percent_encode_errc::non_hex_input));
 }
 
@@ -127,7 +127,7 @@ std::string percent_encode_byte(char byte, encode_set excludes) {
   return {};
 }
 
-expected<std::string, std::error_code> percent_encode(
+tl::expected<std::string, std::error_code> percent_encode(
     std::string_view input, encode_set excludes) {
   auto result = std::string{};
   auto first = begin(input), last = end(input);
@@ -139,19 +139,19 @@ expected<std::string, std::error_code> percent_encode(
   return result;
 }
 
-expected<std::string, std::error_code> percent_encode(
+tl::expected<std::string, std::error_code> percent_encode(
     std::u32string_view input, encode_set excludes) {
   auto bytes = unicode::utf32_to_bytes(input);
   if (!bytes) {
-    return make_unexpected(make_error_code(
+    return tl::make_unexpected(make_error_code(
         percent_encode_errc::overflow));
   }
   return percent_encode(bytes.value(), excludes);
 }
 
-expected<char, std::error_code> percent_decode_byte(std::string_view input) {
+tl::expected<char, std::error_code> percent_decode_byte(std::string_view input) {
   if ((input.size() < 3) || (input.front() != '%')) {
-    return make_unexpected(make_error_code(
+    return tl::make_unexpected(make_error_code(
         percent_encode_errc::non_hex_input));
   }
 
@@ -160,14 +160,14 @@ expected<char, std::error_code> percent_decode_byte(std::string_view input) {
   auto v1 = letter_to_hex(*++it);
 
   if (!v0 || !v1) {
-    return make_unexpected(make_error_code(
+    return tl::make_unexpected(make_error_code(
         percent_encode_errc::non_hex_input));
   }
 
   return (0x10 * v0.value()) + v1.value();
 }
 
-expected<std::string, std::error_code> percent_decode(std::string_view input) {
+tl::expected<std::string, std::error_code> percent_decode(std::string_view input) {
   auto result = std::string{};
   auto first = begin(input), last = end(input);
   auto it = first;
@@ -179,7 +179,7 @@ expected<std::string, std::error_code> percent_decode(std::string_view input) {
       }
       auto byte = percent_decode_byte(std::string_view(std::addressof(*it), 3));
       if (!byte) {
-        return make_unexpected(std::move(byte.error()));
+        return tl::make_unexpected(std::move(byte.error()));
       }
       result.push_back(byte.value());
       it += 3;

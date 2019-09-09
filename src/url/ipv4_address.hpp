@@ -49,12 +49,12 @@ class ipv4_address {
 
   /// The address value
   /// \returns The address value
-  unsigned int address() const noexcept {
+  [[nodiscard]] unsigned int address() const noexcept {
     return address_;
   }
 
   /// \returns The address as a string
-  std::string to_string() const;
+  [[nodiscard]] std::string to_string() const;
 
 };
 

@@ -35,7 +35,7 @@ void url_search_parameters::remove(
   auto it = std::remove_if(
       first, last,
       [&name](const auto &parameter) -> bool {
-        return name.compare(parameter.first) == 0;
+        return name == parameter.first;
       });
   parameters_.erase(it, last);
   update();
@@ -47,7 +47,7 @@ std::optional<url_search_parameters::string_type> url_search_parameters::get(
   auto it = std::find_if(
       first, last,
       [&name](const auto &parameter) -> bool {
-        return name.compare(parameter.first) == 0;
+        return name == parameter.first;
       });
   if (it == last) {
     return std::nullopt;
@@ -71,7 +71,7 @@ bool url_search_parameters::contains(const string_type &name) const noexcept {
   auto first = std::begin(parameters_), last = std::end(parameters_);
   auto it = std::find_if(first, last,
       [&name](const auto &parameter) -> bool {
-    return name.compare(parameter.first) == 0;
+    return name == parameter.first;
   });
   return it != last;
 }
@@ -83,7 +83,7 @@ void url_search_parameters::set(
   auto it = std::find_if(
       first, last,
       [&name](const auto &parameter) -> bool {
-        return name.compare(parameter.first) == 0;
+        return name == parameter.first;
       });
   if (it != last) {
     it->second = value;
@@ -91,7 +91,7 @@ void url_search_parameters::set(
     it = std::remove_if(
         it, last,
         [&name](const auto &parameter) -> bool {
-          return name.compare(parameter.first) == 0;
+          return name == parameter.first;
         });
     parameters_.erase(it, last);
   }

@@ -55,10 +55,10 @@ url::string_type url::href() const {
   return href_;
 }
 
-expected<void, std::error_code> url::set_href(string_type &&href) {
+tl::expected<void, std::error_code> url::set_href(string_type &&href) {
   auto new_url = details::basic_parse(std::move(href));
   if (!new_url) {
-    return make_unexpected(std::move(new_url.error()));
+    return tl::make_unexpected(std::move(new_url.error()));
   }
 
   update_record(std::move(new_url.value()));
@@ -90,11 +90,11 @@ url::string_type url::origin() const {
 
 url::string_type url::protocol() const { return url_.scheme + ":"; }
 
-expected<void, std::error_code> url::set_protocol(string_type &&protocol) {
+tl::expected<void, std::error_code> url::set_protocol(string_type &&protocol) {
   auto new_url = details::basic_parse(
       protocol + ":", std::nullopt, url_, url_parse_state::scheme_start);
   if (!new_url) {
-    return make_unexpected(std::move(new_url.error()));
+    return tl::make_unexpected(std::move(new_url.error()));
   }
 
   update_record(std::move(new_url.value()));
@@ -103,9 +103,9 @@ expected<void, std::error_code> url::set_protocol(string_type &&protocol) {
 
 url::string_type url::username() const { return url_.username; }
 
-expected<void, std::error_code> url::set_username(string_type &&username) {
+tl::expected<void, std::error_code> url::set_username(string_type &&username) {
   if (url_.cannot_have_a_username_password_or_port()) {
-    return make_unexpected(make_error_code(
+    return tl::make_unexpected(make_error_code(
         url_parse_errc::cannot_have_a_username_password_or_port));
   }
 
@@ -123,9 +123,9 @@ expected<void, std::error_code> url::set_username(string_type &&username) {
 
 url::string_type url::password() const { return url_.password; }
 
-expected<void, std::error_code> url::set_password(string_type &&password) {
+tl::expected<void, std::error_code> url::set_password(string_type &&password) {
   if (url_.cannot_have_a_username_password_or_port()) {
-    return make_unexpected(make_error_code(
+    return tl::make_unexpected(make_error_code(
         url_parse_errc::cannot_have_a_username_password_or_port));
   }
 
@@ -153,16 +153,16 @@ url::string_type url::host() const {
   return url_.host.value() + ":" + std::to_string(url_.port.value());
 }
 
-expected<void, std::error_code> url::set_host(string_type &&host) {
+tl::expected<void, std::error_code> url::set_host(string_type &&host) {
   if (url_.cannot_be_a_base_url) {
-    return make_unexpected(make_error_code(
+    return tl::make_unexpected(make_error_code(
         url_parse_errc::cannot_be_a_base_url));
   }
 
   auto new_url = details::basic_parse(
       std::move(host), std::nullopt, url_, url_parse_state::host);
   if (!new_url) {
-    return make_unexpected(std::move(new_url.error()));
+    return tl::make_unexpected(std::move(new_url.error()));
   }
 
   update_record(std::move(new_url.value()));
@@ -177,16 +177,16 @@ url::string_type url::hostname() const {
   return url_.host.value();
 }
 
-expected<void, std::error_code> url::set_hostname(string_type &&hostname) {
+tl::expected<void, std::error_code> url::set_hostname(string_type &&hostname) {
   if (url_.cannot_be_a_base_url) {
-    return make_unexpected(make_error_code(
+    return tl::make_unexpected(make_error_code(
         url_parse_errc::cannot_be_a_base_url));
   }
 
   auto new_url = details::basic_parse(
       std::move(hostname), std::nullopt, url_, url_parse_state::hostname);
   if (!new_url) {
-    return make_unexpected(std::move(new_url.error()));
+    return tl::make_unexpected(std::move(new_url.error()));
   }
 
   update_record(std::move(new_url.value()));
@@ -201,9 +201,9 @@ url::string_type url::port() const {
   return std::to_string(url_.port.value());
 }
 
-expected<void, std::error_code> url::set_port(string_type &&port) {
+tl::expected<void, std::error_code> url::set_port(string_type &&port) {
   if (url_.cannot_have_a_username_password_or_port()) {
-    return make_unexpected(make_error_code(
+    return tl::make_unexpected(make_error_code(
         url_parse_errc::cannot_have_a_username_password_or_port));
   }
 
@@ -216,7 +216,7 @@ expected<void, std::error_code> url::set_port(string_type &&port) {
     auto new_url = details::basic_parse(
         std::move(port), std::nullopt, url_, url_parse_state::port);
     if (!new_url) {
-      return make_unexpected(std::move(new_url.error()));
+      return tl::make_unexpected(std::move(new_url.error()));
     }
     update_record(std::move(new_url.value()));
   }
@@ -251,7 +251,7 @@ tl::expected<void, std::error_code> url::set_pathname(string_type &&pathname) {
   auto new_url = details::basic_parse(
       std::move(pathname),std:: nullopt, url_, url_parse_state::path_start);
   if (!new_url) {
-    return make_unexpected(std::move(new_url.error()));
+    return tl::make_unexpected(std::move(new_url.error()));
   }
   update_record(std::move(new_url.value()));
   return {};
@@ -283,7 +283,7 @@ tl::expected<void, std::error_code> url::set_search(string_type &&search) {
   auto new_url = details::basic_parse(
       std::move(input), std::nullopt, url_, url_parse_state::query);
   if (!new_url) {
-    return make_unexpected(std::move(new_url.error()));
+    return tl::make_unexpected(std::move(new_url.error()));
   }
   update_record(std::move(new_url.value()));
   return {};

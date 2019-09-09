@@ -15,9 +15,9 @@ enum class url_parse_errc {
   invalid_unicode_character=1,
   /// Character is not a valid scheme character
   invalid_scheme_character,
-  // URL is not an absolute URL with fragment
+  /// URL is not an absolute URL with fragment
   not_an_absolute_url_with_fragment,
-  // Cannot set scheme value
+  /// Cannot set scheme value
   cannot_override_scheme,
   /// Hostname is empty
   empty_hostname,

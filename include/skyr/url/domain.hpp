@@ -9,7 +9,7 @@
 #include <string>
 #include <string_view>
 #include <system_error>
-#include <skyr/expected.hpp>
+#include <tl/expected.hpp>
 
 namespace skyr {
 /// Enumerates domain processing errors
@@ -34,7 +34,7 @@ std::error_code make_error_code(domain_errc error);
 ///
 /// \param input A UTF-8 encoded domain to be encoded
 /// \returns The encoded ASCII domain, or an error
-expected<std::string, std::error_code> punycode_encode(
+tl::expected<std::string, std::error_code> punycode_encode(
     std::string_view input);
 
 /// Performs punycode encoding based on a reference implementation
@@ -42,7 +42,7 @@ expected<std::string, std::error_code> punycode_encode(
 ///
 /// \param input A UTF-32 encoded domain to be encoded
 /// \returns The encoded ASCII domain, or an error
-expected<std::string, std::error_code> punycode_encode(
+tl::expected<std::string, std::error_code> punycode_encode(
     std::u32string_view input);
 
 /// Performs punycode decoding based on a reference implementation
@@ -50,7 +50,7 @@ expected<std::string, std::error_code> punycode_encode(
 ///
 /// \param input An ASCII encoded domain to be decoded
 /// \returns The decoded UTF-8 domain, or an error
-expected<std::string, std::error_code> punycode_decode(
+tl::expected<std::string, std::error_code> punycode_decode(
     std::string_view input);
 
 /// Converts a UTF-8 encoded domain to ASCII using
@@ -59,7 +59,7 @@ expected<std::string, std::error_code> punycode_decode(
 /// \param domain A domain
 /// \param be_strict Tells the processor to be strict
 /// \returns An ASCII domain, or an error
-expected<std::string, std::error_code> domain_to_ascii(
+tl::expected<std::string, std::error_code> domain_to_ascii(
     std::string_view domain,
     bool be_strict = true);
 
@@ -69,7 +69,7 @@ expected<std::string, std::error_code> domain_to_ascii(
 /// \param domain A domain
 /// \param be_strict Tells the processor to be strict
 /// \returns An ASCII domain, or an error
-expected<std::string, std::error_code> domain_to_ascii(
+tl::expected<std::string, std::error_code> domain_to_ascii(
     std::u32string_view domain,
     bool be_strict = true);
 }  // namespace skyr

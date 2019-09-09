@@ -9,9 +9,9 @@
 #include <string>
 #include <string_view>
 #include <type_traits>
+#include <tl/expected.hpp>
 #include <skyr/config.hpp>
 #include <skyr/version.hpp>
-#include <skyr/expected.hpp>
 #include <skyr/url/url_record.hpp>
 #include <skyr/url/url_error.hpp>
 #include <skyr/url/url_search_parameters.hpp>
@@ -144,20 +144,20 @@ class url {
   /// \param href The input string
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_href(const Source &href) {
+  tl::expected<void, std::error_code> set_href(const Source &href) {
     static_assert(
         is_url_convertible<Source>::value,
         "Source is not a valid URL string type");
 
     auto bytes = details::to_bytes(href);
     if (!bytes) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_href(std::move(bytes.value()));
   }
 
-  expected<void, std::error_code> set_href(string_type &&href);
+  tl::expected<void, std::error_code> set_href(string_type &&href);
   /// @}
 
   /// The URL string
@@ -182,20 +182,20 @@ class url {
   /// \param protocol The new URL protocol
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_protocol(const Source &protocol) {
+  tl::expected<void, std::error_code> set_protocol(const Source &protocol) {
     static_assert(
         is_url_convertible<Source>::value,
         "Source is not a valid URL string type");
 
     auto bytes = details::to_bytes(protocol);
     if (!bytes) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_protocol(std::move(bytes.value()));
   }
 
-  expected<void, std::error_code> set_protocol(string_type &&protocol);
+  tl::expected<void, std::error_code> set_protocol(string_type &&protocol);
   /// @}
 
   /// \returns The [URL username](https://url.spec.whatwg.org/#dom-url-username)
@@ -207,20 +207,20 @@ class url {
   /// \param username The new username
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_username(const Source &username) {
+  tl::expected<void, std::error_code> set_username(const Source &username) {
     static_assert(
         is_url_convertible<Source>::value,
         "Source is not a valid URL string type");
 
     auto bytes = details::to_bytes(username);
     if (!bytes) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_username(std::move(bytes.value()));
   }
 
-  expected<void, std::error_code> set_username(string_type &&username);
+  tl::expected<void, std::error_code> set_username(string_type &&username);
   /// @}
 
   /// The [URL password](https://url.spec.whatwg.org/#dom-url-password)
@@ -236,20 +236,20 @@ class url {
   /// \param password The new password
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_password(const Source &password) {
+  tl::expected<void, std::error_code> set_password(const Source &password) {
     static_assert(
         is_url_convertible<Source>::value,
         "Source is not a valid URL string type");
 
     auto bytes = details::to_bytes(password);
     if (!bytes) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_password(std::move(bytes.value()));
   }
   
-  expected<void, std::error_code> set_password(string_type &&password);
+  tl::expected<void, std::error_code> set_password(string_type &&password);
   /// @}
 
   /// \returns The [URL host](https://url.spec.whatwg.org/#dom-url-host)
@@ -261,20 +261,20 @@ class url {
   /// \param host The new URL host
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_host(const Source &host) {
+  tl::expected<void, std::error_code> set_host(const Source &host) {
     static_assert(
         is_url_convertible<Source>::value,
         "Source is not a valid URL string type");
 
     auto bytes = details::to_bytes(host);
     if (!bytes) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_host(std::move(bytes.value()));
   }
 
-  expected<void, std::error_code> set_host(string_type &&host);
+  tl::expected<void, std::error_code> set_host(string_type &&host);
   /// @}
 
   /// \returns The [URL hostname](https://url.spec.whatwg.org/#dom-url-hostname)
@@ -286,20 +286,20 @@ class url {
   /// \param hostname The new URL host name
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_hostname(const Source &hostname) {
+  tl::expected<void, std::error_code> set_hostname(const Source &hostname) {
     static_assert(
         is_url_convertible<Source>::value,
         "Source is not a valid URL string type");
 
     auto bytes = details::to_bytes(hostname);
     if (!bytes) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_hostname(std::move(bytes.value()));
   }
 
-  expected<void, std::error_code> set_hostname(string_type &&hostname);
+  tl::expected<void, std::error_code> set_hostname(string_type &&hostname);
   /// @}
 
   /// \returns The [URL port](https://url.spec.whatwg.org/#dom-url-port)
@@ -322,11 +322,11 @@ class url {
   /// \param port The new port
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_port(const Source &port) {
+  tl::expected<void, std::error_code> set_port(const Source &port) {
     return set_port_impl(port);
   }
 
-  expected<void, std::error_code> set_port(string_type &&port);
+  tl::expected<void, std::error_code> set_port(string_type &&port);
   /// @}
 
   /// Returns the [URL pathname](https://url.spec.whatwg.org/#dom-url-pathname)
@@ -340,20 +340,20 @@ class url {
   /// \param pathname The new pathname
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_pathname(const Source &pathname) {
+  tl::expected<void, std::error_code> set_pathname(const Source &pathname) {
     static_assert(
         is_url_convertible<Source>::value,
         "Source is not a valid URL string type");
 
     auto bytes = details::to_bytes(pathname);
     if (!bytes) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_pathname(std::move(bytes.value()));
   }
 
-  expected<void, std::error_code> set_pathname(string_type &&pathname);
+  tl::expected<void, std::error_code> set_pathname(string_type &&pathname);
   /// @}
 
   /// Returns the [URL search string](https://url.spec.whatwg.org/#dom-url-search)
@@ -367,24 +367,24 @@ class url {
   /// \param search The new search string
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_search(const Source &search) {
+  tl::expected<void, std::error_code> set_search(const Source &search) {
     static_assert(
         is_url_convertible<Source>::value,
         "Source is not a valid URL string type");
 
     auto bytes = details::to_bytes(search);
     if (!bytes) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_search(std::move(bytes.value()));
   }
 
-  expected<void, std::error_code> set_search(string_type &&search);
+  tl::expected<void, std::error_code> set_search(string_type &&search);
   /// @}
 
   /// \returns A reference to the search parameters
-  url_search_parameters &search_parameters();
+  [[nodiscard]] url_search_parameters &search_parameters();
 
   /// Returns the [URL hash string](https://url.spec.whatwg.org/#dom-url-hash)
   ///
@@ -397,20 +397,20 @@ class url {
   /// \param hash The new hash string
   /// \returns An error on failure to parse the new URL
   template <class Source>
-  expected<void, std::error_code> set_hash(const Source &hash) {
+  tl::expected<void, std::error_code> set_hash(const Source &hash) {
     static_assert(
         is_url_convertible<Source>::value,
         "Source is not a valid URL string type");
 
     auto bytes = details::to_bytes(hash);
     if (!bytes) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
     return set_hash(std::move(bytes.value()));
   }
 
-  expected<void, std::error_code> set_hash(string_type &&hash);
+  tl::expected<void, std::error_code> set_hash(string_type &&hash);
   /// @}
 
   /// \returns The underlying `url_record` implementation.
@@ -419,7 +419,7 @@ class url {
   }
 
   /// \returns The underlying `url_record` implementation.
-  url_record &&record() && noexcept {
+  [[nodiscard]] url_record &&record() && noexcept {
     return std::move(url_);
   }
 
@@ -473,7 +473,7 @@ class url {
   /// \param scheme
   /// \returns The default port if the scheme is special, `nullopt`
   ///          otherwise
-  static std::optional<std::uint16_t> default_port(
+  [[nodiscard]] static std::optional<std::uint16_t> default_port(
       const string_type &scheme) noexcept;
 
   /// Clears the underlying URL string
@@ -508,7 +508,7 @@ class url {
       typename std::enable_if<is_url_convertible<Source>::value>::type * = nullptr) {
     auto bytes = details::to_bytes(port);
     if (!bytes) {
-      return make_unexpected(
+      return tl::make_unexpected(
           make_error_code(url_parse_errc::invalid_unicode_character));
     }
 
@@ -517,18 +517,18 @@ class url {
       char *last = nullptr;
       auto value = std::strtol(first, &last, 10);
       if (first == last) {
-        return make_unexpected(
+        return tl::make_unexpected(
             make_error_code(url_parse_errc::invalid_port));
       }
 
       if (last != first + bytes.value().size()) {
-        return make_unexpected(
+        return tl::make_unexpected(
             make_error_code(url_parse_errc::invalid_port));
       }
 
       if ((value <= 0) ||
           (value >= static_cast<long>(std::numeric_limits<unsigned short>::max()))) {
-        return make_unexpected(
+        return tl::make_unexpected(
             make_error_code(url_parse_errc::invalid_port));
       }
     }
@@ -537,7 +537,7 @@ class url {
   }
 
   template <typename intT>
-  expected<void, std::error_code> set_port_impl(
+  tl::expected<void, std::error_code> set_port_impl(
       intT port,
       typename std::enable_if<std::is_integral<intT>::value>::type * = nullptr) {
     return set_port(std::to_string(port));
@@ -585,11 +585,11 @@ inline tl::expected<url, std::error_code> make_url(
 /// \param base The base URL
 /// \returns A `url` object on success, an error on failure
 template<class Source>
-inline expected<url, std::error_code> make_url(
+inline tl::expected<url, std::error_code> make_url(
     const Source &input, const url &base) {
   auto bytes = details::to_bytes(input);
   if (!bytes) {
-    return make_unexpected(
+    return tl::make_unexpected(
         make_error_code(url_parse_errc::invalid_unicode_character));
   }
   return details::make_url(std::move(bytes.value()), base.record());

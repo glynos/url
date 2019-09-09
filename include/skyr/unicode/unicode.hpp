@@ -9,7 +9,7 @@
 #include <string>
 #include <string_view>
 #include <system_error>
-#include <skyr/expected.hpp>
+#include <tl/expected.hpp>
 
 namespace skyr {
 /// \namespace unicode
@@ -43,42 +43,42 @@ std::error_code make_error_code(unicode_errc error);
 /// Converts a `std::string` (assuming UTF-8) string to UTF-16
 /// \param input A UTF-8 string
 /// \returns A UTF-16 `std::wstring` or an error on failure
-expected<std::wstring, std::error_code> wstring_from_bytes(
+tl::expected<std::wstring, std::error_code> wstring_from_bytes(
     std::string_view input);
 
 /// Converts a `std::u16string` string to UTF-8
 ///
 /// \param input A UTF-16 string
 /// \returns A UTF-8 `std::string` or an error on failure
-expected<std::string, std::error_code> wstring_to_bytes(
+tl::expected<std::string, std::error_code> wstring_to_bytes(
     std::wstring_view input);
 
 /// Converts a `std::string` (assuming UTF-8) string to UTF-16
 ///
 /// \param input A UTF-8 string
 /// \returns A UTF-16 `std::u16string` or an error on failure
-expected<std::u16string, std::error_code> utf16_from_bytes(
+tl::expected<std::u16string, std::error_code> utf16_from_bytes(
     std::string_view input);
 
 /// Converts a `std::u16string` string to UTF-8
 ///
 /// \param input A UTF-16 string
 /// \returns A UTF-8 `std::string` or an error on failure
-expected<std::string, std::error_code> utf16_to_bytes(
+tl::expected<std::string, std::error_code> utf16_to_bytes(
     std::u16string_view input);
 
 /// Converts a `std::string` (assuming UTF-8) string to UTF-32
 ///
 /// \param input A UTF-8 string
 /// \returns A UTF-32 `std::u32string` or an error on failure
-expected<std::u32string, std::error_code> utf32_from_bytes(
+tl::expected<std::u32string, std::error_code> utf32_from_bytes(
     std::string_view input);
 
 /// Converts a `std::u32string` string to UTF-8
 ///
 /// \param input A UTF-32 string
 /// \returns A UTF-8 `std::string` or an error on failure
-expected<std::string, std::error_code> utf32_to_bytes(
+tl::expected<std::string, std::error_code> utf32_to_bytes(
     std::u32string_view input);
 }  // namespace skyr::unicode
 
