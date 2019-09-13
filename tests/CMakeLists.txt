@@ -1,11 +1,11 @@
-# Copyright (c) Glyn Matthews 2012-2018.
+# Copyright (c) Glyn Matthews 2012-2019.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
 
-find_path(CATCH_INCLUDE_DIR catch.hpp)
-include_directories(${CATCH_INCLUDE_DIR})
+find_package(Catch2 CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 set(
         TESTS
@@ -14,7 +14,6 @@ set(
         percent_encoding_tests
         url_tests
         url_web_platform_tests
-        url_parse_tests
         url_parsing_example_tests
         url_setter_tests
         url_search_parameters_tests
@@ -38,7 +37,8 @@ endif(MSVC)
 foreach (test ${TESTS})
     add_executable(${test} ${test}.cpp)
     add_dependencies(${test} skyr-url)
-    target_link_libraries(${test} PRIVATE ${CMAKE_THREAD_LIBS_INIT} skyr-url)
+    target_link_libraries(
+            ${test} PRIVATE ${CMAKE_THREAD_LIBS_INIT} skyr-url Catch2::Catch2 nlohmann_json nlohmann_json::nlohmann_json)
     set_target_properties(${test} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${Skyr_BINARY_DIR}/tests)
     add_test(${test} ${Skyr_BINARY_DIR}/tests/${test}
     )

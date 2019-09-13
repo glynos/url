@@ -8,7 +8,7 @@
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
 #include <skyr/url.hpp>
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
 // Tests using test data from W3C
 // https://github.com/w3c/web-platform-tests/tree/master/url

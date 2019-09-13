@@ -36,7 +36,7 @@ jobs:
             git fetch origin master
             git checkout -b master origin/master
             ./bootstrap-vcpkg.sh
-            ./vcpkg install catch2 tl-expected
+            ./vcpkg install tl-expected catch2 nlohmann-json
             popd
       - checkout
       - run:

@@ -10,7 +10,6 @@
     https://travis-ci.org/cpp-netlib/url)
 [![AppVeyor](https://ci.appveyor.com/api/projects/status/1iblsi5apka29dmg?svg=true)](
     https://ci.appveyor.com/project/glynos/url-33mfe)
-[![CircleCI](https://circleci.com/gh/cpp-netlib/url/tree/master.svg?style=svg)](https://circleci.com/gh/cpp-netlib/url/tree/master)
 
 
 ## Introduction
@@ -28,9 +27,19 @@ This library provides:
 This project requires the availability of a C++17 compliant compiler
 and standard library.
 
-### Installing `vcpkg`
+### Installing dependencies using `vcpkg`
 
-Follow the instructions to install `vcpkg` on your platform.
+Using `vcpkg`, install the library dependencies:
+
+```bash
+> cd ${VCPKG_ROOT}
+> git init
+> git remote add origin https://github.com/Microsoft/vcpkg.git
+> git fetch origin master
+> git checkout -b master origin/master
+> ./bootstrap-vcpkg.sh
+> ./vcpkg install tl-expected catch2 nlohmann-json
+```
 
 ### Building with `CMake` and `Ninja`
 
@@ -160,7 +169,8 @@ Open the `CMake` menu, click `Install`, then `Skyr`.
 This library uses [expected](https://github.com/TartanLlama/expected)
 and a modified implementation of [utfcpp](https://github.com/nemtrif/utfcpp).
 
-The tests are built using [Google Test](https://github.com/google/googletest).
+The tests use [Catch2](https://github.com/catchorg/catch2) and
+[nlohmann-json](https://github.com/nlohmann/json).
 
 ## Requirements
 

@@ -4,7 +4,7 @@ language:
     - cpp
 
 dist:
-    - trusty
+    - xenial
 
 env:
   global: DEPS_DIR="${TRAVIS_BUILD_DIR}/deps_"
@@ -76,7 +76,7 @@ install:
   - ${CXX} --version
   - export
   - ./bootstrap-vcpkg.sh
-  - ./vcpkg install catch2 tl-expected
+  - ./vcpkg install tl-expected catch2 nlohmann-json
   - popd
 
 cache:
