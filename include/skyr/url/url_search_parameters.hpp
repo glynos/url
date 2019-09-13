@@ -10,7 +10,7 @@
 #include <string_view>
 #include <vector>
 #include <functional>
-#include <skyr/optional.hpp>
+#include <optional>
 #include <skyr/url/url_record.hpp>
 
 namespace skyr {
@@ -61,18 +61,18 @@ class url_search_parameters {
 
   /// \param name
   /// \returns The first search parameter value with the given name
-  optional<string_type> get(const string_type &name) const noexcept;
+  [[nodiscard]] std::optional<string_type> get(const string_type &name) const noexcept;
 
   /// \param name
   /// \returns All search parameter values with the given name
-  std::vector<string_type> get_all(const string_type &name) const;
+  [[nodiscard]] std::vector<string_type> get_all(const string_type &name) const;
 
   /// Tests if there is a parameter with the given name
   ///
   /// \param name The search parameter name
   /// \returns `true` if the value is in the search parameters,
   /// `false` otherwise.
-  bool contains(const string_type &name) const noexcept;
+  [[nodiscard]] bool contains(const string_type &name) const noexcept;
 
   /// Sets a URL search parameter
   ///
@@ -99,29 +99,29 @@ class url_search_parameters {
 
   /// \returns `true` if the URL search string is empty, `false`
   ///          otherwise
-  bool empty() const noexcept {
+  [[nodiscard]] bool empty() const noexcept {
     return parameters_.empty();
   }
 
   /// \returns An iterator to the first element in the search parameters
-  const_iterator begin() const noexcept {
+  [[nodiscard]] const_iterator begin() const noexcept {
     return parameters_.begin();
   }
 
   /// \returns An iterator to the last element in the search parameters
-  const_iterator end() const noexcept {
+  [[nodiscard]] const_iterator end() const noexcept {
     return parameters_.end();
   }
 
   /// \returns The serialized URL search parameters
-  string_type to_string() const;
+  [[nodiscard]] string_type to_string() const;
 
  private:
   void initialize(std::string_view query);
   void update();
 
   std::vector<value_type> parameters_;
-  optional<std::reference_wrapper<url_record>> url_;
+  std::optional<std::reference_wrapper<url_record>> url_;
 };
 }  // namespace skyr
 

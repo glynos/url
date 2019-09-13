@@ -13,119 +13,119 @@
 
 namespace skyr {
 namespace details {
-expected<url_record, std::error_code> basic_parse(
+tl::expected<url_record, std::error_code> basic_parse(
     url_record::string_type input,
-    optional<url_record> base,
-    const optional<url_record> &url,
-    optional<url_parse_state> state_override) {
-  using return_type = expected<url_parse_action, url_parse_errc>;
+    std::optional<url_record> base,
+    const std::optional<url_record> &url,
+    std::optional<url_parse_state> state_override) {
+  using return_type = tl::expected<url_parse_action, url_parse_errc>;
   using url_parse_func = std::function<return_type(url_parser_context &, char)>;
   using url_parse_funcs = std::map<url_parse_state, url_parse_func>;
 
   auto parse_funcs = url_parse_funcs{
       {url_parse_state::scheme_start,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_scheme_start(byte);
        }},
       {url_parse_state::scheme,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_scheme(byte);
        }},
       {url_parse_state::no_scheme,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_no_scheme(byte);
        }},
       {url_parse_state::special_relative_or_authority,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_special_relative_or_authority(byte);
        }},
       {url_parse_state::path_or_authority,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_path_or_authority(byte);
        }},
       {url_parse_state::relative,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_relative(byte);
        }},
       {url_parse_state::relative_slash,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_relative_slash(byte);
        }},
       {url_parse_state::special_authority_slashes,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_special_authority_slashes(byte);
        }},
       {url_parse_state::special_authority_ignore_slashes,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_special_authority_ignore_slashes(byte);
        }},
       {url_parse_state::authority,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_authority(byte);
        }},
       {url_parse_state::host,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_hostname(byte);
        }},
       {url_parse_state::hostname,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_hostname(byte);
        }},
       {url_parse_state::port,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_port(byte);
        }},
       {url_parse_state::file,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_file(byte);
        }},
       {url_parse_state::file_slash,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_file_slash(byte);
        }},
       {url_parse_state::file_host,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_file_host(byte);
        }},
       {url_parse_state::path_start,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_path_start(byte);
        }},
       {url_parse_state::path,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_path(byte);
        }},
       {url_parse_state::cannot_be_a_base_url_path,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_cannot_be_a_base_url(byte);
        }},
       {url_parse_state::query,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_query(byte);
        }},
       {url_parse_state::fragment,
        [](auto &context,
-          auto byte) -> expected<url_parse_action, url_parse_errc> {
+          auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_fragment(byte);
        }}};
 
@@ -137,7 +137,7 @@ expected<url_record, std::error_code> basic_parse(
     auto byte = context.is_eof() ? static_cast<char>(0) : *context.it;
     auto action = func(context, byte);
     if (!action) {
-      return make_unexpected(make_error_code(action.error()));
+      return tl::make_unexpected(make_error_code(action.error()));
     }
 
     switch (action.value()) {
@@ -159,9 +159,9 @@ expected<url_record, std::error_code> basic_parse(
 }
 }  // namespace details
 
-expected<url_record, std::error_code> parse(
+tl::expected<url_record, std::error_code> parse(
     url_record::string_type input,
-    optional<url_record> base) {
+    std::optional<url_record> base) {
   auto url = details::basic_parse(std::move(input), std::move(base));
 
   if (!url) {

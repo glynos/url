@@ -9,7 +9,7 @@
 #include <cstring>
 #include <locale>
 #include <algorithm>
-#include "skyr/optional.hpp"
+#include <optional>
 #include "ipv6_address.hpp"
 #include "algorithms.hpp"
 
@@ -17,8 +17,8 @@ namespace skyr {
 namespace {
 class ipv6_address_error_category : public std::error_category {
  public:
-  const char *name() const noexcept override;
-  std::string message(int error) const noexcept override;
+  [[nodiscard]] const char *name() const noexcept override;
+  [[nodiscard]] std::string message(int error) const noexcept override;
 };
 
 const char *ipv6_address_error_category::name() const noexcept {
@@ -65,7 +65,7 @@ inline std::uint16_t hex_to_dec(char byte) noexcept {
 
 std::string ipv6_address::to_string() const {
   auto output = std::string();
-  auto compress = skyr::optional<size_t>();
+  auto compress = std::optional<size_t>();
 
   auto sequences = std::vector<std::pair<size_t, size_t>>();
   auto in_sequence = false;
@@ -139,10 +139,10 @@ std::string ipv6_address::to_string() const {
 
 namespace details {
 namespace {
-std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std::string_view input) {
+std::pair<tl::expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std::string_view input) {
   auto address = std::array<unsigned short, 8>{{0, 0, 0, 0, 0, 0, 0, 0}};
   auto piece_index = 0;
-  auto compress = optional<decltype(piece_index)>();
+  auto compress = std::optional<decltype(piece_index)>();
 
   auto first = begin(input), last = end(input);
   auto it = first;
@@ -150,7 +150,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
   if (it == last) {
     return
         std::make_pair(
-            make_unexpected(
+            tl::make_unexpected(
                 make_error_code(
                     ipv6_address_errc::does_not_start_with_double_colon)), true);
   }
@@ -161,7 +161,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
     if (!starts_with(next_it, last, ":")) {
       return
           std::make_pair(
-              make_unexpected(
+              tl::make_unexpected(
                   make_error_code(
                       ipv6_address_errc::does_not_start_with_double_colon)), true);
     }
@@ -175,7 +175,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
     if (piece_index == 8) {
       return
           std::make_pair(
-              make_unexpected(
+              tl::make_unexpected(
                   make_error_code(ipv6_address_errc::invalid_piece)), true);
     }
 
@@ -183,7 +183,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
       if (compress) {
         return
             std::make_pair(
-                make_unexpected(
+                tl::make_unexpected(
                     make_error_code(ipv6_address_errc::compress_expected)), true);
       }
 
@@ -208,7 +208,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
       if (length == 0) {
         return
             std::make_pair(
-                make_unexpected(
+                tl::make_unexpected(
                     make_error_code(ipv6_address_errc::empty_ipv4_segment)), true);
       }
 
@@ -217,7 +217,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
       if (piece_index > 6) {
         return
             std::make_pair(
-                make_unexpected(
+                tl::make_unexpected(
                     make_error_code(
                         ipv6_address_errc::invalid_ipv4_segment_number)), true);
       }
@@ -225,7 +225,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
       auto numbers_seen = 0;
 
       while (it != last) {
-        auto ipv4_piece = optional<std::uint16_t>();
+        auto ipv4_piece = std::optional<std::uint16_t>();
 
         if (numbers_seen > 0) {
           if ((*it == '.') && (numbers_seen < 4)) {
@@ -233,7 +233,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
           } else {
             return
                 std::make_pair(
-                    make_unexpected(
+                    tl::make_unexpected(
                         make_error_code(
                             ipv6_address_errc::invalid_ipv4_segment_number)), true);
           }
@@ -242,7 +242,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
         if ((it == last) || !std::isdigit(*it, std::locale::classic())) {
           return
               std::make_pair(
-                  make_unexpected(
+                  tl::make_unexpected(
                       make_error_code(
                           ipv6_address_errc::invalid_ipv4_segment_number)), true);
         }
@@ -254,7 +254,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
           } else if (ipv4_piece.value() == 0) {
             return
                 std::make_pair(
-                    make_unexpected(
+                    tl::make_unexpected(
                         make_error_code(
                             ipv6_address_errc::invalid_ipv4_segment_number)), true);
           } else {
@@ -264,7 +264,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
           if (ipv4_piece.value() > 255) {
             return
                 std::make_pair(
-                    make_unexpected(
+                    tl::make_unexpected(
                         make_error_code(
                             ipv6_address_errc::invalid_ipv4_segment_number)), true);
           }
@@ -283,7 +283,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
       if (numbers_seen != 4) {
         return
             std::make_pair(
-                make_unexpected(
+                tl::make_unexpected(
                     make_error_code(
                         ipv6_address_errc::invalid_ipv4_segment_number)), true);
       }
@@ -294,13 +294,13 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
       if (it == last) {
         return
             std::make_pair(
-                make_unexpected(
+                tl::make_unexpected(
                     make_error_code(ipv6_address_errc::invalid_piece)), true);
       }
     } else if (it != last) {
       return
           std::make_pair(
-              make_unexpected(
+              tl::make_unexpected(
                   make_error_code(ipv6_address_errc::invalid_piece)), true);
     }
     address[piece_index] = value;
@@ -318,7 +318,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
   } else if (!compress && (piece_index != 8)) {
     return
         std::make_pair(
-            make_unexpected(
+            tl::make_unexpected(
                 make_error_code(ipv6_address_errc::compress_expected)), true);
   }
 
@@ -328,7 +328,7 @@ std::pair<expected<ipv6_address, std::error_code>, bool> parse_ipv6_address(std:
 }  // namespace details
 
 
-expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view input) {
+tl::expected<ipv6_address, std::error_code> parse_ipv6_address(std::string_view input) {
   return details::parse_ipv6_address(input).first;
 }
 }  // namespace skyr

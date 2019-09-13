@@ -1,16 +1,14 @@
-// Copyright 2017-18 Glyn Matthews.
+// Copyright 2017-19 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <gtest/gtest.h>
 #include <string>
 #include <fstream>
-#include <sstream>
-#include <iostream>
-#include <regex>
+#define CATCH_CONFIG_MAIN
+#include <catch.hpp>
 #include <skyr/url.hpp>
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
 // Tests using test data from W3C
 // https://github.com/w3c/web-platform-tests/tree/master/url
@@ -19,15 +17,13 @@ using json = nlohmann::json;
 
 namespace {
 struct test_case {
-  test_case(json object)
-    : failure(false) {
+  test_case(json object) {
     input = object["input"].get<std::string>();
     base = object["base"].get<std::string>();
 
-    if (object.find("failure") != object.end()) {
-      failure = object["failure"].get<bool>();
-    }
-
+    failure =
+        (object.find("failure") != object.end()) &&
+        object["failure"].get<bool>();
     if (!failure) {
       href = object["href"].get<std::string>();
       if (object.find("origin") != object.end()) {
@@ -60,96 +56,98 @@ struct test_case {
   std::string search;
   std::string hash;
 };
-} // namespace
 
-std::vector<test_case> load_test_data(bool failing) {
-  std::ifstream fs{"urltestdata.json"};
-  json tests;
-  fs >> tests;
+class TestCaseGenerator : public Catch::Generators::IGenerator<test_case> {
+ public:
+  explicit TestCaseGenerator(
+      const std::string &filename, bool failure) {
+    std::ifstream fs{filename};
+    json tests;
+    fs >> tests;
 
-  std::vector<test_case> test_data;
-  for (auto &&test_case_object : tests) {
-    if (!test_case_object.is_string()) {
+    for (auto &&test_case_object : tests) {
+      if (!test_case_object.is_string()) {
       auto test_case_data = test_case{test_case_object};
-      if (failing == test_case_data.failure) {
-        test_data.emplace_back(test_case_data);
+        if (failure == test_case_data.failure) {
+          test_case_data_.emplace_back(test_case_data);
+        }
       }
     }
+
+    it_ = begin(test_case_data_);
   }
-  return test_data;
+
+  const test_case &get() const override {
+    assert(it_ != test_case_data_.end());
+    return *it_;
+  }
+
+  bool next() override {
+    assert(it_ != test_case_data_.end());
+    ++it_;
+    return it_ != test_case_data_.end();
+  }
+
+ private:
+  std::vector<test_case> test_case_data_;
+  std::vector<test_case>::const_iterator it_;
+};
+
+Catch::Generators::GeneratorWrapper<test_case> test_case_(
+    const std::string &filename, bool failure) {
+  return Catch::Generators::GeneratorWrapper<test_case>(
+      std::unique_ptr<Catch::Generators::IGenerator<test_case>>(
+          new TestCaseGenerator(filename, failure)));
+}
+} // namespace
+
+
+TEST_CASE("test_parse_urls_using_base_urls", "[web_platorm]") {
+  auto test_case_data = GENERATE(test_case_("urltestdata.json", false));
+
+  SECTION("parse_using_constructor") {
+    auto instance = skyr::url(
+        test_case_data.input,
+        skyr::url(test_case_data.base));
+    CHECK(test_case_data.href == instance.href());
+    CHECK(test_case_data.protocol == instance.protocol());
+    CHECK(test_case_data.username == instance.username());
+    CHECK(test_case_data.password == instance.password());
+    CHECK(test_case_data.host == instance.host());
+    CHECK(test_case_data.hostname == instance.hostname());
+    CHECK(test_case_data.port == instance.port());
+    CHECK(test_case_data.pathname == instance.pathname());
+    CHECK(test_case_data.search == instance.search());
+    CHECK(test_case_data.hash == instance.hash());
+  }
+
+  SECTION("parse_using_make") {
+    auto instance = skyr::make_url(
+        test_case_data.input,
+        skyr::url(test_case_data.base));
+    REQUIRE(instance);
+    CHECK(test_case_data.protocol == instance.value().protocol());
+    CHECK(test_case_data.username == instance.value().username());
+    CHECK(test_case_data.password == instance.value().password());
+    CHECK(test_case_data.host == instance.value().host());
+    CHECK(test_case_data.hostname == instance.value().hostname());
+    CHECK(test_case_data.port == instance.value().port());
+    CHECK(test_case_data.pathname == instance.value().pathname());
+    CHECK(test_case_data.search == instance.value().search());
+    CHECK(test_case_data.hash == instance.value().hash());
+  }
 }
 
-class test_parse_urls_using_base_urls : public ::testing::TestWithParam<test_case> {};
+TEST_CASE("test_parse_urls_using_base_urls_failures", "[web_platform]") {
+  auto test_case_data = GENERATE(test_case_("urltestdata.json", true));
 
-INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls,
-                        testing::ValuesIn(load_test_data(false)));
+  SECTION("parse_using_constructor") {
+    auto base = skyr::url(test_case_data.base);
+    REQUIRE_THROWS_AS(skyr::url(test_case_data.input, base), skyr::url_parse_error);
+  }
 
-TEST_P(test_parse_urls_using_base_urls, parse_using_constructor) {
-  auto test_case_data = test_case{GetParam()};
-  auto instance = skyr::url(test_case_data.input, skyr::url(test_case_data.base));
-  EXPECT_EQ(test_case_data.href, instance.href())
-            << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.protocol, instance.protocol())
-            << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.username, instance.username())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.password, instance.password())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.host, instance.host())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.hostname, instance.hostname())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.port, instance.port())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.pathname, instance.pathname())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.search, instance.search())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.hash, instance.hash())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-}
-
-TEST_P(test_parse_urls_using_base_urls, parse_using_make) {
-  auto test_case_data = test_case{GetParam()};
-  auto instance = skyr::make_url(test_case_data.input, skyr::url(test_case_data.base));
-  ASSERT_TRUE(instance)
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "] "
-    << instance.error();
-  EXPECT_EQ(test_case_data.protocol, instance.value().protocol())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.username, instance.value().username())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.password, instance.value().password())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.host, instance.value().host())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.hostname, instance.value().hostname())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.port, instance.value().port())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.pathname, instance.value().pathname())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.search, instance.value().search())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-  EXPECT_EQ(test_case_data.hash, instance.value().hash())
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-}
-
-class test_parse_urls_using_base_urls_failing : public ::testing::TestWithParam<test_case> {};
-
-INSTANTIATE_TEST_CASE_P(url_web_platform_tests, test_parse_urls_using_base_urls_failing,
-                        testing::ValuesIn(load_test_data(true)));
-
-TEST_P(test_parse_urls_using_base_urls_failing, parse_using_constructor) {
-  auto test_case_data = test_case{GetParam()};
-  auto base = skyr::url(test_case_data.base);
-  ASSERT_THROW(skyr::url(test_case_data.input, base), skyr::url_parse_error)
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
-}
-
-TEST_P(test_parse_urls_using_base_urls_failing, parse_using_make) {
-  auto test_case_data = test_case{GetParam()};
-  auto base = skyr::url(test_case_data.base);
-  ASSERT_FALSE(skyr::make_url(test_case_data.input, base))
-    << "Input: [" << test_case_data.input << "], Base: [" << test_case_data.base << "]";
+  SECTION("parse_using_make") {
+    auto base = skyr::url(test_case_data.base);
+    REQUIRE_FALSE(skyr::make_url(test_case_data.input, base));
+  }
 }

@@ -8,11 +8,10 @@
 [![Travis Build Status](
     https://travis-ci.org/cpp-netlib/url.svg?branch=master "Build Status")](
     https://travis-ci.org/cpp-netlib/url)
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/hc10ha6ugl6ea90u?svg=true)](
-    https://ci.appveyor.com/project/glynos/url-3aeqd)
-[![CircleCI](https://circleci.com/gh/cpp-netlib/url/tree/master.svg?style=svg)](https://circleci.com/gh/cpp-netlib/url/tree/master)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/1iblsi5apka29dmg?svg=true)](
+    https://ci.appveyor.com/project/glynos/url-33mfe)
 
-    
+
 ## Introduction
 
 This library provides:
@@ -28,6 +27,20 @@ This library provides:
 This project requires the availability of a C++17 compliant compiler
 and standard library.
 
+### Installing dependencies using `vcpkg`
+
+Using `vcpkg`, install the library dependencies:
+
+```bash
+> cd ${VCPKG_ROOT}
+> git init
+> git remote add origin https://github.com/Microsoft/vcpkg.git
+> git fetch origin master
+> git checkout -b master origin/master
+> ./bootstrap-vcpkg.sh
+> ./vcpkg install tl-expected catch2 nlohmann-json
+```
+
 ### Building with `CMake` and `Ninja`
 
 From a terminal, execute the following sequence of commands:
@@ -35,7 +48,9 @@ From a terminal, execute the following sequence of commands:
 ```bash
 > mkdir _build
 > cd _build
-> cmake .. -G "Ninja"
+> cmake .. \
+    -G "Ninja" \
+    -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake
 > ninja
 ```
 
@@ -64,7 +79,10 @@ These examples are based on the
 To build the examples, run `cmake` as follows:
 
 ```bash
-> cmake .. -G "Ninja" -DSkyr_BUILD_EXAMPLES=ON
+> cmake .. \
+    -G "Ninja" \
+    -DSkyr_BUILD_EXAMPLES=ON \
+    -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake
 ```
 
 ### Creating a URL without a base URL
@@ -129,7 +147,10 @@ This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F
 ### Installing with `CMake` and `Ninja`
 
 ```bash
-> cmake .. -G "Ninja" -DCMAKE_INSTALL_PREFIX=$PREFIX
+> cmake .. \
+    -G "Ninja" \
+    -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+    -DCMAKE_INSTALL_PREFIX=$PREFIX
 > ninja
 > ninja test      # optional
 > ninja install
@@ -145,10 +166,11 @@ Open the `CMake` menu, click `Install`, then `Skyr`.
 
 ## Dependencies
 
-This library uses [optional](https://github.com/TartanLlama/optional),
-[expected](https://github.com/TartanLlama/expected) and [utfcpp](https://github.com/nemtrif/utfcpp).
+This library uses [expected](https://github.com/TartanLlama/expected)
+and a modified implementation of [utfcpp](https://github.com/nemtrif/utfcpp).
 
-The tests are built using [Google Test](https://github.com/google/googletest).
+The tests use [Catch2](https://github.com/catchorg/catch2) and
+[nlohmann-json](https://github.com/nlohmann/json).
 
 ## Requirements
 
@@ -159,6 +181,7 @@ Linux:
 
 * GCC 7
 * GCC 8
+* GCC 9
 * Clang 6
 
 MacOS:
@@ -168,16 +191,13 @@ MacOS:
 Windows:
 
 * Microsoft Visual C++ 2017
+* Microsoft Visual C++ 2019
 
 ## License
 
 This library is released under the Boost Software License (please see
 http://boost.org/LICENSE_1_0.txt or the accompanying LICENSE_1_0.txt
 file for the full text).
-
-[`optional`](https://github.com/TartanLlama/optional/blob/master/COPYING)
-and [`expected`](https://github.com/TartanLlama/expected/blob/master/COPYING)
-are each released under the CCO 1.0 License.
 
 ## Why *skyr*?
 

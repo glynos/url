@@ -11,7 +11,7 @@
 #include <locale>
 #include <set>
 #include <cstddef>
-#include <skyr/expected.hpp>
+#include <tl/expected.hpp>
 
 namespace skyr {
 /// Enumerates percent encoding errors
@@ -55,7 +55,7 @@ std::string percent_encode_byte(
 /// \param excludes The set of code points to exclude when percent
 ///        encoding
 /// \returns A percent encoded ASCII string, or an error on failure
-expected<std::string, std::error_code> percent_encode(
+tl::expected<std::string, std::error_code> percent_encode(
     std::string_view input, encode_set excludes);
 
 /// Percent encodes a string
@@ -63,20 +63,20 @@ expected<std::string, std::error_code> percent_encode(
 /// \param excludes The set of code points to exclude when percent
 ///        encoding
 /// \returns A percent encoded ASCII string, or an error on failure
-expected<std::string, std::error_code> percent_encode(
+tl::expected<std::string, std::error_code> percent_encode(
     std::u32string_view input, encode_set excludes);
 
 /// Percent decode an already encoded string into a byte value
 /// \param input An string of the form %XX, where X is a hexadecimal
 ///        value
 /// \returns The percent decoded byte, or an error on failure
-expected<char, std::error_code> percent_decode_byte(
+tl::expected<char, std::error_code> percent_decode_byte(
     std::string_view input);
 
 /// Percent decodes a string
 /// \param input An ASCII string
 /// \returns A UTF-8 string, or an error on failure
-expected<std::string, std::error_code> percent_decode(
+tl::expected<std::string, std::error_code> percent_decode(
     std::string_view input);
 
 /// Tests whether the input string contains percent encoded values

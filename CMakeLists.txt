@@ -1,4 +1,4 @@
-# Copyright (c) Glyn Matthews 2012-2018.
+# Copyright (c) Glyn Matthews 2012-2019.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -13,15 +13,15 @@ option(Skyr_BUILD_EXAMPLES "Build the URL examples." OFF)
 option(Skyr_FULL_WARNINGS "Build the library with all warnings turned on." ON)
 option(Skyr_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(Skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
-option(Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS "Build the filesystem path functions" ON)
-
-find_package(Threads REQUIRED)
+option(Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS "Build the filesystem path functions" OFF)
 
 set(CMAKE_VERBOSE_MAKEFILE true)
+set(CMAKE_CXX_STANDARD 17)
+
+find_package(Threads REQUIRED)
+find_package(tl-expected CONFIG REQUIRED)
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-
     if (Skyr_FULL_WARNINGS)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
     endif()
@@ -32,7 +32,6 @@ if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
 
     message("C++ Flags: ${CMAKE_CXX_FLAGS} link flags: ${CMAKE_CXX_LINK_FLAGS}")
 elseif(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
     if (NOT Skyr_DISABLE_LIBCXX)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
     endif()
@@ -51,7 +50,7 @@ endif()
 
 if (MSVC)
     if(DEFINED MSVC_VERSION AND MSVC_VERSION LESS 1900)
-        message(FATAL_ERROR "Requires VS 2015 or later")
+        message(FATAL_ERROR "Requires VS 2017 or later")
     endif()
 
     if (Skyr_USE_STATIC_CRT)
@@ -76,11 +75,6 @@ add_subdirectory(src)
 if (Skyr_BUILD_TESTS)
     message(STATUS "Configuring tests")
     enable_testing()
-    set(BUILD_GMOCK OFF)
-    set(BUILD_GTEST ON)
-    set(INSTALL_GMOCK OFF)
-    set(INSTALL_GTEST OFF)
-    add_subdirectory(deps/googletest)
     add_subdirectory(tests)
 endif()
 

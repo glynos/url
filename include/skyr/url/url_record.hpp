@@ -9,7 +9,7 @@
 #include <vector>
 #include <string>
 #include <cstdint>
-#include <skyr/optional.hpp>
+#include <optional>
 
 namespace skyr {
 /// Represents the parts of a URL identifier
@@ -29,16 +29,16 @@ class url_record {
   string_type password;
   /// An optional URL host, either a domain, IPv4 or IPv6 address,
   /// an opaque host, or empty
-  optional<string_type> host;
+  std::optional<string_type> host;
   /// An optional network port
-  optional<std::uint16_t> port;
+  std::optional<std::uint16_t> port;
   /// A list of zero or more ASCII strings, used to identify a
   /// location in a hierarchical form
   std::vector<string_type> path;
   /// An optional ASCII string
-  optional<string_type> query;
+  std::optional<string_type> query;
   /// An optional ASCII string
-  optional<string_type> fragment;
+  std::optional<string_type> fragment;
 
   /// A Boolean value indicating whether this URL can be used as a
   /// base URL
@@ -56,17 +56,17 @@ class url_record {
   /// Tests if the URL is a special scheme
   /// \returns `true` if the URL scheme is a special scheme, `false`
   ///          otherwise
-  bool is_special() const noexcept;
+  [[nodiscard]] bool is_special() const noexcept;
 
   /// Tests if the URL includes credentials
   /// \returns `true` if the URL username or password is not an
   ///          empty string, `false` otherwise
-  bool includes_credentials() const noexcept;
+  [[nodiscard]] bool includes_credentials() const noexcept;
 
   /// Tests if the URL cannot have a username, password or port
   /// \returns `true` if the URL cannot have a username, password
   ///          or port
-  bool cannot_have_a_username_password_or_port() const noexcept;
+  [[nodiscard]] bool cannot_have_a_username_password_or_port() const noexcept;
 
   /// Swaps two `url_record` objects
   /// \param other Another `url_record` object
