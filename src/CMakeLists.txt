@@ -1,10 +1,10 @@
-# Copyright (c) Glyn Matthews 2012-2018.
+# Copyright (c) Glyn Matthews 2012-2019.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
 set(Skyr_SRCS
-		unicode/unicode.cpp
+		unicode/errors.cpp
 		url/url_parser_context.hpp
 		url/url_parser_context.cpp
 		url/url_record.cpp
@@ -29,7 +29,15 @@ set(Skyr_SRCS
         ${Skyr_SOURCE_DIR}/include/skyr/url/details/to_bytes.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/config.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/traits/string_traits.hpp
-		${Skyr_SOURCE_DIR}/include/skyr/unicode/unicode.hpp
+		${Skyr_SOURCE_DIR}/include/skyr/unicode/errors.hpp
+		${Skyr_SOURCE_DIR}/include/skyr/unicode/core.hpp
+		${Skyr_SOURCE_DIR}/include/skyr/unicode/ranges/views/u8_view.hpp
+		${Skyr_SOURCE_DIR}/include/skyr/unicode/ranges/views/unchecked_u8_view.hpp
+		${Skyr_SOURCE_DIR}/include/skyr/unicode/ranges/views/u16_view.hpp
+		${Skyr_SOURCE_DIR}/include/skyr/unicode/ranges/views/u32_view.hpp
+		${Skyr_SOURCE_DIR}/include/skyr/unicode/ranges/transforms/byte_transform.hpp
+		${Skyr_SOURCE_DIR}/include/skyr/unicode/ranges/transforms/u16_transform.hpp
+		${Skyr_SOURCE_DIR}/include/skyr/unicode/ranges/transforms/u32_transform.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/url/percent_encode.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/url/domain.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/url/url_record.hpp
