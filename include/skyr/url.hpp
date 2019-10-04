@@ -17,10 +17,10 @@
 #include <skyr/url/url_search_parameters.hpp>
 #include <skyr/url/details/to_bytes.hpp>
 
-#ifdef SKYR_URI_MSVC
+#if defined(SKYR_PLATFORM_MSVC)
 #pragma warning(push)
 #pragma warning(disable : 4251 4231 4660)
-#endif
+#endif // defined(SKYR_PLATFORM_MSVC)
 
 /// \namespace skyr
 /// Top-level namespace for URL parsing, unicode encoding and domain
@@ -95,8 +95,8 @@ class url {
 
     auto bytes = details::to_bytes(input);
     if (!bytes) {
-      throw url_parse_error(
-          make_error_code(url_parse_errc::invalid_unicode_character));
+      SKYR_EXCEPTIONS_THROW(url_parse_error(
+          make_error_code(url_parse_errc::invalid_unicode_character)));
     }
     initialize(std::move(bytes.value()));
   }
@@ -116,8 +116,8 @@ class url {
 
     auto bytes = details::to_bytes(input);
     if (!bytes) {
-      throw url_parse_error(
-          make_error_code(url_parse_errc::invalid_unicode_character));
+      SKYR_EXCEPTIONS_THROW(url_parse_error(
+          make_error_code(url_parse_errc::invalid_unicode_character)));
     }
     initialize(std::move(bytes.value()), base.record());
   }
@@ -650,5 +650,9 @@ inline bool operator >= (const url &lhs, const url &rhs) noexcept {
   return !(lhs < rhs);
 }
 }  // namespace skyr
+
+#if defined(SKYR_PLATFORM_MSVC)
+#pragma warning(pop)
+#endif // defined(SKYR_PLATFORM_MSVC)
 
 #endif  // SKYR_URL_INC

@@ -38,11 +38,10 @@ void url::swap(url &other) noexcept {
 void url::initialize(string_type &&input, std::optional<url_record> &&base) {
   auto parsed_url = parse(input, base);
   if (!parsed_url) {
-    throw url_parse_error(parsed_url.error());
+    SKYR_EXCEPTIONS_THROW(url_parse_error(parsed_url.error()));
   }
   update_record(std::move(parsed_url.value()));
 }
-
 
 void url::update_record(url_record &&record) {
   url_ = record;

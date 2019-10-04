@@ -17,7 +17,7 @@ TEST_CASE("url_setter_tests", "[url]") {
     CHECK("example.com" == instance.host());
     CHECK("/" == instance.pathname());
   }
-  
+
   SECTION("test_href_2") {
     auto instance = skyr::url{"http://example.com/"};
   

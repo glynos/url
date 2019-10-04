@@ -223,7 +223,7 @@ TEST_CASE("url_search_parameters_test", "[url_search_parameters]") {
     auto parameters = skyr::url_search_parameters(instance.value());
     CHECK("a=b&c=d" == parameters.to_string());
   }
-  
+
   SECTION("url_search_parameters") {
     // https://url.spec.whatwg.org/#example-searchparams-sort
     auto url = skyr::url(
