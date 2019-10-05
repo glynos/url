@@ -7,6 +7,7 @@
 #define SKYR_UNICODE_BYTE_RANGE_HPP
 
 #include <iterator>
+#include <optional>
 #include <tl/expected.hpp>
 #include <skyr/unicode/errors.hpp>
 #include <skyr/unicode/constants.hpp>
@@ -36,29 +37,21 @@ class transform_byte_iterator {
   /// code points
   /// \param it
   /// \param last
-  transform_byte_iterator(CodePointIterator it, CodePointIterator last)
+  transform_byte_iterator(
+      CodePointIterator it,
+      CodePointIterator last)
       : it_(it), last_(last) {}
-  /// Copy constructor
-  transform_byte_iterator(const transform_byte_iterator &) = default;
-  /// Move constructor
-  transform_byte_iterator(transform_byte_iterator &&) noexcept = default;
-  /// Copy assignment operator
-  transform_byte_iterator &operator=(const transform_byte_iterator &) = default;
-  /// Move assignment operator
-  transform_byte_iterator &operator=(transform_byte_iterator &&) noexcept = default;
-  /// Destructor
-  ~transform_byte_iterator() = default;
 
   /// Pre-increment operator
   /// \return A reference to this iterator
-  transform_byte_iterator &operator++() {
+  transform_byte_iterator &operator++() noexcept {
     increment();
     return *this;
   }
 
   /// Post-increment operator
   /// \return A copy of the previous iterator
-  transform_byte_iterator operator++(int) {
+  transform_byte_iterator operator++(int) noexcept {
     auto result = *this;
     increment();
     return result;
@@ -66,7 +59,7 @@ class transform_byte_iterator {
 
   /// Dereference operator
   /// \return An expected value
-  reference operator*() {
+  [[nodiscard]] reference operator*() const noexcept {
     auto code_point = u32_value(*it_).value();
 
     if (!is_valid_code_point(code_point)) {
@@ -186,31 +179,31 @@ class transform_byte_range {
 
   /// Returns an iterator to the beginning
   /// \return \c const_iterator
-  const_iterator begin() const noexcept {
+  [[nodiscard]] const_iterator begin() const noexcept {
     return first ? first.value() : iterator_type();
   }
 
   /// Returns an iterator to the end
   /// \return \c const_iterator
-  const_iterator end() const noexcept {
+  [[nodiscard]] const_iterator end() const noexcept {
     return last ? last.value() : iterator_type();
   }
 
   /// Returns an iterator to the beginning
   /// \return \c const_iterator
-  const_iterator cbegin() const noexcept {
+  [[nodiscard]] const_iterator cbegin() const noexcept {
     return begin();
   }
 
   /// Returns an iterator to the end
   /// \return \c const_iterator
-  const_iterator cend() const noexcept {
+  [[nodiscard]] const_iterator cend() const noexcept {
     return end();
   }
 
   /// Tests if the byte range is empty
   /// \return \c true if the range is empty, \c false otherwise
-  bool empty() const noexcept {
+  [[nodiscard]] bool empty() const noexcept {
     return begin() == end();
   }
 
@@ -228,7 +221,8 @@ struct byte_range_fn {
   /// \param range
   /// \return
   template<class CodePointRange>
-  constexpr auto operator()(CodePointRange &&range) const {
+  constexpr auto operator()(
+      CodePointRange &&range) const noexcept {
     return transform_byte_range{std::forward<CodePointRange>(range)};
   }
 
@@ -237,7 +231,9 @@ struct byte_range_fn {
   /// \param range
   /// \return
   template<typename CodePointRange>
-  friend constexpr auto operator|(CodePointRange &&range, const byte_range_fn &) {
+  friend constexpr auto operator|(
+      CodePointRange &&range,
+      const byte_range_fn &) noexcept {
     return transform_byte_range{std::forward<CodePointRange>(range)};
   }
 };
@@ -252,7 +248,8 @@ static constexpr byte_range_fn to_bytes;
 /// \param range
 /// \return
 template <class Output, typename CodePointRange>
-tl::expected<Output, std::error_code> as(transform_byte_range<CodePointRange> &&range) {
+tl::expected<Output, std::error_code> as(
+    transform_byte_range<CodePointRange> &&range) {
   auto result = Output{};
   for (auto &&byte : range) {
     if (!byte) {
