@@ -25,7 +25,7 @@ class url_search_parameters {
 
  public:
 
-  /// ASCII string type
+  /// string type
   /// \sa url::string_type
   using string_type = std::string;
 
@@ -35,8 +35,14 @@ class url_search_parameters {
   /// An iterator through the search parameters
   using const_iterator = std::vector<value_type>::const_iterator;
 
-  /// Constructor
-  url_search_parameters();
+  /// An alias to \c const_iterator
+  using iterator = const_iterator;
+
+  /// \c std::size_t
+  using size_type = std::size_t;
+
+  /// Default constructor
+  url_search_parameters() = default;
 
   /// Constructor
   ///
@@ -59,11 +65,11 @@ class url_search_parameters {
   /// \param name The name of the parameter to remove
   void remove(const string_type &name);
 
-  /// \param name
+  /// \param name The search parameter name
   /// \returns The first search parameter value with the given name
-  [[nodiscard]] std::optional<string_type> get(const string_type &name) const noexcept;
+  [[nodiscard]] std::optional<string_type> get(const string_type &name) const;
 
-  /// \param name
+  /// \param name The search parameter name
   /// \returns All search parameter values with the given name
   [[nodiscard]] std::vector<string_type> get_all(const string_type &name) const;
 
@@ -76,8 +82,8 @@ class url_search_parameters {
 
   /// Sets a URL search parameter
   ///
-  /// \param name
-  /// \param value
+  /// \param name The search parameter name
+  /// \param value The search parameter value
   void set(const string_type &name, const string_type &value);
 
   /// Clears the search parameters
@@ -97,12 +103,6 @@ class url_search_parameters {
   /// ```
   void sort();
 
-  /// \returns `true` if the URL search string is empty, `false`
-  ///          otherwise
-  [[nodiscard]] bool empty() const noexcept {
-    return parameters_.empty();
-  }
-
   /// \returns An iterator to the first element in the search parameters
   [[nodiscard]] const_iterator begin() const noexcept {
     return parameters_.begin();
@@ -111,6 +111,28 @@ class url_search_parameters {
   /// \returns An iterator to the last element in the search parameters
   [[nodiscard]] const_iterator end() const noexcept {
     return parameters_.end();
+  }
+
+  /// \returns An iterator to the first element in the search parameters
+  [[nodiscard]] const_iterator cbegin() const noexcept {
+    return begin();
+  }
+
+  /// \returns An iterator to the last element in the search parameters
+  [[nodiscard]] const_iterator cend() const noexcept {
+    return end();
+  }
+
+  /// \returns `true` if the URL search string is empty, `false`
+  ///          otherwise
+  [[nodiscard]] bool empty() const noexcept {
+    return parameters_.empty();
+  }
+
+  /// \returns The size of the parameters array (i.e. the
+  ///          number of parameters)
+  [[nodiscard]] size_type size() const noexcept {
+    return parameters_.size();
   }
 
   /// \returns The serialized URL search parameters

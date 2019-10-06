@@ -16,15 +16,18 @@ namespace skyr {
 /// Contains functions to convert from filesystem path to URLs and
 /// vice versa
 namespace filesystem {
+///
 enum class path_errc {
+  ///
   invalid_path=1,
+  ///
   percent_decoding_error,
 };
 
 /// Creates a `std::error_code` given a `skyr::path_errc` value
 /// \param error A filesystem path conversion error
 /// \returns A `std::error_code` object
-std::error_code make_error_code(path_errc error);
+std::error_code make_error_code(path_errc error) noexcept;
 
 /// Converts a path object to a URL with a file protocol. Handles
 /// some processing, including percent encoding
