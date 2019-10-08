@@ -10,6 +10,7 @@
 int main(int argc, char *argv[]) {
   using namespace skyr::percent_encoding;
 
-  auto url = skyr::url("https://example.org/\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+  auto url = skyr::url(
+      "https://example.org/\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
   std::cout << as<std::string>(url | view::decode).value() << std::endl;
 }

@@ -13,17 +13,6 @@
 #include "url_schemes.hpp"
 
 namespace skyr {
-url::url()
-  : url_()
-  , href_()
-  , view_(href_)
-  , parameters_(this) {}
-
-url::url(url_record &&input)
-  : url() {
-  update_record(std::forward<url_record>(input));
-}
-
 void url::swap(url &other) noexcept {
   using std::swap;
   swap(url_, other.url_);

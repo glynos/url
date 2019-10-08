@@ -54,10 +54,10 @@ class url_parse_error : public std::runtime_error {
 ///
 /// For example:
 /// ```
-/// auto url = skyr::make_url("http://example.org/");
-/// assert("http:" == url.value().scheme());
-/// assert("example.org" == url.value().hostname());
-/// assert("/" == url.value().pathname());
+/// auto url = skyr::url("http://example.org/");
+/// assert("http:" == url.scheme());
+/// assert("example.org" == url.hostname());
+/// assert("/" == url.pathname());
 /// ```
 class url {
 
@@ -83,7 +83,7 @@ class url {
   /// Constructs an empty `url` object
   ///
   /// \post `empty() == true`
-  url();
+  url() : url_(), href_(), view_(href_), parameters_(this) {}
 
   /// Parses a URL from the input string. The input string can be
   /// any unicode encoded string (UTF-8, UTF-16 or UTF-32).
@@ -131,19 +131,19 @@ class url {
   /// Constructs a URL from an existing record
   ///
   /// \param input A URL record
-  explicit url(url_record &&input);
-
-  ///
-  /// \param other
-  url(const url &other)
+  explicit url(url_record &&input)
   : url() {
-    auto other_url = other.url_;
-    update_record(std::move(other_url));
+    update_record(std::forward<url_record>(input));
   }
 
   ///
   /// \param other
-  url(url &&other)
+  url(const url &other)
+  : url(url_record(other.url_)) {}
+
+  ///
+  /// \param other
+  url(url &&other) noexcept
   : url(std::move(other.url_)) {}
 
   /// Swaps this `url` object with another

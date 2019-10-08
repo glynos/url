@@ -95,8 +95,8 @@ without using a base URL:
 #include <iostream>
 
 int main(int argc, char *argv[]) {
-  auto url = skyr::make_url("http://example.org/\xf0\x9f\x92\xa9");
-  std::cout << url.value().pathname() << std::endl;
+  auto url = skyr::url("http://example.org/\xf0\x9f\x92\xa9");
+  std::cout << url.pathname() << std::endl;
 }
 ```
 
@@ -131,12 +131,10 @@ This example parses a string, "🏳️‍🌈", using a base URL,
 #include <iostream>
 
 int main(int argc, char *argv[]) {
-  auto base = skyr::make_url("https://example.org/");
-  auto url = skyr::make_url(
-    "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88", base.value());
-  if (url) {
-    std::cout << url.value().href() << std::endl;
-  }
+  auto base = skyr::url("https://example.org/");
+  auto url = skyr::url(
+    "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88", base);
+  std::cout << url.href() << std::endl;
 }
 ```
 
