@@ -11,7 +11,7 @@
 #include <tl/expected.hpp>
 #include <skyr/unicode/errors.hpp>
 #include <skyr/unicode/constants.hpp>
-#include <skyr/unicode/ranges/traits.hpp>
+#include <skyr/unicode/traits/range_iterator.hpp>
 #include <skyr/unicode/ranges/views/u16_view.hpp>
 
 namespace skyr {
@@ -149,7 +149,8 @@ class transform_byte_iterator {
 template<class CodePointRange>
 class transform_byte_range {
 
-  using iterator_type = transform_byte_iterator<typename traits::iterator<CodePointRange>::type>;
+  using iterator_type =
+      transform_byte_iterator<typename traits::range_iterator<CodePointRange>::type>;
 
  public:
 
@@ -257,7 +258,8 @@ tl::expected<Output, std::error_code> as(
     if (!byte) {
       return tl::make_unexpected(byte.error());
     }
-    result.push_back(byte.value());
+    result.push_back(
+        static_cast<typename Output::value_type>(byte.value()));
   }
   return result;
 }

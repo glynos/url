@@ -14,7 +14,9 @@
 #include <skyr/unicode/errors.hpp>
 #include <skyr/unicode/core.hpp>
 #include <skyr/unicode/code_point.hpp>
-#include <skyr/unicode/ranges/traits.hpp>
+#include <skyr/unicode/traits/iterator_value.hpp>
+#include <skyr/unicode/traits/range_iterator.hpp>
+#include <skyr/unicode/traits/range_value.hpp>
 #include <skyr/unicode/ranges/views/unchecked_u8_view.hpp>
 
 namespace skyr {
@@ -32,7 +34,7 @@ class u8_range_iterator {
   ///
   using iterator_category = std::forward_iterator_tag;
   ///
-  using value_type = tl::expected<typename iterator_type::value_type, std::error_code>;
+  using value_type = tl::expected<typename traits::iterator_value<iterator_type>::type, std::error_code>;
   ///
   using reference = value_type;
   ///
@@ -47,8 +49,8 @@ class u8_range_iterator {
   explicit constexpr u8_range_iterator(
       OctetIterator it,
       OctetIterator last)
-      : it_(it)
-      , last_(last) {}
+      : it_(iterator_type(it, last))
+      , last_(iterator_type()) {}
 
   ///
   /// \return
@@ -71,7 +73,7 @@ class u8_range_iterator {
   /// \return
   constexpr reference operator * () const noexcept {
     assert(it_);
-    return valid_u8_code_point(*it_.value());
+    return checked_u8_code_point(*it_.value());
   }
 
   ///
@@ -110,13 +112,13 @@ class u8_range_iterator {
 template <class OctetRange>
 class view_u8_range {
 
-  using octet_iterator_type = typename traits::iterator<OctetRange>::type;
+  using octet_iterator_type = typename traits::range_iterator<OctetRange>::type;
   using iterator_type = u8_range_iterator<octet_iterator_type>;
 
  public:
 
   ///
-  using value_type = u8_code_point_t<octet_iterator_type>;
+  using value_type = u8_code_point_view<octet_iterator_type>;
   ///
   using const_reference = value_type;
   ///
@@ -189,34 +191,14 @@ class view_u8_range {
 
 };
 
-///
-struct u8_range_fn {
-
-  ///
-  /// \tparam OctetRange
-  /// \param range
-  /// \return
-  template <typename OctetRange>
-  constexpr auto operator()(
-      OctetRange &&range) const noexcept {
-    return view_u8_range{std::forward<OctetRange>(range)};
-  }
-
-  ///
-  /// \tparam OctetRange
-  /// \param range
-  /// \return
-  template <typename OctetRange>
-  friend constexpr auto operator|(
-      OctetRange &&range,
-      const u8_range_fn&) noexcept {
-    return view_u8_range{std::forward<OctetRange>(range)};
-  }
-};
-
 namespace view {
 ///
-static constexpr u8_range_fn as_u8;
+template <typename OctetRange>
+inline auto as_u8(
+    const OctetRange &range) noexcept {
+  static_assert(sizeof(typename traits::range_value<OctetRange>::type) == 1);
+  return view_u8_range{range};
+}
 }  // namespace view
 }  // namespace unicode
 }  // namespace v1

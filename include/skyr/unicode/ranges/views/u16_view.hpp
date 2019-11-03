@@ -13,7 +13,8 @@
 #include <tl/expected.hpp>
 #include <skyr/unicode/errors.hpp>
 #include <skyr/unicode/core.hpp>
-#include <skyr/unicode/ranges/traits.hpp>
+#include <skyr/unicode/traits/range_iterator.hpp>
+#include <skyr/unicode/traits/range_value.hpp>
 #include <skyr/unicode/ranges/views/u8_view.hpp>
 #include <skyr/unicode/ranges/transforms/u32_transform.hpp>
 
@@ -120,7 +121,7 @@ class u16_range_iterator {
 template <class U16Range>
 class view_u16_range {
 
-  using iterator_type = u16_range_iterator<typename traits::iterator<U16Range>::type>;
+  using iterator_type = u16_range_iterator<typename traits::range_iterator<U16Range>::type>;
 
  public:
 
@@ -187,31 +188,17 @@ class view_u16_range {
 
 };
 
-///
-struct u16_range_fn {
-  ///
-  /// \tparam OctetRange
-  /// \param range
-  /// \return
-  template <typename U16Range>
-  constexpr auto operator()(U16Range &&range) const noexcept {
-    return view_u16_range{std::forward<U16Range>(range)};
-  }
-
-  ///
-  /// \tparam OctetRange
-  /// \param range
-  /// \return
-  template <typename U16Range>
-  friend constexpr auto operator|(U16Range &&range, const u16_range_fn&) noexcept {
-    return view_u16_range{std::forward<U16Range>(range)};
-  }
-
-};
-
 namespace view {
 ///
-static constexpr u16_range_fn as_u16;
+///
+/// \tparam U16Range
+/// \param range
+/// \return
+template <typename U16Range>
+inline auto as_u16(const U16Range &range) noexcept {
+  static_assert(sizeof(typename traits::range_value<U16Range>::type) >= 1);
+  return view_u16_range{range};
+}
 }  // namespace view
 }  // namespace unicode
 }  // namespace v1

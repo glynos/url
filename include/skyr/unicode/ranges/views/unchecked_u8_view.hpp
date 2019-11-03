@@ -13,7 +13,7 @@
 #include <skyr/unicode/errors.hpp>
 #include <skyr/unicode/core.hpp>
 #include <skyr/unicode/code_point.hpp>
-#include <skyr/unicode/ranges/traits.hpp>
+#include <skyr/unicode/traits/range_iterator.hpp>
 
 namespace skyr {
 inline namespace v1 {
@@ -27,7 +27,7 @@ class unchecked_u8_range_iterator {
   ///
   using iterator_category = std::forward_iterator_tag;
   ///
-  using value_type = u8_code_point_t<OctetIterator>;
+  using value_type = u8_code_point_view<OctetIterator>;
   ///
   using reference = value_type;
   ///
@@ -37,30 +37,34 @@ class unchecked_u8_range_iterator {
   constexpr unchecked_u8_range_iterator() = default;
   ///
   /// \param it
-  explicit constexpr unchecked_u8_range_iterator(OctetIterator it)
-      : it_(it) {}
+  /// \param last
+  constexpr unchecked_u8_range_iterator(OctetIterator it, OctetIterator last)
+      : it_(it), last_(last) {}
 
   ///
   /// \return
   unchecked_u8_range_iterator operator ++ (int) noexcept {
+    assert(it_);
     auto result = *this;
-    std::advance(it_, sequence_length(*it_));
+    increment();
     return result;
   }
 
   ///
   /// \return
   unchecked_u8_range_iterator &operator ++ () noexcept {
-    std::advance(it_, sequence_length(*it_));
+    assert(it_);
+    increment();
     return *this;
   }
 
   ///
   /// \return
   constexpr reference operator * () const noexcept {
-    auto last = it_;
-    std::advance(last, sequence_length(*it_));
-    return u8_code_point_t<OctetIterator>(it_, last);
+    assert(it_);
+    auto last = it_.value();
+    std::advance(last, sequence_length(*it_.value()));
+    return u8_code_point_view<OctetIterator>(it_.value(), last);
   }
 
   ///
@@ -79,7 +83,14 @@ class unchecked_u8_range_iterator {
 
  private:
 
-  OctetIterator it_;
+  void increment() {
+    std::advance(it_.value(), sequence_length(*it_.value()));
+    if (it_ == last_) {
+      it_ = std::nullopt;
+    }
+  }
+
+  std::optional<OctetIterator> it_, last_;
 
 };
 
@@ -88,13 +99,13 @@ class unchecked_u8_range_iterator {
 template <class OctetRange>
 class view_unchecked_u8_range {
 
-  using octet_iterator_type = typename traits::iterator<OctetRange>::type ;
+  using octet_iterator_type = typename traits::range_iterator<OctetRange>::type ;
   using iterator_type = unchecked_u8_range_iterator<octet_iterator_type>;
 
  public:
 
   ///
-  using value_type = u8_code_point_t<octet_iterator_type>;
+  using value_type = u8_code_point_view<octet_iterator_type>;
   ///
   using const_reference = value_type;
   ///
@@ -168,33 +179,16 @@ class view_unchecked_u8_range {
 
 };
 
-///
-struct unchecked_u8_range_fn {
-  ///
-  /// \tparam OctetRange
-  /// \param range
-  /// \return
-  template <typename OctetRange>
-  constexpr auto operator()(
-      OctetRange &&range) const noexcept {
-    return view_unchecked_u8_range{std::forward<OctetRange>(range)};
-  }
-
-  ///
-  /// \tparam OctetRange
-  /// \param range
-  /// \return
-  template <typename OctetRange>
-  friend constexpr auto operator|(
-      OctetRange &&range,
-      const unchecked_u8_range_fn&) noexcept {
-    return view_unchecked_u8_range{std::forward<OctetRange>(range)};
-  }
-};
-
 namespace view {
 ///
-static constexpr unchecked_u8_range_fn unchecked_u8;
+/// \tparam OctetRange
+/// \param range
+/// \return
+template <typename OctetRange>
+inline auto unchecked_u8(
+    const OctetRange &range) noexcept {
+  return view_unchecked_u8_range{range};
+}
 }  // namespace view
 }  // namespace unicode
 }  // namespace v1

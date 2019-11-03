@@ -6,7 +6,7 @@
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
 #include <string>
-#include "skyr/url/domain.hpp"
+#include "skyr/unicode/domain.hpp"
 
 
 TEST_CASE("encode_test", "[punycode]") {
@@ -22,30 +22,25 @@ TEST_CASE("encode_test", "[punycode]") {
       param{"faß", "xn--fa-hia"},
       param{"☃", "xn--n3h"},
       param{"bücher", "xn--bcher-kva"},
-      param("ü", "xn--tda"),
-      param("⌘", "xn--bih"),
-      param("ñ", "xn--ida"),
-      param("☃", "xn--n3h"),
+      param{"ü", "xn--tda"},
+      param{"⌘", "xn--bih"},
+      param{"ñ", "xn--ida"},
+      param{"☃", "xn--n3h"},
       param{"उदाहरण", "xn--p1b6ci4b4b3a"},
       param{"परीक्षा", "xn--11b5bs3a9aj6g"},
-      param("glyn", "xn--glyn-"));
+      param{"glyn", "xn--glyn-"}
+  );
 
   SECTION("encode_set") {
-    auto input = std::string();
-    auto expected = std::string();
-
-    std::tie(input, expected) = domain;
-    auto encoded = skyr::punycode_encode(input);
+    const auto [input, expected] = domain;
+    auto encoded = skyr::unicode::punycode_encode(input);
     REQUIRE(encoded);
     CHECK(expected == encoded.value());
   }
 
   SECTION("decode_set") {
-    auto input = std::string();
-    auto expected = std::string();
-
-    std::tie(expected, input) = domain;
-    auto decoded = skyr::punycode_decode(input);
+    const auto [expected, input] = domain;
+    auto decoded = skyr::unicode::punycode_decode(input);
     REQUIRE(decoded);
     CHECK(expected == decoded.value());
   }

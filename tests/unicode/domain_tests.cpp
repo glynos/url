@@ -6,7 +6,7 @@
 #include <string>
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
-#include <skyr/url/domain.hpp>
+#include <skyr/unicode/domain.hpp>
 
 TEST_CASE("valid domains", "[domain]") {
   using param = std::pair<std::string, std::string>;
@@ -21,11 +21,8 @@ TEST_CASE("valid domains", "[domain]") {
       param{"Ｇｏ.com", "go.com"});
 
   SECTION("dom ascii_tests") {
-    auto input = std::string();
-    auto expected = std::string();
-    std::tie(input, expected) = domain;
-
-    auto instance = skyr::domain_to_ascii(input);
+    const auto [input, expected] = domain;
+    auto instance = skyr::unicode::domain_to_ascii(input);
     REQUIRE(instance);
     CHECK(expected == instance.value());
   }
@@ -33,22 +30,22 @@ TEST_CASE("valid domains", "[domain]") {
 
 TEST_CASE("invalid domains", "[domain]") {
   SECTION("invalid_domain_1") {
-    auto instance = skyr::domain_to_ascii("GOO 　goo.com");
+    auto instance = skyr::unicode::domain_to_ascii("GOO 　goo.com");
     REQUIRE_FALSE(instance);
   }
 
   SECTION("invalid_domain_2") {
-    auto instance = skyr::domain_to_ascii(U"\xfdD0zyx.com");
+    auto instance = skyr::unicode::domain_to_ascii(U"\xfdD0zyx.com");
     REQUIRE_FALSE(instance);
   }
 
   SECTION("invalid_domain_3") {
-    auto instance = skyr::domain_to_ascii("�");
+    auto instance = skyr::unicode::domain_to_ascii("�");
     REQUIRE_FALSE(instance);
   }
 
   SECTION("invalid_domain_4") {
-    auto instance = skyr::domain_to_ascii("％４１.com");
+    auto instance = skyr::unicode::domain_to_ascii("％４１.com");
     REQUIRE_FALSE(instance);
   }
 }
