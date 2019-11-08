@@ -6,6 +6,8 @@
 #ifndef SKYR_UNICODE_DOMAIN_HPP
 #define SKYR_UNICODE_DOMAIN_HPP
 
+/// \file domain.hpp
+
 #include <string>
 #include <string_view>
 #include <system_error>
@@ -14,6 +16,7 @@
 namespace skyr {
 inline namespace v1 {
 namespace unicode {
+/// \enum domain_errc
 /// Enumerates domain processing errors
 enum class domain_errc {
   /// The domain code point is disallowed
@@ -31,7 +34,7 @@ enum class domain_errc {
 /// \returns A `std::error_code` object
 std::error_code make_error_code(domain_errc error) noexcept;
 
-/// Performs punycode encoding based on a reference implementation
+/// Performs Punycode encoding based on a reference implementation
 /// defined in [RFC 3492](https://tools.ietf.org/html/rfc3492)
 ///
 /// \param input A UTF-8 encoded domain to be encoded
@@ -39,7 +42,7 @@ std::error_code make_error_code(domain_errc error) noexcept;
 tl::expected<std::string, std::error_code> punycode_encode(
     std::string_view input);
 
-/// Performs punycode encoding based on a reference implementation
+/// Performs Punycode encoding based on a reference implementation
 /// defined in [RFC 3492](https://tools.ietf.org/html/rfc3492)
 ///
 /// \param input A UTF-32 encoded domain to be encoded
@@ -47,7 +50,7 @@ tl::expected<std::string, std::error_code> punycode_encode(
 tl::expected<std::string, std::error_code> punycode_encode(
     std::u32string_view input);
 
-/// Performs punycode decoding based on a reference implementation
+/// Performs Punycode decoding based on a reference implementation
 /// defined in [RFC 3492](https://tools.ietf.org/html/rfc3492)
 ///
 /// \param input An ASCII encoded domain to be decoded

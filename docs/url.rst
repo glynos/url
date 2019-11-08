@@ -1,17 +1,10 @@
-`skyr::url`
-===========
+URL
+===
 
-`skyr::url` class
------------------
+.. toctree::
+   :maxdepth: 2
 
-.. doxygenclass:: skyr::url
-    :members:
-
-`skyr::url` functions
----------------------
-
-.. doxygenfunction:: skyr::swap(url&, url&)
-
-.. doxygenfunction:: skyr::make_url(const Source&)
-
-.. doxygenfunction:: skyr::make_url(const Source&, const url&)
+   url_error_codes
+   url_class
+   url_record
+   url_search_parameters

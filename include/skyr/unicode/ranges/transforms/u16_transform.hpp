@@ -19,44 +19,47 @@
 namespace skyr {
 inline namespace v1 {
 namespace unicode {
+/// An iterator that transform a code point to UTF-16 code
+/// units
 ///
 /// \tparam CodePointIterator
 template <class CodePointIterator>
-class transform_u16_iterator {
+class u16_transform_iterator {
 
  public:
 
-  ///
+  /// \c std::forward_iterator_tag
   using iterator_category = std::forward_iterator_tag;
-  ///
+  /// An expected wrapper around a UTF-16 encoded code point
   using value_type = tl::expected<u16_code_point_t, std::error_code>;
-  ///
+  /// \c value_type
   using reference = value_type;
-  ///
+  /// \c value_type *
   using pointer = typename std::add_pointer<value_type>::type;
   /// \c std::ptrdiff_t
   using difference_type = std::ptrdiff_t;
 
   /// Default constructor
-  transform_u16_iterator() = default;
+  u16_transform_iterator() = default;
   ///
-  /// \param it
-  explicit constexpr transform_u16_iterator(
-      CodePointIterator it,
+  /// \param first
+  /// \param last
+  explicit constexpr u16_transform_iterator(
+      CodePointIterator first,
       CodePointIterator last)
-      : it_(it)
+      : it_(first)
       , last_(last) {}
 
   /// Pre-increment operator
   /// \return A reference to this iterator
-  transform_u16_iterator &operator ++ () noexcept {
+  u16_transform_iterator &operator ++ () noexcept {
     ++it_;
     return *this;
   }
 
   /// Post-increment operator
   /// \return A copy of the previous iterator
-  transform_u16_iterator operator ++ (int) noexcept {
+  u16_transform_iterator operator ++ (int) noexcept {
     auto result = *this;
     ++it_;
     return result;
@@ -72,30 +75,31 @@ class transform_u16_iterator {
   /// Equality operator
   /// \param other The other iterator
   /// \return \c true if the iterators are the same, \c false otherwise
-  bool operator == (const transform_u16_iterator &other) const noexcept {
+  bool operator == (const u16_transform_iterator &other) const noexcept {
     return it_ == other.it_;
   }
 
   /// Inequality operator
   /// \param other The other iterator
   /// \return \c true if the iterators are not the same, \c false otherwise
-  bool operator != (const transform_u16_iterator &other) const noexcept {
+  bool operator != (const u16_transform_iterator &other) const noexcept {
     return !(*this == other);
   }
 
  private:
 
-  transform_u32_iterator<CodePointIterator> it_, last_;
+  u32_transform_iterator<CodePointIterator> it_, last_;
 
 };
 
+/// A range that transforms code point values to a UTF-16 sequence
 ///
 /// \tparam CodePointRange
 template <class CodePointRange>
 class transform_u16_range {
 
   using iterator_type =
-      transform_u16_iterator<typename traits::range_iterator<CodePointRange>::type>;
+      u16_transform_iterator<typename traits::range_iterator<CodePointRange>::type>;
 
  public:
 
