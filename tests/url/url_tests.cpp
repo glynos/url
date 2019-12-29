@@ -548,4 +548,22 @@ TEST_CASE("url_tests", "[url]") {
     CHECK("example.com" == instance.host());
     CHECK("?a=b&c=d" == instance.search());
   }
+
+  SECTION("url_copy_assign") {
+    auto url = skyr::url("https://example.com/?a=b&c=d");
+    auto instance = skyr::url();
+    instance = url;
+    CHECK("https:" == instance.protocol());
+    CHECK("example.com" == instance.host());
+    CHECK("?a=b&c=d" == instance.search());
+  }
+
+  SECTION("url_move_assign") {
+    auto url = skyr::url("https://example.com/?a=b&c=d");
+    auto instance = skyr::url();
+    instance = std::move(url);
+    CHECK("https:" == instance.protocol());
+    CHECK("example.com" == instance.host());
+    CHECK("?a=b&c=d" == instance.search());
+  }
 }

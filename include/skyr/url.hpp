@@ -150,6 +150,24 @@ class url {
   url(url &&other) noexcept
       : url(std::move(other.url_)) {}
 
+  /// Copy assignment operator
+  /// \param other Another `url` object
+  /// \return *this
+  url &operator=(const url &other) {
+    auto tmp(other);
+    swap(tmp);
+    return *this;
+  }
+
+  /// Move assignment operator
+  /// \param other Another `url` object
+  /// \return *this
+  url &operator=(url&& other) {
+    auto tmp(other);
+    swap(tmp);
+    return *this;
+  }
+
   /// Swaps this `url` object with another
   ///
   /// \param other Another `url` object

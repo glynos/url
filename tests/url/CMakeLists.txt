@@ -11,6 +11,7 @@ set(
         percent_decoding_tests.cpp
         percent_encoding_tests.cpp
         url_tests.cpp
+        url_vector_tests.cpp
         url_web_platform_tests.cpp
         url_parsing_example_tests.cpp
         url_setter_tests.cpp
