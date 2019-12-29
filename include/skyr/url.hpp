@@ -162,7 +162,7 @@ class url {
   /// Move assignment operator
   /// \param other Another `url` object
   /// \return *this
-  url &operator=(url&& other) {
+  url &operator=(url&& other) noexcept {
     auto tmp(other);
     swap(tmp);
     return *this;
