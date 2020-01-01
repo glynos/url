@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.4] - 2020-01-01
+
+### Added
+
+- URLs can be constructed using string literals, e.g.  `auto url = "http://example.com"_url;`
+
+### Changed
+
+- Forced CMake to choose only C++17 standard library (i.e. no extensions)
+- To build with LLVM libcxx, enable it explicitly using `cmake -DSkyr_BUILD_WITH_LLVM_LIBCXX=ON`
+
+### Fixed
+
+- Added explicit copy assignment and move assignment operators
+
 ## [1.3] - 2019-11-05
 
 ### Added
