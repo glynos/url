@@ -33,17 +33,16 @@ std::error_code make_error_code(path_errc error) noexcept {
 }
 
 tl::expected<url, std::error_code> from_path(const std::filesystem::path &path) {
-  url result;
-  result.set_protocol("file");
-  result.set_pathname(path.generic_u8string());
-  return result;
+  return make_url("file://" + path.generic_u8string());
 }
 
 tl::expected<std::filesystem::path, std::error_code> to_path(const url &input) {
   auto pathname = input.pathname();
-  auto decoded = skyr::percent_encoding::as<std::string>(pathname | skyr::percent_encoding::view::decode);
+  auto decoded = skyr::percent_encoding::as<std::string>(
+      pathname | skyr::percent_encoding::view::decode);
   if (!decoded) {
-    return tl::make_unexpected(make_error_code(path_errc::percent_decoding_error));
+    return tl::make_unexpected(
+        make_error_code(path_errc::percent_decoding_error));
   }
   return std::filesystem::path(decoded.value());
 }
