@@ -39,7 +39,7 @@ def parse_version_header(version_header):
     return major, minor, patch
 
 
-version_header = '@CMAKE_SOURCE_DIR@/include/skyr/version.hpp'
+version_header = '@Skyr_SOURCE_DIR@/include/skyr/version.hpp'
 major, minor, patch = parse_version_header(version_header)
 
 

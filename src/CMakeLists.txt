@@ -65,14 +65,14 @@ endif()
 
 add_library(skyr-url ${Skyr_SRCS})
 
-target_link_libraries(skyr-url tl::expected)
+target_link_libraries(skyr-url PUBLIC tl::expected)
 if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
     if (NOT Skyr_DISABLE_LIBCXX)
-        target_link_libraries(skyr-url "c++")
+        target_link_libraries(skyr-url PUBLIC "c++")
     endif()
 elseif(${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
     if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
-        target_link_libraries(skyr-url "stdc++fs")
+        target_link_libraries(skyr-url PUBLIC "stdc++fs")
     endif()
 endif()
 
@@ -81,8 +81,6 @@ set_target_properties(skyr-url PROPERTIES
         SOVERSION 1
         POSITION_INDEPENDENT_CODE ON)
 
-add_library(Skyr::skyr-url ALIAS skyr-url)
-
 target_include_directories(skyr-url
     PUBLIC
         $<INSTALL_INTERFACE:include>
@@ -90,11 +88,13 @@ target_include_directories(skyr-url
     PRIVATE
         ${Skyr_SOURCE_DIR}/src)
 
+add_library(Skyr::skyr-url ALIAS skyr-url)
+
 #propagate sources to parent scope for one-lib-build
 set(Skyr_SRCS ${Skyr_SRCS} PARENT_SCOPE)
 
 # Install
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include DESTINATION ".")
+install(DIRECTORY ${Skyr_SOURCE_DIR}/include DESTINATION ".")
 install(TARGETS skyr-url
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib)

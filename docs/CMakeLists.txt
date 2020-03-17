@@ -1,9 +1,11 @@
-# Copyright (c) Glyn Matthews 2018-19.
+# Copyright (c) Glyn Matthews 2018-20.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(${Skyr_SOURCE_DIR}/cmake/SkyrFunctions.cmake)
+
+LIST(APPEND CMAKE_MODULE_PATH "${Skyr_SOURCE_DIR}/cmake")
 
 find_package(Doxygen REQUIRED)
 find_package(Pandoc REQUIRED)
@@ -37,18 +39,22 @@ endforeach()
 
 # Generate API documentation using Doxygen
 configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
+        Doxyfile.in
         ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
 
 configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in
+        conf.py.in
         ${CMAKE_CURRENT_BINARY_DIR}/conf.py @ONLY)
 
-add_custom_target(doxygen ALL
+add_custom_target(
+        doxygen ALL
         COMMAND
-        ${DOXYGEN}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Generating documentation with Doxygen")
+            ${DOXYGEN}
+        WORKING_DIRECTORY
+            ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT
+            "Generating documentation with Doxygen"
+)
 
 # Convert markdown to RST
 SET(
@@ -58,19 +64,31 @@ SET(
 )
 
 foreach (file_name ${GENERATED_FROM_MARKDOWN})
-    _remove_extension(${file_name} basename)
+    remove_extension(${file_name} basename)
     string(TOUPPER ${basename} basename_upper)
-    add_custom_target(${file_name}
-            pandoc ${CMAKE_SOURCE_DIR}/${basename_upper}.md -f markdown -t rst -s -o ${CMAKE_CURRENT_BINARY_DIR}/${file_name}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/${file_name}
-            COMMENT "Generating RST file with pandoc" VERBATIM)
+    set(target ${basename})
+    string(PREPEND target "doc_")
+    add_custom_target(
+            ${target}
+            pandoc ${Skyr_SOURCE_DIR}/${basename_upper}.md -f markdown -t rst -s -o ${CMAKE_CURRENT_BINARY_DIR}/${file_name}
+            WORKING_DIRECTORY
+                ${CMAKE_CURRENT_BINARY_DIR}
+            BYPRODUCTS
+                ${CMAKE_CURRENT_BINARY_DIR}/${file_name}
+            COMMENT
+                "Generating RST file with pandoc" VERBATIM
+    )
 endforeach()
 
 # Bring it all together using Sphinx
-add_custom_target(doc ALL
+add_custom_target(
+        doc ALL
         COMMAND
-        ${SPHINX_EXECUTABLE} -M html ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        DEPENDS doxygen ${GENERATED_FROM_MARKDOWN}
-        COMMENT "Generating documentation with Sphinx")
+            ${SPHINX_EXECUTABLE} -M html ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}
+        WORKING_DIRECTORY
+            ${CMAKE_CURRENT_BINARY_DIR}
+        DEPENDS
+            doxygen ${GENERATED_FROM_MARKDOWN}
+        COMMENT
+            "Generating documentation with Sphinx"
+)

@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.15)
 
 project(
         Skyr
-        VERSION 1.4.1
+        VERSION 1.4.2
         HOMEPAGE_URL https://cpp-netlib.github.io/url
         DESCRIPTION "A C++ library that implements the WhatWG URL specification"
         LANGUAGES CXX
