@@ -62,16 +62,6 @@ To run the tests, run `ninja test` from the terminal while in the
 > ninja test
 ```
 
-### Building with `CMake` and `Visual Studio 2017`
-
-Open Visual Studio 2017, and click on `File`->`Open`->`Folder`, or
-use the shortcut `Ctrl+Shift+Alt+O`. Open the root folder of this
-project. This will load the project in the explorer. To build,
-simply open the `CMake` menu and click `Build All`.
-
-To run the tests, open the `CMake` menu, click `Tests` and then run
-`Run Skyr CTests`.
-
 ## Examples
 
 These examples are based on the
@@ -182,14 +172,18 @@ Linux:
 * GCC 9
 * Clang 7
 * Clang 8
+* Clang 9
 
 MacOS:
 
 * Clang 7
+* Clang 8
+* Clang 9
 
 Windows:
 
 * Microsoft Visual C++ 2017
+* Microsoft Visual C++ 2019
 
 ## License
 
