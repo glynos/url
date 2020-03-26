@@ -1,6 +1,6 @@
 image:
  - Visual Studio 2017
-# - Visual Studio 2019
+ - Visual Studio 2019
 
 platform:
   - x64
@@ -13,7 +13,7 @@ install:
   - cd C:\Tools\vcpkg
   - git pull
   - .\bootstrap-vcpkg.bat
-  - vcpkg install tl-expected catch2 nlohmann-json
+  - vcpkg install tl-expected catch2 nlohmann-json --triplet x64-windows
   - vcpkg integrate install
   - cd %APPVEYOR_BUILD_FOLDER%
 
@@ -22,7 +22,7 @@ build_script:
   - git submodule update
   - mkdir build
   - cd build
-  - cmake .. -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake
+  - cmake .. -A x64 -DCMAKE_TOOLCHAIN_FILE=C:\Tools\vcpkg\scripts\buildsystems\vcpkg.cmake
   - cmake --build .
   - ctest
 
