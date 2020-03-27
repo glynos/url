@@ -5,7 +5,9 @@ language: c++
 dist: bionic
 
 env:
-  global: DEPS_DIR="${TRAVIS_BUILD_DIR}/deps_"
+  global:
+    - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps_"
+    - INSTALL_DIR="${TRAVIS_BUILD_DIR}/install"
 
 matrix:
   include:
@@ -53,9 +55,10 @@ matrix:
 #    - os: osx
 #      osx_image: xcode10
 #      compiler: clang
-#      env: [COMPILER='clang', VCPKG_TRIPLET='x64-osx']
+#      env: [COMPILER='clang', VCPKG_TRIPLET='x64-osx', BUILD_WITH_LLVM_LIBCXX='ON']
 
 before_install:
+  - echo ${DEPS_DIR}
   - mkdir -p ${DEPS_DIR}
   - pushd ${DEPS_DIR}
   - echo ${TRAVIS_OS_NAME}
@@ -67,7 +70,15 @@ before_install:
     elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       which cmake || brew install cmake
     fi
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      which ninja || sudo apt-get install ninja-build
+    elif [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      which ninja || brew install ninja
+    fi
   - popd
+  - echo ${INSTALL_DIR}
+  - mkdir -p ${INSTALL_DIR}
   - |
     if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
       brew install gcc
@@ -98,19 +109,24 @@ cache:
 
 before_script:
   - export CXX=${COMPILER}
+  - mkdir _build
+  - cmake
+    -B_build
+    -GNinja
+    -DSkyr_BUILD_TESTS=ON
+    -DSkyr_BUILD_DOCS=OFF
+    -DSkyr_BUILD_EXAMPLES=OFF
+    -DSkyr_BUILD_WITH_LLVM_LIBCXX=${BUILD_WITH_LLVM_LIBCXX}
+    -DCMAKE_TOOLCHAIN_FILE=${DEPS_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+    -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
+    .
 
 script:
-    - mkdir _build
-    - pushd _build
-    - cmake -DSkyr_BUILD_TESTS=ON
-            -DSkyr_BUILD_DOCS=OFF
-            -DSkyr_BUILD_EXAMPLES=OFF
-            -DSkyr_BUILD_WITH_LLVM_LIBCXX=${BUILD_WITH_LLVM_LIBCXX}
-            -DCMAKE_TOOLCHAIN_FILE=${DEPS_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
-            ..
-    - make -j 8
-    - make test
-    - popd
+  - pushd _build
+  - ninja
+  - ninja test
+  - ninja install
+  - popd
 
 after_failure:
     - cat _build/Testing/Temporary/LastTest.log
