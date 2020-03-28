@@ -28,6 +28,7 @@ set(Skyr_SRCS
         url/url.cpp
         url/url_error.cpp
         url/url_search_parameters.cpp
+        url/filesystem.cpp
         url/percent_encoding/errors.cpp
 
         ${Skyr_SOURCE_DIR}/include/skyr/config.hpp
@@ -56,24 +57,18 @@ set(Skyr_SRCS
         ${Skyr_SOURCE_DIR}/include/skyr/url/url_serialize.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/url/url_error.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/url/url_search_parameters.hpp
+        ${Skyr_SOURCE_DIR}/include/skyr/url/filesystem.hpp
         ${Skyr_SOURCE_DIR}/include/skyr/url.hpp)
-
-if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
-        LIST(APPEND Skyr_SRCS url/filesystem.cpp)
-        LIST(APPEND Skyr_SRCS ${Skyr_SOURCE_DIR}/include/skyr/url/filesystem.hpp)
-endif()
 
 add_library(skyr-url ${Skyr_SRCS})
 
 target_link_libraries(skyr-url PUBLIC tl::expected)
 if(${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
-    if (NOT Skyr_DISABLE_LIBCXX)
+    if (Skyr_BUILD_WITH_LLVM_LIBCXX)
         target_link_libraries(skyr-url PUBLIC "c++")
     endif()
 elseif(${CMAKE_CXX_COMPILER_ID} MATCHES GNU)
-    if (Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS)
-        target_link_libraries(skyr-url PUBLIC "stdc++fs")
-    endif()
+    target_link_libraries(skyr-url PUBLIC "stdc++fs")
 endif()
 
 set_target_properties(skyr-url PROPERTIES
