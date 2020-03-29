@@ -1,4 +1,4 @@
-// Copyright 2018-19 Glyn Matthews.
+// Copyright 2018-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
@@ -39,12 +39,14 @@ TEST_CASE("encode userinfo", "[percent_encoding]") {
 }
 
 TEST_CASE("encode_tests", "[percent_encoding]") {
+  using namespace std::string_literals;
+
   SECTION("encode_codepoints_before_0x20_set") {
     for (auto i = 0u; i < 0x20u; ++i) {
       auto encoded = skyr::percent_encoding::percent_encode_byte(i, skyr::percent_encoding::encode_set::c0_control);
       char buffer[8];
       std::snprintf(buffer, sizeof(buffer), "%02X", i);
-      auto output = std::string("%") + buffer;
+      auto output = "%"s + buffer;
       CHECK(output == encoded.to_string());
     }
   }
@@ -54,20 +56,20 @@ TEST_CASE("encode_tests", "[percent_encoding]") {
       auto encoded = skyr::percent_encoding::percent_encode_byte(i, skyr::percent_encoding::encode_set::c0_control);
       char buffer[8];
       std::snprintf(buffer, sizeof(buffer), "%02X", i);
-      auto output = std::string("%") + buffer;
+      auto output = "%"s + buffer;
       CHECK(output == encoded.to_string());
     }
   }
 
   SECTION("u8_test_1") {
-    auto input = std::string("\xf0\x9f\x92\xa9");
+    const auto input = "\xf0\x9f\x92\xa9"s;
     auto encoded = skyr::percent_encoding::as<std::string>(input | skyr::percent_encoding::view::encode);
     REQUIRE(encoded);
     CHECK("%F0%9F%92%A9" == encoded.value());
   }
 
   SECTION("u8_test_2") {
-    auto input = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto input = "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"s;
     auto encoded = skyr::percent_encoding::as<std::string>(input | skyr::percent_encoding::view::encode);
     REQUIRE(encoded);
     CHECK("%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88" == encoded.value());

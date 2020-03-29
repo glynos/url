@@ -1,10 +1,12 @@
-// Copyright 2019 Glyn Matthews.
+// Copyright 2019-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef SKYR_UNICODE_CONSTANTS_HPP
 #define SKYR_UNICODE_CONSTANTS_HPP
+
+#include <array>
 
 namespace skyr {
 inline namespace v1 {
@@ -25,7 +27,7 @@ namespace code_points {
 constexpr char32_t max = 0x0010ffffu;
 }  // namespace code_points
 
-constexpr char bom[] = {'\xef', '\xbb', '\xbf'};
+constexpr std::array<char, 3> bom = {'\xef', '\xbb', '\xbf'};
 }  // namespace unicode::constants
 }  // namespace v1
 }  // namespace skyr

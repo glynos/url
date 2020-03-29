@@ -144,8 +144,8 @@ class view_u16_range {
 
   ///
   /// \param range
-  explicit constexpr view_u16_range(const U16Range &range) noexcept
-      : range_{range} {}
+  explicit constexpr view_u16_range(U16Range range) noexcept
+      : range_(std::move(range)) {}
 
   ///
   /// \return

@@ -1,5 +1,5 @@
 // Copyright 2010 Jeroen Habraken.
-// Copyright 2009-2019 Dean Michael Berris, Glyn Matthews.
+// Copyright 2009-2020 Dean Michael Berris, Glyn Matthews.
 // Copyright 2012 Google, Inc.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
@@ -12,6 +12,8 @@
 #include <skyr/url.hpp>
 
 TEST_CASE("url_tests", "[url]") {
+  using namespace std::string_literals;
+
   SECTION("construct_invalid_url_make") {
     CHECK_FALSE(skyr::make_url("I am not a valid url."));
   }
@@ -37,7 +39,7 @@ TEST_CASE("url_tests", "[url]") {
   }
 
   SECTION("construct_url_from_string_make") {
-    auto input = std::string("http://www.example.com/");
+    const auto input = "http://www.example.com/"s;
     CHECK(skyr::make_url(input));
   }
 

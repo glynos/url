@@ -1,4 +1,4 @@
-// Copyright 2018-19 Glyn Matthews.
+// Copyright 2018-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
@@ -14,8 +14,10 @@
 
 
 TEST_CASE("unicode_tests", "[unicode]") {
+  using namespace std::string_literals;
+
   SECTION("utf32_to_bytes_poo_emoji_test") {
-    auto input = std::u32string(U"\x1F4A9");
+    const auto input = U"\x1F4A9"s;
     auto bytes = skyr::unicode::as<std::string>(
         input | skyr::unicode::transform::to_bytes);
     REQUIRE(bytes);
@@ -23,7 +25,7 @@ TEST_CASE("unicode_tests", "[unicode]") {
   }
 
   SECTION("bytes_to_utf32_poo_emoji_test") {
-    auto input = std::string("\xf0\x9f\x92\xa9");
+    const auto input = "\xf0\x9f\x92\xa9"s;
     auto utf32 = skyr::unicode::as<std::u32string>(
         skyr::unicode::view::as_u8(input) | skyr::unicode::transform::to_u32);
     REQUIRE(utf32);
@@ -31,7 +33,7 @@ TEST_CASE("unicode_tests", "[unicode]") {
   }
 
   SECTION("utf16_to_bytes_poo_emoji_test") {
-    auto input = std::u16string(u"\xd83d\xdca9");
+    const auto input = u"\xd83d\xdca9"s;
     auto bytes = skyr::unicode::as<std::string>(
         skyr::unicode::view::as_u16(input) | skyr::unicode::transform::to_bytes);
     REQUIRE(bytes);
@@ -39,7 +41,7 @@ TEST_CASE("unicode_tests", "[unicode]") {
   }
 
   SECTION("bytes_to_utf16_poo_emoji_test") {
-    auto input = std::string("\xf0\x9f\x92\xa9");
+    const auto input = "\xf0\x9f\x92\xa9"s;
     auto utf16 = skyr::unicode::as<std::u16string>(
         skyr::unicode::view::as_u8(input) | skyr::unicode::transform::to_u16);
     REQUIRE(utf16);
@@ -47,7 +49,7 @@ TEST_CASE("unicode_tests", "[unicode]") {
   }
 
   SECTION("wstring_to_bytes_poo_emoji_test") {
-    auto input = std::wstring(L"\xd83d\xdca9");
+    const auto input = L"\xd83d\xdca9"s;
     auto bytes = skyr::unicode::as<std::string>(
         skyr::unicode::view::as_u16(input) | skyr::unicode::transform::to_bytes);
     REQUIRE(bytes);
@@ -55,7 +57,7 @@ TEST_CASE("unicode_tests", "[unicode]") {
   }
 
   SECTION("bytes_to_wstring_poo_emoji_test") {
-    auto input = std::string("\xf0\x9f\x92\xa9");
+    const auto input = "\xf0\x9f\x92\xa9"s;
     auto utf16 = skyr::unicode::as<std::wstring>(
         skyr::unicode::view::as_u8(input) | skyr::unicode::transform::to_u16);
     REQUIRE(utf16);
@@ -63,7 +65,7 @@ TEST_CASE("unicode_tests", "[unicode]") {
   }
 
   SECTION("utf32_rainbow_flag_test") {
-    auto input = std::u32string(U"\x1F3F3\xFE0F\x200D\x1F308");
+    const auto input = U"\x1F3F3\xFE0F\x200D\x1F308"s;
     auto bytes = skyr::unicode::as<std::string>(
         input | skyr::unicode::transform::to_bytes);
     REQUIRE(bytes);

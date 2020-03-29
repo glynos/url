@@ -18,10 +18,11 @@ namespace unicode = skyr::unicode;
 
 
 TEST_CASE("octet range iterator") {
-  using iterator_type = unicode::u8_range_iterator<std::string::const_iterator>;
+  using iterator_type = unicode::u8_range_iterator<std::string_view::const_iterator>;
+  using namespace std::string_view_literals;
 
   SECTION("construction") {
-    auto bytes = std::string("\xf0\x9f\x92\xa9");
+    const auto bytes = "\xf0\x9f\x92\xa9"sv;
     auto it = iterator_type(std::begin(bytes), std::end(bytes));
     auto code_point = *it;
     REQUIRE(code_point);
@@ -29,16 +30,16 @@ TEST_CASE("octet range iterator") {
   }
 
   SECTION("construction from array") {
-    char bytes[] = "\xf0\x9f\x92\xa9";
+    const auto bytes = "\xf0\x9f\x92\xa9"sv;
     auto first = std::begin(bytes), last = std::end(bytes);
-    auto it = unicode::u8_range_iterator<char *>(first, last);
+    auto it = unicode::u8_range_iterator<const char *>(first, last);
     auto code_point = *it;
     REQUIRE(code_point);
     CHECK(U'\x1F4A9' == u32_value(code_point.value()));
   }
 
   SECTION("increment") {
-    auto bytes = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto it = iterator_type(std::begin(bytes), std::end(bytes));
     auto code_point = *it;
     REQUIRE(code_point);
@@ -50,13 +51,13 @@ TEST_CASE("octet range iterator") {
   }
 
   SECTION("increment invalid") {
-    auto bytes = std::string("\xf0\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto it = iterator_type(std::begin(bytes), std::end(bytes));
     CHECK(!*it);
   }
 
   SECTION("equality") {
-    auto bytes = std::string("\xf0\x9f\x92\xa9");
+    const auto bytes = "\xf0\x9f\x92\xa9"sv;
     auto it = iterator_type(std::begin(bytes), std::end(bytes));
     auto last = iterator_type();
     ++it;
@@ -64,14 +65,14 @@ TEST_CASE("octet range iterator") {
   }
 
   SECTION("inequality") {
-    auto bytes = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto it = iterator_type(std::begin(bytes), std::end(bytes));
     auto last = iterator_type();
     CHECK(last != it);
   }
 
   SECTION("end of sequence") {
-    auto bytes = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto it = iterator_type(std::begin(bytes), std::end(bytes));
     auto last = iterator_type();
     std::advance(it, 4);
@@ -80,7 +81,7 @@ TEST_CASE("octet range iterator") {
 
   SECTION("two characters")
   {
-    auto bytes = std::string("\xe6\x97\xa5\xd1\x88");
+    const auto bytes = "\xe6\x97\xa5\xd1\x88"sv;
     auto it = iterator_type(std::begin(bytes), std::end(bytes));
     {
       auto code_point = *it++;
@@ -96,7 +97,7 @@ TEST_CASE("octet range iterator") {
 
   SECTION("three characters")
   {
-    auto bytes = std::string("\xf0\x90\x8d\x86\xe6\x97\xa5\xd1\x88");
+    const auto bytes = "\xf0\x90\x8d\x86\xe6\x97\xa5\xd1\x88"sv;
     auto it = iterator_type(std::begin(bytes), std::end(bytes));
     {
       auto code_point = *it++;
@@ -119,9 +120,10 @@ TEST_CASE("octet range iterator") {
 TEST_CASE("u8 range") {
   using std::begin;
   using std::end;
+  using namespace std::string_view_literals;
 
   SECTION("construction") {
-    auto bytes = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto view = unicode::view_u8_range(bytes);
     CHECK(begin(view) != end(view));
   }
@@ -132,7 +134,7 @@ TEST_CASE("u8 range") {
   }
 
   SECTION("count") {
-    auto bytes = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto view = unicode::view_u8_range(bytes);
     CHECK(4 == view.size());
     CHECK(!view.empty());
@@ -144,21 +146,21 @@ TEST_CASE("u8 range") {
   }
 
   SECTION("pipe syntax") {
-    auto bytes = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto view = unicode::view::as_u8(bytes);
     CHECK(4 == view.size());
     CHECK(!view.empty());
   }
 
   SECTION("pipe syntax with string_view") {
-    auto bytes = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto view = unicode::view::as_u8(std::string_view(bytes));
     CHECK(4 == view.size());
     CHECK(!view.empty());
   }
 
   SECTION("pipe syntax invalid") {
-    auto bytes = std::string("\xf0\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto view = unicode::view::as_u8(bytes);
     auto it = std::begin(view), last = std::end(view);
     CHECK(!*it++);
@@ -168,35 +170,37 @@ TEST_CASE("u8 range") {
   }
 
   SECTION("pipe syntax with u16 string") {
-    auto bytes = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto u16 = unicode::as<std::u16string>(unicode::view::as_u8(bytes) | unicode::transform::to_u16);
     REQUIRE(u16);
     CHECK(u"\xD83C\xDFF3\xFE0F\x200D\xD83C\xDF08" == u16.value());
   }
 
   SECTION("pipe syntax with u32 string") {
-    auto bytes = std::string("\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto u32 = unicode::as<std::u32string>(unicode::view::as_u8(bytes) | unicode::transform::to_u32);
     REQUIRE(u32);
     CHECK(U"\x1F3F3\xFE0F\x200D\x1F308" == u32.value());
   }
 
   SECTION("pipe syntax with u16 string invalid") {
-    auto bytes = std::string("\xf0\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto u16 = unicode::as<std::u16string>(unicode::view::as_u8(bytes) | unicode::transform::to_u16);
     CHECK(!u16);
   }
 
   SECTION("pipe syntax with u32 string invalid") {
-    auto bytes = std::string("\xf0\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88");
+    const auto bytes = "\xf0\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88"sv;
     auto u32 = unicode::as<std::u32string>(unicode::view::as_u8(bytes) | unicode::transform::to_u32);
     CHECK(!u32);
   }
 }
 
 TEST_CASE("write bytes") {
+  using namespace std::string_literals;
+
   SECTION("bytes from u32") {
-    auto input = std::u32string(U"\x1F3F3\xFE0F\x200D\x1F308");
+    const auto input = U"\x1F3F3\xFE0F\x200D\x1F308"s;
     auto bytes = unicode::as<std::string>(
         input | unicode::transform::to_bytes);
     REQUIRE(bytes);
@@ -204,14 +208,14 @@ TEST_CASE("write bytes") {
   }
 
   SECTION("vector of bytes from u32") {
-    auto input = std::u32string(U"\x1F3F3\xFE0F\x200D\x1F308");
+    const auto input = U"\x1F3F3\xFE0F\x200D\x1F308"s;
     auto bytes = unicode::as<std::vector<std::byte>>(
         input | unicode::transform::to_bytes);
     REQUIRE(bytes);
   }
 
   SECTION("bytes from u16") {
-    auto input = std::u16string(u"\xD83C\xDFF3\xFE0F\x200D\xD83C\xDF08");
+    auto input = u"\xD83C\xDFF3\xFE0F\x200D\xD83C\xDF08"s;
     auto bytes = unicode::as<std::string>(
         unicode::view::as_u16(input) | unicode::transform::to_bytes);
     REQUIRE(bytes);

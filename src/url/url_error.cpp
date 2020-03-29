@@ -11,11 +11,11 @@ inline namespace v1 {
 namespace {
 class url_parse_error_category : public std::error_category {
  public:
-  const char *name() const noexcept override {
+  [[nodiscard]] const char *name() const noexcept override {
     return "url parse";
   }
 
-  std::string message(int error) const noexcept override {
+  [[nodiscard]] std::string message(int error) const noexcept override {
     switch (static_cast<url_parse_errc>(error)) {
       case url_parse_errc::invalid_scheme_character:return "Invalid URL scheme";
       case url_parse_errc::not_an_absolute_url_with_fragment:return "Not an absolute URL with fragment";

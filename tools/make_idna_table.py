@@ -75,7 +75,7 @@ def main():
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <algorithm>
-#include <skyr/unicode/idna_table.hpp>
+#include <skyr/unicode/idna.hpp>
 
 namespace skyr {
 inline namespace v1 {
@@ -92,7 +92,7 @@ const code_point_range statuses[] = {
 {% endfor %}};
 }  // namespace
 
-idna_status map_idna_status(char32_t code_point) {
+auto map_idna_status(char32_t code_point) -> idna_status {
   auto first = std::addressof(statuses[0]);
   auto last = first + (sizeof(statuses) / sizeof(statuses[0]));
   auto it = std::lower_bound(
@@ -114,7 +114,7 @@ const mapped_code_point mapped[] = {
 {% endif %}{% endfor %}};
 }  // namespace
 
-char32_t map_idna_code_point(char32_t code_point) {
+auto map_idna_code_point(char32_t code_point) -> char32_t {
   auto first = std::addressof(mapped[0]);
   auto last = first + (sizeof(mapped) / sizeof(mapped[0]));
   auto it = std::lower_bound(

@@ -11,6 +11,8 @@
 /// https://url.spec.whatwg.org/#example-url-parsing
 
 TEST_CASE("url_parsing_example_tests", "[parse]") {
+  using namespace std::string_literals;
+
   SECTION("url_path_1") {
     auto instance = skyr::parse("https:example.org");
     REQUIRE(instance);
@@ -24,8 +26,7 @@ TEST_CASE("url_parsing_example_tests", "[parse]") {
   }
 
   SECTION("url_serialize_1") {
-    auto input = std::string("https:example.org");
-    auto instance = skyr::parse(input);
+    auto instance = skyr::parse("https:example.org");
     REQUIRE(instance);
     auto output = skyr::serialize(instance.value());
     CHECK("https://example.org/" == output);
@@ -66,7 +67,7 @@ TEST_CASE("url_parsing_example_tests", "[parse]") {
   SECTION("url_serialize_6") {
     auto base = skyr::parse("https://example.com/");
     REQUIRE(base);
-    auto instance = skyr::parse("\\example\\..\\demo/.\\", base.value());
+    auto instance = skyr::parse(R"(\example\..\demo/.\)", base.value());
     REQUIRE(instance);
     auto output = skyr::serialize(instance.value());
     CHECK("https://example.com/demo/" == output);

@@ -77,7 +77,7 @@ class TestCaseGenerator : public Catch::Generators::IGenerator<test_case> {
     it_ = begin(test_case_data_);
   }
 
-  const test_case &get() const override {
+  [[nodiscard]] const test_case &get() const override {
     assert(it_ != test_case_data_.end());
     return *it_;
   }

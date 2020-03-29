@@ -38,7 +38,7 @@ TEST_CASE("filesystem path", "[filesystem_path]") {
   }
 
   SECTION("Windows path") {
-    auto path = std::filesystem::path("C:\\path\\to\\file.txt");
+    auto path = std::filesystem::path(R"(C:\path\to\file.txt)");
     auto url = skyr::filesystem::from_path(path);
     REQUIRE(url);
     CHECK(url.value().href() == "file:///C:/path/to/file.txt");
