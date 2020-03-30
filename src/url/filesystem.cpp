@@ -32,11 +32,11 @@ std::error_code make_error_code(path_errc error) noexcept {
   return std::error_code(static_cast<int>(error), category);
 }
 
-tl::expected<url, std::error_code> from_path(const std::filesystem::path &path) {
+tl::expected<url, std::error_code> from_path(const stdfs::path &path) {
   return make_url("file://" + path.generic_u8string());
 }
 
-tl::expected<std::filesystem::path, std::error_code> to_path(const url &input) {
+tl::expected<stdfs::path, std::error_code> to_path(const url &input) {
   auto pathname = input.pathname();
   auto decoded = skyr::percent_encoding::as<std::string>(
       pathname | skyr::percent_encoding::view::decode);
@@ -44,7 +44,7 @@ tl::expected<std::filesystem::path, std::error_code> to_path(const url &input) {
     return tl::make_unexpected(
         make_error_code(path_errc::percent_decoding_error));
   }
-  return std::filesystem::path(decoded.value());
+  return stdfs::path(decoded.value());
 }
 }  // namespace filesystem
 }  // namespace v1

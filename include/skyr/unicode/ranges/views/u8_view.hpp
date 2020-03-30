@@ -49,7 +49,7 @@ class u8_range_iterator {
   ///
   /// \param first
   /// \param last
-  explicit constexpr u8_range_iterator(
+  constexpr u8_range_iterator(
       OctetIterator first,
       OctetIterator last)
       : it_(iterator_type(first, last))
