@@ -7,7 +7,6 @@
 #include <cmath>
 #include <locale>
 #include <vector>
-#include <sstream>
 #include <algorithm>
 #include <optional>
 #include <cstdlib>

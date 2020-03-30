@@ -39,7 +39,47 @@ addons:
       - ninja
     update: true
 
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SHARED_LIB=OFF BUILD_TYPE=Debug Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS=OFF
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SHARED_LIB=OFF BUILD_TYPE=Release Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS=OFF
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SHARED_LIB=ON BUILD_TYPE=Debug Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS=OFF
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7" SHARED_LIB=ON BUILD_TYPE=Release Skyr_BUILD_FILESYSTEM_PATH_FUNCTIONS=OFF
+
 before_install:
+  - eval "${MATRIX_EVAL}"
   - echo ${DEPS_DIR}
   - mkdir -p ${DEPS_DIR}
   - pushd ${DEPS_DIR}
