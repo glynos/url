@@ -1,4 +1,4 @@
-// Copyright 2019 Glyn Matthews.
+// Copyright 2019-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -118,12 +118,12 @@ class view_unchecked_u8_range {
   using size_type = std::size_t;
 
   /// Default constructor
-  constexpr view_unchecked_u8_range() noexcept = default;
+  constexpr view_unchecked_u8_range() = default;
 
   ///
   /// \param range
   explicit constexpr view_unchecked_u8_range(
-      const OctetRange &range) noexcept
+      const OctetRange &range)
       : impl_(
       impl(std::begin(range),
            std::end(range))) {}
@@ -186,7 +186,7 @@ namespace view {
 /// \return
 template <typename OctetRange>
 inline auto unchecked_u8(
-    const OctetRange &range) noexcept {
+    const OctetRange &range) {
   return view_unchecked_u8_range{range};
 }
 }  // namespace view

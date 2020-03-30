@@ -8,6 +8,12 @@
 #include <skyr/url.hpp>
 #include <skyr/url/filesystem.hpp>
 
+#if defined(SKYR_USE_CXX17_EXPERIMENTAL_FILESYSTEM)
+namespace stdfs = std::experimental::filesystem;
+#else
+namespace stdfs = std::filesystem;
+#endif // defined(SKYR_USE_CXX17_EXPERIMENTAL_FILESYSTEM)
+
 TEST_CASE("filesystem path", "[filesystem_path]") {
   SECTION("empty_path") {
     auto instance = skyr::url{};
@@ -31,14 +37,14 @@ TEST_CASE("filesystem path", "[filesystem_path]") {
   }
 
   SECTION("from_path") {
-    auto path = std::filesystem::path("/path/to/file.txt");
+    auto path = stdfs::path("/path/to/file.txt");
     auto url = skyr::filesystem::from_path(path);
     REQUIRE(url);
     CHECK(url.value().href() == "file:///path/to/file.txt");
   }
 
   SECTION("Windows path") {
-    auto path = std::filesystem::path("C:\\path\\to\\file.txt");
+    auto path = stdfs::path(R"(C:\path\to\file.txt)");
     auto url = skyr::filesystem::from_path(path);
     REQUIRE(url);
     CHECK(url.value().href() == "file:///C:/path/to/file.txt");

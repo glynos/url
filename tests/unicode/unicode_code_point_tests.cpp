@@ -13,12 +13,13 @@
 TEST_CASE("u8 code point tests") {
   using std::begin;
   using std::end;
+  using namespace std::string_literals;
 
   SECTION("code point 01") {
-    auto bytes = std::string("\xf0\x9f\x92\xa9");
+    auto bytes = "\xf0\x9f\x92\xa9"s;
     auto cp = skyr::unicode::u8_code_point(bytes);
     REQUIRE(cp);
-    CHECK(std::string("\xf0\x9f\x92\xa9") == std::string(begin(cp.value()), end(cp.value())));
+    CHECK("\xf0\x9f\x92\xa9"s == std::string(begin(cp.value()), end(cp.value())));
     CHECK(U'\x1f4a9' == u32_value(cp));
     CHECK(u16_value(cp).value().is_surrogate_pair());
     CHECK(u'\xd83d' == u16_value(cp).value().lead_value());
@@ -26,7 +27,7 @@ TEST_CASE("u8 code point tests") {
   }
 
   SECTION("code point fail") {
-    auto bytes = std::string("\x9f\x92\xa9");
+    auto bytes = "\x9f\x92\xa9"s;
     auto cp = skyr::unicode::u8_code_point(bytes);
     REQUIRE(!cp);
   }

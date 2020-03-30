@@ -65,7 +65,9 @@ inline std::uint16_t hex_to_dec(char byte) noexcept {
 }  // namespace
 
 std::string ipv6_address::to_string() const {
-  auto output = std::string();
+  using namespace std::string_literals;
+
+  auto output = ""s;
   auto compress = std::optional<size_t>();
 
   auto sequences = std::vector<std::pair<size_t, size_t>>();
@@ -120,7 +122,7 @@ std::string ipv6_address::to_string() const {
     }
 
     if (compress && (compress.value() == i)) {
-      auto separator = (i == 0) ? std::string("::") : std::string(":");
+      auto separator = (i == 0) ? "::"s : ":"s;
       output += separator;
       ignore0 = true;
       continue;

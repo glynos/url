@@ -51,7 +51,7 @@ class url_parser_context {
       const std::optional<url_record> &url,
       std::optional<url_parse_state> state_override = std::nullopt);
 
-  bool is_eof() const noexcept {
+  [[nodiscard]] bool is_eof() const noexcept {
     return it == end(view);
   }
 

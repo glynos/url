@@ -1,4 +1,4 @@
-// Copyright 2019 Glyn Matthews.
+// Copyright 2019-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -87,14 +87,14 @@ struct percent_encoded_char {
   struct no_encode {};
 
   ///
-  percent_encoded_char() noexcept = default;
+  percent_encoded_char() = default;
   ///
   /// \param byte
-  percent_encoded_char(char byte, no_encode) noexcept
+  percent_encoded_char(char byte, no_encode)
       : impl_{byte} {}
   ///
   /// \param byte
-  explicit percent_encoded_char(char byte) noexcept
+  explicit percent_encoded_char(char byte)
       : impl_{
       '%',
       details::hex_to_letter(static_cast<char>((static_cast<unsigned>(byte) >> 4u) & 0x0fu)),
@@ -102,11 +102,11 @@ struct percent_encoded_char {
   ///
   percent_encoded_char(const percent_encoded_char &) = default;
   ///
-  percent_encoded_char(percent_encoded_char &&) noexcept = default;
+  percent_encoded_char(percent_encoded_char &&) = default;
   ///
   percent_encoded_char &operator=(const percent_encoded_char &) = default;
   ///
-  percent_encoded_char &operator=(percent_encoded_char &&) noexcept = default;
+  percent_encoded_char &operator=(percent_encoded_char &&) = default;
   ///
   ~percent_encoded_char() = default;
 
@@ -158,7 +158,7 @@ struct percent_encoded_char {
 /// \param pred
 /// \return
 template <class Pred>
-inline percent_encoded_char percent_encode_byte(char byte, Pred pred) noexcept {
+inline percent_encoded_char percent_encode_byte(char byte, Pred pred) {
   if (pred(byte)) {
     return percent_encoding::percent_encoded_char(byte);
   }
@@ -170,7 +170,7 @@ inline percent_encoded_char percent_encode_byte(char byte, Pred pred) noexcept {
 /// \param byte
 /// \param excludes
 /// \return
-inline percent_encoded_char percent_encode_byte(char byte, encode_set excludes) noexcept {
+inline percent_encoded_char percent_encode_byte(char byte, encode_set excludes) {
   switch (excludes) {
     case encode_set::none:
       return percent_encoding::percent_encoded_char(byte);

@@ -1,4 +1,4 @@
-// Copyright 2019 Glyn Matthews.
+// Copyright 2019-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -49,7 +49,7 @@ class u8_range_iterator {
   ///
   /// \param first
   /// \param last
-  explicit constexpr u8_range_iterator(
+  constexpr u8_range_iterator(
       OctetIterator first,
       OctetIterator last)
       : it_(iterator_type(first, last))
@@ -145,11 +145,11 @@ class view_u8_range {
   using size_type = std::size_t;
 
   ///
-  constexpr view_u8_range() noexcept = default;
+  constexpr view_u8_range() = default;
 
   ///
   /// \param range
-  explicit constexpr view_u8_range(const OctetRange &range) noexcept
+  explicit constexpr view_u8_range(const OctetRange &range)
       : impl_(
       impl(std::begin(range),
            std::end(range))) {}
@@ -212,7 +212,7 @@ namespace view {
 /// \return
 template <typename OctetRange>
 inline auto as_u8(
-    const OctetRange &range) noexcept {
+    const OctetRange &range) {
   static_assert(sizeof(typename traits::range_value<OctetRange>::type) == 1);
   return view_u8_range{range};
 }

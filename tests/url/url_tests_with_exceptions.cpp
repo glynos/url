@@ -12,6 +12,8 @@
 #include <skyr/url.hpp>
 
 TEST_CASE("url_tests", "[url]") {
+  using namespace std::string_literals;
+
   SECTION("construct_invalid_url") {
     CHECK_THROWS_AS(skyr::url("I am not a valid url."), skyr::url_parse_error);
   }
@@ -37,7 +39,7 @@ TEST_CASE("url_tests", "[url]") {
   }
 
   SECTION("construct_url_from_string") {
-    auto input = std::string("http://www.example.com/");
+    const auto input = "http://www.example.com/"s;
     CHECK_NOTHROW((skyr::url(input)));
   }
 

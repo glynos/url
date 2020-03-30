@@ -58,19 +58,19 @@ class percent_decode_iterator {
   using difference_type = std::ptrdiff_t;
 
   ///
-  percent_decode_iterator() noexcept = default;
+  percent_decode_iterator() = default;
   ///
-  percent_decode_iterator(OctetIterator it, OctetIterator last) noexcept
+  percent_decode_iterator(OctetIterator it, OctetIterator last)
   : it_(it)
   , last_(last) {}
   ///
-  percent_decode_iterator(const percent_decode_iterator&) noexcept = default;
+  percent_decode_iterator(const percent_decode_iterator&) = default;
   ///
-  percent_decode_iterator(percent_decode_iterator&&) noexcept = default;
+  percent_decode_iterator(percent_decode_iterator&&) = default;
   ///
-  percent_decode_iterator &operator=(const percent_decode_iterator&)  noexcept = default;
+  percent_decode_iterator &operator=(const percent_decode_iterator&) = default;
   ///
-  percent_decode_iterator &operator=(percent_decode_iterator&&) noexcept = default;
+  percent_decode_iterator &operator=(percent_decode_iterator&&) = default;
   ///
   ~percent_decode_iterator() = default;
 
@@ -161,10 +161,10 @@ class percent_decode_range {
   using size_type = std::size_t;
 
   ///
-  percent_decode_range() noexcept = default;
+  percent_decode_range() = default;
   ///
   /// \param range
-  percent_decode_range(const OctetRange &range) noexcept
+  percent_decode_range(const OctetRange &range)
       : impl_(impl(std::begin(range), std::end(range))) {}
 
   ///
@@ -226,7 +226,7 @@ struct percent_decode_fn {
   /// \return
   template <typename OctetRange>
   constexpr auto operator()(
-      const OctetRange &range) const noexcept {
+      const OctetRange &range) const {
     return percent_decode_range{range};
   }
 
@@ -237,7 +237,7 @@ struct percent_decode_fn {
   template <typename OctetRange>
   friend constexpr auto operator|(
       const OctetRange &range,
-      const percent_decode_fn&) noexcept {
+      const percent_decode_fn&) {
     return percent_decode_range{range};
   }
 

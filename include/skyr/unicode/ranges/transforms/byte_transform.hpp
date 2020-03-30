@@ -1,4 +1,4 @@
-// Copyright 2019 Glyn Matthews.
+// Copyright 2019-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -183,7 +183,7 @@ class transform_byte_range {
   /// Constructor
   /// \param range A range of code points
   explicit transform_byte_range(
-      const CodePointRange &range) noexcept
+      const CodePointRange &range)
       : first(iterator_type{std::begin(range), std::end(range)}),
         last(iterator_type{std::end(range), std::end(range)}) {}
 
@@ -232,7 +232,7 @@ struct byte_range_fn {
   /// \return
   template<class CodePointRange>
   constexpr auto operator()(
-      CodePointRange &&range) const noexcept {
+      CodePointRange &&range) const {
     return transform_byte_range{std::forward<CodePointRange>(range)};
   }
 
@@ -243,7 +243,7 @@ struct byte_range_fn {
   template<typename CodePointRange>
   friend constexpr auto operator|(
       CodePointRange &&range,
-      const byte_range_fn &) noexcept {
+      const byte_range_fn &) {
     return transform_byte_range{std::forward<CodePointRange>(range)};
   }
 };
