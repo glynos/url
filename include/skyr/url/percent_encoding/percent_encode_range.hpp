@@ -1,4 +1,4 @@
-// Copyright 2019 Glyn Matthews.
+// Copyright 2019-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -36,24 +36,24 @@ class percent_encode_iterator {
   using difference_type = std::ptrdiff_t;
 
   ///
-  percent_encode_iterator() noexcept = default;
+  percent_encode_iterator() = default;
   ///
   /// \param it
   /// \param last
   /// \param excludes
   percent_encode_iterator(
       OctetIterator it,
-      OctetIterator last) noexcept
+      OctetIterator last)
   : it_(it)
   , last_(last) {}
   ///
-  percent_encode_iterator(const percent_encode_iterator &) noexcept = default;
+  percent_encode_iterator(const percent_encode_iterator &) = default;
   ///
-  percent_encode_iterator(percent_encode_iterator &&) noexcept = default;
+  percent_encode_iterator(percent_encode_iterator &&) = default;
   ///
-  percent_encode_iterator &operator=(const percent_encode_iterator &) noexcept = default;
+  percent_encode_iterator &operator=(const percent_encode_iterator &) = default;
   ///
-  percent_encode_iterator &operator=(percent_encode_iterator &&) noexcept = default;
+  percent_encode_iterator &operator=(percent_encode_iterator &&) = default;
   ///
   ~percent_encode_iterator() = default;
 
@@ -131,12 +131,12 @@ class percent_encode_range {
   using size_type = std::size_t;
 
   ///
-  percent_encode_range() noexcept = default;
+  percent_encode_range() = default;
   ///
   /// \param range
   /// \param excludes
   explicit percent_encode_range(
-      const OctetRange &range) noexcept
+      const OctetRange &range)
       : impl_(impl(std::begin(range), std::end(range))) {}
 
   ///
@@ -197,7 +197,7 @@ struct percent_encode_fn {
   /// \return
   template <typename OctetRange>
   constexpr auto operator()(
-      const OctetRange &range) const noexcept {
+      const OctetRange &range) const {
     return percent_encode_range{range};
   }
 
@@ -208,7 +208,7 @@ struct percent_encode_fn {
   template <typename OctetRange>
   friend constexpr auto operator|(
       const OctetRange &range,
-      const percent_encode_fn&) noexcept {
+      const percent_encode_fn&) {
     return percent_encode_range{range};
   }
 };

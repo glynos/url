@@ -1,4 +1,4 @@
-// Copyright 2019 Glyn Matthews.
+// Copyright 2019-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -140,11 +140,11 @@ class view_u16_range {
   using size_type = std::size_t;
 
   ///
-  constexpr view_u16_range() noexcept = default;
+  constexpr view_u16_range() = default;
 
   ///
   /// \param range
-  explicit constexpr view_u16_range(U16Range range) noexcept
+  explicit constexpr view_u16_range(U16Range range)
       : range_(std::move(range)) {}
 
   ///
@@ -196,7 +196,7 @@ namespace view {
 /// \param range
 /// \return
 template <typename U16Range>
-inline auto as_u16(const U16Range &range) noexcept {
+inline auto as_u16(const U16Range &range) {
   static_assert(sizeof(typename traits::range_value<U16Range>::type) >= 1);
   return view_u16_range{range};
 }

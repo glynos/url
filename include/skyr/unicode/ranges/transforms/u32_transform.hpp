@@ -1,4 +1,4 @@
-// Copyright 2019 Glyn Matthews.
+// Copyright 2019-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -106,11 +106,11 @@ class transform_u32_range {
   using size_type = std::size_t;
 
   ///
-  constexpr transform_u32_range() noexcept = default;
+  constexpr transform_u32_range() = default;
 
   ///
   /// \param range
-  explicit constexpr transform_u32_range(CodePointRange &&range) noexcept
+  explicit constexpr transform_u32_range(CodePointRange &&range)
       : range_(std::forward<CodePointRange>(range)) {}
 
   ///
@@ -163,7 +163,7 @@ struct transform_u32_range_fn {
   /// \return
   template <class CodePointRange>
   constexpr auto operator()(
-      CodePointRange &&range) const noexcept {
+      CodePointRange &&range) const {
     return transform_u32_range{std::forward<CodePointRange>(range)};
   }
 
@@ -174,7 +174,7 @@ struct transform_u32_range_fn {
   template <class CodePointRange>
   friend constexpr auto operator|(
       CodePointRange &&range,
-      const transform_u32_range_fn&) noexcept {
+      const transform_u32_range_fn&) {
     return transform_u32_range{std::forward<CodePointRange>(range)};
   }
 
