@@ -1,4 +1,4 @@
-// Copyright 2018 Glyn Matthews.
+// Copyright 2018-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -10,7 +10,8 @@
 #include <sstream>
 #include <algorithm>
 #include <optional>
-#include <charconv>
+#include <cstdlib>
+#include <cerrno>
 #include "ipv4_address.hpp"
 
 namespace skyr {
@@ -68,9 +69,9 @@ tl::expected<std::uint64_t, std::error_code> parse_ipv4_number(
     return 0ULL;
   }
 
-  auto number = 0ULL;
-  if (auto [pos, ec] = std::from_chars(input.data(), input.data() + input.size(), number, base);
-      ec != std::errc() || pos != input.data() + input.size()) {
+  char *pos = const_cast<char*>(input.data()) + input.size();
+  auto number = std::strtoull(input.data(), &pos, base);
+  if (errno == ERANGE || (pos != input.data() + input.size())) {
     return tl::make_unexpected(
         make_error_code(ipv4_address_errc::invalid_segment_number));
   }
@@ -79,7 +80,9 @@ tl::expected<std::uint64_t, std::error_code> parse_ipv4_number(
 }  // namespace
 
 std::string ipv4_address::to_string() const {
-  auto output = std::string();
+  using namespace std::string_literals;
+
+  auto output = ""s;
 
   auto n = address_;
   for (auto i = 1U; i <= 4U; ++i) {
