@@ -23,10 +23,30 @@ This library provides:
 * IDNA and Punycode functions for domain name parsing
 * Basic Unicode conversion functions
 
-## Building the project
+## Using the library
 
 This project requires the availability of a C++17 compliant compiler
 and standard library.
+
+### ``vcpkg``
+
+``skyr::url`` is available on [``vcpkg``](https://github.com/microsoft/vcpkg).
+It can be followed by executing the following steps:
+
+```bash
+> cd ${VCPKG_ROOT}
+> git init
+> git remote add origin https://github.com/Microsoft/vcpkg.git
+> git fetch origin master
+> git checkout -b master origin/master
+> ./bootstrap-vcpkg.sh
+> ./vcpkg install skyr-url
+```
+
+On Windows - for example, using Powershell - replace the
+call to ``bootstrap-vcpkg.sh`` with ``bootstrap-vcpkg.bat``.
+
+## Building the project from source
 
 ### Installing dependencies using `vcpkg`
 
@@ -48,18 +68,26 @@ From a terminal, execute the following sequence of commands:
 
 ```bash
 > mkdir _build
-> cd _build
-> cmake .. \
+> cmake \
+    -B _build \
     -G "Ninja" \
-    -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake
-> ninja
+    -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+    .
+> cmake --build _build
 ```
 
-To run the tests, run `ninja test` from the terminal while in the
-`_build` directory:
+To run the tests:
 
 ```bash
-> ninja test
+> cmake --build _build --target test
+```
+
+On Windows, replace the target with ``RUN_TESTS``.
+
+To install the library:
+
+```bash
+> cmake --build _build --target install
 ```
 
 ## Examples
@@ -67,7 +95,7 @@ To run the tests, run `ninja test` from the terminal while in the
 These examples are based on the
 [WhatWG API specification](https://url.spec.whatwg.org/#example-5434421b)
 
-To build the examples, run `cmake` as follows:
+To build the examples with the sources, run `cmake` as follows:
 
 ```bash
 > cmake .. \
@@ -78,8 +106,8 @@ To build the examples, run `cmake` as follows:
 
 ### Creating a URL without a base URL
 
-This example parses a string, "https://example.org/💩",
-without using a base URL:
+[This example](examples/example_01.md) parses a string,
+"https://example.org/💩", without using a base URL:
 
 ```c++
 #include <skyr/url.hpp>
@@ -95,8 +123,8 @@ Gives the output: `/%F0%9F%92%A9`
 
 ### Creating a non-absolute URL without a base URL
 
-This gives an error if the input, "/🍣🍺", is not an
-*absolute-URL-with-fragment-string*:
+[This example](examples/example_02.md)  gives an error if
+the input, "/🍣🍺", is not an *absolute-URL-with-fragment-string*:
 
 ```c++
 #include <skyr/url.hpp>
@@ -114,8 +142,8 @@ This gives the output: `Parsing failed: Not an absolute URL with fragment`
 
 ### Creating a non-absolute URL with a base URL
 
-This example parses a string, "🏳️‍🌈", using a base URL, 
-"https://example.org/":
+[This example](examples/example_03.md) parses a string,
+"🏳️‍🌈", using a base URL, "https://example.org/":
 
 ```c++
 #include <skyr/url.hpp>
@@ -131,27 +159,24 @@ int main(int argc, char *argv[]) {
 
 This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88`
 
-## Installation
+## Testing and installation
 
 ### Installing with `CMake` and `Ninja`
 
 ```bash
 > cmake .. \
     -G "Ninja" \
+    -Dskyr_BUILD_WITH_WPT_TESTS=ON \
     -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake \
     -DCMAKE_INSTALL_PREFIX=$PREFIX
 > ninja
-> ninja test      # optional
+> ninja test
 > ninja install
 ```
 
 Where `$PREFIX` is the location where you want to install the
 library. Depending on the location of `$PREFIX`, you may need to run
 the install command as an administrator (e.g. on Linux as `sudo`).
-
-### Installing with `CMake` and `Visual Studio 2017`
-
-Open the `CMake` menu, click `Install`, then `Skyr`.
 
 ## Dependencies
 
