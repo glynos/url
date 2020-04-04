@@ -4,19 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.5] - 2020-04-04
+
+### Changed
+
+- Rewrote install steps
+- Added .clang-tidy and applied changes
+
 ## [1.4.5] - 2020-03-30
 
-## Changed
+### Changed
 
 - Added support for GCC 7 on Linux
 
 ## [1.4.4] - 2020-03-29
 
-## Fixed
+### Fixed
 
 - Minor fix to the parser (#37)
 
-## Changed
+### Changed
 
 - Updated the coverage of the web platform tests (#39)
 - String literal operators throw exceptions now (#42)
@@ -106,8 +113,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Minor API improvements
 - Improved build and installation instructions in README.md
 
-
 ## [0.5] - 2018-09-30
+
 ### Added
 - A ``skyr::url`` class that implements a generic URL parser,
   compatible with the [WhatWG URL specification](https://url.spec.whatwg.org/#url-class)
