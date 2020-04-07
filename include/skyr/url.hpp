@@ -153,20 +153,12 @@ class url {
   /// Copy assignment operator
   /// \param other Another `url` object
   /// \return *this
-  url &operator=(const url &other) {
-    auto tmp(other);
-    swap(tmp);
-    return *this;
-  }
+  url &operator=(const url &other) = default;
 
   /// Move assignment operator
   /// \param other Another `url` object
   /// \return *this
-  url &operator=(url&& other) noexcept {
-    auto tmp(other);
-    swap(tmp);
-    return *this;
-  }
+  url &operator=(url&& other) = default;
 
   /// Destructor
   ~url() = default;
