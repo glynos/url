@@ -33,9 +33,5 @@ foreach (file_name ${skyr_URL_TESTS})
     add_test(${test} ${PROJECT_BINARY_DIR}/tests/url/${test})
 endforeach ()
 
-if (${skyr_BUILD_WPT_TESTS})
-    add_subdirectory(wpt)
-endif()
-
 file(GLOB URL_TEST_DATA *.txt *.json)
 file(COPY ${URL_TEST_DATA} DESTINATION ${PROJECT_BINARY_DIR}/tests/url)

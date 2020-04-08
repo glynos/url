@@ -829,23 +829,23 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = @Skyr_SOURCE_DIR@/include/skyr/config.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/version.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/unicode.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/unicode/domain.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/unicode/idna.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/unicode/errors.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/unicode/ranges/transforms/byte_transform.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/unicode/ranges/transforms/u16_transform.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/unicode/ranges/transforms/u32_transform.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/unicode/ranges/views/u8_view.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/unicode/ranges/views/u16_view.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/url.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/url/url_error.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/url/url_parse.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/url/url_record.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/url/url_search_parameters.hpp \
-                         @Skyr_SOURCE_DIR@/include/skyr/url/url_serialize.hpp
+INPUT                  = @PROJECT_SOURCE_DIR@/include/skyr/config.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/version.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/unicode.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/unicode/domain.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/unicode/idna.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/unicode/errors.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/unicode/ranges/transforms/byte_transform.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/unicode/ranges/transforms/u16_transform.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/unicode/ranges/transforms/u32_transform.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/unicode/ranges/views/u8_view.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/unicode/ranges/views/u16_view.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/url.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/url/url_error.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/url/url_parse.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/url/url_record.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/url/url_search_parameters.hpp \
+                         @PROJECT_SOURCE_DIR@/include/skyr/url/url_serialize.hpp
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

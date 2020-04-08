@@ -166,7 +166,6 @@ This gives the output: `https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F
 ```bash
 > cmake .. \
     -G "Ninja" \
-    -Dskyr_BUILD_WITH_WPT_TESTS=ON \
     -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/vcpkg/scripts/buildsystems/vcpkg.cmake \
     -DCMAKE_INSTALL_PREFIX=$PREFIX
 > ninja

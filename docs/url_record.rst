@@ -10,8 +10,8 @@
 `skyr::url_record` functions
 ----------------------------
 
-.. doxygenfunction:: skyr::v1::swap(url_record&, url_record&)
+.. doxygenfunction:: skyr::swap(url_record&, url_record&)
 
-.. doxygenfunction:: skyr::v1::parse
+.. doxygenfunction:: skyr::parse
 
-.. doxygenfunction:: skyr::v1::serialize
+.. doxygenfunction:: skyr::serialize
