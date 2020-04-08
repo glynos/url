@@ -3,9 +3,9 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-include(${Skyr_SOURCE_DIR}/cmake/SkyrFunctions.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/skyr-url-functions.cmake)
 
-LIST(APPEND CMAKE_MODULE_PATH "${Skyr_SOURCE_DIR}/cmake")
+LIST(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 find_package(Doxygen REQUIRED)
 find_package(Pandoc REQUIRED)
@@ -64,13 +64,13 @@ SET(
 )
 
 foreach (file_name ${GENERATED_FROM_MARKDOWN})
-    remove_extension(${file_name} basename)
+    skyr_remove_extension(${file_name} basename)
     string(TOUPPER ${basename} basename_upper)
     set(target ${basename})
     string(PREPEND target "doc_")
     add_custom_target(
             ${target}
-            pandoc ${Skyr_SOURCE_DIR}/${basename_upper}.md -f markdown -t rst -s -o ${CMAKE_CURRENT_BINARY_DIR}/${file_name}
+            pandoc ${PROJECT_SOURCE_DIR}/${basename_upper}.md -f markdown -t rst -s -o ${CMAKE_CURRENT_BINARY_DIR}/${file_name}
             WORKING_DIRECTORY
                 ${CMAKE_CURRENT_BINARY_DIR}
             BYPRODUCTS
