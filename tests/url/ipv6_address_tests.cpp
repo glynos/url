@@ -5,7 +5,7 @@
 
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
-#include "../../src/url/ipv6_address.hpp"
+#include <skyr/url/ipv6_address.hpp>
 
 TEST_CASE("ipv6_address_tests", "[ipv6]") {
   using namespace std::string_literals;
@@ -132,5 +132,15 @@ TEST_CASE("ipv6_address_tests", "[ipv6]") {
     auto instance = skyr::parse_ipv6_address(address);
     REQUIRE(instance);
     CHECK("::ffff:c000:280" == instance.value().to_string());
+  }
+
+  SECTION("loopback_test") {
+    auto address = std::array<unsigned short, 8>{{0, 0, 0, 0, 0, 0, 0, 1}};
+    auto instance = skyr::ipv6_address(address);
+    std::array<unsigned char, 16> bytes{
+      {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
+      }};
+    CHECK(bytes == instance.to_bytes());
   }
 }

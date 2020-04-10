@@ -1,4 +1,4 @@
-// Copyright 2018 Glyn Matthews.
+// Copyright 2018-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -6,11 +6,13 @@
 #ifndef SKYR_IPV4_ADDRESS_INC
 #define SKYR_IPV4_ADDRESS_INC
 
+#include <array>
 #include <string>
 #include <string_view>
 #include <system_error>
 #include <optional>
 #include <tl/expected.hpp>
+#include <skyr/url/details/endianness.hpp>
 
 namespace skyr {
 inline namespace v1 {
@@ -45,12 +47,23 @@ class ipv4_address {
    /// Constructor
    /// \param address Sets the IPv4 address to `address`
   explicit ipv4_address(unsigned int address)
-      : address_(address) {}
+      : address_(details::to_network_byte_order(address)) {}
 
   /// The address value
   /// \returns The address value
   [[nodiscard]] unsigned int address() const noexcept {
-    return address_;
+    return details::from_network_byte_order(address_);
+  }
+
+  /// The address in bytes in network byte order
+  /// \returns The address in bytes
+  [[nodiscard]] std::array<unsigned char, 4> to_bytes() const noexcept {
+    return {{
+      static_cast<unsigned char>(address_ >> 24u),
+      static_cast<unsigned char>(address_ >> 16u),
+      static_cast<unsigned char>(address_ >>  8u),
+      static_cast<unsigned char>(address_ >>  0u)
+    }};
   }
 
   /// \returns The address as a string

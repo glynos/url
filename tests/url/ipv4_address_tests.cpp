@@ -5,7 +5,7 @@
 
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
-#include "../../src/url/ipv4_address.hpp"
+#include <skyr/url/ipv4_address.hpp>
 
 TEST_CASE("ipv4 addresses", "[ipv4]") {
   using namespace std::string_literals;
@@ -46,6 +46,13 @@ TEST_CASE("ipv4 addresses", "[ipv4]") {
     CHECK(0x814ff5fc == instance.value().address());
   }
 
+  SECTION("parse_address_looks_short_test") {
+    const auto address = "129.79.245"s;
+    auto instance = skyr::parse_ipv4_address(address);
+    REQUIRE(instance);
+    CHECK(0x814f00f5 == instance.value().address());
+  }
+
   SECTION("parse_address_with_hex") {
     const auto address = "0x7f.0.0.0x7f"s;
     auto instance = skyr::parse_ipv4_address(address);
@@ -57,5 +64,18 @@ TEST_CASE("ipv4 addresses", "[ipv4]") {
     const auto address = "0x7f.0.0.0x7g"s;
     auto instance = skyr::parse_ipv4_address(address);
     REQUIRE_FALSE(instance);
+  }
+
+  SECTION("loopback_as_bytes") {
+    auto instance = skyr::ipv4_address(0x7f000001);
+    std::array<unsigned char, 4> bytes{{0x7f, 0x00, 0x00, 0x01}};
+    CHECK(bytes == instance.to_bytes());
+  }
+
+  SECTION("parse_loopback_test_as_bytes") {
+    auto instance = skyr::parse_ipv4_address("127.0.0.1"s);
+    REQUIRE(instance);
+    std::array<unsigned char, 4> bytes{{0x7f, 0x00, 0x00, 0x01}};
+    CHECK(bytes == instance.value().to_bytes());
   }
 }
