@@ -1,4 +1,4 @@
-// Copyright 2018-19 Glyn Matthews.
+// Copyright 2018-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -16,11 +16,11 @@
 #include <tl/expected.hpp>
 #include <skyr/config.hpp>
 #include <skyr/version.hpp>
-#include <skyr/url/url_record.hpp>
-#include <skyr/url/url_error.hpp>
+#include <skyr/core/url_record.hpp>
+#include <skyr/core/url_error.hpp>
 #include <skyr/url/url_search_parameters.hpp>
-#include <skyr/url/ipv4_address.hpp>
-#include <skyr/url/ipv6_address.hpp>
+#include <skyr/network/ipv4_address.hpp>
+#include <skyr/network/ipv6_address.hpp>
 #include <skyr/url/details/to_bytes.hpp>
 
 #if defined(SKYR_PLATFORM_MSVC)

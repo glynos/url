@@ -1,16 +1,16 @@
-// Copyright 2018-19 Glyn Matthews.
+// Copyright 2018-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <cassert>
 #include <functional>
-#include "skyr/url.hpp"
-#include "skyr/url/url_parse.hpp"
-#include "skyr/url/url_serialize.hpp"
-#include "skyr/url/percent_encoding/percent_encode_range.hpp"
-#include "url_parse_impl.hpp"
-#include "url_schemes.hpp"
+#include <skyr/url.hpp>
+#include <skyr/core/url_parse.hpp>
+#include <skyr/core/url_serialize.hpp>
+#include <skyr/percent_encoding/percent_encode_range.hpp>
+#include "core/url_parse_impl.hpp"
+#include "core/url_schemes.hpp"
 
 namespace skyr {
 inline namespace v1 {
