@@ -5,6 +5,8 @@
 
 #include <skyr/url/url_search_parameters.hpp>
 #include <skyr/query/query_iterator.hpp>
+#include <skyr/percent_encoding/percent_encode.hpp>
+#include <skyr/percent_encoding/percent_decode.hpp>
 #include <skyr/url.hpp>
 
 namespace skyr {
@@ -119,9 +121,9 @@ url_search_parameters::string_type url_search_parameters::to_string() const {
   auto first = std::begin(parameters_), last = std::end(parameters_);
   auto it = first;
   while (it != last) {
-    result.append(it->first);
+    result.append(percent_encode<string_type>(it->first).value());
     result.append("=");
-    result.append(it->second);
+    result.append(percent_encode<string_type>(it->second).value());
 
     ++it;
     if (it != last) {
@@ -138,7 +140,9 @@ void url_search_parameters::initialize(std::string_view query) {
   }
 
   for (auto [name, value] : query_parameter_range(query)) {
-    parameters_.emplace_back(name, value);
+    auto decoded_name = percent_decode<std::string>(name);
+    auto decoded_value = percent_decode<std::string>(value);
+    parameters_.emplace_back(decoded_name.value(), decoded_value.value());
   }
 }
 
