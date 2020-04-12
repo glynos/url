@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2020-04-12
+
+### Added
+
+- IPv4 and IPv6 address hostname accessors
+
+### Changed
+
+- Simplified functions for percent encoding and decoding
+- ``url_record`` has moved to skyr/core
+- Moved web platform tests out of this repository
+
+### Fixed
+
+- Fixed tests for https and file special schemes (#50)
+
 ## [1.5.2] - 2020-04-07
 
 ### Changed

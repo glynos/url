@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(
         skyr-url
-        VERSION 1.5.2
+        VERSION 1.6.0
         HOMEPAGE_URL https://cpp-netlib.github.io/url
         DESCRIPTION "A C++ library that implements the WhatWG URL specification"
         LANGUAGES CXX
@@ -29,7 +29,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(tl-expected CONFIG REQUIRED)
-#find_package(nlohmann_json CONFIG REQUIRED)
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES GNU OR
     ${CMAKE_CXX_COMPILER_ID} MATCHES Clang)

@@ -6,6 +6,8 @@
 #ifndef SKYR_URL_RECORD_INC
 #define SKYR_URL_RECORD_INC
 
+// Deprecated header, use skyr/core/url_record.hpp
+
 #include <skyr/core/url_record.hpp>
 
 #endif // SKYR_URL_RECORD_INC

@@ -227,4 +227,6 @@ Any questions about this library can be addressed to the cpp-netlib
 [developers mailing list]. Issues can be filed using Github at
 http://github.com/cpp-netlib/url/issues.
 
+You can also contact me via Twitter [@glynos](https://twitter.com/glynos).
+
 [developers mailing list]: cpp-netlib@googlegroups.com

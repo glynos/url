@@ -6,6 +6,8 @@
 #ifndef SKYR_URL_ERROR_INC
 #define SKYR_URL_ERROR_INC
 
+// Deprecated header, use skyr/core/url_error.hpp
+
 #include <skyr/core/url_error.hpp>
 
 #endif // SKYR_URL_ERROR_INC
