@@ -3,7 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <skyr/url/url_search_parameters.hpp>
+#include <skyr/url_search_parameters.hpp>
 #include <skyr/query/query_iterator.hpp>
 #include <skyr/percent_encoding/percent_encode.hpp>
 #include <skyr/percent_encoding/percent_decode.hpp>
@@ -121,9 +121,9 @@ auto url_search_parameters::to_string() const -> string_type {
   auto first = std::begin(parameters_), last = std::end(parameters_);
   auto it = first;
   while (it != last) {
-    result.append(percent_encode<string_type>(it->first).value());
+    result.append(percent_encode<string_type>(it->first));
     result.append("=");
-    result.append(percent_encode<string_type>(it->second).value());
+    result.append(percent_encode<string_type>(it->second));
 
     ++it;
     if (it != last) {
