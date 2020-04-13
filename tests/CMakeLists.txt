@@ -6,7 +6,6 @@
 include(${PROJECT_SOURCE_DIR}/cmake/skyr-url-functions.cmake)
 
 find_package(Catch2 CONFIG REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
 if (MSVC)
@@ -23,6 +22,7 @@ function(skyr_create_test file_name output_dir test_name)
         ${test}
         PRIVATE
             skyr-url
+            skyr-json
             Catch2::Catch2
             nlohmann_json::nlohmann_json
             fmt::fmt
@@ -41,3 +41,4 @@ add_subdirectory(percent_encoding)
 add_subdirectory(network)
 add_subdirectory(url)
 add_subdirectory(filesystem)
+add_subdirectory(json)
