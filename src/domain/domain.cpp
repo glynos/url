@@ -29,7 +29,8 @@ auto process(
 
   while (it != last) {
     switch (domain::map_idna_status(*it)) {
-      case domain::idna_status::disallowed:error = true;
+      case domain::idna_status::disallowed:
+        error = true;
         break;
       case domain::idna_status::disallowed_std3_valid:
         if (use_std3_ascii_rules) {
@@ -45,8 +46,10 @@ auto process(
           result += domain::map_idna_code_point(*it);
         }
         break;
-      case domain::idna_status::ignored:break;
-      case domain::idna_status::mapped:result += domain::map_idna_code_point(*it);
+      case domain::idna_status::ignored:
+        break;
+      case domain::idna_status::mapped:
+        result += domain::map_idna_code_point(*it);
         break;
       case domain::idna_status::deviation:
         if (transitional_processing) {
@@ -55,7 +58,8 @@ auto process(
           result += *it;
         }
         break;
-      case domain::idna_status::valid:result += *it;
+      case domain::idna_status::valid:
+        result += *it;
         break;
     }
 
@@ -116,15 +120,6 @@ auto unicode_to_ascii(
 }  // namespace
 
 auto domain_to_ascii(
-    std::string_view domain, bool be_strict) -> tl::expected<std::string, std::error_code> {
-  auto utf32 = unicode::as<std::u32string>(unicode::view::as_u8(domain) | unicode::transform::to_u32);
-  if (!utf32) {
-    return tl::make_unexpected(make_error_code(domain_errc::encoding_error));
-  }
-  return domain_to_ascii(utf32.value(), be_strict);
-}
-
-auto domain_to_ascii(
     std::u32string_view domain, bool be_strict) -> tl::expected<std::string, std::error_code> {
   auto result =
       unicode_to_ascii(domain, false, true, true, be_strict, false, be_strict);
@@ -134,5 +129,29 @@ auto domain_to_ascii(
   }
   return result;
 }
+
+auto domain_to_ascii(
+    std::string_view domain, bool be_strict) -> tl::expected<std::string, std::error_code> {
+  auto utf32 = unicode::as<std::u32string>(unicode::view::as_u8(domain) | unicode::transform::to_u32);
+  if (!utf32) {
+    return tl::make_unexpected(make_error_code(domain_errc::encoding_error));
+  }
+  return domain_to_ascii(utf32.value(), be_strict);
+}
+
+auto domain_to_unicode(std::string_view ascii) -> tl::expected<std::string, std::error_code> {
+  auto labels = split(ascii, '.');
+
+  for (auto &label : labels) {
+    auto encoded = punycode_decode(label);
+    if (!encoded) {
+      return tl::make_unexpected(encoded.error());
+    }
+    label.assign(begin(encoded.value()), end(encoded.value()));
+  }
+
+  return join(labels, '.');
+}
+
 }  // namespace v1
 }  // namespace skyr

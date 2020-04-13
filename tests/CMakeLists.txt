@@ -36,4 +36,8 @@ function(skyr_create_test file_name output_dir test_name)
 endfunction()
 
 add_subdirectory(unicode)
+add_subdirectory(domain)
+add_subdirectory(percent_encoding)
+add_subdirectory(network)
 add_subdirectory(url)
+add_subdirectory(filesystem)
