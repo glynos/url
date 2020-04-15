@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Search &#8212; Skyr URL 1.7 documentation</title>
+    <title>Percent Encoding &#8212; Skyr URL 1.7 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -11,24 +11,18 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/language_data.js"></script>
-    <script type="text/javascript" src="_static/searchtools.js"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="#" />
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
-  
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Filesystem Path Conversion" href="filesystem.html" />
+    <link rel="prev" title="Network Addresses" href="network.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-
 
   </head><body>
 
@@ -60,7 +54,7 @@
      href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="url.html">URL</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="url.html#description">Description</a></li>
 <li class="toctree-l2"><a class="reference internal" href="url.html#headers">Headers</a></li>
@@ -89,11 +83,11 @@
 <li class="toctree-l2"><a class="reference internal" href="network.html#api">API</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="percent_encoding.html">Percent Encoding</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#headers">Headers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#example">Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#api">API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Percent Encoding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api">API</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="filesystem.html">Filesystem Path Conversion</a><ul>
@@ -141,24 +135,55 @@
      href="#">Page <b class="caret"></b></a>
   <ul class="dropdown-menu localtoc"
       role="menu"
-      aria-labelledby="dLabelLocalToc"></ul>
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Percent Encoding</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#headers">Headers</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#id1">Percent encoding</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
 </li>
               
             
             
               
                 
+  <li>
+    <a href="network.html" title="Previous Chapter: Network Addresses"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Network Addresses</span>
+    </a>
+  </li>
+  <li>
+    <a href="filesystem.html" title="Next Chapter: Filesystem Path Conversion"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Filesystem Pa... &raquo;</span>
+    </a>
+  </li>
               
             
             
             
             
-              <li class="hidden-sm"></li>
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/percent_encoding.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
             
           </ul>
 
           
             
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
           
         </div>
     </div>
@@ -167,40 +192,87 @@
 <div class="container">
   <div class="row">
       <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Percent Encoding</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#headers">Headers</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#id1">Percent encoding</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="network.html" title="Previous Chapter: Network Addresses"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Network Addresses</span>
+    </a>
+  </li>
+  <li>
+    <a href="filesystem.html" title="Next Chapter: Filesystem Path Conversion"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Filesystem Pa... &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="_sources/percent_encoding.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
         </div>
       </div>
     <div class="col-md-9 content">
       
-  <h1 id="search-documentation">Search</h1>
-  <div id="fallback" class="admonition warning">
-  <script type="text/javascript">$('#fallback').hide();</script>
-  <p>
-    Please activate JavaScript to enable the search
-    functionality.
-  </p>
-  </div>
-  <p>
-    From here you can search these documents. Enter your search
-    words into the box below and click "search". Note that the search
-    function will automatically search for all of the words. Pages
-    containing fewer words won't appear in the result list.
-  </p>
+  <div class="section" id="percent-encoding">
+<h1>Percent Encoding<a class="headerlink" href="#percent-encoding" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The functions below allow percent encoding and decoding, most
+commonly used in URL paths, query parameter and fragments.</p>
+</div>
+<div class="section" id="headers">
+<h2>Headers<a class="headerlink" href="#headers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;skyr/percent_encoding/percent_encode.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;skyr/percent_encoding/percent_decode.hpp&gt;</span><span class="cp"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Percent encoding<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v114percent_encodeEDaNSt11string_viewE">
+<span id="_CPPv3I0EN4skyr2v114percent_encodeENSt11string_viewE"></span><span id="_CPPv2I0EN4skyr2v114percent_encodeENSt11string_viewE"></span><span class="target" id="namespaceskyr_1af78601ac872605135c4b1db356915755"></span>template&lt;class <code class="sig-name descname">Output</code>&gt;<br />auto <code class="sig-prename descclassname">skyr::v1<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">percent_encode</code><span class="sig-paren">(</span>std::string_view <em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v114percent_encodeEDaNSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Percent encodes the input <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The percent encoded output when successful, an error otherwise. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
 
-  
-  <form class="form-inline" action="" method="get">
-    <div class="form-group">
-      <input type="text" class="form-control" name="q" value="" />
-    </div>
-    <input type="submit" class="btn btn-default" value="search" />
-    <span id="search-progress" style="padding-left: 10px"></span>
-  </form>  
-  
-  
-  
-  <div id="search-results">
-  
-  </div>
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v114percent_decodeEDaNSt11string_viewE">
+<span id="_CPPv3I0EN4skyr2v114percent_decodeENSt11string_viewE"></span><span id="_CPPv2I0EN4skyr2v114percent_decodeENSt11string_viewE"></span><span class="target" id="namespaceskyr_1a6ae80d0e411e04b1d5cd7b2fb92d40c9"></span>template&lt;class <code class="sig-name descname">Output</code>&gt;<br />auto <code class="sig-prename descclassname">skyr::v1<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">percent_decode</code><span class="sig-paren">(</span>std::string_view <em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v114percent_decodeEDaNSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Percent decodes the input <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The percent decoded output when successful, an error otherwise. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
 
     </div>
       

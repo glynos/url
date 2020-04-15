@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Search &#8212; Skyr URL 1.7 documentation</title>
+    <title>JSON &#8212; Skyr URL 1.7 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -11,24 +11,18 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/language_data.js"></script>
-    <script type="text/javascript" src="_static/searchtools.js"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="#" />
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
-  
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
+    <link rel="prev" title="Filesystem Path Conversion" href="filesystem.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
-
 
   </head><body>
 
@@ -60,7 +54,7 @@
      href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="url.html">URL</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="url.html#description">Description</a></li>
 <li class="toctree-l2"><a class="reference internal" href="url.html#headers">Headers</a></li>
@@ -103,11 +97,11 @@
 <li class="toctree-l2"><a class="reference internal" href="filesystem.html#api">API</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="json.html">JSON</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="json.html#description">Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="json.html#headers">Headers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="json.html#example">Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="json.html#api">API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">JSON</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api">API</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
@@ -141,24 +135,55 @@
      href="#">Page <b class="caret"></b></a>
   <ul class="dropdown-menu localtoc"
       role="menu"
-      aria-labelledby="dLabelLocalToc"></ul>
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">JSON</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#headers">Headers</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#id1">JSON</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
 </li>
               
             
             
               
                 
+  <li>
+    <a href="filesystem.html" title="Previous Chapter: Filesystem Path Conversion"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Filesystem Pa...</span>
+    </a>
+  </li>
+  <li>
+    <a href="changelog.html" title="Next Chapter: Changelog"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Changelog &raquo;</span>
+    </a>
+  </li>
               
             
             
             
             
-              <li class="hidden-sm"></li>
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/json.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
             
           </ul>
 
           
             
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
           
         </div>
     </div>
@@ -167,40 +192,77 @@
 <div class="container">
   <div class="row">
       <div class="col-md-3">
-        <div id="sidebar" class="bs-sidenav" role="complementary">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">JSON</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#headers">Headers</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#id1">JSON</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="filesystem.html" title="Previous Chapter: Filesystem Path Conversion"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Filesystem Pa...</span>
+    </a>
+  </li>
+  <li>
+    <a href="changelog.html" title="Next Chapter: Changelog"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Changelog &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="_sources/json.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
         </div>
       </div>
     <div class="col-md-9 content">
       
-  <h1 id="search-documentation">Search</h1>
-  <div id="fallback" class="admonition warning">
-  <script type="text/javascript">$('#fallback').hide();</script>
-  <p>
-    Please activate JavaScript to enable the search
-    functionality.
-  </p>
-  </div>
-  <p>
-    From here you can search these documents. Enter your search
-    words into the box below and click "search". Note that the search
-    function will automatically search for all of the words. Pages
-    containing fewer words won't appear in the result list.
-  </p>
+  <div class="section" id="json">
+<h1>JSON<a class="headerlink" href="#json" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The functions below convert between a URL query string and a JSON
+object. They depend on the
+<a class="reference external" href="https://github.com/nlohmann/json">nlohmann</a> library.</p>
+</div>
+<div class="section" id="headers">
+<h2>Headers<a class="headerlink" href="#headers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;skyr/json/json.hpp&gt;</span><span class="cp"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>JSON<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="_CPPv4N4skyr2v14json12encode_queryERKN8nlohmann4jsonEcc">
+<span id="_CPPv3N4skyr2v14json12encode_queryERKN8nlohmann4jsonEcc"></span><span id="_CPPv2N4skyr2v14json12encode_queryERKN8nlohmann4jsonEcc"></span><span id="skyr::v1::json::encode_query__nlohmann::jsonCR.c.c"></span><span class="target" id="json_8hpp_1aad4d965ef653a3b56fcde3a5a16b5740"></span>auto <code class="sig-prename descclassname">skyr::v1::json<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">encode_query</code><span class="sig-paren">(</span><em class="property">const</em> nlohmann::json &amp;<em>json</em>, char <em>separator</em> = '&amp;', char <em>equal</em> = '='<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v14json12encode_queryERKN8nlohmann4jsonEcc" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
 
-  
-  <form class="form-inline" action="" method="get">
-    <div class="form-group">
-      <input type="text" class="form-control" name="q" value="" />
-    </div>
-    <input type="submit" class="btn btn-default" value="search" />
-    <span id="search-progress" style="padding-left: 10px"></span>
-  </form>  
-  
-  
-  
-  <div id="search-results">
-  
-  </div>
+<dl class="function">
+<dt id="_CPPv4N4skyr2v14json12decode_queryENSt11string_viewEcc">
+<span id="_CPPv3N4skyr2v14json12decode_queryENSt11string_viewEcc"></span><span id="_CPPv2N4skyr2v14json12decode_queryENSt11string_viewEcc"></span><span id="skyr::v1::json::decode_query__std::string_view.c.c"></span><span class="target" id="json_8hpp_1a9923e0e32b382a8dcdca85655c9c72ae"></span>auto <code class="sig-prename descclassname">skyr::v1::json<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">decode_query</code><span class="sig-paren">(</span>std::string_view <em>query</em>, char <em>separator</em> = '&amp;', char <em>equal</em> = '='<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v14json12decode_queryENSt11string_viewEcc" title="Permalink to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
 
     </div>
       

@@ -2,23 +2,22 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>skyr::url &#8212; Skyr URL 1.0 documentation</title>
+    <meta charset="utf-8" />
+    <title>URL &#8212; Skyr URL 1.7 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="skyr::url_search_parameters" href="url_search_parameters.html" />
+    <link rel="next" title="Core" href="core.html" />
     <link rel="prev" title="Skyr URL" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -27,7 +26,7 @@
 
   </head><body>
 
-  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -38,11 +37,13 @@
         </button>
         <a class="navbar-brand" href="index.html">
           Skyr URL</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.7</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/cpp-netlib/url/">GitHub</a></li>
             
             
               <li class="dropdown globaltoc-container">
@@ -54,15 +55,74 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#"><cite>skyr::url</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="url_search_parameters.html"><cite>skyr::url_search_parameters</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="optional.html"><cite>skyr::optional</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="expected.html"><cite>skyr::expected</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="percent_encode.html">Percent encoding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain name processing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filesystem.html"><cite>std::filesystem::path</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="unicode.html">Unicode encoding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">URL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain Name Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network.html">Network Addresses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encoding.html">Percent Encoding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html">Filesystem Path Conversion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="json.html">JSON</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="json.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.7.0] - 2020-04-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">[1.6.0] - 2020-04-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">[1.5.2] - 2020-04-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">[1.5.1] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">[1.5] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">[1.4.5] - 2020-03-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">[1.4.4] - 2020-03-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">[1.4.3] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">[1.4.2] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">[1.4.1] - 2020-03-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id22">[1.4] - 2020-01-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id26">[1.3] - 2019-11-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id30">[1.2] - 2019-08-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id34">[1.1] - 2019-07-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id37">[1.0] - 2018-10-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id40">[0.5] - 2018-09-30</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -76,7 +136,19 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#"><cite>skyr::url</cite></a></li>
+<li><a class="reference internal" href="#">URL</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#headers">Headers</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#skyr-url-class"><cite>skyr::url</cite> class</a></li>
+<li><a class="reference internal" href="#skyr-url-functions"><cite>skyr::url</cite> functions</a></li>
+<li><a class="reference internal" href="#skyr-url-error-codes"><cite>skyr::url</cite> error codes</a></li>
+<li><a class="reference internal" href="#skyr-url-search-parameters-class"><cite>skyr::url_search_parameters</cite> class</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -90,7 +162,7 @@
     </a>
   </li>
   <li>
-    <a href="url_search_parameters.html" title="Next Chapter: skyr::url_search_parameters"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">skyr::url_sea... &raquo;</span>
+    <a href="core.html" title="Next Chapter: Core"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Core &raquo;</span>
     </a>
   </li>
               
@@ -122,292 +194,170 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">URL</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#headers">Headers</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#skyr-url-class"><cite>skyr::url</cite> class</a></li>
+<li><a class="reference internal" href="#skyr-url-functions"><cite>skyr::url</cite> functions</a></li>
+<li><a class="reference internal" href="#skyr-url-error-codes"><cite>skyr::url</cite> error codes</a></li>
+<li><a class="reference internal" href="#skyr-url-search-parameters-class"><cite>skyr::url_search_parameters</cite> class</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="index.html" title="Previous Chapter: Skyr URL"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Skyr URL</span>
+    </a>
+  </li>
+  <li>
+    <a href="core.html" title="Next Chapter: Core"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Core &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="_sources/url.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
-  <div class="section" id="skyr-url">
-<h1><cite>skyr::url</cite><a class="headerlink" href="#skyr-url" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="_CPPv3N4skyr3urlE">
-<span id="_CPPv2N4skyr3urlE"></span><span id="skyr::url"></span><span class="target" id="classskyr_1_1url"></span><em class="property">class </em><code class="descname">url</code><a class="headerlink" href="#_CPPv3N4skyr3urlE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Represents a URL. Parsing is performed according to the <a class="reference external" href="https://url.spec.whatwg.org/">WhatWG specification</a></p>
-<p>The API follows closely the <a class="reference external" href="https://url.spec.whatwg.org/#url-class">WhatWG IDL specification</a>.</p>
-<p>For example: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">auto</span> <span class="n">url</span> <span class="o">=</span> <span class="n">skyr</span><span class="p">::</span><span class="n">make_url</span><span class="p">(</span><span class="s2">&quot;http://example.org/&quot;</span><span class="p">);</span>
-<span class="k">assert</span><span class="p">(</span><span class="s2">&quot;http:&quot;</span> <span class="o">==</span> <span class="n">url</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">scheme</span><span class="p">());</span>
-<span class="k">assert</span><span class="p">(</span><span class="s2">&quot;example.org&quot;</span> <span class="o">==</span> <span class="n">url</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">hostname</span><span class="p">());</span>
-<span class="k">assert</span><span class="p">(</span><span class="s2">&quot;/&quot;</span> <span class="o">==</span> <span class="n">url</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">pathname</span><span class="p">());</span>
+  <div class="section" id="url">
+<h1>URL<a class="headerlink" href="#url" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The <cite>skyr::url</cite> class parses a URL in the constructor and provides
+a rich interface to access and process the URL components. The
+<cite>skyr::url</cite> constructor throws a <cite>skyr::url_parse_error</cite> on failure.</p>
+</div>
+<div class="section" id="headers">
+<h2>Headers<a class="headerlink" href="#headers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;skyr/url.hpp&gt;</span><span class="cp"></span>
 </pre></div>
 </div>
- </p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
-<dl class="function">
-<dt id="_CPPv3N4skyr3url8set_hrefERK6Source">
-<span id="_CPPv2N4skyr3url8set_hrefERK6Source"></span><span id="skyr::url::set_href__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a93685791b748d0d5f8aad7d7e283d59c"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_href</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_hrefERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Template Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </li>
-</ul>
-</dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
 </div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
-<dl class="function">
-<dt id="_CPPv3N4skyr3url12set_protocolERK6Source">
-<span id="_CPPv2N4skyr3url12set_protocolERK6Source"></span><span id="skyr::url::set_protocol__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1aeaa6e0fd2dc45ea406e4ef50bd27099b"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_protocol</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>protocol</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_protocolERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-protocol">URL protocol</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">protocol</span></code>: The new URL protocol </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;skyr/url.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
-<dl class="function">
-<dt id="_CPPv3N4skyr3url12set_usernameERK6Source">
-<span id="_CPPv2N4skyr3url12set_usernameERK6Source"></span><span id="skyr::url::set_username__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1abc1a82566363687a5fba41c5aedc926c"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_username</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_usernameERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-username">URL username</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">username</span></code>: The new username </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">skyr</span><span class="o">::</span><span class="n">literals</span><span class="p">;</span>
 
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
-<dl class="function">
-<dt id="_CPPv3N4skyr3url12set_passwordERK6Source">
-<span id="_CPPv2N4skyr3url12set_passwordERK6Source"></span><span id="skyr::url::set_password__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1ac699e87539db3cba7a3c1177356bbf34"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_password</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>password</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_passwordERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-password">URL password</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">password</span></code>: The new password </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;http://example.com/&quot;</span><span class="n">_url</span><span class="p">;</span>
 
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Protocol: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">url</span><span class="p">.</span><span class="n">protocol</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Hostname: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">url</span><span class="p">.</span><span class="n">hostname</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Pathname: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">url</span><span class="p">.</span><span class="n">pathname</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">skyr</span><span class="o">::</span><span class="n">url_parse_error</span> <span class="o">&amp;</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">e</span><span class="p">.</span><span class="n">code</span><span class="p">().</span><span class="n">message</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 </div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
-<dl class="function">
-<dt id="_CPPv3N4skyr3url8set_hostERK6Source">
-<span id="_CPPv2N4skyr3url8set_hostERK6Source"></span><span id="skyr::url::set_host__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a396cd0f422f515087cae9149854f175d"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_host</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>host</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_hostERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-host">URL host</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">host</span></code>: The new URL host </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
 </div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
-<dl class="function">
-<dt id="_CPPv3N4skyr3url12set_hostnameERK6Source">
-<span id="_CPPv2N4skyr3url12set_hostnameERK6Source"></span><span id="skyr::url::set_hostname__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1ae7270958c3c6b1013773a2fcf6bc10d9"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_hostname</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>hostname</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_hostnameERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hostname">URL hostname</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">hostname</span></code>: The new URL host name </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
-<dl class="function">
-<dt id="_CPPv3N4skyr3url8set_portERK6Source">
-<span id="_CPPv2N4skyr3url8set_portERK6Source"></span><span id="skyr::url::set_port__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a17bc9169465e09cb3a986687e6866664"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_port</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_portERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">port</span></code>: The new port </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
-<dl class="function">
-<dt id="_CPPv3N4skyr3url12set_pathnameERK6Source">
-<span id="_CPPv2N4skyr3url12set_pathnameERK6Source"></span><span id="skyr::url::set_pathname__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1aa8dd4e3fb42f9168939ac70ae8a28776"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_pathname</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>pathname</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12set_pathnameERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-pathname">URL pathname</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">pathname</span></code>: The new pathname </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
-<dl class="function">
-<dt id="_CPPv3N4skyr3url10set_searchERK6Source">
-<span id="_CPPv2N4skyr3url10set_searchERK6Source"></span><span id="skyr::url::set_search__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1ada2df84e51167a78fe6d41216c0c7119"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_search</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>search</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url10set_searchERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-search">URL search string</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">search</span></code>: The new search string </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric">Unnamed Group</p>
-<dl class="function">
-<dt id="_CPPv3N4skyr3url8set_hashERK6Source">
-<span id="_CPPv2N4skyr3url8set_hashERK6Source"></span><span id="skyr::url::set_hash__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a4f6e9ef4d727cc666e9d07358b4336e2"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;void, std::error_code&gt; <code class="descname">set_hash</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>hash</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url8set_hashERK6Source" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hash">URL hash string</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error on failure to parse the new URL </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">hash</span></code>: The new hash string </li>
-</ul>
-</dd>
-</dl>
-</p>
-</dd></dl>
-
-</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="skyr-url-class">
+<h3><cite>skyr::url</cite> class<a class="headerlink" href="#skyr-url-class" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="_CPPv4N4skyr2v13urlE">
+<span id="_CPPv3N4skyr2v13urlE"></span><span id="_CPPv2N4skyr2v13urlE"></span><span id="skyr::v1::url"></span><span class="target" id="classskyr_1_1v1_1_1url"></span><em class="property">class </em><code class="sig-name descname">url</code><a class="headerlink" href="#_CPPv4N4skyr2v13urlE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>This class represents a URL. Parsing on construction is performed according to the <a class="reference external" href="https://url.spec.whatwg.org/">WhatWG specification</a></p>
+<p>The API follows closely the <a class="reference external" href="https://url.spec.whatwg.org/#url-class">WhatWG IDL specification</a>. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Types</p>
 <dl class="type">
-<dt id="_CPPv3N4skyr3url11string_typeE">
-<span id="_CPPv2N4skyr3url11string_typeE"></span><span class="target" id="classskyr_1_1url_1a45ae079af1188c9726c94cabc5bc09e2"></span><em class="property">using </em><code class="descname">string_type</code> = std::string<a class="headerlink" href="#_CPPv3N4skyr3url11string_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url11string_typeE">
+<span id="_CPPv3N4skyr2v13url11string_typeE"></span><span id="_CPPv2N4skyr2v13url11string_typeE"></span><span class="target" id="classskyr_1_1v1_1_1url_1a4d9945007eb5328f06055d67187b5444"></span><em class="property">using </em><code class="sig-name descname">string_type</code> = std::string<a class="headerlink" href="#_CPPv4N4skyr2v13url11string_typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>The internal ASCII string type, or <code class="docutils literal notranslate"><span class="pre">std::basic_string&lt;value_type&gt;</span></code> </p>
 </dd></dl>
 
 <dl class="type">
-<dt id="_CPPv3N4skyr3url11string_viewE">
-<span id="_CPPv2N4skyr3url11string_viewE"></span><span class="target" id="classskyr_1_1url_1ad51230e906a5a3a4e9003d847ef5b46f"></span><em class="property">using </em><code class="descname">string_view</code> = std::string_view<a class="headerlink" href="#_CPPv3N4skyr3url11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>The internal string_view, or <code class="docutils literal notranslate"><span class="pre">std::basic_string_view&lt;value_type&gt;</span></code> </p>
+<dt id="_CPPv4N4skyr2v13url11string_viewE">
+<span id="_CPPv3N4skyr2v13url11string_viewE"></span><span id="_CPPv2N4skyr2v13url11string_viewE"></span><span class="target" id="classskyr_1_1v1_1_1url_1a33af798ef37c7d195f7ffb6f4484ef88"></span><em class="property">using </em><code class="sig-name descname">string_view</code> = std::string_view<a class="headerlink" href="#_CPPv4N4skyr2v13url11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The internal string view type, or <code class="docutils literal notranslate"><span class="pre">std::basic_string_view&lt;value_type&gt;</span></code> </p>
 </dd></dl>
 
 <dl class="type">
-<dt id="_CPPv3N4skyr3url10value_typeE">
-<span id="_CPPv2N4skyr3url10value_typeE"></span><span class="target" id="classskyr_1_1url_1a1a105d9b919c9fe0f26a46eee9f9e71e"></span><em class="property">using </em><code class="descname">value_type</code> = <a class="reference internal" href="#_CPPv3N4skyr3url11string_viewE" title="skyr::url::string_view">string_view</a>::value_type<a class="headerlink" href="#_CPPv3N4skyr3url10value_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url10value_typeE">
+<span id="_CPPv3N4skyr2v13url10value_typeE"></span><span id="_CPPv2N4skyr2v13url10value_typeE"></span><span class="target" id="classskyr_1_1v1_1_1url_1ac381ab74fba6909a1278f0d4ff1c95db"></span><em class="property">using </em><code class="sig-name descname">value_type</code> = <a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a>::value_type<a class="headerlink" href="#_CPPv4N4skyr2v13url10value_typeE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>The ASCII character type. </p>
 </dd></dl>
 
 <dl class="type">
-<dt id="_CPPv3N4skyr3url14const_iteratorE">
-<span id="_CPPv2N4skyr3url14const_iteratorE"></span><span class="target" id="classskyr_1_1url_1a97e4ee6a5e9da5429962615c97cd00a1"></span><em class="property">using </em><code class="descname">const_iterator</code> = <a class="reference internal" href="#_CPPv3N4skyr3url11string_viewE" title="skyr::url::string_view">string_view</a>::const_iterator<a class="headerlink" href="#_CPPv3N4skyr3url14const_iteratorE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url14const_iteratorE">
+<span id="_CPPv3N4skyr2v13url14const_iteratorE"></span><span id="_CPPv2N4skyr2v13url14const_iteratorE"></span><span class="target" id="classskyr_1_1v1_1_1url_1a6125e6f7fb3ba22012f254210d63a934"></span><em class="property">using </em><code class="sig-name descname">const_iterator</code> = <a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a>::const_iterator<a class="headerlink" href="#_CPPv4N4skyr2v13url14const_iteratorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>A constant iterator with a value type of <code class="docutils literal notranslate"><span class="pre">value_type</span></code> </p>
 </dd></dl>
 
 <dl class="type">
-<dt id="_CPPv3N4skyr3url8iteratorE">
-<span id="_CPPv2N4skyr3url8iteratorE"></span><span class="target" id="classskyr_1_1url_1ad580c6563bc09909eb7bcfefa9b7dd87"></span><em class="property">using </em><code class="descname">iterator</code> = <a class="reference internal" href="#_CPPv3N4skyr3url14const_iteratorE" title="skyr::url::const_iterator">const_iterator</a><a class="headerlink" href="#_CPPv3N4skyr3url8iteratorE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url8iteratorE">
+<span id="_CPPv3N4skyr2v13url8iteratorE"></span><span id="_CPPv2N4skyr2v13url8iteratorE"></span><span class="target" id="classskyr_1_1v1_1_1url_1a079c94c7cd0d29a4211944955a48ab00"></span><em class="property">using </em><code class="sig-name descname">iterator</code> = <a class="reference internal" href="#_CPPv4N4skyr2v13url14const_iteratorE" title="skyr::v1::url::const_iterator">const_iterator</a><a class="headerlink" href="#_CPPv4N4skyr2v13url8iteratorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>An alias to <code class="docutils literal notranslate"><span class="pre">const_iterator</span></code> </p>
 </dd></dl>
 
 <dl class="type">
-<dt id="_CPPv3N4skyr3url15const_referenceE">
-<span id="_CPPv2N4skyr3url15const_referenceE"></span><span class="target" id="classskyr_1_1url_1aac84bbe9b92ad196ba55057fba8f6188"></span><em class="property">using </em><code class="descname">const_reference</code> = <a class="reference internal" href="#_CPPv3N4skyr3url11string_viewE" title="skyr::url::string_view">string_view</a>::const_reference<a class="headerlink" href="#_CPPv3N4skyr3url15const_referenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url15const_referenceE">
+<span id="_CPPv3N4skyr2v13url15const_referenceE"></span><span id="_CPPv2N4skyr2v13url15const_referenceE"></span><span class="target" id="classskyr_1_1v1_1_1url_1ac399fdaccb299200fcbd7b119e7ef61c"></span><em class="property">using </em><code class="sig-name descname">const_reference</code> = <a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a>::const_reference<a class="headerlink" href="#_CPPv4N4skyr2v13url15const_referenceE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>A constant reference with value type of <code class="docutils literal notranslate"><span class="pre">value_type</span></code> </p>
 </dd></dl>
 
 <dl class="type">
-<dt id="_CPPv3N4skyr3url9referenceE">
-<span id="_CPPv2N4skyr3url9referenceE"></span><span class="target" id="classskyr_1_1url_1ae1c79602b95946c86cffa64a90936a70"></span><em class="property">using </em><code class="descname">reference</code> = <a class="reference internal" href="#_CPPv3N4skyr3url15const_referenceE" title="skyr::url::const_reference">const_reference</a><a class="headerlink" href="#_CPPv3N4skyr3url9referenceE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url9referenceE">
+<span id="_CPPv3N4skyr2v13url9referenceE"></span><span id="_CPPv2N4skyr2v13url9referenceE"></span><span class="target" id="classskyr_1_1v1_1_1url_1ab3d5e117d4288a2f6d9bc8db96dbe16d"></span><em class="property">using </em><code class="sig-name descname">reference</code> = <a class="reference internal" href="#_CPPv4N4skyr2v13url15const_referenceE" title="skyr::v1::url::const_reference">const_reference</a><a class="headerlink" href="#_CPPv4N4skyr2v13url9referenceE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>An alias to <code class="docutils literal notranslate"><span class="pre">const_reference</span></code> </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv4N4skyr2v13url9size_typeE">
+<span id="_CPPv3N4skyr2v13url9size_typeE"></span><span id="_CPPv2N4skyr2v13url9size_typeE"></span><span class="target" id="classskyr_1_1v1_1_1url_1a77d618cff05afb6bebfb27c022566726"></span><em class="property">using </em><code class="sig-name descname">size_type</code> = std::size_t<a class="headerlink" href="#_CPPv4N4skyr2v13url9size_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">std::size_t</span></code> </p>
 </dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="function">
-<dt id="_CPPv3N4skyr3url3urlEv">
-<span id="_CPPv2N4skyr3url3urlEv"></span><span id="skyr::url::url"></span><span class="target" id="classskyr_1_1url_1aa73dd8db220e9db773d371b1a0495003"></span><code class="descname">url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url3urlEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url3urlEv">
+<span id="_CPPv3N4skyr2v13url3urlEv"></span><span id="_CPPv2N4skyr2v13url3urlEv"></span><span id="skyr::v1::url::url"></span><span class="target" id="classskyr_1_1v1_1_1url_1a7f10e062d208178d521655fc75bc37a7"></span><code class="sig-name descname">url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url3urlEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructs an empty <code class="docutils literal notranslate"><span class="pre">url</span></code> object</p>
-<p><dl class="docutils">
-<dt><strong>Post</strong></dt>
-<dd><code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1url_1af240d484cf5f36aedcfaaa35368a4f9b"><span class="std std-ref"><span class="pre">empty()</span></span></a> <span class="pre">==</span> <span class="pre">true</span></code> </dd>
+<p><dl class="simple">
+<dt><strong>Post</strong></dt><dd><p><code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url_1a63c84447b3f35879a93fae31d3ca809d"><span class="std std-ref"><span class="pre">empty()</span></span></a> <span class="pre">==</span> <span class="pre">true</span></code> </p>
+</dd>
 </dl>
 </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr3url3urlERK6Source">
-<span id="_CPPv2N4skyr3url3urlERK6Source"></span><span id="skyr::url::url__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1aca6023b41c0997ce3adf2ba18bea86de"></span><code class="descname">url</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url3urlERK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4I0EN4skyr2v13url3urlERK6Source">
+<span id="_CPPv3I0EN4skyr2v13url3urlERK6Source"></span><span id="_CPPv2I0EN4skyr2v13url3urlERK6Source"></span><span class="target" id="classskyr_1_1v1_1_1url_1a61e94b329c263be1662c407c9e445b1a"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br /><code class="sig-name descname">url</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url3urlERK6Source" title="skyr::v1::url::url::Source">Source</a> &amp;<em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url3urlERK6Source" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Parses a URL from the input string. The input string can be any unicode encoded string (UTF-8, UTF-16 or UTF-32).</p>
-<p><dl class="docutils">
-<dt><strong>Template Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </li>
+<p><dl class="simple">
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
 </ul>
 </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </li>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </p></li>
 </ul>
 </dd>
-<dt><strong>Exceptions</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1url__parse__error"><span class="std std-ref"><span class="pre">url_parse_error</span></span></a></code>: on parse errors </li>
+<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url__parse__error"><span class="std std-ref"><span class="pre">url_parse_error</span></span></a></code>: on parse errors </p></li>
 </ul>
 </dd>
 </dl>
@@ -415,24 +365,21 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr3url3urlERK6SourceRK3url">
-<span id="_CPPv2N4skyr3url3urlERK6SourceRK3url"></span><span id="skyr::url::url__SourceCR.urlCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="classskyr_1_1url_1a5b293dc127d6fac809dfcd8619dc523c"></span><code class="descname">url</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>input</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv3N4skyr3url3urlEv" title="skyr::url::url">url</a> &amp;<em>base</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url3urlERK6SourceRK3url" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4I0EN4skyr2v13url3urlERK6SourceRK3url">
+<span id="_CPPv3I0EN4skyr2v13url3urlERK6SourceRK3url"></span><span id="_CPPv2I0EN4skyr2v13url3urlERK6SourceRK3url"></span><span class="target" id="classskyr_1_1v1_1_1url_1a000b2b26a3a0887bfb94cb94c4bb3cad"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br /><code class="sig-name descname">url</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url3urlERK6Source" title="skyr::v1::url::url::Source">Source</a> &amp;<em>input</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url3urlERK6Source" title="skyr::v1::url::url">url</a> &amp;<em>base</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url3urlERK6SourceRK3url" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Parses a URL from the input string. The input string can be any unicode encoded string (UTF-8, UTF-16 or UTF-32).</p>
-<p><dl class="docutils">
-<dt><strong>Template Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </li>
+<p><dl class="simple">
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
 </ul>
 </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </li>
-<li><code class="docutils literal notranslate"><span class="pre">base</span></code>: A base URL </li>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">base</span></code>: A base URL </p></li>
 </ul>
 </dd>
-<dt><strong>Exceptions</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1url__parse__error"><span class="std std-ref"><span class="pre">url_parse_error</span></span></a></code>: on parse errors </li>
+<dt><strong>Exceptions</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url__parse__error"><span class="std std-ref"><span class="pre">url_parse_error</span></span></a></code>: on parse errors </p></li>
 </ul>
 </dd>
 </dl>
@@ -440,13 +387,12 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr3url3urlERR10url_record">
-<span id="_CPPv2N4skyr3url3urlERR10url_record"></span><span id="skyr::url::url__url_recordRR"></span><span class="target" id="classskyr_1_1url_1a56001e2d54d2261b906a8c66bd2476aa"></span><code class="descname">url</code><span class="sig-paren">(</span>url_record &amp;&amp;<em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url3urlERR10url_record" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url3urlERR10url_record">
+<span id="_CPPv3N4skyr2v13url3urlERR10url_record"></span><span id="_CPPv2N4skyr2v13url3urlERR10url_record"></span><span id="skyr::v1::url::url__url_recordRR"></span><span class="target" id="classskyr_1_1v1_1_1url_1aa1306c1170a0de8256e95429c50a7438"></span><code class="sig-name descname">url</code><span class="sig-paren">(</span><a class="reference internal" href="core.html#_CPPv4N4skyr2v110url_recordE" title="skyr::v1::url_record">url_record</a> &amp;&amp;<em>input</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url3urlERR10url_record" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Constructs a URL from an existing record</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: A URL record </li>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">input</span></code>: A URL record </p></li>
 </ul>
 </dd>
 </dl>
@@ -454,13 +400,70 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr3url4swapER3url">
-<span id="_CPPv2N4skyr3url4swapER3url"></span><span id="skyr::url::swap__urlR"></span><span class="target" id="classskyr_1_1url_1a219c5da9e1e495c4fea0e96e3ca0a676"></span>void <code class="descname">swap</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv3N4skyr3urlE" title="skyr::url">url</a> &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url4swapER3url" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url3urlERK3url">
+<span id="_CPPv3N4skyr2v13url3urlERK3url"></span><span id="_CPPv2N4skyr2v13url3urlERK3url"></span><span id="skyr::v1::url::url__urlCR"></span><span class="target" id="classskyr_1_1v1_1_1url_1a0a8a978c8b5481665e5c8e97e101a532"></span><code class="sig-name descname">url</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4skyr2v13url3urlEv" title="skyr::v1::url::url">url</a> &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url3urlERK3url" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy constructor <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">other</span></code>: Another <code class="docutils literal notranslate"><span class="pre">url</span></code> object </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url3urlERR3url">
+<span id="_CPPv3N4skyr2v13url3urlERR3url"></span><span id="_CPPv2N4skyr2v13url3urlERR3url"></span><span id="skyr::v1::url::url__urlRR"></span><span class="target" id="classskyr_1_1v1_1_1url_1a02bde2637fdf3e52814ee87674fd8792"></span><code class="sig-name descname">url</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url3urlEv" title="skyr::v1::url::url">url</a> &amp;&amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url3urlERR3url" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Move constructor <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">other</span></code>: Another <code class="docutils literal notranslate"><span class="pre">url</span></code> object </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13urlaSERK3url">
+<span id="_CPPv3N4skyr2v13urlaSERK3url"></span><span id="_CPPv2N4skyr2v13urlaSERK3url"></span><span id="skyr::v1::url::assign-operator__urlCR"></span><span class="target" id="classskyr_1_1v1_1_1url_1a5c16b5c783c9c310cc31b7e4852faf9e"></span><a class="reference internal" href="#_CPPv4N4skyr2v13urlE" title="skyr::v1::url">url</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4skyr2v13urlE" title="skyr::v1::url">url</a> &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13urlaSERK3url" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Copy assignment operator <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>*this </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">other</span></code>: Another <code class="docutils literal notranslate"><span class="pre">url</span></code> object </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13urlaSERR3url">
+<span id="_CPPv3N4skyr2v13urlaSERR3url"></span><span id="_CPPv2N4skyr2v13urlaSERR3url"></span><span id="skyr::v1::url::assign-operator__urlRR"></span><span class="target" id="classskyr_1_1v1_1_1url_1afeef0c47cae1aa4d95f8a44929b28f55"></span><a class="reference internal" href="#_CPPv4N4skyr2v13urlE" title="skyr::v1::url">url</a> &amp;<code class="sig-name descname">operator=</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13urlE" title="skyr::v1::url">url</a> &amp;&amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13urlaSERR3url" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Move assignment operator <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>*this </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">other</span></code>: Another <code class="docutils literal notranslate"><span class="pre">url</span></code> object </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13urlD0Ev">
+<span id="_CPPv3N4skyr2v13urlD0Ev"></span><span id="_CPPv2N4skyr2v13urlD0Ev"></span><span id="skyr::v1::url::~url"></span><span class="target" id="classskyr_1_1v1_1_1url_1ae7c5543d89406d569dbe7ceead479e11"></span><code class="sig-name descname">~url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13urlD0Ev" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Destructor. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url4swapER3url">
+<span id="_CPPv3N4skyr2v13url4swapER3url"></span><span id="_CPPv2N4skyr2v13url4swapER3url"></span><span id="skyr::v1::url::swap__urlR"></span><span class="target" id="classskyr_1_1v1_1_1url_1adb6bfb03c4cde6e4835ec0c243176ff9"></span>void <code class="sig-name descname">swap</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13urlE" title="skyr::v1::url">url</a> &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url4swapER3url" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Swaps this <code class="docutils literal notranslate"><span class="pre">url</span></code> object with another</p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">other</span></code>: The other <code class="docutils literal notranslate"><span class="pre">url</span></code> object </li>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">other</span></code>: Another <code class="docutils literal notranslate"><span class="pre">url</span></code> object </p></li>
 </ul>
 </dd>
 </dl>
@@ -468,230 +471,104 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3NK4skyr3url4hrefEv">
-<span id="_CPPv2NK4skyr3url4hrefEv"></span><span id="skyr::url::hrefC"></span><span class="target" id="classskyr_1_1url_1a07175705f0e237ec46ad3298c6dd7789"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">href</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url4hrefEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>The URL string</p>
+<dt id="_CPPv4NK4skyr2v13url4hrefEv">
+<span id="_CPPv3NK4skyr2v13url4hrefEv"></span><span id="_CPPv2NK4skyr2v13url4hrefEv"></span><span id="skyr::v1::url::hrefC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a4ecbff88a313c9c0dc91ccfe1bc97bf4"></span>auto <code class="sig-name descname">href</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url4hrefEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-href">serialization of the context object’s url</a></p>
 <p>Equivalent to <code class="docutils literal notranslate"><span class="pre">skyr::serialize(url_).value()</span></code></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The underlying URL string </dd>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The serialization of the context object’s url </p>
+</dd>
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="#classskyr_1_1v1_1_1url_1a54ef5192c4e239b299ccb0ebe9e09d91"><span class="std std-ref">to_json</span></a> </p>
+</dd>
 </dl>
 </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3NK4skyr3url7to_jsonEv">
-<span id="_CPPv2NK4skyr3url7to_jsonEv"></span><span id="skyr::url::to_jsonC"></span><span class="target" id="classskyr_1_1url_1a01630031f041b5482b0372c2544f51e9"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url7to_jsonEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>The URL string</p>
+<dt id="_CPPv4I0EN4skyr2v13url8set_hrefEDaRK6Source">
+<span id="_CPPv3I0EN4skyr2v13url8set_hrefERK6Source"></span><span id="_CPPv2I0EN4skyr2v13url8set_hrefERK6Source"></span><span class="target" id="classskyr_1_1v1_1_1url_1a644238d19d8cee69c8828348d4dc5260"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-name descname">set_href</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url8set_hrefEDaRK6Source" title="skyr::v1::url::set_href::Source">Source</a> &amp;<em>href</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url8set_hrefEDaRK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the context object’s url according to the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-href">steps described in the specification</a> <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">href</span></code>: The input string </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url8set_hrefE11string_view">
+<span id="_CPPv3N4skyr2v13url8set_hrefE11string_view"></span><span id="_CPPv2N4skyr2v13url8set_hrefE11string_view"></span><span id="skyr::v1::url::set_href__string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1a17059349c11a7afe96fc105d60a29770"></span>auto <code class="sig-name descname">set_href</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a> <em>href</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url8set_hrefE11string_view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the context object’s url according to the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-href">steps described in the specification</a> <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">href</span></code>: The input string </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url7to_jsonEv">
+<span id="_CPPv3NK4skyr2v13url7to_jsonEv"></span><span id="_CPPv2NK4skyr2v13url7to_jsonEv"></span><span id="skyr::v1::url::to_jsonC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a54ef5192c4e239b299ccb0ebe9e09d91"></span>auto <code class="sig-name descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url7to_jsonEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-href">serialization of the context object’s url</a></p>
 <p>Equivalent to <code class="docutils literal notranslate"><span class="pre">skyr::serialize(url_).value()</span></code></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The underlying URL string </dd>
-<dt><strong>See</strong></dt>
-<dd><a class="reference internal" href="#classskyr_1_1url_1a07175705f0e237ec46ad3298c6dd7789"><span class="std std-ref">href()</span></a> </dd>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The serialization of the context object’s url </p>
+</dd>
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="#classskyr_1_1v1_1_1url_1a4ecbff88a313c9c0dc91ccfe1bc97bf4"><span class="std std-ref">href()</span></a> </p>
+</dd>
 </dl>
 </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3NK4skyr3url6originEv">
-<span id="_CPPv2NK4skyr3url6originEv"></span><span id="skyr::url::originC"></span><span class="target" id="classskyr_1_1url_1a13f82e33728c2d50a4e14a2206325d00"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">origin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url6originEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The <a class="reference external" href="https://url.spec.whatwg.org/#origin">URL origin</a> </dd>
+<dt id="_CPPv4NK4skyr2v13url6originEv">
+<span id="_CPPv3NK4skyr2v13url6originEv"></span><span id="_CPPv2NK4skyr2v13url6originEv"></span><span id="skyr::v1::url::originC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a55970b5401f21de319d22bfc66bf5db7"></span>auto <code class="sig-name descname">origin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url6originEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#origin">URL origin</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#origin">URL origin</a> </p>
+</dd>
 </dl>
 </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3NK4skyr3url8protocolEv">
-<span id="_CPPv2NK4skyr3url8protocolEv"></span><span id="skyr::url::protocolC"></span><span class="target" id="classskyr_1_1url_1ae7429e5485b7027a7e499c799fe6bd9a"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">protocol</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url8protocolEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4NK4skyr2v13url8protocolEv">
+<span id="_CPPv3NK4skyr2v13url8protocolEv"></span><span id="_CPPv2NK4skyr2v13url8protocolEv"></span><span id="skyr::v1::url::protocolC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a446a114e8e88d6b709385babb6e17bf9"></span>auto <code class="sig-name descname">protocol</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url8protocolEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>The URL scheme + <code class="docutils literal notranslate"><span class="pre">&quot;:&quot;</span></code></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-protocol">URL protocol</a> </dd>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-protocol">URL protocol</a> </p>
+</dd>
 </dl>
 </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3NK4skyr3url8usernameEv">
-<span id="_CPPv2NK4skyr3url8usernameEv"></span><span id="skyr::url::usernameC"></span><span class="target" id="classskyr_1_1url_1a1a96f3403b12af5a364789ba6e5996bc"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">username</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url8usernameEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-username">URL username</a> </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url8passwordEv">
-<span id="_CPPv2NK4skyr3url8passwordEv"></span><span id="skyr::url::passwordC"></span><span class="target" id="classskyr_1_1url_1a0ce04be3f1d58bf2964d9d399042352a"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">password</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url8passwordEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-password">URL password</a></p>
-<p>Equivalent to: <code class="docutils literal notranslate"><span class="pre">url_.password?</span> <span class="pre">url_.password.value()</span> <span class="pre">:</span> <a class="reference internal" href="#classskyr_1_1url_1a45ae079af1188c9726c94cabc5bc09e2"><span class="std std-ref"><span class="pre">string_type()</span></span></a></code></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The URL password </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url4hostEv">
-<span id="_CPPv2NK4skyr3url4hostEv"></span><span id="skyr::url::hostC"></span><span class="target" id="classskyr_1_1url_1afb9793a29911952127180745ff11b441"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">host</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url4hostEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-host">URL host</a> </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url8hostnameEv">
-<span id="_CPPv2NK4skyr3url8hostnameEv"></span><span id="skyr::url::hostnameC"></span><span class="target" id="classskyr_1_1url_1a2bc27c315c5c882bc797725a81c5a33b"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">hostname</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url8hostnameEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hostname">URL hostname</a> </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url4portEv">
-<span id="_CPPv2NK4skyr3url4portEv"></span><span id="skyr::url::portC"></span><span class="target" id="classskyr_1_1url_1a04ddc965a040dd25ec47b9a94b486275"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">port</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url4portEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a> </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url4portEPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE">
-<span id="_CPPv2NK4skyr3url4portEPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE"></span><span id="skyr::url::port__std::enable_if:std::is_integral:intT:::value:::typePC"></span><em class="property">template </em>&lt;<em class="property">typename</em> intT&gt;<br /><span class="target" id="classskyr_1_1url_1a12a493408b4a35dc9521fa0220fb7b1c"></span>intT <code class="descname">port</code><span class="sig-paren">(</span><em class="property">typename</em> std::enable_if&lt;std::is_integral&lt;intT&gt;::value&gt;::type * = nullptr<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url4portEPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a> </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url8pathnameEv">
-<span id="_CPPv2NK4skyr3url8pathnameEv"></span><span id="skyr::url::pathnameC"></span><span class="target" id="classskyr_1_1url_1a7bd68b43b201fdb5d0d04a7f540ec3ef"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">pathname</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url8pathnameEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-pathname">URL pathname</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The URL pathname </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url6searchEv">
-<span id="_CPPv2NK4skyr3url6searchEv"></span><span id="skyr::url::searchC"></span><span class="target" id="classskyr_1_1url_1a6ced6a0f1a0465d2e1ab46d1ad1a47d4"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">search</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url6searchEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-search">URL search string</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The URL search string </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3N4skyr3url17search_parametersEv">
-<span id="_CPPv2N4skyr3url17search_parametersEv"></span><span id="skyr::url::search_parameters"></span><span class="target" id="classskyr_1_1url_1a93ce99ccca7d25ded07a4f2596f48e4e"></span><a class="reference internal" href="url_search_parameters.html#_CPPv3N4skyr21url_search_parametersE" title="skyr::url_search_parameters">url_search_parameters</a> &amp;<code class="descname">search_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url17search_parametersEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>A reference to the search parameters </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url4hashEv">
-<span id="_CPPv2NK4skyr3url4hashEv"></span><span id="skyr::url::hashC"></span><span class="target" id="classskyr_1_1url_1a2bc9b5b5901334c418cac234fc5d0a6c"></span><a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> <code class="descname">hash</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url4hashEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hash">URL hash string</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The URL hash string </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url6recordEv">
-<span id="_CPPv2NK4skyr3url6recordEv"></span><span id="skyr::url::recordC"></span><span class="target" id="classskyr_1_1url_1a88a85129d1223a03df90cf34120afa1a"></span>url_record <code class="descname">record</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url6recordEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>A copy to the underlying <code class="docutils literal notranslate"><span class="pre">url_record</span></code> implementation. </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url10is_specialEv">
-<span id="_CPPv2NK4skyr3url10is_specialEv"></span><span id="skyr::url::is_specialC"></span><span class="target" id="classskyr_1_1url_1a835d9a2fb840cf0b4de80952cfee8e90"></span>bool <code class="descname">is_special</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url10is_specialEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Tests whether the URL uses a <a class="reference external" href="https://url.spec.whatwg.org/#special-scheme">special scheme</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd><code class="docutils literal notranslate"><span class="pre">true</span></code> if the URL scheme is special, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url16validation_errorEv">
-<span id="_CPPv2NK4skyr3url16validation_errorEv"></span><span id="skyr::url::validation_errorC"></span><span class="target" id="classskyr_1_1url_1a21858014c016bb2865c6f12c10b3073e"></span>bool <code class="descname">validation_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url16validation_errorEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>A <a class="reference external" href="https://url.spec.whatwg.org/#validation-error">validation error</a> indicates a mismatch between input and valid input</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd><code class="docutils literal notranslate"><span class="pre">true</span></code> if there was a validation error during parsing, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url5beginEv">
-<span id="_CPPv2NK4skyr3url5beginEv"></span><span id="skyr::url::beginC"></span><span class="target" id="classskyr_1_1url_1a8d9689bb1889baadadf85fa2651430b4"></span><a class="reference internal" href="#_CPPv3N4skyr3url14const_iteratorE" title="skyr::url::const_iterator">const_iterator</a> <code class="descname">begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url5beginEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An iterator to the beginning of the URL string </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url3endEv">
-<span id="_CPPv2NK4skyr3url3endEv"></span><span id="skyr::url::endC"></span><span class="target" id="classskyr_1_1url_1a94fd65d08d35c5d9f696ea1dd893d860"></span><a class="reference internal" href="#_CPPv3N4skyr3url14const_iteratorE" title="skyr::url::const_iterator">const_iterator</a> <code class="descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url3endEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An iterator to the end of the URL string </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url5emptyEv">
-<span id="_CPPv2NK4skyr3url5emptyEv"></span><span id="skyr::url::emptyC"></span><span class="target" id="classskyr_1_1url_1af240d484cf5f36aedcfaaa35368a4f9b"></span>bool <code class="descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url5emptyEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Tests whether the URL is an empty string</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd><code class="docutils literal notranslate"><span class="pre">true</span></code> if the URL is an empty string, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise </dd>
-</dl>
-</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="_CPPv3NK4skyr3url7compareERK3url">
-<span id="_CPPv2NK4skyr3url7compareERK3url"></span><span id="skyr::url::compare__urlCRC"></span><span class="target" id="classskyr_1_1url_1a6e048762e25fc29e9d0b515476ab3bb2"></span>int <code class="descname">compare</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv3N4skyr3urlE" title="skyr::url">url</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url7compareERK3url" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Compares this <code class="docutils literal notranslate"><span class="pre">url</span></code> object lexicographically with another</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd><code class="docutils literal notranslate"><span class="pre">href_.compare(other.href_)</span></code> </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">other</span></code>: The other <code class="docutils literal notranslate"><span class="pre">url</span></code> object </li>
+<dt id="_CPPv4I0EN4skyr2v13url12set_protocolEDaRK6Source">
+<span id="_CPPv3I0EN4skyr2v13url12set_protocolERK6Source"></span><span id="_CPPv2I0EN4skyr2v13url12set_protocolERK6Source"></span><span class="target" id="classskyr_1_1v1_1_1url_1aa9739ebe53c33ce6e67ad7700d3efec1"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-name descname">set_protocol</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url12set_protocolEDaRK6Source" title="skyr::v1::url::set_protocol::Source">Source</a> &amp;<em>protocol</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url12set_protocolEDaRK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-protocol">URL protocol</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">protocol</span></code>: The new URL protocol </p></li>
 </ul>
 </dd>
 </dl>
@@ -699,34 +576,593 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr3url5clearEv">
-<span id="_CPPv2N4skyr3url5clearEv"></span><span id="skyr::url::clear"></span><span class="target" id="classskyr_1_1url_1a8ddfbcdc4ecfbceb2a24d3c65536e52c"></span>void <code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url5clearEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url12set_protocolE11string_view">
+<span id="_CPPv3N4skyr2v13url12set_protocolE11string_view"></span><span id="_CPPv2N4skyr2v13url12set_protocolE11string_view"></span><span id="skyr::v1::url::set_protocol__string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1a29f45035b5b705164fb8e44b1318bbb2"></span>auto <code class="sig-name descname">set_protocol</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a> <em>protocol</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url12set_protocolE11string_view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-protocol">URL protocol</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">protocol</span></code>: The new URL protocol </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url8usernameEv">
+<span id="_CPPv3NK4skyr2v13url8usernameEv"></span><span id="_CPPv2NK4skyr2v13url8usernameEv"></span><span id="skyr::v1::url::usernameC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a6c186f33e57e77e212147f59723c6694"></span>auto <code class="sig-name descname">username</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url8usernameEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-username">URL username</a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v13url12set_usernameEDaRK6Source">
+<span id="_CPPv3I0EN4skyr2v13url12set_usernameERK6Source"></span><span id="_CPPv2I0EN4skyr2v13url12set_usernameERK6Source"></span><span class="target" id="classskyr_1_1v1_1_1url_1ac968f958662bd3b8019110d3effa1d1a"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-name descname">set_username</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url12set_usernameEDaRK6Source" title="skyr::v1::url::set_username::Source">Source</a> &amp;<em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url12set_usernameEDaRK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-username">URL username</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">username</span></code>: The new username </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url12set_usernameE11string_view">
+<span id="_CPPv3N4skyr2v13url12set_usernameE11string_view"></span><span id="_CPPv2N4skyr2v13url12set_usernameE11string_view"></span><span id="skyr::v1::url::set_username__string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1aa0314694ed3a6678311aaba6ba444f44"></span>auto <code class="sig-name descname">set_username</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a> <em>username</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url12set_usernameE11string_view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-username">URL username</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">username</span></code>: The new username </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url8passwordEv">
+<span id="_CPPv3NK4skyr2v13url8passwordEv"></span><span id="_CPPv2NK4skyr2v13url8passwordEv"></span><span id="skyr::v1::url::passwordC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a4b60ab6ebd8768db61a3d31650bbc2ba"></span>auto <code class="sig-name descname">password</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url8passwordEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-password">URL password</a></p>
+<p>Equivalent to: <code class="docutils literal notranslate"><span class="pre">url_.password?</span> <span class="pre">url_.password.value()</span> <span class="pre">:</span> <a class="reference internal" href="#classskyr_1_1v1_1_1url_1a4d9945007eb5328f06055d67187b5444"><span class="std std-ref"><span class="pre">string_type()</span></span></a></code></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The URL password </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v13url12set_passwordEDaRK6Source">
+<span id="_CPPv3I0EN4skyr2v13url12set_passwordERK6Source"></span><span id="_CPPv2I0EN4skyr2v13url12set_passwordERK6Source"></span><span class="target" id="classskyr_1_1v1_1_1url_1ad35c30e8062de0c1dbb9b30e1478f416"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-name descname">set_password</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url12set_passwordEDaRK6Source" title="skyr::v1::url::set_password::Source">Source</a> &amp;<em>password</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url12set_passwordEDaRK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-password">URL password</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">password</span></code>: The new password </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url12set_passwordE11string_view">
+<span id="_CPPv3N4skyr2v13url12set_passwordE11string_view"></span><span id="_CPPv2N4skyr2v13url12set_passwordE11string_view"></span><span id="skyr::v1::url::set_password__string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1a17dd45608ae2deb37f30d4269c0941ff"></span>auto <code class="sig-name descname">set_password</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a> <em>password</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url12set_passwordE11string_view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-password">URL password</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">password</span></code>: The new password </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url4hostEv">
+<span id="_CPPv3NK4skyr2v13url4hostEv"></span><span id="_CPPv2NK4skyr2v13url4hostEv"></span><span id="skyr::v1::url::hostC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a9f20eb1b09ef555f9a5947bc4c7bc04e"></span>auto <code class="sig-name descname">host</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url4hostEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-host">URL host</a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v13url8set_hostEDaRK6Source">
+<span id="_CPPv3I0EN4skyr2v13url8set_hostERK6Source"></span><span id="_CPPv2I0EN4skyr2v13url8set_hostERK6Source"></span><span class="target" id="classskyr_1_1v1_1_1url_1ae13148f1045f7e7fdaaad6a8b5655461"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-name descname">set_host</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url8set_hostEDaRK6Source" title="skyr::v1::url::set_host::Source">Source</a> &amp;<em>host</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url8set_hostEDaRK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-host">URL host</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">host</span></code>: The new URL host </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url8set_hostE11string_view">
+<span id="_CPPv3N4skyr2v13url8set_hostE11string_view"></span><span id="_CPPv2N4skyr2v13url8set_hostE11string_view"></span><span id="skyr::v1::url::set_host__string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1a88bb3893252fad71409f6e41130a2e74"></span>auto <code class="sig-name descname">set_host</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a> <em>host</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url8set_hostE11string_view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-host">URL host</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">host</span></code>: The new URL host </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url8hostnameEv">
+<span id="_CPPv3NK4skyr2v13url8hostnameEv"></span><span id="_CPPv2NK4skyr2v13url8hostnameEv"></span><span id="skyr::v1::url::hostnameC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a1b4daafd1ff87b69847daa5798a33c5e"></span>auto <code class="sig-name descname">hostname</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url8hostnameEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hostname">URL hostname</a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v13url12set_hostnameEDaRK6Source">
+<span id="_CPPv3I0EN4skyr2v13url12set_hostnameERK6Source"></span><span id="_CPPv2I0EN4skyr2v13url12set_hostnameERK6Source"></span><span class="target" id="classskyr_1_1v1_1_1url_1adbb04270e7ec8beef519c627c8fe166b"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-name descname">set_hostname</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url12set_hostnameEDaRK6Source" title="skyr::v1::url::set_hostname::Source">Source</a> &amp;<em>hostname</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url12set_hostnameEDaRK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hostname">URL hostname</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hostname</span></code>: The new URL host name </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url12set_hostnameE11string_view">
+<span id="_CPPv3N4skyr2v13url12set_hostnameE11string_view"></span><span id="_CPPv2N4skyr2v13url12set_hostnameE11string_view"></span><span id="skyr::v1::url::set_hostname__string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1a1ea35c30a4803d3f935360090600725f"></span>auto <code class="sig-name descname">set_hostname</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a> <em>hostname</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url12set_hostnameE11string_view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hostname">URL hostname</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hostname</span></code>: The new URL host name </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url15is_ipv4_addressEv">
+<span id="_CPPv3NK4skyr2v13url15is_ipv4_addressEv"></span><span id="_CPPv2NK4skyr2v13url15is_ipv4_addressEv"></span><span id="skyr::v1::url::is_ipv4_addressC"></span><span class="target" id="classskyr_1_1v1_1_1url_1aeadbceb9d9d17e41378a48a587634f2a"></span>auto <code class="sig-name descname">is_ipv4_address</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url15is_ipv4_addressEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Checks if the hostname is a valid IPv4 address. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url12ipv4_addressEv">
+<span id="_CPPv3NK4skyr2v13url12ipv4_addressEv"></span><span id="_CPPv2NK4skyr2v13url12ipv4_addressEv"></span><span id="skyr::v1::url::ipv4_addressC"></span><span class="target" id="classskyr_1_1v1_1_1url_1af7d926a7932b6fcde90ede48662d899d"></span>auto <code class="sig-name descname">ipv4_address</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url12ipv4_addressEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns an optional <a class="reference internal" href="network.html#classskyr_1_1v1_1_1ipv4__address"><span class="std std-ref">ipv4_address</span></a> value if the hostname is a valid IPv4 address </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url15is_ipv6_addressEv">
+<span id="_CPPv3NK4skyr2v13url15is_ipv6_addressEv"></span><span id="_CPPv2NK4skyr2v13url15is_ipv6_addressEv"></span><span id="skyr::v1::url::is_ipv6_addressC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a47cd4627fa8dcc19e64af5652f016b1e"></span>auto <code class="sig-name descname">is_ipv6_address</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url15is_ipv6_addressEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Checks if the hostname is a valid IPv6 address. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url12ipv6_addressEv">
+<span id="_CPPv3NK4skyr2v13url12ipv6_addressEv"></span><span id="_CPPv2NK4skyr2v13url12ipv6_addressEv"></span><span id="skyr::v1::url::ipv6_addressC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a02090886b8967623b4cc005416cc6998"></span>auto <code class="sig-name descname">ipv6_address</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url12ipv6_addressEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns an optional <a class="reference internal" href="network.html#classskyr_1_1v1_1_1ipv6__address"><span class="std std-ref">ipv6_address</span></a> value if the hostname is a valid IPv6 address </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url9is_domainEv">
+<span id="_CPPv3NK4skyr2v13url9is_domainEv"></span><span id="_CPPv2NK4skyr2v13url9is_domainEv"></span><span id="skyr::v1::url::is_domainC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a7f32f1592bb7d54b858e319432495ce8"></span>auto <code class="sig-name descname">is_domain</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url9is_domainEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Checks if the hostname is a valid domain name. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url6domainEv">
+<span id="_CPPv3NK4skyr2v13url6domainEv"></span><span id="_CPPv2NK4skyr2v13url6domainEv"></span><span id="skyr::v1::url::domainC"></span><span class="target" id="classskyr_1_1v1_1_1url_1af0148fe1a863882d519032c88ded33c7"></span>auto <code class="sig-name descname">domain</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url6domainEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the decoded domain name. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url9is_opaqueEv">
+<span id="_CPPv3NK4skyr2v13url9is_opaqueEv"></span><span id="_CPPv2NK4skyr2v13url9is_opaqueEv"></span><span id="skyr::v1::url::is_opaqueC"></span><span class="target" id="classskyr_1_1v1_1_1url_1acb1c18938989c6dcbe25ffa252e068d0"></span>auto <code class="sig-name descname">is_opaque</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url9is_opaqueEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Checks if the hostname is a valid domain name. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url4portEv">
+<span id="_CPPv3NK4skyr2v13url4portEv"></span><span id="_CPPv2NK4skyr2v13url4portEv"></span><span id="skyr::v1::url::portC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a9ff7ba75ec6930537026c7fe2c874047"></span>auto <code class="sig-name descname">port</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url4portEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0ENK4skyr2v13url4portEDaPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE">
+<span id="_CPPv3I0ENK4skyr2v13url4portEPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE"></span><span id="_CPPv2I0ENK4skyr2v13url4portEPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE"></span><span class="target" id="classskyr_1_1v1_1_1url_1aedf449ca6dd5f4a01653ca9c832f5997"></span>template&lt;typename <code class="sig-name descname">intT</code>&gt;<br />auto <code class="sig-name descname">port</code><span class="sig-paren">(</span><em class="property">typename</em> std::enable_if&lt;std::is_integral&lt;<a class="reference internal" href="#_CPPv4I0ENK4skyr2v13url4portEDaPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE" title="skyr::v1::url::port::intT">intT</a>&gt;::value&gt;::type * = nullptr<span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4I0ENK4skyr2v13url4portEDaPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v13url8set_portEDaRK10PortSource">
+<span id="_CPPv3I0EN4skyr2v13url8set_portERK10PortSource"></span><span id="_CPPv2I0EN4skyr2v13url8set_portERK10PortSource"></span><span class="target" id="classskyr_1_1v1_1_1url_1abf7cb26d7a8c17ed8e22bde2bf669e14"></span>template&lt;class <code class="sig-name descname">PortSource</code>&gt;<br />auto <code class="sig-name descname">set_port</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url8set_portEDaRK10PortSource" title="skyr::v1::url::set_port::PortSource">PortSource</a> &amp;<em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url8set_portEDaRK10PortSource" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">PortSource</span></code>: The input type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">port</span></code>: The new port </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url8set_portE11string_view">
+<span id="_CPPv3N4skyr2v13url8set_portE11string_view"></span><span id="_CPPv2N4skyr2v13url8set_portE11string_view"></span><span id="skyr::v1::url::set_port__string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1a9f8d41129e69e36342fb63cc13770880"></span>auto <code class="sig-name descname">set_port</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a> <em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url8set_portE11string_view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-port">URL port</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">port</span></code>: The new port </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url8pathnameEv">
+<span id="_CPPv3NK4skyr2v13url8pathnameEv"></span><span id="_CPPv2NK4skyr2v13url8pathnameEv"></span><span id="skyr::v1::url::pathnameC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a2c26eb16e9820f6a7ab3793487a30a7e"></span>auto <code class="sig-name descname">pathname</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url8pathnameEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-pathname">URL pathname</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The URL pathname </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v13url12set_pathnameEDaRK6Source">
+<span id="_CPPv3I0EN4skyr2v13url12set_pathnameERK6Source"></span><span id="_CPPv2I0EN4skyr2v13url12set_pathnameERK6Source"></span><span class="target" id="classskyr_1_1v1_1_1url_1a30ea59b7718ff565294b1b444c5310eb"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-name descname">set_pathname</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url12set_pathnameEDaRK6Source" title="skyr::v1::url::set_pathname::Source">Source</a> &amp;<em>pathname</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url12set_pathnameEDaRK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-pathname">URL pathname</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pathname</span></code>: The new pathname </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url12set_pathnameE11string_view">
+<span id="_CPPv3N4skyr2v13url12set_pathnameE11string_view"></span><span id="_CPPv2N4skyr2v13url12set_pathnameE11string_view"></span><span id="skyr::v1::url::set_pathname__string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1aa5d9919108d73d318d75b124169231b6"></span>auto <code class="sig-name descname">set_pathname</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a> <em>pathname</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url12set_pathnameE11string_view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-pathname">URL pathname</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pathname</span></code>: The new pathname </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url6searchEv">
+<span id="_CPPv3NK4skyr2v13url6searchEv"></span><span id="_CPPv2NK4skyr2v13url6searchEv"></span><span id="skyr::v1::url::searchC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a525fdd61745b94206ff468bbb2c5619d"></span>auto <code class="sig-name descname">search</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url6searchEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-search">URL search string</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-search">URL search string</a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v13url10set_searchEDaRK6Source">
+<span id="_CPPv3I0EN4skyr2v13url10set_searchERK6Source"></span><span id="_CPPv2I0EN4skyr2v13url10set_searchERK6Source"></span><span class="target" id="classskyr_1_1v1_1_1url_1a8280d1fc9c60d2fb5678c0f0b95f95ec"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-name descname">set_search</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url10set_searchEDaRK6Source" title="skyr::v1::url::set_search::Source">Source</a> &amp;<em>search</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url10set_searchEDaRK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-search">URL search string</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">search</span></code>: The new search string </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url10set_searchE11string_view">
+<span id="_CPPv3N4skyr2v13url10set_searchE11string_view"></span><span id="_CPPv2N4skyr2v13url10set_searchE11string_view"></span><span id="skyr::v1::url::set_search__string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1a8235075d899c0247dad16ba2640130eb"></span>auto <code class="sig-name descname">set_search</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a> <em>search</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url10set_searchE11string_view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-search">URL search string</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">search</span></code>: The new search string </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url17search_parametersEv">
+<span id="_CPPv3N4skyr2v13url17search_parametersEv"></span><span id="_CPPv2N4skyr2v13url17search_parametersEv"></span><span id="skyr::v1::url::search_parameters"></span><span class="target" id="classskyr_1_1v1_1_1url_1a2a2aaac6be76380d1bc3272981f962f2"></span>auto <code class="sig-name descname">search_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url17search_parametersEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A reference to the search parameters </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url17search_parametersEv">
+<span id="_CPPv3NK4skyr2v13url17search_parametersEv"></span><span id="_CPPv2NK4skyr2v13url17search_parametersEv"></span><span id="skyr::v1::url::search_parametersC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a3e28a412507290604c11309011cd12e4"></span>auto <code class="sig-name descname">search_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url17search_parametersEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A reference to the search parameters </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url4hashEv">
+<span id="_CPPv3NK4skyr2v13url4hashEv"></span><span id="_CPPv2NK4skyr2v13url4hashEv"></span><span id="skyr::v1::url::hashC"></span><span class="target" id="classskyr_1_1v1_1_1url_1ac4c17b0400c9c40450dc1ab1c87181b5"></span>auto <code class="sig-name descname">hash</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url4hashEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hash">URL hash string</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hash">URL hash string</a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v13url8set_hashEDaRK6Source">
+<span id="_CPPv3I0EN4skyr2v13url8set_hashERK6Source"></span><span id="_CPPv2I0EN4skyr2v13url8set_hashERK6Source"></span><span class="target" id="classskyr_1_1v1_1_1url_1a89ec47c317991a3bca0a17d75edffa03"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-name descname">set_hash</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v13url8set_hashEDaRK6Source" title="skyr::v1::url::set_hash::Source">Source</a> &amp;<em>hash</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN4skyr2v13url8set_hashEDaRK6Source" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hash">URL hash string</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hash</span></code>: The new hash string </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url8set_hashE11string_view">
+<span id="_CPPv3N4skyr2v13url8set_hashE11string_view"></span><span id="_CPPv2N4skyr2v13url8set_hashE11string_view"></span><span id="skyr::v1::url::set_hash__string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1aa95d6950510272d3699ee10cd8c22217"></span>auto <code class="sig-name descname">set_hash</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13url11string_viewE" title="skyr::v1::url::string_view">string_view</a> <em>hash</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url8set_hashE11string_view" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets the <a class="reference external" href="https://url.spec.whatwg.org/#dom-url-hash">URL hash string</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error on failure to parse the new URL </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">hash</span></code>: The new hash string </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NKR4skyr2v13url6recordEv">
+<span id="_CPPv3NKR4skyr2v13url6recordEv"></span><span id="_CPPv2NKR4skyr2v13url6recordEv"></span><span id="skyr::v1::url::recordCR"></span><span class="target" id="classskyr_1_1v1_1_1url_1a727b03a23bc388f78ccbe27d0fabee3b"></span>auto <code class="sig-name descname">record</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em> &amp;<a class="headerlink" href="#_CPPv4NKR4skyr2v13url6recordEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The URL context object</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The underlying <code class="docutils literal notranslate"><a class="reference internal" href="core.html#classskyr_1_1v1_1_1url__record"><span class="std std-ref"><span class="pre">url_record</span></span></a></code> implementation. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NO4skyr2v13url6recordEv">
+<span id="_CPPv3NO4skyr2v13url6recordEv"></span><span id="_CPPv2NO4skyr2v13url6recordEv"></span><span id="skyr::v1::url::recordO"></span><span class="target" id="classskyr_1_1v1_1_1url_1a889ac9ed13b623a32470599d37478ed7"></span>auto <code class="sig-name descname">record</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &amp;&amp;<a class="headerlink" href="#_CPPv4NO4skyr2v13url6recordEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The URL context object</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The underlying <code class="docutils literal notranslate"><a class="reference internal" href="core.html#classskyr_1_1v1_1_1url__record"><span class="std std-ref"><span class="pre">url_record</span></span></a></code> implementation. </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url10is_specialEv">
+<span id="_CPPv3NK4skyr2v13url10is_specialEv"></span><span id="_CPPv2NK4skyr2v13url10is_specialEv"></span><span id="skyr::v1::url::is_specialC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a7f948462d09fd877f332bd3b52047ef0"></span>auto <code class="sig-name descname">is_special</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url10is_specialEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Tests whether the URL uses a <a class="reference external" href="https://url.spec.whatwg.org/#special-scheme">special scheme</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> if the URL scheme is special, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url16validation_errorEv">
+<span id="_CPPv3NK4skyr2v13url16validation_errorEv"></span><span id="_CPPv2NK4skyr2v13url16validation_errorEv"></span><span id="skyr::v1::url::validation_errorC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a7b6f1bf202d876b1fc2328f5ea06fc47"></span>auto <code class="sig-name descname">validation_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url16validation_errorEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A <a class="reference external" href="https://url.spec.whatwg.org/#validation-error">validation error</a> indicates a mismatch between input and valid input</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> if there was a validation error during parsing, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url5beginEv">
+<span id="_CPPv3NK4skyr2v13url5beginEv"></span><span id="_CPPv2NK4skyr2v13url5beginEv"></span><span id="skyr::v1::url::beginC"></span><span class="target" id="classskyr_1_1v1_1_1url_1adab4354b95974a5a8c8483bbc277f90d"></span>auto <code class="sig-name descname">begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url5beginEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An iterator to the beginning of the context object’s string (<code class="docutils literal notranslate"><span class="pre">href_</span></code>)</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An iterator to the beginning of the context object’s string </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url3endEv">
+<span id="_CPPv3NK4skyr2v13url3endEv"></span><span id="_CPPv2NK4skyr2v13url3endEv"></span><span id="skyr::v1::url::endC"></span><span class="target" id="classskyr_1_1v1_1_1url_1ac771e7d2a987ea9a205f8b24aa5facd9"></span>auto <code class="sig-name descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url3endEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An iterator to the end of the context object’s string (<code class="docutils literal notranslate"><span class="pre">href_</span></code>)</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An iterator to the end of the URL string </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url5emptyEv">
+<span id="_CPPv3NK4skyr2v13url5emptyEv"></span><span id="_CPPv2NK4skyr2v13url5emptyEv"></span><span id="skyr::v1::url::emptyC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a63c84447b3f35879a93fae31d3ca809d"></span>auto <code class="sig-name descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url5emptyEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Tests whether the URL is an empty string</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> if the URL is an empty string, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url4sizeEv">
+<span id="_CPPv3NK4skyr2v13url4sizeEv"></span><span id="_CPPv2NK4skyr2v13url4sizeEv"></span><span id="skyr::v1::url::sizeC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a514503a39a10ee12f3b262907a9314cd"></span>auto <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Gets the size of the URL buffer <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The size of the URL buffer </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13url7compareERK3url">
+<span id="_CPPv3NK4skyr2v13url7compareERK3url"></span><span id="_CPPv2NK4skyr2v13url7compareERK3url"></span><span id="skyr::v1::url::compare__urlCRC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a3982472f74c104d4a6c1e2b23f82d17c"></span>auto <code class="sig-name descname">compare</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4skyr2v13urlE" title="skyr::v1::url">url</a> &amp;<em>other</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url7compareERK3url" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Compares this <code class="docutils literal notranslate"><span class="pre">url</span></code> object lexicographically with another</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">href_.compare(other.href_)</span></code> </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">other</span></code>: The other <code class="docutils literal notranslate"><span class="pre">url</span></code> object </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v13url5clearEv">
+<span id="_CPPv3N4skyr2v13url5clearEv"></span><span id="_CPPv2N4skyr2v13url5clearEv"></span><span id="skyr::v1::url::clear"></span><span class="target" id="classskyr_1_1v1_1_1url_1a82ceeaa7782c5c214694848dcbab149f"></span>void <code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url5clearEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Clears the underlying URL string</p>
-<p><dl class="docutils">
-<dt><strong>Post</strong></dt>
-<dd><code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1url_1af240d484cf5f36aedcfaaa35368a4f9b"><span class="std std-ref"><span class="pre">empty()</span></span></a> <span class="pre">==</span> <span class="pre">true</span></code> </dd>
+<p><dl class="simple">
+<dt><strong>Post</strong></dt><dd><p><code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url_1a63c84447b3f35879a93fae31d3ca809d"><span class="std std-ref"><span class="pre">empty()</span></span></a> <span class="pre">==</span> <span class="pre">true</span></code> </p>
+</dd>
 </dl>
 </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3NK4skyr3url5c_strEv">
-<span id="_CPPv2NK4skyr3url5c_strEv"></span><span id="skyr::url::c_strC"></span><span class="target" id="classskyr_1_1url_1a11bd7f608228655357216dc4797e13a9"></span><em class="property">const</em> char *<code class="descname">c_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3url5c_strEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Returns the underyling byte buffer</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd><code class="docutils literal notranslate"><span class="pre">href_.c_str()</span></code> </dd>
+<dt id="_CPPv4NK4skyr2v13url5c_strEv">
+<span id="_CPPv3NK4skyr2v13url5c_strEv"></span><span id="_CPPv2NK4skyr2v13url5c_strEv"></span><span id="skyr::v1::url::c_strC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a0501cdc805f81c0a29a21c29643be847"></span>auto <code class="sig-name descname">c_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url5c_strEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the underlying byte buffer</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">href_.c_str()</span></code> </p>
+</dd>
 </dl>
 </p>
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3NK4skyr3urlcv11string_typeEv">
-<span id="_CPPv2NK4skyr3urlcv11string_typeEv"></span><span id="skyr::url::castto-string_type-operatorC"></span><span class="target" id="classskyr_1_1url_1acb3db9915b8044785bd106e439d5ba31"></span><code class="descname">operator string_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr3urlcv11string_typeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4NK4skyr2v13url4dataEv">
+<span id="_CPPv3NK4skyr2v13url4dataEv"></span><span id="_CPPv2NK4skyr2v13url4dataEv"></span><span id="skyr::v1::url::dataC"></span><span class="target" id="classskyr_1_1v1_1_1url_1a0e6bd8995b4b17a76de3a011d9224e96"></span>auto <code class="sig-name descname">data</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13url4dataEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Returns the underlying byte buffer</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">href_.data()</span></code> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v13urlcv11string_typeEv">
+<span id="_CPPv3NK4skyr2v13urlcv11string_typeEv"></span><span id="_CPPv2NK4skyr2v13urlcv11string_typeEv"></span><span id="skyr::v1::url::castto-string_type-operatorC"></span><span class="target" id="classskyr_1_1v1_1_1url_1afc3780cdb50ec3b7fecc43791d4d2f6f"></span><code class="sig-name descname">operator string_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v13urlcv11string_typeEv" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Returns the underlying string</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd><code class="docutils literal notranslate"><span class="pre">href_</span></code> </dd>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">href_</span></code> </p>
+</dd>
 </dl>
 </p>
 </dd></dl>
@@ -735,15 +1171,14 @@
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Static Functions</p>
 <dl class="function">
-<dt id="_CPPv3N4skyr3url12default_portERK11string_type">
-<span id="_CPPv2N4skyr3url12default_portERK11string_type"></span><span id="skyr::url::default_port__string_typeCR"></span><span class="target" id="classskyr_1_1url_1ad4a953b62cbd998921d39168106ba363"></span><em class="property">static</em> <a class="reference internal" href="optional.html#_CPPv3N4skyr8optionalE" title="skyr::optional">optional</a>&lt;std::uint16_t&gt; <code class="descname">default_port</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv3N4skyr3url11string_typeE" title="skyr::url::string_type">string_type</a> &amp;<em>scheme</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr3url12default_portERK11string_type" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v13url12default_portENSt11string_viewE">
+<span id="_CPPv3N4skyr2v13url12default_portENSt11string_viewE"></span><span id="_CPPv2N4skyr2v13url12default_portENSt11string_viewE"></span><span id="skyr::v1::url::default_port__std::string_view"></span><span class="target" id="classskyr_1_1v1_1_1url_1a528d5c4a582bd84fde48e7fb09221f54"></span><em class="property">static</em> auto <code class="sig-name descname">default_port</code><span class="sig-paren">(</span>std::string_view <em>scheme</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v13url12default_portENSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Returns the default port for <a class="reference external" href="https://url.spec.whatwg.org/#special-scheme">special schemes</a></p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>The default port if the scheme is special, <code class="docutils literal notranslate"><span class="pre">nullopt</span></code> otherwise </dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">scheme</span></code>: </li>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The default port if the scheme is special, <code class="docutils literal notranslate"><span class="pre">nullopt</span></code> otherwise </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">scheme</span></code>: </p></li>
 </ul>
 </dd>
 </dl>
@@ -753,19 +1188,163 @@
 </div>
 </dd></dl>
 
+</div>
+<div class="section" id="skyr-url-functions">
+<h3><cite>skyr::url</cite> functions<a class="headerlink" href="#skyr-url-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="_CPPv4N4skyr2v14swapER3urlR3url">
+<span id="_CPPv3N4skyr2v14swapER3urlR3url"></span><span id="_CPPv2N4skyr2v14swapER3urlR3url"></span><span id="skyr::v1::swap__urlR.urlR"></span><span class="target" id="namespaceskyr_1ad72d72261ac96054fa54221d829a55a7"></span>void <code class="sig-prename descclassname">skyr::v1<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">swap</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v13urlE" title="skyr::v1::url">url</a> &amp;<em>lhs</em>, <a class="reference internal" href="#_CPPv4N4skyr2v13urlE" title="skyr::v1::url">url</a> &amp;<em>rhs</em><span class="sig-paren">)</span><br /></dt>
+<dd><p>Swaps two <code class="docutils literal notranslate"><span class="pre">url</span></code> objects</p>
+<p>Equivalent to <code class="docutils literal notranslate"><span class="pre">lhs.swap(rhs)</span></code></p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code>: The first <code class="docutils literal notranslate"><span class="pre">url</span></code> object </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code>: The second <code class="docutils literal notranslate"><span class="pre">url</span></code> object </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v18make_urlEDaRK6Source">
+<span id="_CPPv3I0EN4skyr2v18make_urlERK6Source"></span><span id="_CPPv2I0EN4skyr2v18make_urlERK6Source"></span><span class="target" id="namespaceskyr_1a096ff6922226ac89b1de120c56564041"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-prename descclassname">skyr::v1<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">make_url</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v18make_urlEDaRK6Source" title="skyr::v1::make_url::Source">Source</a> &amp;<em>input</em><span class="sig-paren">)</span><br /></dt>
+<dd><p>Parses a URL string and constructs a <code class="docutils literal notranslate"><span class="pre">url</span></code> object on success, wrapped in a <code class="docutils literal notranslate"><span class="pre">tl::expected</span></code></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">url</span></code> object on success, an error on failure </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4I0EN4skyr2v18make_urlEDaRK6SourceRK3url">
+<span id="_CPPv3I0EN4skyr2v18make_urlERK6SourceRK3url"></span><span id="_CPPv2I0EN4skyr2v18make_urlERK6SourceRK3url"></span><span class="target" id="namespaceskyr_1a6cf94221e7f1d21f5296fe73e1d31185"></span>template&lt;class <code class="sig-name descname">Source</code>&gt;<br />auto <code class="sig-prename descclassname">skyr::v1<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">make_url</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4I0EN4skyr2v18make_urlEDaRK6Source" title="skyr::v1::make_url::Source">Source</a> &amp;<em>input</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv4N4skyr2v13urlE" title="skyr::v1::url">url</a> &amp;<em>base</em><span class="sig-paren">)</span><br /></dt>
+<dd><p>Parses a URL string and constructs a <code class="docutils literal notranslate"><span class="pre">url</span></code> object on success, wrapped in a <code class="docutils literal notranslate"><span class="pre">tl::expected</span></code></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A <code class="docutils literal notranslate"><span class="pre">url</span></code> object on success, an error on failure </p>
+</dd>
+<dt><strong>Template Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </p></li>
+</ul>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">base</span></code>: The base URL </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="section" id="skyr-url-error-codes">
+<h3><cite>skyr::url</cite> error codes<a class="headerlink" href="#skyr-url-error-codes" title="Permalink to this headline">¶</a></h3>
+<dl class="enum">
+<dt id="_CPPv4N4skyr14url_parse_errcE">
+<span id="_CPPv3N4skyr14url_parse_errcE"></span><span id="_CPPv2N4skyr14url_parse_errcE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfc"></span><em class="property">enum </em><code class="sig-prename descclassname">skyr<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">url_parse_errc</code><a class="headerlink" href="#_CPPv4N4skyr14url_parse_errcE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Enumerates URL parser errors </p>
+<p><em>Values:</em></p>
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr25invalid_unicode_characterE">
+<span id="_CPPv3N4skyr25invalid_unicode_characterE"></span><span id="_CPPv2N4skyr25invalid_unicode_characterE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfcab208aef057485f534e651bff91f6c36a"></span><code class="sig-name descname">invalid_unicode_character</code> = 1<a class="headerlink" href="#_CPPv4N4skyr25invalid_unicode_characterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The string contains an invalid Unicode character. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr24invalid_scheme_characterE">
+<span id="_CPPv3N4skyr24invalid_scheme_characterE"></span><span id="_CPPv2N4skyr24invalid_scheme_characterE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfca96d3fd758bf124362aed91d64ebb13a9"></span><code class="sig-name descname">invalid_scheme_character</code><a class="headerlink" href="#_CPPv4N4skyr24invalid_scheme_characterE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A character is not a valid scheme character. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr33not_an_absolute_url_with_fragmentE">
+<span id="_CPPv3N4skyr33not_an_absolute_url_with_fragmentE"></span><span id="_CPPv2N4skyr33not_an_absolute_url_with_fragmentE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfcabb849c7362e81c886a4d5c7646a22e9a"></span><code class="sig-name descname">not_an_absolute_url_with_fragment</code><a class="headerlink" href="#_CPPv4N4skyr33not_an_absolute_url_with_fragmentE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The URL is not an absolute URL with fragment. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr22cannot_override_schemeE">
+<span id="_CPPv3N4skyr22cannot_override_schemeE"></span><span id="_CPPv2N4skyr22cannot_override_schemeE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfcaf8f6d256986cff2a52ce66a7759be946"></span><code class="sig-name descname">cannot_override_scheme</code><a class="headerlink" href="#_CPPv4N4skyr22cannot_override_schemeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Cannot set scheme value. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr14empty_hostnameE">
+<span id="_CPPv3N4skyr14empty_hostnameE"></span><span id="_CPPv2N4skyr14empty_hostnameE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfcac368bd366bff63f5d20765df044ced31"></span><code class="sig-name descname">empty_hostname</code><a class="headerlink" href="#_CPPv4N4skyr14empty_hostnameE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The ostname is empty. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr20invalid_ipv4_addressE">
+<span id="_CPPv3N4skyr20invalid_ipv4_addressE"></span><span id="_CPPv2N4skyr20invalid_ipv4_addressE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfca634479089a7606e2ec4810fa30ff20da"></span><code class="sig-name descname">invalid_ipv4_address</code><a class="headerlink" href="#_CPPv4N4skyr20invalid_ipv4_addressE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Invalid IPv4 address. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr20invalid_ipv6_addressE">
+<span id="_CPPv3N4skyr20invalid_ipv6_addressE"></span><span id="_CPPv2N4skyr20invalid_ipv6_addressE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfca5186a71e0e20b83f0c310bec32af6526"></span><code class="sig-name descname">invalid_ipv6_address</code><a class="headerlink" href="#_CPPv4N4skyr20invalid_ipv6_addressE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Invalid IPv6 address. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr20forbidden_host_pointE">
+<span id="_CPPv3N4skyr20forbidden_host_pointE"></span><span id="_CPPv2N4skyr20forbidden_host_pointE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfcad09bb4b4686b3da5fe834de04bf69024"></span><code class="sig-name descname">forbidden_host_point</code><a class="headerlink" href="#_CPPv4N4skyr20forbidden_host_pointE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A character is a forbidden host point. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr24cannot_decode_host_pointE">
+<span id="_CPPv3N4skyr24cannot_decode_host_pointE"></span><span id="_CPPv2N4skyr24cannot_decode_host_pointE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfca24d78c29f285c1a929d3d9232d43b428"></span><code class="sig-name descname">cannot_decode_host_point</code><a class="headerlink" href="#_CPPv4N4skyr24cannot_decode_host_pointE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Unable to decode host point. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr12domain_errorE">
+<span id="_CPPv3N4skyr12domain_errorE"></span><span id="_CPPv2N4skyr12domain_errorE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfca8aa56dadef1d396e75395d3bb50c5fee"></span><code class="sig-name descname">domain_error</code><a class="headerlink" href="#_CPPv4N4skyr12domain_errorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Invalid domain string. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr20cannot_be_a_base_urlE">
+<span id="_CPPv3N4skyr20cannot_be_a_base_urlE"></span><span id="_CPPv2N4skyr20cannot_be_a_base_urlE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfca6f84c8cd7836212e7cbd9140f0260682"></span><code class="sig-name descname">cannot_be_a_base_url</code><a class="headerlink" href="#_CPPv4N4skyr20cannot_be_a_base_urlE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The URL cannot be a base URL. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr39cannot_have_a_username_password_or_portE">
+<span id="_CPPv3N4skyr39cannot_have_a_username_password_or_portE"></span><span id="_CPPv2N4skyr39cannot_have_a_username_password_or_portE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfcaa7e95eb42afaa1a91b48ab6e6c3a58ea"></span><code class="sig-name descname">cannot_have_a_username_password_or_port</code><a class="headerlink" href="#_CPPv4N4skyr39cannot_have_a_username_password_or_portE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The URL cannot have a username, password or port. </p>
+</dd></dl>
+
+<dl class="enumerator">
+<dt id="_CPPv4N4skyr12invalid_portE">
+<span id="_CPPv3N4skyr12invalid_portE"></span><span id="_CPPv2N4skyr12invalid_portE"></span><span class="target" id="namespaceskyr_1a4b0ac505e33270910ea7375926711bfca0355f6b3a360aa38b5824481dd4e53e3"></span><code class="sig-name descname">invalid_port</code><a class="headerlink" href="#_CPPv4N4skyr12invalid_portE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Invalid port value. </p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
-<dt id="_CPPv3N4skyr15url_parse_errorE">
-<span id="_CPPv2N4skyr15url_parse_errorE"></span><span id="skyr::url_parse_error"></span><span class="target" id="classskyr_1_1url__parse__error"></span><em class="property">class </em><code class="descname">url_parse_error</code> : <em class="property">public</em> std::runtime_error<a class="headerlink" href="#_CPPv3N4skyr15url_parse_errorE" title="Permalink to this definition">¶</a><br /></dt>
+<dt id="_CPPv4N4skyr2v115url_parse_errorE">
+<span id="_CPPv3N4skyr2v115url_parse_errorE"></span><span id="_CPPv2N4skyr2v115url_parse_errorE"></span><span id="skyr::v1::url_parse_error"></span><span class="target" id="classskyr_1_1v1_1_1url__parse__error"></span><em class="property">class </em><code class="sig-name descname">url_parse_error</code> : <em class="property">public</em> std::runtime_error<a class="headerlink" href="#_CPPv4N4skyr2v115url_parse_errorE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Thrown when there is an error parsing the URL. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="function">
-<dt id="_CPPv3N4skyr15url_parse_error15url_parse_errorENSt10error_codeE">
-<span id="_CPPv2N4skyr15url_parse_error15url_parse_errorENSt10error_codeE"></span><span id="skyr::url_parse_error::url_parse_error__std::error_code"></span><span class="target" id="classskyr_1_1url__parse__error_1a5b4b5e5b02b3322346689ad64d8dcf29"></span><code class="descname">url_parse_error</code><span class="sig-paren">(</span>std::error_code <em>error</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv3N4skyr15url_parse_error15url_parse_errorENSt10error_codeE" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p>Constructor <dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">error</span></code>: An error code value </li>
+<dt id="_CPPv4N4skyr2v115url_parse_error15url_parse_errorENSt10error_codeE">
+<span id="_CPPv3N4skyr2v115url_parse_error15url_parse_errorENSt10error_codeE"></span><span id="_CPPv2N4skyr2v115url_parse_error15url_parse_errorENSt10error_codeE"></span><span id="skyr::v1::url_parse_error::url_parse_error__std::error_code"></span><span class="target" id="classskyr_1_1v1_1_1url__parse__error_1ac6612bd1f5d17d90ecb09a37b7337a36"></span><code class="sig-name descname">url_parse_error</code><span class="sig-paren">(</span>std::error_code <em>code</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v115url_parse_error15url_parse_errorENSt10error_codeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">code</span></code>: An error code value </p></li>
 </ul>
 </dd>
 </dl>
@@ -773,11 +1352,11 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3NK4skyr15url_parse_error5errorEv">
-<span id="_CPPv2NK4skyr15url_parse_error5errorEv"></span><span id="skyr::url_parse_error::errorC"></span><span class="target" id="classskyr_1_1url__parse__error_1a37d2291ae426470074f7df0736c7f844"></span>std::error_code <code class="descname">error</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv3NK4skyr15url_parse_error5errorEv" title="Permalink to this definition">¶</a><br /></dt>
-<dd><p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>An error code </dd>
+<dt id="_CPPv4NK4skyr2v115url_parse_error4codeEv">
+<span id="_CPPv3NK4skyr2v115url_parse_error4codeEv"></span><span id="_CPPv2NK4skyr2v115url_parse_error4codeEv"></span><span id="skyr::v1::url_parse_error::codeC"></span><span class="target" id="classskyr_1_1v1_1_1url__parse__error_1a9bcb4dd1c15d30c24b0a7e0f137befdf"></span>auto <code class="sig-name descname">code</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v115url_parse_error4codeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An error code </p>
+</dd>
 </dl>
 </p>
 </dd></dl>
@@ -785,16 +1364,65 @@
 </div>
 </dd></dl>
 
+</div>
+<div class="section" id="skyr-url-search-parameters-class">
+<h3><cite>skyr::url_search_parameters</cite> class<a class="headerlink" href="#skyr-url-search-parameters-class" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="_CPPv4N4skyr2v121url_search_parametersE">
+<span id="_CPPv3N4skyr2v121url_search_parametersE"></span><span id="_CPPv2N4skyr2v121url_search_parametersE"></span><span id="skyr::v1::url_search_parameters"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters"></span><em class="property">class </em><code class="sig-name descname">url_search_parameters</code><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parametersE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Supports iterating through <a class="reference external" href="https://url.spec.whatwg.org/#urlsearchparams">URL search parameters</a></p>
+<p>The API closely follows the <a class="reference external" href="https://url.spec.whatwg.org/#interface-urlsearchparams">WhatWG IDL specification</a> </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="type">
+<dt id="_CPPv4N4skyr2v121url_search_parameters11string_typeE">
+<span id="_CPPv3N4skyr2v121url_search_parameters11string_typeE"></span><span id="_CPPv2N4skyr2v121url_search_parameters11string_typeE"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1abce72d69b08ad2845f241751368c5cd0"></span><em class="property">using </em><code class="sig-name descname">string_type</code> = std::string<a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters11string_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>string type <dl class="simple">
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="#classskyr_1_1v1_1_1url_1a4d9945007eb5328f06055d67187b5444"><span class="std std-ref">url::string_type</span></a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv4N4skyr2v121url_search_parameters10value_typeE">
+<span id="_CPPv3N4skyr2v121url_search_parameters10value_typeE"></span><span id="_CPPv2N4skyr2v121url_search_parameters10value_typeE"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a982a36caf7337b1d51dbdebba3d846d0"></span><em class="property">using </em><code class="sig-name descname">value_type</code> = std::pair&lt;<a class="reference internal" href="#_CPPv4N4skyr2v121url_search_parameters11string_typeE" title="skyr::v1::url_search_parameters::string_type">string_type</a>, <a class="reference internal" href="#_CPPv4N4skyr2v121url_search_parameters11string_typeE" title="skyr::v1::url_search_parameters::string_type">string_type</a>&gt;<a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters10value_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A key-value pair. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv4N4skyr2v121url_search_parameters14const_iteratorE">
+<span id="_CPPv3N4skyr2v121url_search_parameters14const_iteratorE"></span><span id="_CPPv2N4skyr2v121url_search_parameters14const_iteratorE"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a31f61fc140d889172dc486599e683c64"></span><em class="property">using </em><code class="sig-name descname">const_iterator</code> = std::vector::const_iterator<a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters14const_iteratorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An iterator through the search parameters. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv4N4skyr2v121url_search_parameters8iteratorE">
+<span id="_CPPv3N4skyr2v121url_search_parameters8iteratorE"></span><span id="_CPPv2N4skyr2v121url_search_parameters8iteratorE"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1ae537e29d3c0918f2328521c41ca79382"></span><em class="property">using </em><code class="sig-name descname">iterator</code> = <a class="reference internal" href="#_CPPv4N4skyr2v121url_search_parameters14const_iteratorE" title="skyr::v1::url_search_parameters::const_iterator">const_iterator</a><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters8iteratorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An alias to <code class="docutils literal notranslate"><span class="pre">const_iterator</span></code>. </p>
+</dd></dl>
+
+<dl class="type">
+<dt id="_CPPv4N4skyr2v121url_search_parameters9size_typeE">
+<span id="_CPPv3N4skyr2v121url_search_parameters9size_typeE"></span><span id="_CPPv2N4skyr2v121url_search_parameters9size_typeE"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a2f834d07cebee9807a81fbe5e4831a62"></span><em class="property">using </em><code class="sig-name descname">size_type</code> = std::size_t<a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters9size_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">std::size_t</span></code> </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="function">
-<dt id="_CPPv3N4skyr4swapER3urlR3url">
-<span id="_CPPv2N4skyr4swapER3urlR3url"></span><span id="skyr::swap__urlR.urlR"></span><span class="target" id="namespaceskyr_1a07d15ec3db5ec6f953cf6f1fa6d6b1ac"></span>void <code class="descclassname">skyr<code class="descclassname">::</code></code><code class="descname">swap</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv3N4skyr3urlE" title="skyr::url">url</a> &amp;<em>lhs</em>, <a class="reference internal" href="#_CPPv3N4skyr3urlE" title="skyr::url">url</a> &amp;<em>rhs</em><span class="sig-paren">)</span><br /></dt>
-<dd><p>Swaps two <code class="docutils literal notranslate"><span class="pre">url</span></code> objects</p>
-<p>Equivalent to <code class="docutils literal notranslate"><span class="pre">lhs.swap(rhs)</span></code></p>
-<p><dl class="docutils">
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">lhs</span></code>: The first <code class="docutils literal notranslate"><span class="pre">url</span></code> object </li>
-<li><code class="docutils literal notranslate"><span class="pre">rhs</span></code>: The second <code class="docutils literal notranslate"><span class="pre">url</span></code> object </li>
+<dt id="_CPPv4N4skyr2v121url_search_parameters21url_search_parametersEv">
+<span id="_CPPv3N4skyr2v121url_search_parameters21url_search_parametersEv"></span><span id="_CPPv2N4skyr2v121url_search_parameters21url_search_parametersEv"></span><span id="skyr::v1::url_search_parameters::url_search_parameters"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a736e9ce92e5c89209f351e2c6092ceb9"></span><code class="sig-name descname">url_search_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters21url_search_parametersEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Default constructor. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v121url_search_parameters21url_search_parametersENSt11string_viewE">
+<span id="_CPPv3N4skyr2v121url_search_parameters21url_search_parametersENSt11string_viewE"></span><span id="_CPPv2N4skyr2v121url_search_parameters21url_search_parametersENSt11string_viewE"></span><span id="skyr::v1::url_search_parameters::url_search_parameters__std::string_view"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1abaeab2f57552f2b76b5cbb8770b89241"></span><code class="sig-name descname">url_search_parameters</code><span class="sig-paren">(</span>std::string_view <em>query</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters21url_search_parametersENSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">query</span></code>: The search string </p></li>
 </ul>
 </dd>
 </dl>
@@ -802,20 +1430,11 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr8make_urlERK6Source">
-<span id="_CPPv2N4skyr8make_urlERK6Source"></span><span id="skyr::make_url__SourceCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="namespaceskyr_1a8a993fffacde289bb1efc6f24eff360b"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;<a class="reference internal" href="#_CPPv3N4skyr3urlE" title="skyr::url">url</a>, std::error_code&gt; <code class="descclassname">skyr<code class="descclassname">::</code></code><code class="descname">make_url</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>input</em><span class="sig-paren">)</span><br /></dt>
-<dd><p>Parses a URL string and constructs a <code class="docutils literal notranslate"><span class="pre">url</span></code> object</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>A <code class="docutils literal notranslate"><span class="pre">url</span></code> object on success, an error on failure </dd>
-<dt><strong>Template Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </li>
-</ul>
-</dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </li>
+<dt id="_CPPv4N4skyr2v121url_search_parameters21url_search_parametersENSt16initializer_listI10value_typeEE">
+<span id="_CPPv3N4skyr2v121url_search_parameters21url_search_parametersENSt16initializer_listI10value_typeEE"></span><span id="_CPPv2N4skyr2v121url_search_parameters21url_search_parametersENSt16initializer_listI10value_typeEE"></span><span id="skyr::v1::url_search_parameters::url_search_parameters__std::initializer_list:value_type:"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a669032fd4ed9f4eda55aad4ef31b4290"></span><code class="sig-name descname">url_search_parameters</code><span class="sig-paren">(</span>std::initializer_list&lt;<a class="reference internal" href="#_CPPv4N4skyr2v121url_search_parameters10value_typeE" title="skyr::v1::url_search_parameters::value_type">value_type</a>&gt; <em>parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters21url_search_parametersENSt16initializer_listI10value_typeEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">parameters</span></code>: </p></li>
 </ul>
 </dd>
 </dl>
@@ -823,27 +1442,201 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="_CPPv3N4skyr8make_urlERK6SourceRK3url">
-<span id="_CPPv2N4skyr8make_urlERK6SourceRK3url"></span><span id="skyr::make_url__SourceCR.urlCR"></span><em class="property">template </em>&lt;<em class="property">class</em> Source&gt;<br /><span class="target" id="namespaceskyr_1aa85137433afeb9b88688fa1f4f9fc508"></span><a class="reference internal" href="expected.html#_CPPv3N4skyr8expectedE" title="skyr::expected">expected</a>&lt;<a class="reference internal" href="#_CPPv3N4skyr3urlE" title="skyr::url">url</a>, std::error_code&gt; <code class="descclassname">skyr<code class="descclassname">::</code></code><code class="descname">make_url</code><span class="sig-paren">(</span><em class="property">const</em> Source &amp;<em>input</em>, <em class="property">const</em> <a class="reference internal" href="#_CPPv3N4skyr3urlE" title="skyr::url">url</a> &amp;<em>base</em><span class="sig-paren">)</span><br /></dt>
-<dd><p>Parses a URL string and constructs a <code class="docutils literal notranslate"><span class="pre">url</span></code> object</p>
-<p><dl class="docutils">
-<dt><strong>Return</strong></dt>
-<dd>A <code class="docutils literal notranslate"><span class="pre">url</span></code> object on success, an error on failure </dd>
-<dt><strong>Template Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">Source</span></code>: The input string type </li>
-</ul>
-</dd>
-<dt><strong>Parameters</strong></dt>
-<dd><ul class="breatheparameterlist first last simple">
-<li><code class="docutils literal notranslate"><span class="pre">input</span></code>: The input string </li>
-<li><code class="docutils literal notranslate"><span class="pre">base</span></code>: The base URL </li>
+<dt id="_CPPv4N4skyr2v121url_search_parameters4swapER21url_search_parameters">
+<span id="_CPPv3N4skyr2v121url_search_parameters4swapER21url_search_parameters"></span><span id="_CPPv2N4skyr2v121url_search_parameters4swapER21url_search_parameters"></span><span id="skyr::v1::url_search_parameters::swap__url_search_parametersR"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a461d7625dd21fb1a2418186634f6703c"></span>void <code class="sig-name descname">swap</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v121url_search_parametersE" title="skyr::v1::url_search_parameters">url_search_parameters</a> &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters4swapER21url_search_parameters" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">other</span></code>: </p></li>
 </ul>
 </dd>
 </dl>
 </p>
 </dd></dl>
 
+<dl class="function">
+<dt id="_CPPv4N4skyr2v121url_search_parameters6appendENSt11string_viewENSt11string_viewE">
+<span id="_CPPv3N4skyr2v121url_search_parameters6appendENSt11string_viewENSt11string_viewE"></span><span id="_CPPv2N4skyr2v121url_search_parameters6appendENSt11string_viewENSt11string_viewE"></span><span id="skyr::v1::url_search_parameters::append__std::string_view.std::string_view"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1ac7742f5fcbaf1b6a7c23fb34fd3427eb"></span>void <code class="sig-name descname">append</code><span class="sig-paren">(</span>std::string_view <em>name</em>, std::string_view <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters6appendENSt11string_viewENSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Appends a name-value pair to the search string</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The parameter name </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code>: The parameter value </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v121url_search_parameters6removeENSt11string_viewE">
+<span id="_CPPv3N4skyr2v121url_search_parameters6removeENSt11string_viewE"></span><span id="_CPPv2N4skyr2v121url_search_parameters6removeENSt11string_viewE"></span><span id="skyr::v1::url_search_parameters::remove__std::string_view"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a150066547f0c16ffe225dbf024df55e3"></span>void <code class="sig-name descname">remove</code><span class="sig-paren">(</span>std::string_view <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters6removeENSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Removes a parameter from the search string</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The name of the parameter to remove </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v121url_search_parameters3getENSt11string_viewE">
+<span id="_CPPv3NK4skyr2v121url_search_parameters3getENSt11string_viewE"></span><span id="_CPPv2NK4skyr2v121url_search_parameters3getENSt11string_viewE"></span><span id="skyr::v1::url_search_parameters::get__std::string_viewC"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1aa8c412f64f669fec7b81fab72ec30665"></span>auto <code class="sig-name descname">get</code><span class="sig-paren">(</span>std::string_view <em>name</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v121url_search_parameters3getENSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The first search parameter value with the given name </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The search parameter name </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v121url_search_parameters7get_allENSt11string_viewE">
+<span id="_CPPv3NK4skyr2v121url_search_parameters7get_allENSt11string_viewE"></span><span id="_CPPv2NK4skyr2v121url_search_parameters7get_allENSt11string_viewE"></span><span id="skyr::v1::url_search_parameters::get_all__std::string_viewC"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1aab8876d741459c5843887de716b1458a"></span>auto <code class="sig-name descname">get_all</code><span class="sig-paren">(</span>std::string_view <em>name</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v121url_search_parameters7get_allENSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>All search parameter values with the given name </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The search parameter name </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v121url_search_parameters8containsENSt11string_viewE">
+<span id="_CPPv3NK4skyr2v121url_search_parameters8containsENSt11string_viewE"></span><span id="_CPPv2NK4skyr2v121url_search_parameters8containsENSt11string_viewE"></span><span id="skyr::v1::url_search_parameters::contains__std::string_viewC"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a17fb3173b02376a51bb834dfea471413"></span>auto <code class="sig-name descname">contains</code><span class="sig-paren">(</span>std::string_view <em>name</em><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v121url_search_parameters8containsENSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Tests if there is a parameter with the given name</p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> if the value is in the search parameters, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise. </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The search parameter name </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v121url_search_parameters3setENSt11string_viewENSt11string_viewE">
+<span id="_CPPv3N4skyr2v121url_search_parameters3setENSt11string_viewENSt11string_viewE"></span><span id="_CPPv2N4skyr2v121url_search_parameters3setENSt11string_viewENSt11string_viewE"></span><span id="skyr::v1::url_search_parameters::set__std::string_view.std::string_view"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a6823f51e6466a9f6aa4a9ac204c7c661"></span>void <code class="sig-name descname">set</code><span class="sig-paren">(</span>std::string_view <em>name</em>, std::string_view <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters3setENSt11string_viewENSt11string_viewE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sets a URL search parameter</p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: The search parameter name </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code>: The search parameter value </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v121url_search_parameters5clearEv">
+<span id="_CPPv3N4skyr2v121url_search_parameters5clearEv"></span><span id="_CPPv2N4skyr2v121url_search_parameters5clearEv"></span><span id="skyr::v1::url_search_parameters::clear"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1ad6c21afa5b234e57d64e2c9d0b6f32e7"></span>void <code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters5clearEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Clears the search parameters</p>
+<p><dl class="simple">
+<dt><strong>Post</strong></dt><dd><p><code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url__search__parameters_1a500b304e0b94f7412ead0018488f2d85"><span class="std std-ref"><span class="pre">empty()</span></span></a> <span class="pre">==</span> <span class="pre">true</span></code> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v121url_search_parameters4sortEv">
+<span id="_CPPv3N4skyr2v121url_search_parameters4sortEv"></span><span id="_CPPv2N4skyr2v121url_search_parameters4sortEv"></span><span id="skyr::v1::url_search_parameters::sort"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a04549c074a1fa3109a01ef7369db6acb"></span>void <code class="sig-name descname">sort</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v121url_search_parameters4sortEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Sorts the search parameters alphanumerically</p>
+<p><a class="reference external" href="https://url.spec.whatwg.org/#example-searchparams-sort">https://url.spec.whatwg.org/#example-searchparams-sort</a></p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">auto</span> <span class="n">url</span> <span class="o">=</span> <span class="n">skyr</span><span class="p">::</span><span class="n">url</span><span class="p">(</span>
+  <span class="s2">&quot;https://example.org/?q=</span><span class="se">\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88</span><span class="s2">&amp;key=e1f7bc78&quot;</span><span class="p">);</span>
+<span class="n">url</span><span class="o">.</span><span class="n">search_parameters</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">();</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">url</span><span class="o">.</span><span class="n">search</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;?key=e1f7bc78&amp;q=</span><span class="si">%F</span><span class="s2">0</span><span class="si">%9F%8F</span><span class="s2">%B3</span><span class="si">%E</span><span class="s2">F%B8</span><span class="si">%8F%E</span><span class="s2">2</span><span class="si">%80%</span><span class="s2">8D</span><span class="si">%F</span><span class="s2">0</span><span class="si">%9F</span><span class="s2">%8C%88&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+ </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v121url_search_parameters5beginEv">
+<span id="_CPPv3NK4skyr2v121url_search_parameters5beginEv"></span><span id="_CPPv2NK4skyr2v121url_search_parameters5beginEv"></span><span id="skyr::v1::url_search_parameters::beginC"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a5469ee16907b1bb128c5dbcff2c40428"></span>auto <code class="sig-name descname">begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v121url_search_parameters5beginEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An iterator to the first element in the search parameters </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v121url_search_parameters3endEv">
+<span id="_CPPv3NK4skyr2v121url_search_parameters3endEv"></span><span id="_CPPv2NK4skyr2v121url_search_parameters3endEv"></span><span id="skyr::v1::url_search_parameters::endC"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1aa3816dc4dbbfb494bbdd5284d64058be"></span>auto <code class="sig-name descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v121url_search_parameters3endEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An iterator to the last element in the search parameters </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v121url_search_parameters6cbeginEv">
+<span id="_CPPv3NK4skyr2v121url_search_parameters6cbeginEv"></span><span id="_CPPv2NK4skyr2v121url_search_parameters6cbeginEv"></span><span id="skyr::v1::url_search_parameters::cbeginC"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a6e8cee0371b8f0e04604c9a991c79253"></span>auto <code class="sig-name descname">cbegin</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v121url_search_parameters6cbeginEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An iterator to the first element in the search parameters </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v121url_search_parameters4cendEv">
+<span id="_CPPv3NK4skyr2v121url_search_parameters4cendEv"></span><span id="_CPPv2NK4skyr2v121url_search_parameters4cendEv"></span><span id="skyr::v1::url_search_parameters::cendC"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a0a6a0248ab65eae873e619f60f233e89"></span>auto <code class="sig-name descname">cend</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v121url_search_parameters4cendEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An iterator to the last element in the search parameters </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v121url_search_parameters5emptyEv">
+<span id="_CPPv3NK4skyr2v121url_search_parameters5emptyEv"></span><span id="_CPPv2NK4skyr2v121url_search_parameters5emptyEv"></span><span id="skyr::v1::url_search_parameters::emptyC"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a500b304e0b94f7412ead0018488f2d85"></span>auto <code class="sig-name descname">empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v121url_search_parameters5emptyEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> if the URL search string is empty, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v121url_search_parameters4sizeEv">
+<span id="_CPPv3NK4skyr2v121url_search_parameters4sizeEv"></span><span id="_CPPv2NK4skyr2v121url_search_parameters4sizeEv"></span><span id="skyr::v1::url_search_parameters::sizeC"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1ac349d553d36d4b0cde12061aba88969c"></span>auto <code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v121url_search_parameters4sizeEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The size of the parameters array (i.e. the number of parameters) </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v121url_search_parameters9to_stringEv">
+<span id="_CPPv3NK4skyr2v121url_search_parameters9to_stringEv"></span><span id="_CPPv2NK4skyr2v121url_search_parameters9to_stringEv"></span><span id="skyr::v1::url_search_parameters::to_stringC"></span><span class="target" id="classskyr_1_1v1_1_1url__search__parameters_1a0bbb799c17ac2f6442137e9b68909e9d"></span>auto <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v121url_search_parameters9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The serialized URL search parameters </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
 </div>
 
 
@@ -858,8 +1651,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018, Glyn Matthews.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.<br/>
+        &copy; Copyright 2018-20, Glyn Matthews.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
 </footer>

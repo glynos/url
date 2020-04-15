@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Network Addresses &#8212; Skyr URL 1.7 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Percent Encoding" href="percent_encoding.html" />
+    <link rel="prev" title="Domain Name Processing" href="domain.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          Skyr URL</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.7</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/cpp-netlib/url/">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="url.html">URL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="url.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain Name Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Network Addresses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encoding.html">Percent Encoding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html">Filesystem Path Conversion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="json.html">JSON</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="json.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.7.0] - 2020-04-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">[1.6.0] - 2020-04-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">[1.5.2] - 2020-04-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">[1.5.1] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">[1.5] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">[1.4.5] - 2020-03-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">[1.4.4] - 2020-03-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">[1.4.3] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">[1.4.2] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">[1.4.1] - 2020-03-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id22">[1.4] - 2020-01-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id26">[1.3] - 2019-11-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id30">[1.2] - 2019-08-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id34">[1.1] - 2019-07-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id37">[1.0] - 2018-10-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id40">[0.5] - 2018-09-30</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Network Addresses</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#headers">Headers</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#ipv4">IPv4</a></li>
+<li><a class="reference internal" href="#ipv6">IPv6</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="domain.html" title="Previous Chapter: Domain Name Processing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Domain Name P...</span>
+    </a>
+  </li>
+  <li>
+    <a href="percent_encoding.html" title="Next Chapter: Percent Encoding"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Percent Encoding &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/network.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Network Addresses</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#headers">Headers</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#ipv4">IPv4</a></li>
+<li><a class="reference internal" href="#ipv6">IPv6</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="domain.html" title="Previous Chapter: Domain Name Processing"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Domain Name P...</span>
+    </a>
+  </li>
+  <li>
+    <a href="percent_encoding.html" title="Next Chapter: Percent Encoding"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Percent Encoding &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="_sources/network.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="network-addresses">
+<h1>Network Addresses<a class="headerlink" href="#network-addresses" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>Two classes representing IPv4 and IPv6 addresses are provided.</p>
+</div>
+<div class="section" id="headers">
+<h2>Headers<a class="headerlink" href="#headers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;skyr/network/ipv4_address.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;skyr/network/ipv6_address.hpp&gt;</span><span class="cp"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;skyr/url.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">skyr</span><span class="o">::</span><span class="n">literals</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">url</span> <span class="o">=</span> <span class="s">&quot;http://[1080:0:0:0:8:800:200C:417A]:8090/&quot;</span><span class="n">_url</span><span class="p">;</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">url</span><span class="p">.</span><span class="n">is_ipv6_address</span><span class="p">());</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;IPv6 Host: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">url</span><span class="p">.</span><span class="n">ipv6_address</span><span class="p">().</span><span class="n">to_string</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ipv4">
+<h3>IPv4<a class="headerlink" href="#ipv4" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="_CPPv4N4skyr2v112ipv4_addressE">
+<span id="_CPPv3N4skyr2v112ipv4_addressE"></span><span id="_CPPv2N4skyr2v112ipv4_addressE"></span><span id="skyr::v1::ipv4_address"></span><span class="target" id="classskyr_1_1v1_1_1ipv4__address"></span><em class="property">class </em><code class="sig-name descname">ipv4_address</code><a class="headerlink" href="#_CPPv4N4skyr2v112ipv4_addressE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Represents an IPv4 address. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4N4skyr2v112ipv4_address12ipv4_addressEv">
+<span id="_CPPv3N4skyr2v112ipv4_address12ipv4_addressEv"></span><span id="_CPPv2N4skyr2v112ipv4_address12ipv4_addressEv"></span><span id="skyr::v1::ipv4_address::ipv4_address"></span><span class="target" id="classskyr_1_1v1_1_1ipv4__address_1a2c98d884e708ece1298bce3289be988b"></span><code class="sig-name descname">ipv4_address</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v112ipv4_address12ipv4_addressEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v112ipv4_address12ipv4_addressEj">
+<span id="_CPPv3N4skyr2v112ipv4_address12ipv4_addressEj"></span><span id="_CPPv2N4skyr2v112ipv4_address12ipv4_addressEj"></span><span id="skyr::v1::ipv4_address::ipv4_address__unsigned-i"></span><span class="target" id="classskyr_1_1v1_1_1ipv4__address_1af8f2155653b9a76e83ecccd26bdc8376"></span><code class="sig-name descname">ipv4_address</code><span class="sig-paren">(</span>unsigned int <em>address</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v112ipv4_address12ipv4_addressEj" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">address</span></code>: Sets the IPv4 address to <code class="docutils literal notranslate"><span class="pre">address</span></code> </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v112ipv4_address7addressEv">
+<span id="_CPPv3NK4skyr2v112ipv4_address7addressEv"></span><span id="_CPPv2NK4skyr2v112ipv4_address7addressEv"></span><span id="skyr::v1::ipv4_address::addressC"></span><span class="target" id="classskyr_1_1v1_1_1ipv4__address_1ad0e0d759f59da6804489be07b063089a"></span>auto <code class="sig-name descname">address</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v112ipv4_address7addressEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The address value <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The address value </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v112ipv4_address8to_bytesEv">
+<span id="_CPPv3NK4skyr2v112ipv4_address8to_bytesEv"></span><span id="_CPPv2NK4skyr2v112ipv4_address8to_bytesEv"></span><span id="skyr::v1::ipv4_address::to_bytesC"></span><span class="target" id="classskyr_1_1v1_1_1ipv4__address_1af2a50e588f3714b22369834adacd7974"></span>auto <code class="sig-name descname">to_bytes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v112ipv4_address8to_bytesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The address in bytes in network byte order <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The address in bytes </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v112ipv4_address9to_stringEv">
+<span id="_CPPv3NK4skyr2v112ipv4_address9to_stringEv"></span><span id="_CPPv2NK4skyr2v112ipv4_address9to_stringEv"></span><span id="skyr::v1::ipv4_address::to_stringC"></span><span class="target" id="classskyr_1_1v1_1_1ipv4__address_1ab5b1faf305cf4807b9806e7a77859892"></span>auto <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v112ipv4_address9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The address as a string </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="ipv6">
+<h3>IPv6<a class="headerlink" href="#ipv6" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="_CPPv4N4skyr2v112ipv6_addressE">
+<span id="_CPPv3N4skyr2v112ipv6_addressE"></span><span id="_CPPv2N4skyr2v112ipv6_addressE"></span><span id="skyr::v1::ipv6_address"></span><span class="target" id="classskyr_1_1v1_1_1ipv6__address"></span><em class="property">class </em><code class="sig-name descname">ipv6_address</code><a class="headerlink" href="#_CPPv4N4skyr2v112ipv6_addressE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Represents an IPv6 address. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4N4skyr2v112ipv6_address12ipv6_addressEv">
+<span id="_CPPv3N4skyr2v112ipv6_address12ipv6_addressEv"></span><span id="_CPPv2N4skyr2v112ipv6_address12ipv6_addressEv"></span><span id="skyr::v1::ipv6_address::ipv6_address"></span><span class="target" id="classskyr_1_1v1_1_1ipv6__address_1a11423491bbd81571845bd50705b75405"></span><code class="sig-name descname">ipv6_address</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v112ipv6_address12ipv6_addressEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v112ipv6_address12ipv6_addressENSt5arrayItXL8EEEE">
+<span id="_CPPv3N4skyr2v112ipv6_address12ipv6_addressENSt5arrayItXL8EEEE"></span><span id="_CPPv2N4skyr2v112ipv6_address12ipv6_addressENSt5arrayItX8EEE"></span><span id="skyr::v1::ipv6_address::ipv6_address__std::array:unsigned-short.8:"></span><span class="target" id="classskyr_1_1v1_1_1ipv6__address_1ac505539316ed409e55e382bc483d2d57"></span><code class="sig-name descname">ipv6_address</code><span class="sig-paren">(</span>std::array&lt;unsigned short, 8&gt; <em>address</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v112ipv6_address12ipv6_addressENSt5arrayItXL8EEEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Constructor <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">address</span></code>: Sets the IPv6 address to <code class="docutils literal notranslate"><span class="pre">address</span></code> </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v112ipv6_address8to_bytesEv">
+<span id="_CPPv3NK4skyr2v112ipv6_address8to_bytesEv"></span><span id="_CPPv2NK4skyr2v112ipv6_address8to_bytesEv"></span><span id="skyr::v1::ipv6_address::to_bytesC"></span><span class="target" id="classskyr_1_1v1_1_1ipv6__address_1aabc6372938cd5885d83c3fde6d9c6e58"></span>auto <code class="sig-name descname">to_bytes</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v112ipv6_address8to_bytesEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>The address in bytes in network byte order <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The address in bytes </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v112ipv6_address9to_stringEv">
+<span id="_CPPv3NK4skyr2v112ipv6_address9to_stringEv"></span><span id="_CPPv2NK4skyr2v112ipv6_address9to_stringEv"></span><span id="skyr::v1::ipv6_address::to_stringC"></span><span class="target" id="classskyr_1_1v1_1_1ipv6__address_1ad5285560c2998a819045999aada1216c"></span>auto <code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v112ipv6_address9to_stringEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>The IPv6 address as a string </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-20, Glyn Matthews.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

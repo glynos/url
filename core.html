@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Core &#8212; Skyr URL 1.7 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Domain Name Processing" href="domain.html" />
+    <link rel="prev" title="URL" href="url.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          Skyr URL</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.7</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/cpp-netlib/url/">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="url.html">URL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="url.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain Name Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network.html">Network Addresses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encoding.html">Percent Encoding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html">Filesystem Path Conversion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="json.html">JSON</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="json.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.7.0] - 2020-04-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">[1.6.0] - 2020-04-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">[1.5.2] - 2020-04-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">[1.5.1] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">[1.5] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">[1.4.5] - 2020-03-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">[1.4.4] - 2020-03-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">[1.4.3] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">[1.4.2] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">[1.4.1] - 2020-03-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id22">[1.4] - 2020-01-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id26">[1.3] - 2019-11-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id30">[1.2] - 2019-08-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id34">[1.1] - 2019-07-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id37">[1.0] - 2018-10-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id40">[0.5] - 2018-09-30</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Core</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#headers">Headers</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#skyr-url-record-class"><cite>skyr::url_record</cite> class</a></li>
+<li><a class="reference internal" href="#skyr-url-record-functions"><cite>skyr::url_record</cite> functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="url.html" title="Previous Chapter: URL"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; URL</span>
+    </a>
+  </li>
+  <li>
+    <a href="domain.html" title="Next Chapter: Domain Name Processing"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Domain Name P... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/core.rst.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Core</a><ul>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#headers">Headers</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#skyr-url-record-class"><cite>skyr::url_record</cite> class</a></li>
+<li><a class="reference internal" href="#skyr-url-record-functions"><cite>skyr::url_record</cite> functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="url.html" title="Previous Chapter: URL"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; URL</span>
+    </a>
+  </li>
+  <li>
+    <a href="domain.html" title="Next Chapter: Domain Name Processing"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Domain Name P... &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="_sources/core.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="core">
+<h1>Core<a class="headerlink" href="#core" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The core of the <cite>skyr</cite> library is a <cite>skyr::url_record</cite> that
+contains a URL parts, a <cite>skyr::parse</cite> function that parses an
+input string and creates a <cite>skyr::url_record</cite> and a
+<cite>skyr::serialize</cite> function that composes a URL string from an
+existing <cite>skyr::url_record</cite>.</p>
+<p>Use these functions directly if your needs are simple. Use the
+<cite>skyr::url</cite> class for more complex operations, including
+Unicode encoding and decoding.</p>
+</div>
+<div class="section" id="headers">
+<h2>Headers<a class="headerlink" href="#headers" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;skyr/core/url_record.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;skyr/core/parse.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;skyr/core/serialize.hpp&gt;</span><span class="cp"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;skyr/core/url_record.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;skyr/core/parse.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;skyr/core/serialize.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">url</span> <span class="o">=</span> <span class="n">skyr</span><span class="o">::</span><span class="n">url_parse</span><span class="p">(</span><span class="s">&quot;http://example.org/&quot;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="s">&quot;http&quot;</span> <span class="o">==</span> <span class="n">url</span><span class="p">.</span><span class="n">scheme</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">url</span><span class="p">.</span><span class="n">host</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="s">&quot;example.org&quot;</span> <span class="o">==</span> <span class="n">url</span><span class="p">.</span><span class="n">host</span><span class="p">.</span><span class="n">value</span><span class="p">());</span>
+  <span class="n">assert</span><span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="n">url</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+
+  <span class="k">auto</span> <span class="n">serialized</span> <span class="o">=</span> <span class="n">skyr</span><span class="o">::</span><span class="n">serialize</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="s">&quot;http://example.org/&quot;</span> <span class="o">==</span> <span class="n">serialized</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="skyr-url-record-class">
+<h3><cite>skyr::url_record</cite> class<a class="headerlink" href="#skyr-url-record-class" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="_CPPv4N4skyr2v110url_recordE">
+<span id="_CPPv3N4skyr2v110url_recordE"></span><span id="_CPPv2N4skyr2v110url_recordE"></span><span id="skyr::v1::url_record"></span><span class="target" id="classskyr_1_1v1_1_1url__record"></span><em class="property">class </em><code class="sig-name descname">url_record</code><a class="headerlink" href="#_CPPv4N4skyr2v110url_recordE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Represents the parts of a URL identifier. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Types</p>
+<dl class="type">
+<dt id="_CPPv4N4skyr2v110url_record11string_typeE">
+<span id="_CPPv3N4skyr2v110url_record11string_typeE"></span><span id="_CPPv2N4skyr2v110url_record11string_typeE"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1a02706c94d8e9ea4b7ab32243bb492545"></span><em class="property">using </em><code class="sig-name descname">string_type</code> = std::string<a class="headerlink" href="#_CPPv4N4skyr2v110url_record11string_typeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>string type <dl class="simple">
+<dt><strong>See</strong></dt><dd><p><a class="reference internal" href="url.html#classskyr_1_1v1_1_1url_1a4d9945007eb5328f06055d67187b5444"><span class="std std-ref">url::string_type</span></a> </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Functions</p>
+<dl class="function">
+<dt id="_CPPv4N4skyr2v110url_record10url_recordEv">
+<span id="_CPPv3N4skyr2v110url_record10url_recordEv"></span><span id="_CPPv2N4skyr2v110url_record10url_recordEv"></span><span id="skyr::v1::url_record::url_record"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1a2f10fde7d51041a9381e27049ac6608f"></span><code class="sig-name descname">url_record</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v110url_record10url_recordEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Default constructor. </p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v110url_record10is_specialEv">
+<span id="_CPPv3NK4skyr2v110url_record10is_specialEv"></span><span id="_CPPv2NK4skyr2v110url_record10is_specialEv"></span><span id="skyr::v1::url_record::is_specialC"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1ac4bc1d2003d25edf96fe576e955a0fe9"></span>auto <code class="sig-name descname">is_special</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v110url_record10is_specialEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Tests if the URL is a special scheme <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> if the URL scheme is a special scheme, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v110url_record20includes_credentialsEv">
+<span id="_CPPv3NK4skyr2v110url_record20includes_credentialsEv"></span><span id="_CPPv2NK4skyr2v110url_record20includes_credentialsEv"></span><span id="skyr::v1::url_record::includes_credentialsC"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1ac9a9acaa906344093a6026c039ebcb40"></span>auto <code class="sig-name descname">includes_credentials</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v110url_record20includes_credentialsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Tests if the URL includes credentials <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> if the URL username or password is not an empty string, <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4NK4skyr2v110url_record39cannot_have_a_username_password_or_portEv">
+<span id="_CPPv3NK4skyr2v110url_record39cannot_have_a_username_password_or_portEv"></span><span id="_CPPv2NK4skyr2v110url_record39cannot_have_a_username_password_or_portEv"></span><span id="skyr::v1::url_record::cannot_have_a_username_password_or_portC"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1a0dfc59c6a788d5b7606d928379ec6279"></span>auto <code class="sig-name descname">cannot_have_a_username_password_or_port</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em><a class="headerlink" href="#_CPPv4NK4skyr2v110url_record39cannot_have_a_username_password_or_portEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Tests if the URL cannot have a username, password or port <dl class="simple">
+<dt><strong>Return</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">true</span></code> if the URL cannot have a username, password or port </p>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v110url_record4swapER10url_record">
+<span id="_CPPv3N4skyr2v110url_record4swapER10url_record"></span><span id="_CPPv2N4skyr2v110url_record4swapER10url_record"></span><span id="skyr::v1::url_record::swap__url_recordR"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1ac0ec77ef6eab2ef9edc08d158707780a"></span>void <code class="sig-name descname">swap</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v110url_recordE" title="skyr::v1::url_record">url_record</a> &amp;<em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v110url_record4swapER10url_record" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Swaps two <code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url__record"><span class="std std-ref"><span class="pre">url_record</span></span></a></code> objects <dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">other</span></code>: Another <code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url__record"><span class="std std-ref"><span class="pre">url_record</span></span></a></code> object </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric">Public Members</p>
+<dl class="member">
+<dt id="_CPPv4N4skyr2v110url_record6schemeE">
+<span id="_CPPv3N4skyr2v110url_record6schemeE"></span><span id="_CPPv2N4skyr2v110url_record6schemeE"></span><span id="skyr::v1::url_record::scheme__string_type"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1a2ef9b4be1372fab930153d01d027e2df"></span><a class="reference internal" href="#_CPPv4N4skyr2v110url_record11string_typeE" title="skyr::v1::url_record::string_type">string_type</a> <code class="sig-name descname">scheme</code><a class="headerlink" href="#_CPPv4N4skyr2v110url_record6schemeE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An ASCII string that identifies the type of URL. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N4skyr2v110url_record8usernameE">
+<span id="_CPPv3N4skyr2v110url_record8usernameE"></span><span id="_CPPv2N4skyr2v110url_record8usernameE"></span><span id="skyr::v1::url_record::username__string_type"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1aedc179d849e2f9d1921e07d7dc5e722e"></span><a class="reference internal" href="#_CPPv4N4skyr2v110url_record11string_typeE" title="skyr::v1::url_record::string_type">string_type</a> <code class="sig-name descname">username</code><a class="headerlink" href="#_CPPv4N4skyr2v110url_record8usernameE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An ASCII string identifying a username. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N4skyr2v110url_record8passwordE">
+<span id="_CPPv3N4skyr2v110url_record8passwordE"></span><span id="_CPPv2N4skyr2v110url_record8passwordE"></span><span id="skyr::v1::url_record::password__string_type"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1a99609395d7b593d0e9f08f1a4a444fa2"></span><a class="reference internal" href="#_CPPv4N4skyr2v110url_record11string_typeE" title="skyr::v1::url_record::string_type">string_type</a> <code class="sig-name descname">password</code><a class="headerlink" href="#_CPPv4N4skyr2v110url_record8passwordE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An ASCII string identifying a password. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N4skyr2v110url_record4hostE">
+<span id="_CPPv3N4skyr2v110url_record4hostE"></span><span id="_CPPv2N4skyr2v110url_record4hostE"></span><span id="skyr::v1::url_record::host__std::optional:string_type:"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1a274d394c19c9693f7c62fc22583659d0"></span>std::optional&lt;<a class="reference internal" href="#_CPPv4N4skyr2v110url_record11string_typeE" title="skyr::v1::url_record::string_type">string_type</a>&gt; <code class="sig-name descname">host</code><a class="headerlink" href="#_CPPv4N4skyr2v110url_record4hostE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An optional URL host, either a domain, IPv4 or IPv6 address, an opaque host, or empty </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N4skyr2v110url_record4portE">
+<span id="_CPPv3N4skyr2v110url_record4portE"></span><span id="_CPPv2N4skyr2v110url_record4portE"></span><span id="skyr::v1::url_record::port__std::optional:std::uint16_t:"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1a69d2a51c4d1333d2c9d3fd51d7fcb654"></span>std::optional&lt;std::uint16_t&gt; <code class="sig-name descname">port</code><a class="headerlink" href="#_CPPv4N4skyr2v110url_record4portE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An optional network port. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N4skyr2v110url_record4pathE">
+<span id="_CPPv3N4skyr2v110url_record4pathE"></span><span id="_CPPv2N4skyr2v110url_record4pathE"></span><span id="skyr::v1::url_record::path__std::vector:string_type:"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1ab5692db2435745af9b549ac3e9974bb6"></span>std::vector&lt;<a class="reference internal" href="#_CPPv4N4skyr2v110url_record11string_typeE" title="skyr::v1::url_record::string_type">string_type</a>&gt; <code class="sig-name descname">path</code><a class="headerlink" href="#_CPPv4N4skyr2v110url_record4pathE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A list of zero or more ASCII strings, used to identify a location in a hierarchical form </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N4skyr2v110url_record5queryE">
+<span id="_CPPv3N4skyr2v110url_record5queryE"></span><span id="_CPPv2N4skyr2v110url_record5queryE"></span><span id="skyr::v1::url_record::query__std::optional:string_type:"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1ac419aca135f4b44f33b7b7f5a1372ab9"></span>std::optional&lt;<a class="reference internal" href="#_CPPv4N4skyr2v110url_record11string_typeE" title="skyr::v1::url_record::string_type">string_type</a>&gt; <code class="sig-name descname">query</code><a class="headerlink" href="#_CPPv4N4skyr2v110url_record5queryE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An optional ASCII string. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N4skyr2v110url_record8fragmentE">
+<span id="_CPPv3N4skyr2v110url_record8fragmentE"></span><span id="_CPPv2N4skyr2v110url_record8fragmentE"></span><span id="skyr::v1::url_record::fragment__std::optional:string_type:"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1a392e3d9324435515a72326b9da66d209"></span>std::optional&lt;<a class="reference internal" href="#_CPPv4N4skyr2v110url_record11string_typeE" title="skyr::v1::url_record::string_type">string_type</a>&gt; <code class="sig-name descname">fragment</code><a class="headerlink" href="#_CPPv4N4skyr2v110url_record8fragmentE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>An optional ASCII string. </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N4skyr2v110url_record20cannot_be_a_base_urlE">
+<span id="_CPPv3N4skyr2v110url_record20cannot_be_a_base_urlE"></span><span id="_CPPv2N4skyr2v110url_record20cannot_be_a_base_urlE"></span><span id="skyr::v1::url_record::cannot_be_a_base_url__b"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1a26aee2d9aa24215a313dc28dbabe4566"></span>bool <code class="sig-name descname">cannot_be_a_base_url</code> = false<a class="headerlink" href="#_CPPv4N4skyr2v110url_record20cannot_be_a_base_urlE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A Boolean value indicating whether this URL can be used as a base URL </p>
+</dd></dl>
+
+<dl class="member">
+<dt id="_CPPv4N4skyr2v110url_record16validation_errorE">
+<span id="_CPPv3N4skyr2v110url_record16validation_errorE"></span><span id="_CPPv2N4skyr2v110url_record16validation_errorE"></span><span id="skyr::v1::url_record::validation_error__b"></span><span class="target" id="classskyr_1_1v1_1_1url__record_1aacd4e05fd00fc27cf3b4fb90937fe8ff"></span>bool <code class="sig-name descname">validation_error</code> = false<a class="headerlink" href="#_CPPv4N4skyr2v110url_record16validation_errorE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>A Boolean value indicating whether a non-fatal validation error occurred during parsing </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="skyr-url-record-functions">
+<h3><cite>skyr::url_record</cite> functions<a class="headerlink" href="#skyr-url-record-functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="_CPPv4N4skyr2v14swapER10url_recordR10url_record">
+<span id="_CPPv3N4skyr2v14swapER10url_recordR10url_record"></span><span id="_CPPv2N4skyr2v14swapER10url_recordR10url_record"></span><span id="skyr::v1::swap__url_recordR.url_recordR"></span><span class="target" id="namespaceskyr_1a2e023cbfdee74cf034247106d9cc50f3"></span>void <code class="sig-prename descclassname">skyr::v1<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">swap</code><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4skyr2v110url_recordE" title="skyr::v1::url_record">url_record</a> &amp;<em>lhs</em>, <a class="reference internal" href="#_CPPv4N4skyr2v110url_recordE" title="skyr::v1::url_record">url_record</a> &amp;<em>rhs</em><span class="sig-paren">)</span><br /></dt>
+<dd><p>Swaps two <code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url__record"><span class="std std-ref"><span class="pre">url_record</span></span></a></code> objects</p>
+<p>Equivalent to <code class="docutils literal notranslate"><span class="pre">lhs.swap(rhs)</span></code></p>
+<p><dl class="simple">
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code>: A <code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url__record"><span class="std std-ref"><span class="pre">url_record</span></span></a></code> object </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code>: A <code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url__record"><span class="std std-ref"><span class="pre">url_record</span></span></a></code> object </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v15parseENSt11string_viewENSt8optionalI10url_recordEE">
+<span id="_CPPv3N4skyr2v15parseENSt11string_viewENSt8optionalI10url_recordEE"></span><span id="_CPPv2N4skyr2v15parseENSt11string_viewENSt8optionalI10url_recordEE"></span><span id="skyr::v1::parse__std::string_view.std::optional:url_record:"></span><span class="target" id="namespaceskyr_1ab13dad554629d4ebfd80c839abb111df"></span>auto <code class="sig-prename descclassname">skyr::v1<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">parse</code><span class="sig-paren">(</span>std::string_view <em>input</em>, std::optional&lt;<a class="reference internal" href="#_CPPv4N4skyr2v110url_recordE" title="skyr::v1::url_record">url_record</a>&gt; <em>base</em> = std::nullopt<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v15parseENSt11string_viewENSt8optionalI10url_recordEE" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Parses a URL is according to the <a class="reference external" href="https://url.spec.whatwg.org/">WhatWG specification</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>An expected <code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url__record"><span class="std std-ref"><span class="pre">url_record</span></span></a></code> on success, or an <code class="docutils literal notranslate"><span class="pre">error_code</span></code> if parsing <code class="docutils literal notranslate"><span class="pre">input</span></code> failed </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">input</span></code>: A UTF-8 encoded input string </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">base</span></code>: An optional base <code class="docutils literal notranslate"><a class="reference internal" href="#classskyr_1_1v1_1_1url__record"><span class="std std-ref"><span class="pre">url_record</span></span></a></code> </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="_CPPv4N4skyr2v19serializeERK10url_recordb">
+<span id="_CPPv3N4skyr2v19serializeERK10url_recordb"></span><span id="_CPPv2N4skyr2v19serializeERK10url_recordb"></span><span id="skyr::v1::serialize__url_recordCR.b"></span><span class="target" id="namespaceskyr_1a50c2cf64dfcf802e11727243843d0dd7"></span>auto <code class="sig-prename descclassname">skyr::v1<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">serialize</code><span class="sig-paren">(</span><em class="property">const</em> <a class="reference internal" href="#_CPPv4N4skyr2v110url_recordE" title="skyr::v1::url_record">url_record</a> &amp;<em>url</em>, bool <em>exclude_fragment</em> = false<span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4skyr2v19serializeERK10url_recordb" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Serializes a URL record according to the <a class="reference external" href="https://url.spec.whatwg.org/#url-serializing">WhatWG specification</a></p>
+<p><dl class="simple">
+<dt><strong>Return</strong></dt><dd><p>A serialized URL string </p>
+</dd>
+<dt><strong>Parameters</strong></dt><dd><ul class="breatheparameterlist simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">url</span></code>: A URL record </p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exclude_fragment</span></code>: A flag to exclude the fragment from serialization, if set </p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2018-20, Glyn Matthews.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

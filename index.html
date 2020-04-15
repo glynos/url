@@ -2,23 +2,22 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Skyr URL &#8212; Skyr URL 1.0 documentation</title>
+    <meta charset="utf-8" />
+    <title>Skyr URL &#8212; Skyr URL 1.7 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="skyr::url" href="url.html" />
+    <link rel="next" title="URL" href="url.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -26,7 +25,7 @@
 
   </head><body>
 
-  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -37,11 +36,13 @@
         </button>
         <a class="navbar-brand" href="#">
           Skyr URL</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.7</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/cpp-netlib/url/">GitHub</a></li>
             
             
               <li class="dropdown globaltoc-container">
@@ -53,15 +54,74 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="url.html"><cite>skyr::url</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="url_search_parameters.html"><cite>skyr::url_search_parameters</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="optional.html"><cite>skyr::optional</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="expected.html"><cite>skyr::expected</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="percent_encode.html">Percent encoding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain name processing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filesystem.html"><cite>std::filesystem::path</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="unicode.html">Unicode encoding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="url.html">URL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="url.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain Name Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network.html">Network Addresses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encoding.html">Percent Encoding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html">Filesystem Path Conversion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="json.html">JSON</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="json.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.7.0] - 2020-04-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">[1.6.0] - 2020-04-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">[1.5.2] - 2020-04-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">[1.5.1] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">[1.5] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">[1.4.5] - 2020-03-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">[1.4.4] - 2020-03-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">[1.4.3] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">[1.4.2] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">[1.4.1] - 2020-03-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id22">[1.4] - 2020-01-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id26">[1.3] - 2019-11-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id30">[1.2] - 2019-08-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id34">[1.1] - 2019-07-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id37">[1.0] - 2018-10-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id40">[0.5] - 2018-09-30</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -76,30 +136,15 @@
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Skyr URL</a><ul>
-<li><a class="reference internal" href="#status">Status</a></li>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
-<li><a class="reference internal" href="#building-the-project">Building the project</a><ul>
-<li><a class="reference internal" href="#building-with-cmake-and-ninja">Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Ninja</span></code></a></li>
-<li><a class="reference internal" href="#building-with-cmake-and-visual-studio-2017">Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">Studio</span> <span class="pre">2017</span></code></a></li>
+<li><a class="reference internal" href="#quick-start">Quick Start</a><ul>
+<li><a class="reference internal" href="#download-vcpkg-and-install-the-dependencies">1. Download <code class="docutils literal notranslate"><span class="pre">vcpkg</span></code> and install the dependencies</a></li>
+<li><a class="reference internal" href="#write-your-code">2. Write your code</a></li>
+<li><a class="reference internal" href="#set-up-your-build-dependencies">3. Set up your build dependencies</a></li>
+<li><a class="reference internal" href="#build-and-run">4. Build and run</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#examples">Examples</a><ul>
-<li><a class="reference internal" href="#creating-a-url-without-a-base-url">Creating a URL without a base URL</a></li>
-<li><a class="reference internal" href="#creating-a-non-absolute-url-without-a-base-url">Creating a non-absolute URL without a base URL</a></li>
-<li><a class="reference internal" href="#creating-a-non-absolute-url-with-a-base-url">Creating a non-absolute URL with a base URL</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#installation">Installation</a><ul>
-<li><a class="reference internal" href="#installing-with-cmake-and-ninja">Installing with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Ninja</span></code></a></li>
-<li><a class="reference internal" href="#installing-with-cmake-and-visual-studio-2017">Installing with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">Studio</span> <span class="pre">2017</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li><a class="reference internal" href="#requirements">Requirements</a></li>
-<li><a class="reference internal" href="#license">License</a></li>
-<li><a class="reference internal" href="#why-skyr">Why <em>skyr</em>?</a></li>
-<li><a class="reference internal" href="#contact">Contact</a></li>
-<li><a class="reference internal" href="#api">API</a></li>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
 </ul>
 </li>
 </ul>
@@ -111,7 +156,7 @@
               
                 
   <li>
-    <a href="url.html" title="Next Chapter: skyr::url"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">skyr::url &raquo;</span>
+    <a href="url.html" title="Next Chapter: URL"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">URL &raquo;</span>
     </a>
   </li>
               
@@ -143,200 +188,209 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Skyr URL</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#quick-start">Quick Start</a><ul>
+<li><a class="reference internal" href="#download-vcpkg-and-install-the-dependencies">1. Download <code class="docutils literal notranslate"><span class="pre">vcpkg</span></code> and install the dependencies</a></li>
+<li><a class="reference internal" href="#write-your-code">2. Write your code</a></li>
+<li><a class="reference internal" href="#set-up-your-build-dependencies">3. Set up your build dependencies</a></li>
+<li><a class="reference internal" href="#build-and-run">4. Build and run</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="url.html" title="Next Chapter: URL"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">URL &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="_sources/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
   <div class="section" id="skyr-url">
 <h1>Skyr URL<a class="headerlink" href="#skyr-url" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="status">
-<h2>Status<a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference external" href="https://github.com/cpp-netlib/url/blob/master/LICENSE_1_0.txt"><img alt="License" src="https://img.shields.io/badge/license-boost-blue.svg" /></a> <a class="reference external" href="https://travis-ci.org/cpp-netlib/url"><img alt="Travis Build Status" src="https://travis-ci.org/cpp-netlib/url.svg?branch=master" /></a> <a class="reference external" href="https://ci.appveyor.com/project/glynos/url-3aeqd"><img alt="AppVeyor" src="https://ci.appveyor.com/api/projects/status/hc10ha6ugl6ea90u?svg=true" /></a></p>
-</div>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This library provides:</p>
 <ul class="simple">
-<li>A <code class="docutils literal notranslate"><span class="pre">skyr::url</span></code> class that implements a generic URL parser,
-conforming with the <a class="reference external" href="https://url.spec.whatwg.org/#url-class">WhatWG URL
-specification</a></li>
-<li>URL serialization and comparison</li>
-<li>Percent encoding and decoding functions</li>
-<li>IDNA and Punycode functions for domain name parsing</li>
+<li><p>A <cite>skyr::url</cite> class that implements a generic URL parser,
+conforming with the WhatWG URL specification</p></li>
+<li><p>URL serialization and comparison</p></li>
+<li><p>Percent encoding and decoding functions</p></li>
+<li><p>IDNA and Punycode functions for domain name parsing</p></li>
+<li><p>Basic Unicode conversion functions</p></li>
 </ul>
 </div>
-<div class="section" id="building-the-project">
-<h2>Building the project<a class="headerlink" href="#building-the-project" title="Permalink to this headline">¶</a></h2>
-<p>This project requires the availability of a C++17 compliant compiler and
-standard library.</p>
-<div class="section" id="building-with-cmake-and-ninja">
-<h3>Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Ninja</span></code><a class="headerlink" href="#building-with-cmake-and-ninja" title="Permalink to this headline">¶</a></h3>
-<p>From a terminal, execute the following sequence of commands:</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">mkdir</span> <span class="n">_build</span>
-<span class="o">&gt;</span> <span class="n">cd</span> <span class="n">_build</span>
-<span class="o">&gt;</span> <span class="n">cmake</span> <span class="o">..</span> <span class="o">-</span><span class="n">G</span> <span class="s2">&quot;Ninja&quot;</span>
-<span class="o">&gt;</span> <span class="n">ninja</span>
-</pre></div>
-</div>
-<p>To run the tests, run <code class="docutils literal notranslate"><span class="pre">ninja</span> <span class="pre">test</span></code> from the terminal while in the
-<code class="docutils literal notranslate"><span class="pre">_build</span></code> directory:</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">ninja</span> <span class="n">test</span>
+<div class="section" id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<p>This project requires the availability of a C++17 compliant compiler
+and standard library.</p>
+<div class="section" id="download-vcpkg-and-install-the-dependencies">
+<h3>1. Download <code class="docutils literal notranslate"><span class="pre">vcpkg</span></code> and install the dependencies<a class="headerlink" href="#download-vcpkg-and-install-the-dependencies" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">cd</span> <span class="si">${</span><span class="nv">VCPKG_ROOT</span><span class="si">}</span>
+&gt; git init
+&gt; git remote add origin https://github.com/Microsoft/vcpkg.git
+&gt; git fetch origin master
+&gt; git checkout -b master origin/master
+&gt; ./bootstrap-vcpkg.sh
+&gt; ./vcpkg install skyr-url
 </pre></div>
 </div>
 </div>
-<div class="section" id="building-with-cmake-and-visual-studio-2017">
-<h3>Building with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">Studio</span> <span class="pre">2017</span></code><a class="headerlink" href="#building-with-cmake-and-visual-studio-2017" title="Permalink to this headline">¶</a></h3>
-<p>Open Visual Studio 2017, and click on <code class="docutils literal notranslate"><span class="pre">File</span></code>-&gt;``Open``-&gt;``Folder``, or
-use the shortcut <code class="docutils literal notranslate"><span class="pre">Ctrl+Shift+Alt+O</span></code>. Open the root folder of this
-project. This will load the project in the explorer. To build, simply
-open the <code class="docutils literal notranslate"><span class="pre">CMake</span></code> menu and click <code class="docutils literal notranslate"><span class="pre">Build</span> <span class="pre">All</span></code>.</p>
-<p>To run the tests, open the <code class="docutils literal notranslate"><span class="pre">CMake</span></code> menu, click <code class="docutils literal notranslate"><span class="pre">Tests</span></code> and then run
-<code class="docutils literal notranslate"><span class="pre">Run</span> <span class="pre">Skyr</span> <span class="pre">CTests</span></code>.</p>
-</div>
-</div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
-<p>These examples are based on the <a class="reference external" href="https://url.spec.whatwg.org/#example-5434421b">WhatWG API
-specification</a></p>
-<p>To build the examples, run <code class="docutils literal notranslate"><span class="pre">cmake</span></code> as follows:</p>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">cmake</span> <span class="o">..</span> <span class="o">-</span><span class="n">G</span> <span class="s2">&quot;Ninja&quot;</span> <span class="o">-</span><span class="n">DSkyr_BUILD_EXAMPLES</span><span class="o">=</span><span class="n">ON</span>
-</pre></div>
-</div>
-<div class="section" id="creating-a-url-without-a-base-url">
-<h3>Creating a URL without a base URL<a class="headerlink" href="#creating-a-url-without-a-base-url" title="Permalink to this headline">¶</a></h3>
-<p>This example parses a string, “<a class="reference external" href="https://example.org">https://example.org</a>/💩”, without using a
-base URL:</p>
-<div class="code cpp highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;skyr/url.hpp&gt;</span>
-<span class="c1">#include &lt;iostream&gt;</span>
+<div class="section" id="write-your-code">
+<h3>2. Write your code<a class="headerlink" href="#write-your-code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// url_test.cpp</span>
 
-<span class="nb">int</span> <span class="n">main</span><span class="p">(</span><span class="nb">int</span> <span class="n">argc</span><span class="p">,</span> <span class="n">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="n">auto</span> <span class="n">url</span> <span class="o">=</span> <span class="n">skyr</span><span class="p">::</span><span class="n">make_url</span><span class="p">(</span><span class="s2">&quot;http://example.org/</span><span class="se">\xf0\x9f\x92\xa9</span><span class="s2">&quot;</span><span class="p">);</span>
-  <span class="n">std</span><span class="p">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">url</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">pathname</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>Gives the output: <code class="docutils literal notranslate"><span class="pre">/%F0%9F%92%A9</span></code></p>
-</div>
-<div class="section" id="creating-a-non-absolute-url-without-a-base-url">
-<h3>Creating a non-absolute URL without a base URL<a class="headerlink" href="#creating-a-non-absolute-url-without-a-base-url" title="Permalink to this headline">¶</a></h3>
-<p>This gives an error if the input, “/🍣🍺”, is not an
-<em>absolute-URL-with-fragment-string</em>:</p>
-<div class="code cpp highlight-default notranslate"><div class="highlight"><pre><span></span>#include &lt;skyr/url.hpp&gt;
-#include &lt;iostream&gt;
+<span class="cp">#include</span> <span class="cpf">&lt;skyr/url.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;skyr/percent_encoding/percent_decode.hpp&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
-int main(int argc, char *argv[]) {
-  auto url = skyr::make_url(&quot;\xf0\x9f\x8d\xa3\xf0\x9f\x8d\xba&quot;);
-  if (!url) {
-    std::cerr &lt;&lt; &quot;Parsing failed: &quot; &lt;&lt; url.error().message() &lt;&lt; std::endl;
-  }
-}
-</pre></div>
-</div>
-<p>This gives the output:
-<code class="docutils literal notranslate"><span class="pre">Parsing</span> <span class="pre">failed:</span> <span class="pre">Not</span> <span class="pre">an</span> <span class="pre">absolute</span> <span class="pre">URL</span> <span class="pre">with</span> <span class="pre">fragment</span></code></p>
-</div>
-<div class="section" id="creating-a-non-absolute-url-with-a-base-url">
-<h3>Creating a non-absolute URL with a base URL<a class="headerlink" href="#creating-a-non-absolute-url-with-a-base-url" title="Permalink to this headline">¶</a></h3>
-<p>This example parses a string, “🏳️‍🌈”, using a base URL,
-“<a class="reference external" href="https://example.org/">https://example.org/</a>”:</p>
-<div class="code cpp highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include &lt;skyr/url.hpp&gt;</span>
-<span class="c1">#include &lt;iostream&gt;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">using</span> <span class="k">namespace</span> <span class="n">skyr</span><span class="o">::</span><span class="n">literals</span><span class="p">;</span>
 
-<span class="nb">int</span> <span class="n">main</span><span class="p">(</span><span class="nb">int</span> <span class="n">argc</span><span class="p">,</span> <span class="n">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="n">auto</span> <span class="n">base</span> <span class="o">=</span> <span class="n">skyr</span><span class="p">::</span><span class="n">make_url</span><span class="p">(</span><span class="s2">&quot;https://example.org/&quot;</span><span class="p">);</span>
-  <span class="n">auto</span> <span class="n">url</span> <span class="o">=</span> <span class="n">skyr</span><span class="p">::</span><span class="n">make_url</span><span class="p">(</span>
-    <span class="s2">&quot;</span><span class="se">\xf0\x9f\x8f\xb3\xef\xb8\x8f\xe2\x80\x8d\xf0\x9f\x8c\x88</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">value</span><span class="p">());</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="p">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">url</span><span class="o">.</span><span class="n">value</span><span class="p">()</span><span class="o">.</span><span class="n">href</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="p">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">url</span> <span class="o">=</span>
+        <span class="s">&quot;http://sub.example.إختبار:8090/</span><span class="se">\xcf\x80</span><span class="s">?a=1&amp;c=2&amp;b=</span><span class="se">\xe2\x80\x8d\xf0\x9f\x8c\x88</span><span class="s">&quot;</span><span class="n">_url</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Protocol: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">url</span><span class="p">.</span><span class="n">protocol</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Domain?   &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">boolalpha</span> <span class="o">&lt;&lt;</span> <span class="n">url</span><span class="p">.</span><span class="n">is_domain</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Domain:   &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">url</span><span class="p">.</span><span class="n">domain</span><span class="p">().</span><span class="n">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Pathname: &quot;</span> <span class="o">&lt;&lt;</span>
+        <span class="n">skyr</span><span class="o">::</span><span class="n">percent_decode</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">url</span><span class="p">.</span><span class="n">pathname</span><span class="p">()).</span><span class="n">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Port:     &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">url</span><span class="p">.</span><span class="n">port</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">uint16_t</span><span class="o">&gt;</span><span class="p">().</span><span class="n">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Search parameters&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">search</span> <span class="o">=</span> <span class="n">url</span><span class="p">.</span><span class="n">search_parameters</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">]</span> <span class="o">:</span> <span class="n">search</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;  &quot;</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;key: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">key</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, value = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">catch</span> <span class="p">(</span><span class="k">const</span> <span class="n">skyr</span><span class="o">::</span><span class="n">url_parse_error</span> <span class="o">&amp;</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">e</span><span class="p">.</span><span class="n">code</span><span class="p">().</span><span class="n">message</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>This gives the output:
-<code class="docutils literal notranslate"><span class="pre">https://example.org/%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88</span></code></p>
 </div>
-</div>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="installing-with-cmake-and-ninja">
-<h3>Installing with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Ninja</span></code><a class="headerlink" href="#installing-with-cmake-and-ninja" title="Permalink to this headline">¶</a></h3>
-<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>&gt; cmake .. -G &quot;Ninja&quot; -DCMAKE_INSTALL_PREFIX=$PREFIX
-&gt; ninja
-&gt; ninja test      # optional
-&gt; ninja install
+<div class="section" id="set-up-your-build-dependencies">
+<h3>3. Set up your build dependencies<a class="headerlink" href="#set-up-your-build-dependencies" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="c"># CMakeLists.txt</span>
+
+<span class="nb">project</span><span class="p">(</span><span class="s">my_project</span><span class="p">)</span>
+
+<span class="nb">find_package</span><span class="p">(</span><span class="s">tl-expected</span> <span class="s">CONFIG</span> <span class="s">REQUIRED</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">skyr-url</span> <span class="s">CONFIG</span> <span class="s">REQUIRED</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span> <span class="s">17</span><span class="p">)</span>
+
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">url_test</span> <span class="s">url_test.cpp</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">url_test</span> <span class="s">PRIVATE</span> <span class="s">skyr::skyr-url</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Where <code class="docutils literal notranslate"><span class="pre">$PREFIX</span></code> is the location where you want to install the library.
-Depending on the location of <code class="docutils literal notranslate"><span class="pre">$PREFIX</span></code>, you may need to run the
-install command as an administrator (e.g. on Linux as <code class="docutils literal notranslate"><span class="pre">sudo</span></code>).</p>
 </div>
-<div class="section" id="installing-with-cmake-and-visual-studio-2017">
-<h3>Installing with <code class="docutils literal notranslate"><span class="pre">CMake</span></code> and <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">Studio</span> <span class="pre">2017</span></code><a class="headerlink" href="#installing-with-cmake-and-visual-studio-2017" title="Permalink to this headline">¶</a></h3>
-<p>Open the <code class="docutils literal notranslate"><span class="pre">CMake</span></code> menu, click <code class="docutils literal notranslate"><span class="pre">Install</span></code>, then <code class="docutils literal notranslate"><span class="pre">Skyr</span></code>.</p>
+<div class="section" id="build-and-run">
+<h3>4. Build and run<a class="headerlink" href="#build-and-run" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">cd</span> <span class="si">${</span><span class="nv">SOURCE_ROOT</span><span class="si">}</span>
+&gt; cmake <span class="se">\</span>
+      -B _build <span class="se">\</span>
+      -G Ninja <span class="se">\</span>
+      -DCMAKE_TOOLCHAIN_FILE<span class="o">=</span><span class="si">${</span><span class="nv">VCPKG_ROOT</span><span class="si">}</span>/vcpkg/scripts/buildsystems/vcpkg.cmake <span class="se">\</span>
+      .
+&gt; cmake --build _build
+&gt; ./_build/url_test
+</pre></div>
 </div>
 </div>
-<div class="section" id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<p>This library uses
-<a class="reference external" href="https://github.com/TartanLlama/optional">optional</a>,
-<a class="reference external" href="https://github.com/TartanLlama/expected">expected</a> and
-<a class="reference external" href="https://github.com/nemtrif/utfcpp">utfcpp</a>.</p>
-<p>The tests are built using <a class="reference external" href="https://github.com/google/googletest">Google
-Test</a>.</p>
 </div>
-<div class="section" id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
-<p>This library has been tested using the following platforms and
-compilers:</p>
-<p>Linux:</p>
-<ul class="simple">
-<li>GCC 7</li>
-<li>GCC 8</li>
-<li>Clang 6</li>
-</ul>
-<p>MacOS:</p>
-<ul class="simple">
-<li>Clang 6</li>
-</ul>
-<p>Windows:</p>
-<ul class="simple">
-<li>Microsoft Visual C++ 2017</li>
-</ul>
-</div>
-<div class="section" id="license">
-<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
-<p>This library is released under the Boost Software License (please see
-<a class="reference external" href="http://boost.org/LICENSE_1_0.txt">http://boost.org/LICENSE_1_0.txt</a> or the accompanying LICENSE_1_0.txt
-file for the full text).</p>
-<p><code class="docutils literal notranslate"><span class="pre">`optional</span></code> &lt;<a class="reference external" href="https://github.com/TartanLlama/optional/blob/master/COPYING">https://github.com/TartanLlama/optional/blob/master/COPYING</a>&gt;`__
-and
-<code class="docutils literal notranslate"><span class="pre">`expected</span></code> &lt;<a class="reference external" href="https://github.com/TartanLlama/expected/blob/master/COPYING">https://github.com/TartanLlama/expected/blob/master/COPYING</a>&gt;`__
-are each released under the CCO 1.0 License.</p>
-</div>
-<div class="section" id="why-skyr">
-<h2>Why <em>skyr</em>?<a class="headerlink" href="#why-skyr" title="Permalink to this headline">¶</a></h2>
-<p>This name was chosen by a random project name generator, which itself
-was randomly chosen.</p>
-</div>
-<div class="section" id="contact">
-<h2>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h2>
-<p>Any questions about this library can be addressed to the cpp-netlib
-<a class="reference external" href="mailto:cpp-netlib&#37;&#52;&#48;googlegroups&#46;com">developers mailing list</a>. Issues can be
-filed using Github at <a class="reference external" href="http://github.com/cpp-netlib/uri/issues">http://github.com/cpp-netlib/uri/issues</a>.</p>
-</div>
-<div class="section" id="api">
-<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="url.html"><cite>skyr::url</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="url_search_parameters.html"><cite>skyr::url_search_parameters</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="optional.html"><cite>skyr::optional</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="expected.html"><cite>skyr::expected</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="percent_encode.html">Percent encoding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain name processing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filesystem.html"><cite>std::filesystem::path</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="unicode.html">Unicode encoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="url.html">URL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="url.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain Name Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network.html">Network Addresses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encoding.html">Percent Encoding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html">Filesystem Path Conversion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="json.html">JSON</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="json.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#api">API</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.0] - 2018-10-13</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">[0.5] - 2018-09-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.7.0] - 2020-04-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">[1.6.0] - 2020-04-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">[1.5.2] - 2020-04-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">[1.5.1] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">[1.5] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">[1.4.5] - 2020-03-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">[1.4.4] - 2020-03-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">[1.4.3] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">[1.4.2] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">[1.4.1] - 2020-03-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id22">[1.4] - 2020-01-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id26">[1.3] - 2019-11-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id30">[1.2] - 2019-08-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id34">[1.1] - 2019-07-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id37">[1.0] - 2018-10-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id40">[0.5] - 2018-09-30</a></li>
 </ul>
 </li>
 </ul>
@@ -356,8 +410,8 @@ filed using Github at <a class="reference external" href="http://github.com/cpp-
       
     </p>
     <p>
-        &copy; Copyright 2018, Glyn Matthews.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.<br/>
+        &copy; Copyright 2018-20, Glyn Matthews.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
 </footer>

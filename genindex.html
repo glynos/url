@@ -3,16 +3,15 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Index &#8212; Skyr URL 1.0 documentation</title>
+    <meta charset="utf-8" />
+    <title>Index &#8212; Skyr URL 1.7 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -26,7 +25,7 @@
 
   </head><body>
 
-  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -37,11 +36,13 @@
         </button>
         <a class="navbar-brand" href="index.html">
           Skyr URL</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.7</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
           <ul class="nav navbar-nav">
+            
+                <li><a href="https://github.com/cpp-netlib/url/">GitHub</a></li>
             
             
               <li class="dropdown globaltoc-container">
@@ -53,15 +54,74 @@
   <ul class="dropdown-menu globaltoc"
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="url.html"><cite>skyr::url</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="url_search_parameters.html"><cite>skyr::url_search_parameters</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="optional.html"><cite>skyr::optional</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="expected.html"><cite>skyr::expected</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="percent_encode.html">Percent encoding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain name processing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="filesystem.html"><cite>std::filesystem::path</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="unicode.html">Unicode encoding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="url.html">URL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="url.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="domain.html">Domain Name Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domain.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network.html">Network Addresses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="percent_encoding.html">Percent Encoding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="percent_encoding.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="filesystem.html">Filesystem Path Conversion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filesystem.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="json.html">JSON</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="json.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#headers">Headers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json.html#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id1">[1.7.0] - 2020-04-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id2">[1.6.0] - 2020-04-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id5">[1.5.2] - 2020-04-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id7">[1.5.1] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id9">[1.5] - 2020-04-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id11">[1.4.5] - 2020-03-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id13">[1.4.4] - 2020-03-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id16">[1.4.3] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id18">[1.4.2] - 2020-03-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id20">[1.4.1] - 2020-03-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id22">[1.4] - 2020-01-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id26">[1.3] - 2019-11-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id30">[1.2] - 2019-08-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id34">[1.1] - 2019-07-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id37">[1.0] - 2018-10-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#id40">[0.5] - 2018-09-30</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -106,7 +166,18 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary">
+<form action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
       
 
 <h1 id="index">Index</h1>
@@ -118,207 +189,285 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="expected.html#_CPPv3N4skyr19bad_expected_accessE">skyr::bad_expected_access (C++ class)</a>
+      <li><a href="url.html#_CPPv4N4skyr20cannot_be_a_base_urlE">skyr::cannot_be_a_base_url (C++ enumerator)</a>
 </li>
-      <li><a href="domain.html#_CPPv3N4skyr9bad_inputE">skyr::bad_input (C++ enumerator)</a>
+      <li><a href="url.html#_CPPv4N4skyr24cannot_decode_host_pointE">skyr::cannot_decode_host_point (C++ enumerator)</a>
 </li>
-      <li><a href="optional.html#_CPPv3N4skyr19bad_optional_accessE">skyr::bad_optional_access (C++ class)</a>
+      <li><a href="url.html#_CPPv4N4skyr39cannot_have_a_username_password_or_portE">skyr::cannot_have_a_username_password_or_port (C++ enumerator)</a>
 </li>
-      <li><a href="domain.html#_CPPv3N4skyr21disallowed_code_pointE">skyr::disallowed_code_point (C++ enumerator)</a>
+      <li><a href="url.html#_CPPv4N4skyr22cannot_override_schemeE">skyr::cannot_override_scheme (C++ enumerator)</a>
 </li>
-      <li><a href="domain.html#_CPPv3N4skyr11domain_errcE">skyr::domain_errc (C++ type)</a>
+      <li><a href="url.html#_CPPv4N4skyr12domain_errorE">skyr::domain_error (C++ enumerator)</a>
 </li>
-      <li><a href="domain.html#_CPPv3N4skyr15domain_to_asciiENSt11string_viewEb">skyr::domain_to_ascii (C++ function)</a>, <a href="domain.html#_CPPv3N4skyr15domain_to_asciiENSt14u32string_viewEb">[1]</a>
+      <li><a href="url.html#_CPPv4N4skyr14empty_hostnameE">skyr::empty_hostname (C++ enumerator)</a>
 </li>
-      <li><a href="domain.html#_CPPv3N4skyr14encoding_errorE">skyr::encoding_error (C++ enumerator)</a>
+      <li><a href="url.html#_CPPv4N4skyr20forbidden_host_pointE">skyr::forbidden_host_point (C++ enumerator)</a>
 </li>
-      <li><a href="expected.html#_CPPv3N4skyr8expectedE">skyr::expected (C++ class)</a>
+      <li><a href="url.html#_CPPv4N4skyr20invalid_ipv4_addressE">skyr::invalid_ipv4_address (C++ enumerator)</a>
 </li>
-      <li><a href="filesystem.html#_CPPv3N4skyr10filesystem9from_pathERKNSt10filesystem4pathE">skyr::filesystem::from_path (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr20invalid_ipv6_addressE">skyr::invalid_ipv6_address (C++ enumerator)</a>
 </li>
-      <li><a href="filesystem.html#_CPPv3N4skyr10filesystem12invalid_pathE">skyr::filesystem::invalid_path (C++ enumerator)</a>
+      <li><a href="url.html#_CPPv4N4skyr12invalid_portE">skyr::invalid_port (C++ enumerator)</a>
 </li>
-      <li><a href="filesystem.html#_CPPv3N4skyr10filesystem9path_errcE">skyr::filesystem::path_errc (C++ type)</a>
+      <li><a href="url.html#_CPPv4N4skyr24invalid_scheme_characterE">skyr::invalid_scheme_character (C++ enumerator)</a>
 </li>
-      <li><a href="filesystem.html#_CPPv3N4skyr10filesystem22percent_decoding_errorE">skyr::filesystem::percent_decoding_error (C++ enumerator)</a>
+      <li><a href="url.html#_CPPv4N4skyr25invalid_unicode_characterE">skyr::invalid_unicode_character (C++ enumerator)</a>
 </li>
-      <li><a href="filesystem.html#_CPPv3N4skyr10filesystem7to_pathERK3url">skyr::filesystem::to_path (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr33not_an_absolute_url_with_fragmentE">skyr::not_an_absolute_url_with_fragment (C++ enumerator)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr8make_urlERK6Source">skyr::make_url (C++ function)</a>, <a href="url.html#_CPPv3N4skyr8make_urlERK6SourceRK3url">[1]</a>
+      <li><a href="url.html#_CPPv4N4skyr14url_parse_errcE">skyr::url_parse_errc (C++ enum)</a>
 </li>
-      <li><a href="percent_encode.html#_CPPv3N4skyr13non_hex_inputE">skyr::non_hex_input (C++ enumerator)</a>
+      <li><a href="domain.html#_CPPv4N4skyr2v115domain_to_asciiENSt11string_viewEb">skyr::v1::domain_to_ascii (C++ function)</a>
 </li>
-      <li><a href="optional.html#_CPPv3N4skyr8optionalE">skyr::optional (C++ class)</a>
+      <li><a href="domain.html#_CPPv4N4skyr2v117domain_to_unicodeENSt11string_viewE">skyr::v1::domain_to_unicode (C++ function)</a>
 </li>
-      <li><a href="domain.html#_CPPv3N4skyr8overflowE">skyr::overflow (C++ enumerator)</a>, <a href="percent_encode.html#_CPPv3N4skyr8overflowE">[1]</a>
+      <li><a href="filesystem.html#_CPPv4N4skyr2v110filesystem9from_pathERKN5stdfs4pathE">skyr::v1::filesystem::from_path (C++ function)</a>
 </li>
-      <li><a href="percent_encode.html#_CPPv3N4skyr14percent_decodeENSt11string_viewE">skyr::percent_decode (C++ function)</a>
+      <li><a href="filesystem.html#_CPPv4N4skyr2v110filesystem12invalid_pathE">skyr::v1::filesystem::invalid_path (C++ enumerator)</a>
 </li>
-      <li><a href="percent_encode.html#_CPPv3N4skyr19percent_decode_byteENSt11string_viewE">skyr::percent_decode_byte (C++ function)</a>
+      <li><a href="filesystem.html#_CPPv4N4skyr2v110filesystem9path_errcE">skyr::v1::filesystem::path_errc (C++ enum)</a>
 </li>
-      <li><a href="percent_encode.html#_CPPv3N4skyr14percent_encodeENSt11string_viewERK11exclude_set">skyr::percent_encode (C++ function)</a>, <a href="percent_encode.html#_CPPv3N4skyr14percent_encodeENSt14u32string_viewERK11exclude_set">[1]</a>
+      <li><a href="filesystem.html#_CPPv4N4skyr2v110filesystem22percent_decoding_errorE">skyr::v1::filesystem::percent_decoding_error (C++ enumerator)</a>
 </li>
-      <li><a href="percent_encode.html#_CPPv3N4skyr19percent_encode_byteEcRK11exclude_set">skyr::percent_encode_byte (C++ function)</a>
+      <li><a href="filesystem.html#_CPPv4N4skyr2v110filesystem7to_pathERK3url">skyr::v1::filesystem::to_path (C++ function)</a>
 </li>
-      <li><a href="percent_encode.html#_CPPv3N4skyr19percent_encode_errcE">skyr::percent_encode_errc (C++ type)</a>
+      <li><a href="network.html#_CPPv4N4skyr2v112ipv4_addressE">skyr::v1::ipv4_address (C++ class)</a>
 </li>
-      <li><a href="domain.html#_CPPv3N4skyr15punycode_decodeENSt11string_viewE">skyr::punycode_decode (C++ function)</a>
+      <li><a href="network.html#_CPPv4NK4skyr2v112ipv4_address7addressEv">skyr::v1::ipv4_address::address (C++ function)</a>
 </li>
-      <li><a href="domain.html#_CPPv3N4skyr15punycode_encodeENSt11string_viewE">skyr::punycode_encode (C++ function)</a>, <a href="domain.html#_CPPv3N4skyr15punycode_encodeENSt14u32string_viewE">[1]</a>
+      <li><a href="network.html#_CPPv4N4skyr2v112ipv4_address12ipv4_addressEj">skyr::v1::ipv4_address::ipv4_address (C++ function)</a>, <a href="network.html#_CPPv4N4skyr2v112ipv4_address12ipv4_addressEv">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr4swapER3urlR3url">skyr::swap (C++ function)</a>
+      <li><a href="network.html#_CPPv4NK4skyr2v112ipv4_address8to_bytesEv">skyr::v1::ipv4_address::to_bytes (C++ function)</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode21illegal_byte_sequenceE">skyr::unicode::illegal_byte_sequence (C++ enumerator)</a>
+      <li><a href="network.html#_CPPv4NK4skyr2v112ipv4_address9to_stringEv">skyr::v1::ipv4_address::to_string (C++ function)</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode18invalid_code_pointE">skyr::unicode::invalid_code_point (C++ enumerator)</a>
+      <li><a href="network.html#_CPPv4N4skyr2v112ipv6_addressE">skyr::v1::ipv6_address (C++ class)</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode12invalid_leadE">skyr::unicode::invalid_lead (C++ enumerator)</a>
+      <li><a href="network.html#_CPPv4N4skyr2v112ipv6_address12ipv6_addressENSt5arrayItXL8EEEE">skyr::v1::ipv6_address::ipv6_address (C++ function)</a>, <a href="network.html#_CPPv4N4skyr2v112ipv6_address12ipv6_addressEv">[1]</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode8overflowE">skyr::unicode::overflow (C++ enumerator)</a>
+      <li><a href="network.html#_CPPv4NK4skyr2v112ipv6_address8to_bytesEv">skyr::v1::ipv6_address::to_bytes (C++ function)</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode12unicode_errcE">skyr::unicode::unicode_errc (C++ type)</a>
+      <li><a href="network.html#_CPPv4NK4skyr2v112ipv6_address9to_stringEv">skyr::v1::ipv6_address::to_string (C++ function)</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode16utf16_from_bytesENSt11string_viewE">skyr::unicode::utf16_from_bytes (C++ function)</a>
+      <li><a href="json.html#_CPPv4N4skyr2v14json12decode_queryENSt11string_viewEcc">skyr::v1::json::decode_query (C++ function)</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode14utf16_to_bytesENSt14u16string_viewE">skyr::unicode::utf16_to_bytes (C++ function)</a>
+      <li><a href="json.html#_CPPv4N4skyr2v14json12encode_queryERKN8nlohmann4jsonEcc">skyr::v1::json::encode_query (C++ function)</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode16utf32_from_bytesENSt11string_viewE">skyr::unicode::utf32_from_bytes (C++ function)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v18make_urlEDaRK6Source">skyr::v1::make_url (C++ function)</a>, <a href="url.html#_CPPv4I0EN4skyr2v18make_urlEDaRK6SourceRK3url">[1]</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode14utf32_to_bytesENSt14u32string_viewE">skyr::unicode::utf32_to_bytes (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v15parseENSt11string_viewENSt8optionalI10url_recordEE">skyr::v1::parse (C++ function)</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode18wstring_from_bytesENSt11string_viewE">skyr::unicode::wstring_from_bytes (C++ function)</a>
+      <li><a href="percent_encoding.html#_CPPv4I0EN4skyr2v114percent_decodeEDaNSt11string_viewE">skyr::v1::percent_decode (C++ function)</a>
 </li>
-      <li><a href="unicode.html#_CPPv3N4skyr7unicode16wstring_to_bytesENSt12wstring_viewE">skyr::unicode::wstring_to_bytes (C++ function)</a>
+      <li><a href="percent_encoding.html#_CPPv4I0EN4skyr2v114percent_encodeEDaNSt11string_viewE">skyr::v1::percent_encode (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3urlE">skyr::url (C++ class)</a>
+      <li><a href="domain.html#_CPPv4N4skyr2v115punycode_decodeENSt11string_viewE">skyr::v1::punycode_decode (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url5beginEv">skyr::url::begin (C++ function)</a>
+      <li><a href="domain.html#_CPPv4N4skyr2v115punycode_encodeENSt11string_viewE">skyr::v1::punycode_encode (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url5c_strEv">skyr::url::c_str (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v19serializeERK10url_recordb">skyr::v1::serialize (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url5clearEv">skyr::url::clear (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v14swapER10url_recordR10url_record">skyr::v1::swap (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v14swapER3urlR3url">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url7compareERK3url">skyr::url::compare (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13urlE">skyr::v1::url (C++ class)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url14const_iteratorE">skyr::url::const_iterator (C++ type)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url5beginEv">skyr::v1::url::begin (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url15const_referenceE">skyr::url::const_reference (C++ type)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url5c_strEv">skyr::v1::url::c_str (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url12default_portERK11string_type">skyr::url::default_port (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url5clearEv">skyr::v1::url::clear (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url5emptyEv">skyr::url::empty (C++ function)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url7compareERK3url">skyr::v1::url::compare (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url3endEv">skyr::url::end (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url14const_iteratorE">skyr::v1::url::const_iterator (C++ type)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url4hashEv">skyr::url::hash (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url15const_referenceE">skyr::v1::url::const_reference (C++ type)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url4hostEv">skyr::url::host (C++ function)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url4dataEv">skyr::v1::url::data (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url8hostnameEv">skyr::url::hostname (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url12default_portENSt11string_viewE">skyr::v1::url::default_port (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url4hrefEv">skyr::url::href (C++ function)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url6domainEv">skyr::v1::url::domain (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url5emptyEv">skyr::v1::url::empty (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url3endEv">skyr::v1::url::end (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url4hashEv">skyr::v1::url::hash (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url4hostEv">skyr::v1::url::host (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url8hostnameEv">skyr::v1::url::hostname (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url4hrefEv">skyr::v1::url::href (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url12ipv4_addressEv">skyr::v1::url::ipv4_address (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url12ipv6_addressEv">skyr::v1::url::ipv6_address (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url9is_domainEv">skyr::v1::url::is_domain (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url15is_ipv4_addressEv">skyr::v1::url::is_ipv4_address (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url15is_ipv6_addressEv">skyr::v1::url::is_ipv6_address (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url9is_opaqueEv">skyr::v1::url::is_opaque (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url10is_specialEv">skyr::v1::url::is_special (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v13url8iteratorE">skyr::v1::url::iterator (C++ type)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13urlcv11string_typeEv">skyr::v1::url::operator string_type (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v13urlaSERK3url">skyr::v1::url::operator= (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13urlaSERR3url">[1]</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url6originEv">skyr::v1::url::origin (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url8passwordEv">skyr::v1::url::password (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url8pathnameEv">skyr::v1::url::pathname (C++ function)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="url.html#_CPPv3NK4skyr3url10is_specialEv">skyr::url::is_special (C++ function)</a>
+      <li><a href="url.html#_CPPv4I0ENK4skyr2v13url4portEDaPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE">skyr::v1::url::port (C++ function)</a>, <a href="url.html#_CPPv4NK4skyr2v13url4portEv">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url8iteratorE">skyr::url::iterator (C++ type)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url8protocolEv">skyr::v1::url::protocol (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3urlcv11string_typeEv">skyr::url::operator string_type (C++ function)</a>
+      <li><a href="url.html#_CPPv4NKR4skyr2v13url6recordEv">skyr::v1::url::record (C++ function)</a>, <a href="url.html#_CPPv4NO4skyr2v13url6recordEv">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url6originEv">skyr::url::origin (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url9referenceE">skyr::v1::url::reference (C++ type)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url8passwordEv">skyr::url::password (C++ function)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url6searchEv">skyr::v1::url::search (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url8pathnameEv">skyr::url::pathname (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url17search_parametersEv">skyr::v1::url::search_parameters (C++ function)</a>, <a href="url.html#_CPPv4NK4skyr2v13url17search_parametersEv">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url4portEPNSt9enable_ifINSt11is_integralI4intTE5valueEE4typeE">skyr::url::port (C++ function)</a>, <a href="url.html#_CPPv3NK4skyr3url4portEv">[1]</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url8set_hashEDaRK6Source">skyr::v1::url::set_hash (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13url8set_hashE11string_view">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url8protocolEv">skyr::url::protocol (C++ function)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url8set_hostEDaRK6Source">skyr::v1::url::set_host (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13url8set_hostE11string_view">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url6recordEv">skyr::url::record (C++ function)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url12set_hostnameEDaRK6Source">skyr::v1::url::set_hostname (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13url12set_hostnameE11string_view">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url9referenceE">skyr::url::reference (C++ type)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url8set_hrefEDaRK6Source">skyr::v1::url::set_href (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13url8set_hrefE11string_view">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url6searchEv">skyr::url::search (C++ function)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url12set_passwordEDaRK6Source">skyr::v1::url::set_password (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13url12set_passwordE11string_view">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url17search_parametersEv">skyr::url::search_parameters (C++ function)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url12set_pathnameEDaRK6Source">skyr::v1::url::set_pathname (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13url12set_pathnameE11string_view">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url8set_hashERK6Source">skyr::url::set_hash (C++ function)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url8set_portEDaRK10PortSource">skyr::v1::url::set_port (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13url8set_portE11string_view">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url8set_hostERK6Source">skyr::url::set_host (C++ function)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url12set_protocolEDaRK6Source">skyr::v1::url::set_protocol (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13url12set_protocolE11string_view">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url12set_hostnameERK6Source">skyr::url::set_hostname (C++ function)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url10set_searchEDaRK6Source">skyr::v1::url::set_search (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13url10set_searchE11string_view">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url8set_hrefERK6Source">skyr::url::set_href (C++ function)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url12set_usernameEDaRK6Source">skyr::v1::url::set_username (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v13url12set_usernameE11string_view">[1]</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url12set_passwordERK6Source">skyr::url::set_password (C++ function)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url4sizeEv">skyr::v1::url::size (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url12set_pathnameERK6Source">skyr::url::set_pathname (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url9size_typeE">skyr::v1::url::size_type (C++ type)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url8set_portERK6Source">skyr::url::set_port (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url11string_typeE">skyr::v1::url::string_type (C++ type)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url12set_protocolERK6Source">skyr::url::set_protocol (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url11string_viewE">skyr::v1::url::string_view (C++ type)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url10set_searchERK6Source">skyr::url::set_search (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url4swapER3url">skyr::v1::url::swap (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url12set_usernameERK6Source">skyr::url::set_username (C++ function)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url7to_jsonEv">skyr::v1::url::to_json (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url11string_typeE">skyr::url::string_type (C++ type)</a>
+      <li><a href="url.html#_CPPv4I0EN4skyr2v13url3urlERK6Source">skyr::v1::url::url (C++ function)</a>, <a href="url.html#_CPPv4I0EN4skyr2v13url3urlERK6SourceRK3url">[1]</a>, <a href="url.html#_CPPv4N4skyr2v13url3urlERK3url">[2]</a>, <a href="url.html#_CPPv4N4skyr2v13url3urlERR10url_record">[3]</a>, <a href="url.html#_CPPv4N4skyr2v13url3urlERR3url">[4]</a>, <a href="url.html#_CPPv4N4skyr2v13url3urlEv">[5]</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url11string_viewE">skyr::url::string_view (C++ type)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url8usernameEv">skyr::v1::url::username (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url4swapER3url">skyr::url::swap (C++ function)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v13url16validation_errorEv">skyr::v1::url::validation_error (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url7to_jsonEv">skyr::url::to_json (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13url10value_typeE">skyr::v1::url::value_type (C++ type)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url3urlERK6Source">skyr::url::url (C++ function)</a>, <a href="url.html#_CPPv3N4skyr3url3urlERK6SourceRK3url">[1]</a>, <a href="url.html#_CPPv3N4skyr3url3urlERR10url_record">[2]</a>, <a href="url.html#_CPPv3N4skyr3url3urlEv">[3]</a>
+      <li><a href="url.html#_CPPv4N4skyr2v13urlD0Ev">skyr::v1::url::~url (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url8usernameEv">skyr::url::username (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v115url_parse_errorE">skyr::v1::url_parse_error (C++ class)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr3url16validation_errorEv">skyr::url::validation_error (C++ function)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v115url_parse_error4codeEv">skyr::v1::url_parse_error::code (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr3url10value_typeE">skyr::url::value_type (C++ type)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v115url_parse_error15url_parse_errorENSt10error_codeE">skyr::v1::url_parse_error::url_parse_error (C++ function)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr15url_parse_errorE">skyr::url_parse_error (C++ class)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_recordE">skyr::v1::url_record (C++ class)</a>
 </li>
-      <li><a href="url.html#_CPPv3NK4skyr15url_parse_error5errorEv">skyr::url_parse_error::error (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record20cannot_be_a_base_urlE">skyr::v1::url_record::cannot_be_a_base_url (C++ member)</a>
 </li>
-      <li><a href="url.html#_CPPv3N4skyr15url_parse_error15url_parse_errorENSt10error_codeE">skyr::url_parse_error::url_parse_error (C++ function)</a>
+      <li><a href="core.html#_CPPv4NK4skyr2v110url_record39cannot_have_a_username_password_or_portEv">skyr::v1::url_record::cannot_have_a_username_password_or_port (C++ function)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parametersE">skyr::url_search_parameters (C++ class)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record8fragmentE">skyr::v1::url_record::fragment (C++ member)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters6appendERK11string_typeRK11string_type">skyr::url_search_parameters::append (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record4hostE">skyr::v1::url_record::host (C++ member)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3NK4skyr21url_search_parameters5beginEv">skyr::url_search_parameters::begin (C++ function)</a>
+      <li><a href="core.html#_CPPv4NK4skyr2v110url_record20includes_credentialsEv">skyr::v1::url_record::includes_credentials (C++ function)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters5clearEv">skyr::url_search_parameters::clear (C++ function)</a>
+      <li><a href="core.html#_CPPv4NK4skyr2v110url_record10is_specialEv">skyr::v1::url_record::is_special (C++ function)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters14const_iteratorE">skyr::url_search_parameters::const_iterator (C++ type)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record8passwordE">skyr::v1::url_record::password (C++ member)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3NK4skyr21url_search_parameters8containsERK11string_type">skyr::url_search_parameters::contains (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record4pathE">skyr::v1::url_record::path (C++ member)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3NK4skyr21url_search_parameters5emptyEv">skyr::url_search_parameters::empty (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record4portE">skyr::v1::url_record::port (C++ member)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3NK4skyr21url_search_parameters3endEv">skyr::url_search_parameters::end (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record5queryE">skyr::v1::url_record::query (C++ member)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3NK4skyr21url_search_parameters3getERK11string_type">skyr::url_search_parameters::get (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record6schemeE">skyr::v1::url_record::scheme (C++ member)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3NK4skyr21url_search_parameters7get_allERK11string_type">skyr::url_search_parameters::get_all (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record11string_typeE">skyr::v1::url_record::string_type (C++ type)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters6removeERK11string_type">skyr::url_search_parameters::remove (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record4swapER10url_record">skyr::v1::url_record::swap (C++ function)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters3setERK11string_typeRK11string_type">skyr::url_search_parameters::set (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record10url_recordEv">skyr::v1::url_record::url_record (C++ function)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters4sortEv">skyr::url_search_parameters::sort (C++ function)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record8usernameE">skyr::v1::url_record::username (C++ member)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters11string_typeE">skyr::url_search_parameters::string_type (C++ type)</a>
+      <li><a href="core.html#_CPPv4N4skyr2v110url_record16validation_errorE">skyr::v1::url_record::validation_error (C++ member)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3NK4skyr21url_search_parameters9to_stringEv">skyr::url_search_parameters::to_string (C++ function)</a>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parametersE">skyr::v1::url_search_parameters (C++ class)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters21url_search_parametersENSt11string_viewE">skyr::url_search_parameters::url_search_parameters (C++ function)</a>, <a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters21url_search_parametersER10url_record">[1]</a>, <a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters21url_search_parametersEv">[2]</a>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters6appendENSt11string_viewENSt11string_viewE">skyr::v1::url_search_parameters::append (C++ function)</a>
 </li>
-      <li><a href="url_search_parameters.html#_CPPv3N4skyr21url_search_parameters10value_typeE">skyr::url_search_parameters::value_type (C++ type)</a>
+      <li><a href="url.html#_CPPv4NK4skyr2v121url_search_parameters5beginEv">skyr::v1::url_search_parameters::begin (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v121url_search_parameters6cbeginEv">skyr::v1::url_search_parameters::cbegin (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v121url_search_parameters4cendEv">skyr::v1::url_search_parameters::cend (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters5clearEv">skyr::v1::url_search_parameters::clear (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters14const_iteratorE">skyr::v1::url_search_parameters::const_iterator (C++ type)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v121url_search_parameters8containsENSt11string_viewE">skyr::v1::url_search_parameters::contains (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v121url_search_parameters5emptyEv">skyr::v1::url_search_parameters::empty (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v121url_search_parameters3endEv">skyr::v1::url_search_parameters::end (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v121url_search_parameters3getENSt11string_viewE">skyr::v1::url_search_parameters::get (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v121url_search_parameters7get_allENSt11string_viewE">skyr::v1::url_search_parameters::get_all (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters8iteratorE">skyr::v1::url_search_parameters::iterator (C++ type)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters6removeENSt11string_viewE">skyr::v1::url_search_parameters::remove (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters3setENSt11string_viewENSt11string_viewE">skyr::v1::url_search_parameters::set (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v121url_search_parameters4sizeEv">skyr::v1::url_search_parameters::size (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters9size_typeE">skyr::v1::url_search_parameters::size_type (C++ type)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters4sortEv">skyr::v1::url_search_parameters::sort (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters11string_typeE">skyr::v1::url_search_parameters::string_type (C++ type)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters4swapER21url_search_parameters">skyr::v1::url_search_parameters::swap (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4NK4skyr2v121url_search_parameters9to_stringEv">skyr::v1::url_search_parameters::to_string (C++ function)</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters21url_search_parametersENSt11string_viewE">skyr::v1::url_search_parameters::url_search_parameters (C++ function)</a>, <a href="url.html#_CPPv4N4skyr2v121url_search_parameters21url_search_parametersENSt16initializer_listI10value_typeEE">[1]</a>, <a href="url.html#_CPPv4N4skyr2v121url_search_parameters21url_search_parametersEv">[2]</a>
+</li>
+      <li><a href="url.html#_CPPv4N4skyr2v121url_search_parameters10value_typeE">skyr::v1::url_search_parameters::value_type (C++ type)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -336,8 +485,8 @@
       
     </p>
     <p>
-        &copy; Copyright 2018, Glyn Matthews.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.<br/>
+        &copy; Copyright 2018-20, Glyn Matthews.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
 </footer>
