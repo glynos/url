@@ -10,6 +10,10 @@ configure_file(
 
 add_library(
         skyr-url
+)
+
+target_sources(skyr-url
+    PRIVATE
 
         core/url_parser_context.hpp
         core/url_parser_context.cpp
@@ -28,7 +32,6 @@ add_library(
         string/starts_with.hpp
         url/url.cpp
         url/url_search_parameters.cpp
-        filesystem/path.cpp
 
         ${PROJECT_SOURCE_DIR}/include/skyr/config.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/version.hpp
@@ -62,12 +65,9 @@ add_library(
         ${PROJECT_SOURCE_DIR}/include/skyr/percent_encoding/percent_encode.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/network/ipv4_address.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/network/ipv6_address.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/query/query_iterator.hpp
+        ${PROJECT_SOURCE_DIR}/include/skyr/query/query_parameter_range.hpp
+        ${PROJECT_SOURCE_DIR}/include/skyr/path/path_element_range.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/platform/endianness.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/url/url_record.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/url/url_parse.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/url/url_serialize.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/url/url_error.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/url_search_parameters.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/filesystem/path.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/url.hpp)
@@ -97,5 +97,7 @@ add_library(skyr-json INTERFACE)
 target_link_libraries(skyr-json INTERFACE tl::expected nlohmann_json::nlohmann_json)
 
 target_include_directories(skyr-json
-        INTERFACE
-        ${PROJECT_SOURCE_DIR}/include)
+    INTERFACE
+        $<INSTALL_INTERFACE:include>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        )
