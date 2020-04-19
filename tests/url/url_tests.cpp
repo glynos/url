@@ -665,4 +665,17 @@ TEST_CASE("url_tests", "[url]") {
     CHECK(instance.is_domain());
     CHECK(instance.domain().value() == "उदाहरण.परीक्षा");
   }
+
+  SECTION("regression_failure_01") {
+    auto base = skyr::url("file:///tmp/mock/path");
+    auto instance = skyr::url("file:c:\\foo\\bar.html", base);
+    CHECK(instance.protocol() == "file:");
+    CHECK(instance.pathname() == "/c:/foo/bar.html");
+  }
+
+  SECTION("regression_failure_02") {
+    auto base = skyr::url("about:blank");
+    auto instance = skyr::url("http://example.org/test?%GH", base);
+    CHECK(instance.search() == "?%GH");
+  }
 }
