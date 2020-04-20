@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(
         skyr-url
-        VERSION 1.7.2
+        VERSION 1.7.3
         HOMEPAGE_URL https://cpp-netlib.github.io/url
         DESCRIPTION "A C++ library that implements the WhatWG URL specification"
         LANGUAGES CXX
@@ -122,7 +122,7 @@ write_basic_package_version_file(
         COMPATIBILITY SameMajorVersion
         ARCH_INDEPENDENT)
 
-install(TARGETS skyr-url skyr-json
+install(TARGETS skyr-url skyr-filesystem skyr-json
         EXPORT ${PROJECT_NAME}-targets
         INCLUDES DESTINATION "${CMAKE_INSTALL_DATADIR}"
         ARCHIVE DESTINATION lib
