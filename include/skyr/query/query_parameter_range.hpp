@@ -12,94 +12,10 @@
 #include <type_traits>
 #include <algorithm>
 #include <utility>
+#include <skyr/ranges/string_element_range.hpp>
 
 namespace skyr {
 inline namespace v1 {
-///
-class query_element_iterator {
- public:
-
-  ///
-  using iterator_category = std::forward_iterator_tag;
-  ///
-  using value_type = std::string_view;
-  ///
-  using const_reference = value_type;
-  ///
-  using reference = const_reference;
-  ///
-  using const_pointer = std::add_pointer<const value_type>::type;
-  ///
-  using pointer = const_pointer;
-  ///
-  using difference_type = std::ptrdiff_t;
-
-  ///
-  query_element_iterator() = default;
-
-  ///
-  /// \param query
-  explicit query_element_iterator(std::string_view query)
-      : it_(!query.empty() ? std::make_optional(std::begin(query)) : std::nullopt)
-      , last_(!query.empty() ? std::make_optional(std::end(query)) : std::nullopt) {}
-
-  ///
-  /// \return
-  auto &operator++() {
-    increment();
-    return *this;
-  }
-
-  ///
-  /// \return
-  auto operator++(int) {
-    auto result = *this;
-    increment();
-    return result;
-  }
-
-  ///
-  /// \return
-  auto operator*() const noexcept -> const_reference {
-    assert(it_);
-    auto delimiter = std::find_if(
-        it_.value(), last_.value(), [](auto c) { return (c == '&') || (c == ';'); });
-    return std::string_view(
-        std::addressof(*it_.value()),
-        std::distance(it_.value(), delimiter));
-  }
-
-  ///
-  /// \param other
-  /// \return
-  auto operator==(const query_element_iterator &other) const noexcept {
-    return it_ == other.it_;
-  }
-
-  ///
-  /// \param other
-  /// \return
-  auto operator!=(const query_element_iterator &other) const noexcept {
-    return !(*this == other);
-  }
-
- private:
-
-  void increment() {
-    assert(it_);
-    it_ = std::find_if(
-        it_.value(), last_.value(), [](auto c) { return (c == '&') || (c == ';'); });
-    if (it_ == last_) {
-      it_ = std::nullopt;
-    } else {
-      ++it_.value();
-    }
-  }
-
-  std::optional<value_type::const_iterator> it_, last_;
-
-};
-
 ///
 class query_parameter_iterator {
  public:
@@ -125,11 +41,11 @@ class query_parameter_iterator {
   ///
   /// \param query
   explicit query_parameter_iterator(std::string_view query)
-      : it_(query) {}
+      : it_(query, std::string_view("&;")) {}
 
   ///
   /// \return
-  auto &operator++() {
+  auto operator++() -> query_parameter_iterator & {
     ++it_;
     return *this;
   }
@@ -145,20 +61,14 @@ class query_parameter_iterator {
   ///
   /// \return
   auto operator*() const noexcept -> const_reference {
-    auto first = std::begin(*it_), last = std::end(*it_);
-
-    auto equal_it = std::find_if(first, last, [](auto c) { return (c == '='); });
-
-    auto name =
-        std::string_view(std::addressof(*first), std::distance(first, equal_it));
-    if (equal_it != last) {
-      ++equal_it;
+    auto element = *it_;
+    auto delim = element.find_first_of("=");
+    if (delim != value_type::first_type::npos) {
+      return { element.substr(0, delim), element.substr(delim + 1) };
     }
-    auto value = (equal_it == last) ?
-                 std::nullopt :
-                 std::make_optional(std::string_view(std::addressof(*equal_it), std::distance(equal_it, last)));
-
-    return {name, value};
+    else {
+      return { element, std::nullopt };
+    }
   }
 
   ///
@@ -177,7 +87,7 @@ class query_parameter_iterator {
 
  private:
 
-  query_element_iterator it_;
+  string_element_iterator<char> it_;
 
 };
 

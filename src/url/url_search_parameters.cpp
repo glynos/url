@@ -1,4 +1,4 @@
-// Copyright 2017-19 Glyn Matthews.
+// Copyright 2017-20 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -11,10 +11,19 @@
 
 namespace skyr {
 inline namespace v1 {
-url_search_parameters::url_search_parameters(
-    std::string_view query) {
-  initialize(query);
-}
+namespace {
+struct is_name {
+  explicit is_name(std::string_view name)
+      : name_(name)
+  {}
+
+  auto operator () (const std::pair<std::string, std::string> &parameter) noexcept {
+    return name_ == parameter.first;
+  }
+
+  std::string_view name_;
+};
+}  // namespace
 
 url_search_parameters::url_search_parameters(
     url *url)
@@ -24,41 +33,10 @@ url_search_parameters::url_search_parameters(
   }
 }
 
-url_search_parameters::url_search_parameters(
-    std::initializer_list<value_type> parameters)
-    : parameters_(parameters) {}
-
-void url_search_parameters::swap(url_search_parameters &other) noexcept {
-  std::swap(parameters_, other.parameters_);
-}
-
-void url_search_parameters::append(
-    std::string_view name,
-    std::string_view value) {
-  parameters_.emplace_back(name, value);
-  update();
-}
-
-namespace {
-template<class Iterator>
-inline auto remove_parameter(Iterator first, Iterator last, std::string_view name) {
-  return std::remove_if(
-      first, last,
-      [&name](const auto &parameter) { return name == parameter.first; });
-}
-
-template<class Iterator>
-inline auto find_parameter(Iterator first, Iterator last, std::string_view name) {
-  return std::find_if(
-      first, last,
-      [&name](const auto &parameter) { return name == parameter.first; });
-}
-}  // namespace
-
 void url_search_parameters::remove(
     std::string_view name) {
   auto first = std::begin(parameters_), last = std::end(parameters_);
-  auto it = remove_parameter(first, last, name);
+  auto it = std::remove_if(first, last, is_name(name));
   parameters_.erase(it, last);
   update();
 }
@@ -66,7 +44,7 @@ void url_search_parameters::remove(
 auto url_search_parameters::get(
     std::string_view name) const -> std::optional<string_type> {
   auto first = std::begin(parameters_), last = std::end(parameters_);
-  auto it = find_parameter(first, last, name);
+  auto it = std::find_if(first, last, is_name(name));
   return (it != last) ? std::make_optional(it->second) : std::nullopt;
 }
 
@@ -76,7 +54,7 @@ auto url_search_parameters::get_all(
   result.reserve(parameters_.size());
   for (auto[parameter_name, value] : parameters_) {
     if (parameter_name == name) {
-      result.push_back(value);
+      result.emplace_back(value);
     }
   }
   return result;
@@ -84,17 +62,19 @@ auto url_search_parameters::get_all(
 
 auto url_search_parameters::contains(std::string_view name) const noexcept -> bool {
   auto first = std::begin(parameters_), last = std::end(parameters_);
-  return find_parameter(first, last, name) != last;
+  return std::find_if(first, last, is_name(name)) != last;
 }
 
 void url_search_parameters::set(
     std::string_view name,
     std::string_view value) {
   auto first = std::begin(parameters_), last = std::end(parameters_);
-  auto it = find_parameter(first, last, name);
+  auto it = std::find_if(first, last, is_name(name));
   if (it != last) {
     it->second = value;
-    it = remove_parameter(++it, last, name);
+
+    ++it;
+    it = std::remove_if(it, last, is_name(name));
     parameters_.erase(it, last);
   } else {
     parameters_.emplace_back(name, value);
@@ -102,33 +82,20 @@ void url_search_parameters::set(
   update();
 }
 
-void url_search_parameters::clear() noexcept {
-  parameters_.clear();
-  update();
-}
-
-void url_search_parameters::sort() {
-  auto first = std::begin(parameters_), last = std::end(parameters_);
-  std::sort(
-      first, last,
-      [](const auto &lhs, const auto &rhs) -> bool { return lhs.first < rhs.first; });
-  update();
-}
-
 auto url_search_parameters::to_string() const -> string_type {
   auto result = string_type{};
 
-  auto first = std::begin(parameters_), last = std::end(parameters_);
-  auto it = first;
-  while (it != last) {
-    result.append(percent_encode<string_type>(it->first));
-    result.append("=");
-    result.append(percent_encode<string_type>(it->second));
-
-    ++it;
-    if (it != last) {
+  bool start = true;
+  for (const auto &[name, value] : parameters_) {
+    if (start) {
+      start = false;
+    }
+    else {
       result.append("&");
     }
+    result.append(percent_encode<string_type>(name));
+    result.append("=");
+    result.append(percent_encode<string_type>(value));
   }
 
   return result;
