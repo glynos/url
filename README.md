@@ -31,7 +31,7 @@ and standard library.
 ### ``vcpkg``
 
 ``skyr::url`` is available on [``vcpkg``](https://github.com/microsoft/vcpkg).
-It can be followed by executing the following steps:
+It can be installed by executing the following steps:
 
 ```bash
 > cd ${VCPKG_ROOT}
