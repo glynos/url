@@ -3,10 +3,6 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-include(${PROJECT_SOURCE_DIR}/cmake/skyr-url-git.cmake)
-
-skyr_get_git_sha1(skyr-url_VERSION_SHA1)
-
 configure_file(
         version.hpp.in
         ${PROJECT_BINARY_DIR}/include/skyr/version.hpp
