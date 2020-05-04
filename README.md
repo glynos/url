@@ -179,12 +179,15 @@ the install command as an administrator (e.g. on Linux as `sudo`).
 
 ## Dependencies
 
-This library uses [expected](https://github.com/TartanLlama/expected)
-and a modified implementation of [utfcpp](https://github.com/nemtrif/utfcpp).
+This library uses [expected](https://github.com/TartanLlama/expected).
 
 The tests use [Catch2](https://github.com/catchorg/catch2),
 [nlohmann-json](https://github.com/nlohmann/json) and
 [fmtlib](https://github.com/fmtlib/fmt).
+
+## Acknowledgements
+
+This library includes a modified implementation of [utfcpp](https://github.com/nemtrif/utfcpp).
 
 ## Requirements
 

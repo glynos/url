@@ -102,16 +102,6 @@ struct percent_encoded_char {
       '%',
       details::hex_to_letter(static_cast<char>((static_cast<unsigned>(byte) >> 4u) & 0x0fu)),
       details::hex_to_letter(static_cast<char>(static_cast<unsigned >(byte) & 0x0fu))} {}
-  ///
-  percent_encoded_char(const percent_encoded_char &) = default;
-  ///
-  percent_encoded_char(percent_encoded_char &&) noexcept = default;
-  ///
-  percent_encoded_char &operator=(const percent_encoded_char &) = default;
-  ///
-  percent_encoded_char &operator=(percent_encoded_char &&) noexcept = default;
-  ///
-  ~percent_encoded_char() = default;
 
   ///
   /// \return

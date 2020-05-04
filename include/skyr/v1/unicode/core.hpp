@@ -17,28 +17,28 @@ namespace unicode {
 ///
 /// \param octet
 /// \return
-constexpr auto mask8(uint8_t octet) {
+constexpr inline auto mask8(uint8_t octet) {
   return static_cast<uint8_t>(0xffu & octet);
 }
 
 ///
 /// \param value
 /// \return
-constexpr auto mask16(char16_t value) {
+constexpr inline auto mask16(char16_t value) {
   return static_cast<char16_t>(u'\xffff' & value);
 }
 
 ///
 /// \param octet
 /// \return
-constexpr auto is_trail(uint8_t octet) {
+constexpr inline auto is_trail(uint8_t octet) {
   return ((mask8(octet) >> 6u) == 0x2u);
 }
 
 ///
 /// \param code_point
 /// \return
-constexpr auto is_lead_surrogate(char16_t code_point) {
+constexpr inline auto is_lead_surrogate(char16_t code_point) {
   return
       (code_point >= constants::surrogates::lead_min) &&
       (code_point <= constants::surrogates::lead_max);
@@ -47,7 +47,7 @@ constexpr auto is_lead_surrogate(char16_t code_point) {
 ///
 /// \param value
 /// \return
-constexpr auto is_trail_surrogate(char16_t value) {
+constexpr inline auto is_trail_surrogate(char16_t value) {
   return
       (value >= constants::surrogates::trail_min) &&
       (value <= constants::surrogates::trail_max);
@@ -56,7 +56,7 @@ constexpr auto is_trail_surrogate(char16_t value) {
 ///
 /// \param value
 /// \return
-constexpr auto is_surrogate(char16_t value) {
+constexpr inline auto is_surrogate(char16_t value) {
   return
       (value >= constants::surrogates::lead_min) &&
       (value <= constants::surrogates::trail_max);
@@ -65,7 +65,7 @@ constexpr auto is_surrogate(char16_t value) {
 /// Tests if the code point is a valid value.
 /// \param code_point
 /// \return \c true if it has a valid value, \c false otherwise
-constexpr auto is_valid_code_point(char32_t code_point) {
+constexpr inline auto is_valid_code_point(char32_t code_point) {
   return
       (code_point <= constants::code_points::max) &&
       !is_surrogate(static_cast<char16_t>(code_point));
@@ -74,7 +74,7 @@ constexpr auto is_valid_code_point(char32_t code_point) {
 /// Returns the size of the sequnce given the lead octet value.
 /// \param lead_value
 /// \return 1, 2, 3 or 4
-constexpr auto sequence_length(uint8_t lead_value) {
+constexpr inline auto sequence_length(uint8_t lead_value) {
   auto lead = mask8(lead_value);
   if (lead < 0x80u) {
     return 1;
@@ -164,7 +164,7 @@ template<typename OctetIterator>
 auto from_two_byte_sequence(OctetIterator first) -> tl::expected<sequence_state<OctetIterator>, std::error_code> {
   using result_type = tl::expected<sequence_state<OctetIterator>, std::error_code>;
 
-  auto set_code_point = [](auto state) -> result_type {
+  constexpr static auto set_code_point = [](auto state) -> result_type {
     return update_value(
         state,
         ((state.value << 6) & 0x7ff) + (*state.it & 0x3f));
@@ -186,13 +186,13 @@ template<typename OctetIterator>
 auto from_three_byte_sequence(OctetIterator first) -> tl::expected<sequence_state<OctetIterator>, std::error_code> {
   using result_type = tl::expected<sequence_state<OctetIterator>, std::error_code>;
 
-  auto update_code_point_from_second_byte = [](auto state) -> result_type {
+  constexpr static auto update_code_point_from_second_byte = [](auto state) -> result_type {
     return update_value(
         state,
         ((state.value << 12) & 0xffff) + ((mask8(*state.it) << 6) & 0xfff));
   };
 
-  auto set_code_point = [](auto state) -> result_type {
+  constexpr static auto set_code_point = [](auto state) -> result_type {
     return update_value(
         state,
         state.value + (*state.it & 0x3f));
@@ -215,19 +215,19 @@ template<typename OctetIterator>
 auto from_four_byte_sequence(OctetIterator first) -> tl::expected<sequence_state<OctetIterator>, std::error_code> {
   using result_type = tl::expected<sequence_state<OctetIterator>, std::error_code>;
 
-  auto update_code_point_from_second_byte = [](auto state) -> result_type {
+  constexpr static auto update_code_point_from_second_byte = [](auto state) -> result_type {
     return update_value(
         state,
         ((state.value << 18) & 0x1fffff) + ((mask8(*state.it) << 12) & 0x3ffff));
   };
 
-  auto update_code_point_from_third_byte = [](auto state) -> result_type {
+  constexpr static auto update_code_point_from_third_byte = [](auto state) -> result_type {
     return update_value(
         state,
         state.value + ((mask8(*state.it) << 6) & 0xfff));
   };
 
-  auto set_code_point = [](auto state) -> result_type {
+  constexpr static auto set_code_point = [](auto state) -> result_type {
     return update_value(
         state,
         state.value + (*state.it & 0x3f));

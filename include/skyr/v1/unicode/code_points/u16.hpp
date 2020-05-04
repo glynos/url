@@ -33,17 +33,6 @@ class u16_code_point_t {
       : code_point_((lead_value << 10U) + trail_value + constants::surrogates::offset) {}
 
   ///
-  constexpr u16_code_point_t(const u16_code_point_t &) = default;
-  ///
-  constexpr u16_code_point_t(u16_code_point_t &&) noexcept = default;
-  ///
-  u16_code_point_t &operator=(const u16_code_point_t &) = default;
-  ///
-  u16_code_point_t &operator=(u16_code_point_t &&) noexcept = default;
-  ///
-  ~u16_code_point_t() = default;
-
-  ///
   /// \return
   [[nodiscard]] constexpr auto is_surrogate_pair() const noexcept {
     return code_point_ > U'\xffff';
