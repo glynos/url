@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <skyr/v1/core/parse.hpp>
+#include <skyr/v1/core/check_input.hpp>
 #include <skyr/v1/core/errors.hpp>
 #include "url_parse_impl.hpp"
 #include "url_parser_context.hpp"
@@ -14,6 +15,7 @@ inline namespace v1 {
 namespace details {
 auto basic_parse(
     std::string_view input,
+    bool *validation_error,
     const url_record *base,
     const url_record *url,
     std::optional<url_parse_state> state_override) -> tl::expected<url_record, std::error_code> {
@@ -21,7 +23,7 @@ auto basic_parse(
   using url_parse_func = std::function<return_type(url_parser_context &, char)>;
   using url_parse_funcs = std::vector<url_parse_func>;
 
-  auto parse_funcs = url_parse_funcs{
+  const static auto parse_funcs = url_parse_funcs{
       [](auto &context,
           auto byte) -> tl::expected<url_parse_action, url_parse_errc> {
          return context.parse_scheme_start(byte);
@@ -108,8 +110,9 @@ auto basic_parse(
        }
   };
 
+  auto input_ = preprocess_input(input, validation_error);
   auto context = url_parser_context(
-      input, base, url, state_override);
+      input_, validation_error, base, url, state_override);
 
   while (true) {
     auto func = parse_funcs[static_cast<std::size_t>(context.state)];
@@ -140,13 +143,28 @@ auto basic_parse(
 
 auto parse(
     std::string_view input) -> tl::expected<url_record, std::error_code> {
-  return details::parse(input, nullptr);
+  bool validation_error = false;
+  return details::parse(input, &validation_error, nullptr);
+}
+
+auto parse(
+    std::string_view input,
+    bool *validation_error) -> tl::expected<url_record, std::error_code> {
+  return details::parse(input, validation_error, nullptr);
 }
 
 auto parse(
     std::string_view input,
     const url_record &base) -> tl::expected<url_record, std::error_code> {
-  return details::parse(input, &base);
+  bool validation_error = false;
+  return details::parse(input, &validation_error, &base);
+}
+
+auto parse(
+    std::string_view input,
+    const url_record &base,
+    bool *validation_error) -> tl::expected<url_record, std::error_code> {
+  return details::parse(input, validation_error, &base);
 }
 }  // namespace v1
 }  // namespace skyr

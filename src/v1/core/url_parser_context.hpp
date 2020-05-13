@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SKYR_URL_CONTEXT_HPP
-#define SKYR_URL_CONTEXT_HPP
+#ifndef SKYR_V1_CORE_URL_PARSER_CONTEXT_HPP
+#define SKYR_V1_CORE_URL_PARSER_CONTEXT_HPP
 
 #include <cassert>
 #include <string_view>
@@ -26,12 +26,13 @@ class url_parser_context {
 
  private:
 
-  std::string input;
-  std::string_view view;
+  std::string_view input;
 
  public:
 
   std::string_view::const_iterator it;
+
+  bool *validation_error;
 
   const url_record *base;
   url_record url;
@@ -47,26 +48,27 @@ class url_parser_context {
 
   url_parser_context(
       std::string_view input,
+      bool *validation_error,
       const url_record *base,
       const url_record *url=nullptr,
       std::optional<url_parse_state> state_override=std::nullopt);
 
   [[nodiscard]] auto is_eof() const noexcept {
-    return it == end(view);
+    return it == end(input);
   }
 
   void increment() noexcept {
-    assert(it != end(view));
+    assert(it != end(input));
     ++it;
   }
 
   void decrement() noexcept {
-    assert(it != begin(view));
+    assert(it != begin(input));
     --it;
   }
 
   void reset() noexcept {
-    it = begin(view);
+    it = begin(input);
   }
 
   void restart_from_buffer() noexcept {
@@ -98,4 +100,4 @@ class url_parser_context {
 }  // namespace v1
 }  // namespace skyr
 
-#endif // SKYR_URL_CONTEXT_HPP
+#endif // SKYR_V1_CORE_URL_PARSER_CONTEXT_HPP

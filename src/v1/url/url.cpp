@@ -17,7 +17,8 @@ inline namespace v1 {
 void url::initialize(string_view input, const url_record *base) {
   using result_type = tl::expected<void, std::error_code>;
 
-  details::parse(input, base)
+  bool validation_error = false;
+  details::parse(input, &validation_error, base)
       .and_then([=](auto &&url) -> result_type {
         update_record(std::forward<url_record>(url));
         return {};
@@ -29,7 +30,8 @@ void url::initialize(string_view input, const url_record *base) {
 }
 
 auto url::set_href(string_view href) -> std::error_code {
-  auto new_url = details::basic_parse(href);
+  bool validation_error = false;
+  auto new_url = details::basic_parse(href, &validation_error);
   if (!new_url) {
     return new_url.error();
   }
@@ -60,8 +62,9 @@ auto url::set_protocol(string_view protocol) -> std::error_code {
     protocol = string_view(protocol_);
   }
 
+  bool validation_error = false;
   auto new_url = details::basic_parse(
-      protocol, nullptr, &url_, url_parse_state::scheme_start);
+      protocol, &validation_error, nullptr, &url_, url_parse_state::scheme_start);
   if (!new_url) {
     return new_url.error();
   }
@@ -111,8 +114,9 @@ auto url::set_host(string_view host) -> std::error_code {
         url_parse_errc::cannot_be_a_base_url);
   }
 
+  bool validation_error = false;
   auto new_url = details::basic_parse(
-      host, nullptr, &url_, url_parse_state::host);
+      host, &validation_error, nullptr, &url_, url_parse_state::host);
   if (!new_url) {
     return new_url.error();
   }
@@ -126,8 +130,9 @@ auto url::set_hostname(string_view hostname) -> std::error_code {
         url_parse_errc::cannot_be_a_base_url);
   }
 
+  bool validation_error = false;
   auto new_url = details::basic_parse(
-      hostname, nullptr, &url_, url_parse_state::hostname);
+      hostname, &validation_error, nullptr, &url_, url_parse_state::hostname);
   if (!new_url) {
     return new_url.error();
   }
@@ -136,15 +141,18 @@ auto url::set_hostname(string_view hostname) -> std::error_code {
 }
 
 auto url::is_ipv4_address() const -> bool {
-  return parse_ipv4_address(hostname()).has_value();
+  bool validation_error = false;
+  return parse_ipv4_address(hostname(), &validation_error).has_value();
 }
 
 auto url::ipv4_address() const -> std::optional<skyr::ipv4_address> {
-  auto address = parse_ipv4_address(hostname());
+  bool validation_error = false;
+  auto address = parse_ipv4_address(hostname(), &validation_error);
   return address ? std::make_optional(address.value()) : std::nullopt;
 }
 
 auto url::is_ipv6_address() const -> bool {
+  bool validation_error = false;
   if (!url_.host) {
     return false;
   }
@@ -152,10 +160,11 @@ auto url::is_ipv6_address() const -> bool {
   if ((view.size() <= 2) || view.front() != '[' || view.back() != ']') {
     return false;
   }
-  return parse_ipv6_address(view.substr(1, view.size() - 2)).has_value();
+  return parse_ipv6_address(view.substr(1, view.size() - 2), &validation_error).has_value();
 }
 
 auto url::ipv6_address() const -> std::optional<skyr::ipv6_address> {
+  bool validation_error = false;
   if (!url_.host) {
     return std::nullopt;
   }
@@ -164,7 +173,7 @@ auto url::ipv6_address() const -> std::optional<skyr::ipv6_address> {
     return std::nullopt;
   }
 
-  auto address = parse_ipv6_address(view.substr(1, view.size() - 2));
+  auto address = parse_ipv6_address(view.substr(1, view.size() - 2), &validation_error);
   return address.has_value() ? std::make_optional(address.value()) : std::nullopt;
 }
 
@@ -183,8 +192,9 @@ auto url::set_port(string_view port) -> std::error_code {
     new_url.port = std::nullopt;
     update_record(std::move(new_url));
   } else {
+    bool validation_error = false;
     auto new_url = details::basic_parse(
-        port, nullptr, &url_, url_parse_state::port);
+        port, &validation_error, nullptr, &url_, url_parse_state::port);
     if (!new_url) {
       return new_url.error();
     }
@@ -201,8 +211,9 @@ auto  url::set_pathname(string_view pathname) -> std::error_code {
   }
 
   url_.path.clear();
+  bool validation_error = false;
   auto new_url = details::basic_parse(
-      pathname, nullptr, &url_, url_parse_state::path_start);
+      pathname, &validation_error, nullptr, &url_, url_parse_state::path_start);
   if (!new_url) {
     return new_url.error();
   }
@@ -223,8 +234,9 @@ auto url::set_search(string_view search) -> std::error_code {
   }
 
   url.query = "";
+  bool validation_error = false;
   auto new_url = details::basic_parse(
-      search, nullptr, &url, url_parse_state::query);
+      search, &validation_error, nullptr, &url, url_parse_state::query);
   if (!new_url) {
     return new_url.error();
   }
@@ -244,7 +256,8 @@ auto url::set_hash(string_view hash) -> std::error_code {
   }
 
   url_.fragment = "";
-  auto new_url = details::basic_parse(hash, nullptr, &url_, url_parse_state::fragment);
+  bool validation_error = false;
+  auto new_url = details::basic_parse(hash, &validation_error, nullptr, &url_, url_parse_state::fragment);
   if (!new_url) {
     return new_url.error();
   }
@@ -260,7 +273,8 @@ namespace details {
 auto make_url(
     url::string_view input,
     const url_record *base) -> tl::expected<url, std::error_code> {
-  return parse(input, base)
+  bool validation_error = false;
+  return parse(input, &validation_error, base)
       .and_then([](auto &&new_url) -> tl::expected<url, std::error_code> {
         return url(std::forward<url_record>(new_url));
       });
