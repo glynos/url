@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2020-05-23
+
+### Changed
+
+- API of URL parsing and serialization functions
+
+### Fixed
+
+- Added tl::expected dependency to skyr-url-config.cmake.in
+- Fixed header location for catch.hpp in unit tests
+- Build scripts not consistently correctly setting compiler options
+
 ## [1.7.5] - 2020-05-03
 
 ### Fixed
@@ -184,6 +196,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixes to ``CMakeLists.txt``
 
 ## [1.0] - 2018-10-13
+
 ### Added
 - Conversion functions between ``skyr::url`` and ``std::filesystem::path`` 
 
