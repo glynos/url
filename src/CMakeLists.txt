@@ -23,6 +23,8 @@ target_sources(skyr-url
         v1/core/url_parser_context.cpp
         v1/core/parse.cpp
         v1/core/url_parse_impl.hpp
+        v1/network/ipv4_address.cpp
+        v1/network/ipv6_address.cpp
         v1/domain/domain.cpp
         v1/domain/punycode.cpp
         v1/domain/idna.cpp
@@ -114,17 +116,18 @@ set(msvc $<CXX_COMPILER_ID:MSVC>)
 target_compile_definitions(
         skyr-url
         PRIVATE
-        $<${msvc}:/D_SCL_SECURE_NO_WARNINGS>
-        $<${msvc}:/D_CRT_SECURE_NO_DEPRECATE>
+        $<${msvc}:_SCL_SECURE_NO_WARNINGS>
+        $<${msvc}:_CRT_SECURE_NO_DEPRECATE>
 )
 
 target_compile_options(
         skyr-url
         PRIVATE
-        $<$<AND:$<OR:${gnu},${clang}>,${full_warnings}>:-Wall>
+        $<$<AND:$<OR:${gnu},${clang}>,${full_warnings}>:-Wall -Wextra>
         $<$<AND:$<OR:${gnu},${clang}>,${warnings_as_errors}>:-Werror>
         $<$<AND:$<OR:${gnu},${clang}>,${no_exceptions}>:-fno-exceptions>
         $<$<AND:$<OR:${gnu},${clang}>,${no_rtti}>:-fno-rtti>
+        $<$<AND:$<OR:${gnu},${clang}>,$<CONFIG:MinSizeRel>>:-flto>
 
         $<$<AND:${clang},$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>:-stdlib=libc++>
 
