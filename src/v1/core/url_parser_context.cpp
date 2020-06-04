@@ -97,23 +97,19 @@ inline auto is_windows_drive_letter(std::string_view segment) noexcept {
   return result;
 }
 
+constexpr static auto to_lower = [] (auto byte) -> decltype(byte) {
+    return std::tolower(byte, std::locale::classic());
+};
+
 inline auto is_single_dot_path_segment(std::string_view segment) noexcept {
   auto lower = std::string(segment);
-  std::transform(begin(lower), end(lower), begin(lower),
-                 [] (auto byte) -> decltype(byte) {
-    return std::tolower(byte, std::locale::classic());
-  });
-
+  std::transform(begin(lower), end(lower), begin(lower), to_lower);
   return ((lower == ".") || (lower == "%2e"));
 }
 
 auto is_double_dot_path_segment(std::string_view segment) noexcept {
   auto lower = std::string(segment);
-  std::transform(begin(lower), end(lower), begin(lower),
-                 [] (auto byte) -> decltype(byte) {
-    return std::tolower(byte, std::locale::classic());
-  });
-
+  std::transform(begin(lower), end(lower), begin(lower), to_lower);
   return (
       (lower == "..") ||
       (lower == ".%2e") ||
