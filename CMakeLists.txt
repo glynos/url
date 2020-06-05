@@ -23,6 +23,7 @@ option(skyr_BUILD_WITHOUT_EXCEPTIONS "Build without exceptions." OFF)
 option(skyr_BUILD_WITHOUT_RTTI "Build without RTTI." OFF)
 option(skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
 option(skyr_BUILD_WITH_LLVM_LIBCXX "Instruct Clang to use LLVM's implementation of C++ standard library" OFF)
+option(skyr_ENABLE_FILESYSTEM_FUNCTIONS "Enable functions to convert URL to std::filesystem::path" ON)
 option(skyr_ENABLE_JSON_FUNCTIONS "Enable functions to convert URL components to JSON" ON)
 
 set(CMAKE_VERBOSE_MAKEFILE true)
@@ -66,7 +67,9 @@ endif()
 # Add an alias for projects that use skyr-url as a dependency
 if (NOT CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     add_library(skyr::skyr-url ALIAS skyr-url)
-    add_library(skyr::skyr-filesystem ALIAS skyr-filesystem)
+    if (skyr_ENABLE_FILESYSTEM_FUNCTIONS)
+        add_library(skyr::skyr-filesystem ALIAS skyr-filesystem)
+    endif()
     if (skyr_ENABLE_JSON_FUNCTIONS)
         add_library(skyr::skyr-json ALIAS skyr-json)
     endif()
@@ -86,7 +89,10 @@ write_basic_package_version_file(
         COMPATIBILITY SameMajorVersion
         ARCH_INDEPENDENT)
 
-set(skyr_TARGETS skyr-url skyr-filesystem)
+set(skyr_TARGETS skyr-url)
+if (skyr_ENABLE_FILESYSTEM_FUNCTIONS)
+    list(APPEND skyr_TARGETS skyr-filesystem)
+endif()
 if (skyr_ENABLE_JSON_FUNCTIONS)
     list(APPEND skyr_TARGETS skyr-json)
 endif()
@@ -107,5 +113,56 @@ install(FILES
         "${PROJECT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
         DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}")
 
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/" TYPE INCLUDE)
-install(DIRECTORY "${PROJECT_BINARY_DIR}/include/" TYPE INCLUDE)
+install(
+        DIRECTORY
+        "${PROJECT_SOURCE_DIR}/include/skyr/core"
+        "${PROJECT_SOURCE_DIR}/include/skyr/domain"
+        "${PROJECT_SOURCE_DIR}/include/skyr/network"
+        "${PROJECT_SOURCE_DIR}/include/skyr/percent_encoding"
+        "${PROJECT_SOURCE_DIR}/include/skyr/query"
+        DESTINATION
+        include/skyr
+)
+
+install(
+        DIRECTORY
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/core"
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/domain"
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/network"
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/percent_encoding"
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/platform"
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/query"
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/ranges"
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/string"
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/traits"
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode"
+        DESTINATION
+        include/skyr/v1
+)
+
+install(
+        FILES
+        "${PROJECT_BINARY_DIR}/include/skyr/version.hpp"
+        "${PROJECT_SOURCE_DIR}/include/skyr/config.hpp"
+        "${PROJECT_SOURCE_DIR}/include/skyr/url.hpp"
+        DESTINATION
+        include/skyr
+)
+
+install(
+        FILES
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/url.hpp"
+        "${PROJECT_SOURCE_DIR}/include/skyr/v1/url_search_parameters.hpp"
+        DESTINATION
+        include/skyr/v1
+)
+
+if (skyr_ENABLE_FILESYSTEM_FUNCTIONS)
+    install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/skyr/filesystem" DESTINATION include/skyr)
+    install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/skyr/v1/filesystem" DESTINATION include/skyr/v1)
+endif()
+
+if (skyr_ENABLE_JSON_FUNCTIONS)
+    install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/skyr/json" DESTINATION include/skyr)
+    install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/skyr/v1/json" DESTINATION include/skyr/v1)
+endif()
