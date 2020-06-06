@@ -142,7 +142,7 @@ target_link_libraries(
         PUBLIC
         tl::expected
         PRIVATE
-        $<$<AND:${clang},$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>:c++>
+        $<${libcxx}:c++>
 )
 
 target_include_directories(
@@ -159,7 +159,7 @@ target_include_directories(
 # skyr-filesystem
 #################################################
 
-if (skyr_ENABLE_JSON_FUNCTIONS)
+if (skyr_ENABLE_FILESYSTEM_FUNCTIONS)
     add_library(skyr-filesystem INTERFACE)
 
     target_compile_features(skyr-filesystem INTERFACE cxx_std_17)
