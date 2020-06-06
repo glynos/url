@@ -50,11 +50,13 @@ class percent_decode_iterator {
   ///
   using reference = const_reference;
   ///
-  using const_pointer = const typename std::add_pointer<value_type>::type;
+  using const_pointer = const value_type *;
   ///
   using pointer = const_pointer;
   ///
   using difference_type = std::ptrdiff_t;
+  ///
+  using size_type = std::size_t;
 
   ///
   percent_decode_iterator() = default;
@@ -240,9 +242,9 @@ struct percent_decode_fn {
 
 };
 
-namespace view {
+namespace views {
 static constexpr percent_decode_fn decode;
-}  // namespace view
+}  // namespace views
 
 ///
 /// \tparam Output

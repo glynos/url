@@ -9,14 +9,15 @@
 #include <cassert>
 #include <iterator>
 #include <optional>
+#include <type_traits>
+#include <tl/expected.hpp>
 #include <skyr/v1/unicode/core.hpp>
 #include <skyr/v1/unicode/errors.hpp>
 #include <skyr/v1/unicode/ranges/transforms/u32_transform.hpp>
 #include <skyr/v1/unicode/ranges/views/u8_view.hpp>
+#include <skyr/v1/unicode/ranges/sentinel.hpp>
 #include <skyr/v1/unicode/traits/range_iterator.hpp>
 #include <skyr/v1/unicode/traits/range_value.hpp>
-#include <tl/expected.hpp>
-#include <type_traits>
 
 namespace skyr {
 inline namespace v1 {
@@ -37,11 +38,13 @@ class u16_range_iterator {
   ///
   using reference = const_reference;
   ///
-  using const_pointer = const typename std::add_pointer<value_type>::type;
+  using const_pointer = const value_type *;
   ///
   using pointer = const_reference;
   ///
   using difference_type = std::ptrdiff_t;
+  ///
+  using size_type = std::size_t;
 
   /// \brief Constructor
   u16_range_iterator() = default;
@@ -56,7 +59,7 @@ class u16_range_iterator {
 
   ///
   /// \return
-  auto operator ++ (int) noexcept {
+  auto operator ++ (int) noexcept -> u16_range_iterator {
     auto result = *this;
     increment();
     return result;
@@ -64,7 +67,7 @@ class u16_range_iterator {
 
   ///
   /// \return
-  auto &operator ++ () noexcept {
+  auto operator ++ () noexcept -> u16_range_iterator & {
     increment();
     return *this;
   }
@@ -104,6 +107,20 @@ class u16_range_iterator {
     return !(*this == other);
   }
 
+  ///
+  /// \param sentinel
+  /// \return
+  [[maybe_unused]] auto operator == ([[maybe_unused]] sentinel sentinel) const noexcept {
+    return !it_;
+  }
+
+  ///
+  /// \param sentinel
+  /// \return
+  [[maybe_unused]] auto operator != ([[maybe_unused]] sentinel sentinel) const noexcept {
+    return !(*this == sentinel);
+  }
+
  private:
 
   void increment() {
@@ -124,7 +141,7 @@ class u16_range_iterator {
 template <class U16Range>
 class view_u16_range {
 
-  using iterator_type = u16_range_iterator<typename traits::range_iterator<U16Range>::type>;
+  using iterator_type = u16_range_iterator<traits::range_iterator_t<U16Range>>;
 
  public:
 
@@ -191,7 +208,7 @@ class view_u16_range {
 
 };
 
-namespace view {
+namespace views {
 ///
 ///
 /// \tparam U16Range
@@ -199,10 +216,10 @@ namespace view {
 /// \return
 template <typename U16Range>
 inline auto as_u16(const U16Range &range) {
-  static_assert(sizeof(typename traits::range_value<U16Range>::type) >= 2);
+  static_assert(sizeof(traits::range_value_t<U16Range>) >= 2);
   return view_u16_range{range};
 }
-}  // namespace view
+}  // namespace views
 }  // namespace unicode
 }  // namespace v1
 }  // namespace skyr

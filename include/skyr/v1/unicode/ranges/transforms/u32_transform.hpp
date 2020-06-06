@@ -8,12 +8,13 @@
 
 #include <iterator>
 #include <optional>
+#include <type_traits>
+#include <tl/expected.hpp>
 #include <skyr/v1/unicode/core.hpp>
 #include <skyr/v1/unicode/errors.hpp>
 #include <skyr/v1/unicode/ranges/views/u8_view.hpp>
+#include <skyr/v1/unicode/ranges/sentinel.hpp>
 #include <skyr/v1/unicode/traits/range_iterator.hpp>
-#include <tl/expected.hpp>
-#include <type_traits>
 
 namespace skyr {
 inline namespace v1 {
@@ -33,14 +34,17 @@ class u32_transform_iterator {
   ///
   using reference = const_reference;
   ///
-  using const_pointer = const typename std::add_pointer<value_type>::type;
+  using const_pointer = const value_type *;
   ///
   using pointer = const_pointer;
   ///
   using difference_type = std::ptrdiff_t;
+  ///
+  using size_type = std::size_t;
 
   ///
   constexpr u32_transform_iterator() = default;
+
   ///
   /// \param it
   explicit constexpr u32_transform_iterator(CodePointIterator it)
@@ -48,7 +52,7 @@ class u32_transform_iterator {
 
   ///
   /// \return
-  auto operator ++ (int) noexcept {
+  auto operator ++ (int) noexcept -> u32_transform_iterator {
     auto result = *this;
     ++it_;
     return result;
@@ -56,7 +60,7 @@ class u32_transform_iterator {
 
   ///
   /// \return
-  auto &operator ++ () noexcept {
+  auto operator ++ () noexcept -> u32_transform_iterator & {
     ++it_;
     return *this;
   }
@@ -93,7 +97,7 @@ class u32_transform_iterator {
 template <class CodePointRange>
 class transform_u32_range {
 
-  using iterator_type = typename traits::range_iterator<CodePointRange>::type;
+  using iterator_type = traits::range_iterator_t<CodePointRange>;
 
  public:
 
@@ -185,10 +189,10 @@ struct transform_u32_range_fn {
 
 };
 
-namespace transform {
+namespace transforms {
 ///
 static constexpr transform_u32_range_fn to_u32;
-}  // namespace transform
+}  // namespace transforms
 
 ///
 /// \tparam Output

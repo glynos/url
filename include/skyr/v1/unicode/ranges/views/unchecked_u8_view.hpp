@@ -8,19 +8,22 @@
 
 #include <iterator>
 #include <optional>
+#include <tl/expected.hpp>
 #include <skyr/v1/unicode/code_point.hpp>
 #include <skyr/v1/unicode/core.hpp>
 #include <skyr/v1/unicode/errors.hpp>
 #include <skyr/v1/unicode/traits/range_iterator.hpp>
-#include <tl/expected.hpp>
-#include <type_traits>
+#include <skyr/v1/unicode/ranges/sentinel.hpp>
 
 namespace skyr {
 inline namespace v1 {
 namespace unicode {
 ///
 /// \tparam OctetIterator
-template <typename OctetIterator>
+template <
+    class OctetIterator,
+    class Sentinel=OctetIterator
+    >
 class unchecked_u8_range_iterator {
  public:
 
@@ -33,19 +36,25 @@ class unchecked_u8_range_iterator {
   ///
   using reference = const_reference;
   ///
+  using const_pointer = const value_type *;
+  ///
+  using pointer = const_reference;
+  ///
   using difference_type = std::ptrdiff_t;
+  ///
+  using size_type = std::size_t;
 
   ///
   constexpr unchecked_u8_range_iterator() = default;
   ///
   /// \param it
   /// \param last
-  constexpr unchecked_u8_range_iterator(OctetIterator it, OctetIterator last)
-      : it_(it), last_(last) {}
+  constexpr unchecked_u8_range_iterator(OctetIterator it, Sentinel sentinel)
+      : it_(it), sentinel_(sentinel) {}
 
   ///
   /// \return
-  auto operator ++ (int) noexcept {
+  auto operator ++ (int) noexcept -> unchecked_u8_range_iterator {
     assert(it_);
     auto result = *this;
     increment();
@@ -54,7 +63,7 @@ class unchecked_u8_range_iterator {
 
   ///
   /// \return
-  auto &operator ++ () noexcept {
+  auto operator ++ () noexcept -> unchecked_u8_range_iterator & {
     assert(it_);
     increment();
     return *this;
@@ -83,16 +92,31 @@ class unchecked_u8_range_iterator {
     return !(*this == other);
   }
 
+  ///
+  /// \param sentinel
+  /// \return
+  [[maybe_unused]] constexpr auto operator == ([[maybe_unused]] sentinel sentinel) const noexcept {
+    return !it_;
+  }
+
+  ///
+  /// \param sentinel
+  /// \return
+  [[maybe_unused]] constexpr auto operator != (sentinel sentinel) const noexcept {
+    return !(*this == sentinel);
+  }
+
  private:
 
   void increment() {
     std::advance(it_.value(), sequence_length(*it_.value()));
-    if (it_ == last_) {
+    if (it_ == sentinel_) {
       it_ = std::nullopt;
     }
   }
 
-  std::optional<OctetIterator> it_, last_;
+  std::optional<OctetIterator> it_;
+  Sentinel sentinel_;
 
 };
 
@@ -101,7 +125,7 @@ class unchecked_u8_range_iterator {
 template <class OctetRange>
 class view_unchecked_u8_range {
 
-  using octet_iterator_type = typename traits::range_iterator<OctetRange>::type ;
+  using octet_iterator_type = traits::range_iterator_t<OctetRange>;
   using iterator_type = unchecked_u8_range_iterator<octet_iterator_type>;
 
  public:
@@ -181,17 +205,17 @@ class view_unchecked_u8_range {
 
 };
 
-namespace view {
+namespace views {
 ///
 /// \tparam OctetRange
 /// \param range
 /// \return
 template <typename OctetRange>
-inline auto unchecked_u8(
+[[maybe_unused]] inline auto unchecked_u8(
     const OctetRange &range) {
   return view_unchecked_u8_range{range};
 }
-}  // namespace view
+}  // namespace views
 }  // namespace unicode
 }  // namespace v1
 }  // namespace skyr

@@ -6,10 +6,10 @@
 #ifndef SKYR_V1_UNICODE_CODE_POINT_HPP
 #define SKYR_V1_UNICODE_CODE_POINT_HPP
 
+#include <tl/expected.hpp>
 #include <skyr/v1/unicode/code_points/u16.hpp>
 #include <skyr/v1/unicode/code_points/u8.hpp>
 #include <skyr/v1/unicode/errors.hpp>
-#include <tl/expected.hpp>
 
 namespace skyr {
 inline namespace v1 {
@@ -21,7 +21,8 @@ namespace unicode {
 template <typename OctetIterator>
 inline auto u32_value(
     u8_code_point_view<OctetIterator> code_point) noexcept -> tl::expected<char32_t, unicode_errc> {
-  return find_code_point(code_point.begin()).map([] (auto &&state) { return state.value; });
+  constexpr static auto to_value = [] (auto &&state) { return state.value; };
+  return find_code_point(code_point.begin()).map(to_value);
 }
 
 ///

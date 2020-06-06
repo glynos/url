@@ -8,11 +8,11 @@
 
 #include <iterator>
 #include <optional>
+#include <tl/expected.hpp>
 #include <skyr/v1/unicode/constants.hpp>
 #include <skyr/v1/unicode/errors.hpp>
 #include <skyr/v1/unicode/ranges/views/u16_view.hpp>
 #include <skyr/v1/unicode/traits/range_iterator.hpp>
-#include <tl/expected.hpp>
 
 namespace skyr {
 inline namespace v1 {
@@ -31,9 +31,17 @@ class u8_transform_iterator {
   /// An expected wrapper around a \c char
   using value_type = tl::expected<char, unicode_errc>;
   /// A reference
-  using reference = value_type;
+  using const_reference = value_type;
+  /// A reference
+  using reference = const_reference;
+  /// A pointer
+  using const_pointer = const value_type *;
+  /// A pointer
+  using pointer = const_pointer;
   /// \c std::ptrdiff_t
   using difference_type = std::ptrdiff_t;
+  /// \c std::size_t
+  using size_type = std::size_t;
 
   /// Constructor
   u8_transform_iterator() = default;
@@ -49,14 +57,14 @@ class u8_transform_iterator {
 
   /// Pre-increment operator
   /// \return A reference to this iterator
-  auto &operator++() noexcept {
+  auto operator++() noexcept -> u8_transform_iterator & {
     increment();
     return *this;
   }
 
   /// Post-increment operator
   /// \return A copy of the previous iterator
-  auto operator++(int) noexcept {
+  auto operator++(int) noexcept -> u8_transform_iterator {
     auto result = *this;
     increment();
     return result;
@@ -156,7 +164,7 @@ class u8_transform_iterator {
 template<class CodePointRange>
 class transform_u8_range {
 
-  using iterator_type = u8_transform_iterator<typename traits::range_iterator<CodePointRange>::type>;
+  using iterator_type = u8_transform_iterator<traits::range_iterator_t<CodePointRange>>;
 
  public:
 
@@ -166,8 +174,10 @@ class transform_u8_range {
   using const_reference = value_type;
   /// \c const_reference
   using reference = const_reference;
-  /// \c value_type*
-  using pointer = typename std::add_pointer<value_type>::type;
+  /// \c const value_type*
+  using const_pointer = const value_type *;
+  /// \c const value_type*
+  using pointer = const_pointer;
   /// \c transform_u8_iterator
   using const_iterator = iterator_type;
   /// \c const_iterator
@@ -247,9 +257,9 @@ struct u8_range_fn {
   }
 };
 
-namespace transform {
+namespace transforms {
 static constexpr u8_range_fn to_u8;
-}  // namespace transform
+}  // namespace transforms
 
 ///
 /// \tparam Output

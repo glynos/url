@@ -8,13 +8,13 @@
 
 #include <iterator>
 #include <optional>
+#include <type_traits>
+#include <tl/expected.hpp>
 #include <skyr/v1/unicode/core.hpp>
 #include <skyr/v1/unicode/errors.hpp>
 #include <skyr/v1/unicode/ranges/transforms/u32_transform.hpp>
 #include <skyr/v1/unicode/ranges/views/u8_view.hpp>
 #include <skyr/v1/unicode/traits/range_iterator.hpp>
-#include <tl/expected.hpp>
-#include <type_traits>
 
 namespace skyr {
 inline namespace v1 {
@@ -37,11 +37,13 @@ class u16_transform_iterator {
   /// \c const_reference
   using reference = const_reference;
   /// \c value_type *
-  using const_pointer = const typename std::add_pointer<value_type>::type;
+  using const_pointer = const value_type *;
   /// \c value_type *
   using pointer = const_pointer;
   /// \c std::ptrdiff_t
   using difference_type = std::ptrdiff_t;
+  /// \c std::size_t
+  using size_type = std::size_t;
 
   /// Default constructor
   u16_transform_iterator() = default;
@@ -51,19 +53,18 @@ class u16_transform_iterator {
   explicit constexpr u16_transform_iterator(
       CodePointIterator first,
       CodePointIterator last)
-      : it_(first)
-      , last_(last) {}
+      : it_(first) {}
 
   /// Pre-increment operator
   /// \return A reference to this iterator
-  auto &operator ++ () noexcept {
+  auto operator ++ () noexcept -> u16_transform_iterator & {
     ++it_;
     return *this;
   }
 
   /// Post-increment operator
   /// \return A copy of the previous iterator
-  auto operator ++ (int) noexcept {
+  auto operator ++ (int) noexcept -> u16_transform_iterator {
     auto result = *this;
     ++it_;
     return result;
@@ -87,13 +88,13 @@ class u16_transform_iterator {
   /// Inequality operator
   /// \param other The other iterator
   /// \return \c true if the iterators are not the same, \c false otherwise
-  bool operator != (const u16_transform_iterator &other) const noexcept {
+  auto operator != (const u16_transform_iterator &other) const noexcept {
     return !(*this == other);
   }
 
  private:
 
-  u32_transform_iterator<CodePointIterator> it_, last_;
+  u32_transform_iterator<CodePointIterator> it_;
 
 };
 
@@ -104,7 +105,7 @@ template <class CodePointRange>
 class transform_u16_range {
 
   using iterator_type =
-      u16_transform_iterator<typename traits::range_iterator<CodePointRange>::type>;
+      u16_transform_iterator<traits::range_iterator_t<CodePointRange>>;
 
  public:
 
@@ -197,10 +198,10 @@ struct transform_u16_range_fn {
 
 };
 
-namespace transform {
+namespace transforms {
 ///
 static constexpr transform_u16_range_fn to_u16;
-}  // namespace transform
+}  // namespace transforms
 
 /// A sink that converts a U16 range to  string.
 /// \tparam Output

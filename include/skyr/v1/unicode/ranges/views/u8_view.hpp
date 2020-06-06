@@ -9,6 +9,8 @@
 #include <cassert>
 #include <iterator>
 #include <optional>
+#include <type_traits>
+#include <tl/expected.hpp>
 #include <skyr/v1/unicode/code_point.hpp>
 #include <skyr/v1/unicode/core.hpp>
 #include <skyr/v1/unicode/errors.hpp>
@@ -16,8 +18,6 @@
 #include <skyr/v1/unicode/traits/iterator_value.hpp>
 #include <skyr/v1/unicode/traits/range_iterator.hpp>
 #include <skyr/v1/unicode/traits/range_value.hpp>
-#include <tl/expected.hpp>
-#include <type_traits>
 
 namespace skyr {
 inline namespace v1 {
@@ -25,46 +25,51 @@ namespace unicode {
 /// \brief
 ///
 /// \tparam OctetIterator
-template <typename OctetIterator>
+template <
+    class OctetIterator,
+    class Sentinel=OctetIterator
+    >
 class u8_range_iterator {
 
-  using iterator_type = unchecked_u8_range_iterator<OctetIterator>;
+  using iterator_type = unchecked_u8_range_iterator<OctetIterator, Sentinel>;
 
  public:
 
   /// \c std::forward_iterator_tag
   using iterator_category = std::forward_iterator_tag;
   /// An expected value containing a UTF-8 encoded code point
-  using value_type = tl::expected<typename traits::iterator_value<iterator_type>::type, unicode_errc>;
+  using value_type = tl::expected<traits::iterator_value_t<iterator_type>, unicode_errc>;
   /// A reference type
   using const_reference = value_type;
   /// A reference type
   using reference = const_reference;
   /// A pointer type
-  using const_pointer = const typename std::add_pointer<value_type>::type;
+  using const_pointer = const value_type *;
   /// A pointer type
   using pointer = const_pointer;
   /// \c std::ptrdiff_t
   using difference_type = std::ptrdiff_t;
+  /// \c std::size_t
+  using size_type = std::size_t;
 
   /// \brief Constructs an end range iterator
   constexpr u8_range_iterator() = default;
+
   /// \brief Constructs a \c u8_range_iterator from a range of octets
   ///
   /// \param first
   /// \param last
   constexpr u8_range_iterator(
       OctetIterator first,
-      OctetIterator last)
-      : it_(iterator_type(first, last))
-      , last_(iterator_type()) {}
+      Sentinel sentinel)
+      : it_(iterator_type(first, sentinel)) {}
 
   /// \brief Post-increment operator
   ///
   /// Increments through a code point
   ///
   /// \return The previous iterator value
-  auto operator ++ (int) noexcept {
+  auto operator ++ (int) noexcept -> u8_range_iterator {
     assert(it_);
     auto result = *this;
     increment();
@@ -76,7 +81,7 @@ class u8_range_iterator {
   /// Increments through a code point
   ///
   /// \return \c *this
-  auto &operator ++ () noexcept {
+  auto operator ++ () noexcept -> u8_range_iterator & {
     assert(it_);
     increment();
     return *this;
@@ -108,12 +113,27 @@ class u8_range_iterator {
     return !(*this == other);
   }
 
+  ///
+  /// \param sentinel
+  /// \return
+  [[maybe_unused]] constexpr auto operator == (sentinel sentinel) const noexcept {
+    return it_ == sentinel;
+  }
+
+  ///
+  /// \param sentinel
+  /// \return
+  [[maybe_unused]] constexpr auto operator != (sentinel sentinel) const noexcept {
+    return !(*this == sentinel);
+  }
+
+
  private:
 
   void increment() {
     if (**this) {
       ++it_.value();
-      if (it_ == last_) {
+      if (it_ == sentinel()) {
         it_ = std::nullopt;
       }
     } else {
@@ -121,7 +141,7 @@ class u8_range_iterator {
     }
   }
 
-  std::optional<iterator_type> it_, last_;
+  std::optional<iterator_type> it_;
 
 };
 
@@ -130,7 +150,7 @@ class u8_range_iterator {
 template <class OctetRange>
 class view_u8_range {
 
-  using octet_iterator_type = typename traits::range_iterator<OctetRange>::type;
+  using octet_iterator_type = traits::range_iterator_t<OctetRange>;
   using iterator_type = u8_range_iterator<octet_iterator_type>;
 
  public:
@@ -209,18 +229,17 @@ class view_u8_range {
 
 };
 
-namespace view {
+namespace views {
 ///
 /// \tparam OctetRange
 /// \param range
 /// \return
 template <typename OctetRange>
-inline auto as_u8(
-    const OctetRange &range) {
-  static_assert(sizeof(typename traits::range_value<OctetRange>::type) >= 1);
+inline auto as_u8(const OctetRange &range) {
+  static_assert(sizeof(traits::range_value_t<OctetRange>) >= 1);
   return view_u8_range{range};
 }
-}  // namespace view
+}  // namespace views
 }  // namespace unicode
 }  // namespace v1
 }  // namespace skyr
