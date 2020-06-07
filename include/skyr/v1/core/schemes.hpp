@@ -6,7 +6,7 @@
 #ifndef SKYR_V1_CORE_URL_SCHEMES_HPP
 #define SKYR_V1_CORE_URL_SCHEMES_HPP
 
-#include <vector>
+#include <array>
 #include <utility>
 #include <string>
 #include <string_view>
@@ -29,8 +29,7 @@ constexpr static auto schemes = default_port_list{{
                                                {"wss"sv, static_cast<std::uint16_t>(443)},
                                            }};
 
-
-constexpr auto scheme_less(
+constexpr static auto scheme_less(
     const default_port_list::value_type &special_scheme,
     std::string_view scheme) {
   return special_scheme.first < scheme;

@@ -154,40 +154,25 @@ auto url::set_hostname(string_view hostname) -> std::error_code {
 }
 
 auto url::is_ipv4_address() const -> bool {
-  bool validation_error = false;
-  return parse_ipv4_address(hostname(), &validation_error).has_value();
+  return (url_.host && url_.host.value().is_ipv4_address());
 }
 
 auto url::ipv4_address() const -> std::optional<skyr::ipv4_address> {
-  bool validation_error = false;
-  auto address = parse_ipv4_address(hostname(), &validation_error);
-  return address ? std::make_optional(address.value()) : std::nullopt;
+  if (!is_ipv4_address()) {
+    return std::nullopt;
+  }
+  return url_.host.value().ipv4_address();
 }
 
 auto url::is_ipv6_address() const -> bool {
-  bool validation_error = false;
-  if (!url_.host) {
-    return false;
-  }
-  auto view = std::string_view(url_.host.value());
-  if ((view.size() <= 2) || view.front() != '[' || view.back() != ']') {
-    return false;
-  }
-  return parse_ipv6_address(view.substr(1, view.size() - 2), &validation_error).has_value();
+  return (url_.host && url_.host.value().is_ipv6_address());
 }
 
 auto url::ipv6_address() const -> std::optional<skyr::ipv6_address> {
-  bool validation_error = false;
-  if (!url_.host) {
+  if (!is_ipv6_address()) {
     return std::nullopt;
   }
-  auto view = std::string_view(url_.host.value());
-  if ((view.size() <= 2) || view.front() != '[' || view.back() != ']') {
-    return std::nullopt;
-  }
-
-  auto address = parse_ipv6_address(view.substr(1, view.size() - 2), &validation_error);
-  return address.has_value() ? std::make_optional(address.value()) : std::nullopt;
+  return url_.host.value().ipv6_address();
 }
 
 [[nodiscard]] auto url::domain() const -> std::optional<string_type> {

@@ -8,7 +8,7 @@
 #include <array>
 #include <skyr/v1/domain/domain.hpp>
 #include <skyr/v1/core/schemes.hpp>
-#include <skyr/v1/core/parse_host.hpp>
+#include <skyr/v1/core/host.hpp>
 #include <skyr/v1/percent_encoding/percent_decode_range.hpp>
 #include <skyr/v1/string/starts_with.hpp>
 #include "url_parser_context.hpp"
@@ -28,31 +28,6 @@ auto remaining_starts_with(
     std::string_view input,
     std::string_view chars) noexcept {
   return !input.empty() && starts_with(input.substr(1), chars);
-}
-
-auto parse_host_impl(
-    std::string_view input,
-    bool is_not_special,
-    bool *validation_error) -> tl::expected<std::string, url_parse_errc> {
-  constexpr static auto to_string = [] (auto &&host) {
-      using T = std::decay_t<decltype(host)>;
-
-      if constexpr (std::is_same_v<T, std::string>) {
-        return host;
-      }
-      else if constexpr (std::is_same_v<T, ipv4_address>) {
-        return host.serialize();
-      }
-      else if constexpr (std::is_same_v<T, ipv6_address>) {
-        return "[" + host.serialize() + "]";
-      }
-    };
-
-  auto host = parse_host(input, is_not_special, validation_error);
-  if (host) {
-    return std::visit(to_string, host.value());
-  }
-  return tl::make_unexpected(host.error());
 }
 
 auto port_number(std::string_view port) noexcept -> tl::expected<std::uint16_t, url_parse_errc> {
@@ -185,7 +160,7 @@ auto url_parser_context::parse_scheme(char byte) -> tl::expected<url_parse_actio
         return tl::make_unexpected(url_parse_errc::cannot_override_scheme);
       }
 
-      if ((url.scheme == "file") && (!url.host || url.host.value().empty())) {
+      if ((url.scheme == "file") && (!url.host || url.host.value().is_empty())) {
         return tl::make_unexpected(url_parse_errc::cannot_override_scheme);
       }
     }
@@ -429,7 +404,7 @@ auto url_parser_context::parse_hostname(char byte) -> tl::expected<url_parse_act
       return tl::make_unexpected(url_parse_errc::empty_hostname);
     }
 
-    auto host = parse_host_impl(buffer, !url.is_special(), validation_error);
+    auto host = parse_host(buffer, !url.is_special(), validation_error);
     if (!host) {
       return tl::make_unexpected(host.error());
     }
@@ -459,7 +434,7 @@ auto url_parser_context::parse_hostname(char byte) -> tl::expected<url_parse_act
       return url_parse_action::success;
     }
 
-    auto host = parse_host_impl(buffer, !url.is_special(), validation_error);
+    auto host = parse_host(buffer, !url.is_special(), validation_error);
     if (!host) {
       return tl::make_unexpected(host.error());
     }
@@ -605,7 +580,7 @@ auto url_parser_context::parse_file_host(char byte) -> tl::expected<url_parse_ac
       *validation_error |= true;
       state = url_parse_state::path;
     } else if (buffer.empty()) {
-      url.host = std::string();
+      url.host = skyr::host{std::string()};
 
       if (state_override) {
         return url_parse_action::success;
@@ -613,13 +588,13 @@ auto url_parser_context::parse_file_host(char byte) -> tl::expected<url_parse_ac
 
       state = url_parse_state::path_start;
     } else {
-      auto host = parse_host_impl(buffer, !url.is_special(), validation_error);
+      auto host = parse_host(buffer, !url.is_special(), validation_error);
       if (!host) {
         return tl::make_unexpected(host.error());
       }
 
-      if (host.value() == "localhost") {
-        host.value().clear();
+      if (host.value().to_string() == "localhost") {
+        host.value() = skyr::host{""};
       }
       url.host = host.value();
 
@@ -689,9 +664,9 @@ auto url_parser_context::parse_path(char byte) -> tl::expected<url_parse_action,
     } else if (!is_single_dot_path_segment(buffer)) {
       if ((url.scheme == "file") &&
           url.path.empty() && is_windows_drive_letter(buffer)) {
-        if (!url.host || !url.host.value().empty()) {
+        if (!url.host || !url.host.value().is_empty()) {
           *validation_error |= true;
-          url.host = std::string();
+          url.host = skyr::host{std::string()};
         }
         buffer[1] = ':';
       }
