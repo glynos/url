@@ -71,6 +71,10 @@ auto adapt(uint32_t delta, uint32_t numpoints, bool firsttime) {
 
 auto punycode_encode(
     std::u32string_view input) -> tl::expected<std::string, domain_errc> {
+  if (input.empty()) {
+    return tl::make_unexpected(domain_errc::empty_string);
+  }
+
   auto result = std::string{};
   result.reserve(256);
 
@@ -140,6 +144,10 @@ auto punycode_encode(
 
 auto punycode_decode(
     std::string_view input) -> tl::expected<std::string, domain_errc> {
+  if (input.empty()) {
+    return tl::make_unexpected(domain_errc::empty_string);
+  }
+
   auto result = std::u32string();
   result.reserve(256);
 
@@ -206,8 +214,25 @@ auto punycode_decode(
   return u8_result.value();
 }
 
+auto punycode_decode(
+    std::u32string_view input) -> tl::expected<std::u32string, domain_errc> {
+  if (input.empty()) {
+    return tl::make_unexpected(domain_errc::empty_string);
+  }
+
+  auto u8input = unicode::as<std::string>(input | unicode::transforms::to_u8).value();
+  return punycode_decode(std::string_view(u8input))
+      .and_then([] (auto &&output) -> tl::expected<std::u32string, domain_errc> {
+        return unicode::as<std::u32string>(unicode::views::as_u8(output) | unicode::transforms::to_u32).value();
+      });
+}
+
 auto punycode_encode(
     std::string_view input) -> tl::expected<std::string, domain_errc> {
+  if (input.empty()) {
+    return tl::make_unexpected(domain_errc::empty_string);
+  }
+
   auto utf32 = unicode::as<std::u32string>(unicode::views::as_u8(input) | unicode::transforms::to_u32);
   if (!utf32) {
     return tl::make_unexpected(domain_errc::bad_input);
