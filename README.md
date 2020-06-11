@@ -167,7 +167,7 @@ find_package(skyr-url CONFIG REQUIRED)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(url_parts url_parts.cpp)
-target_link_libraries(url_test PRIVATE skyr::skyr-url)
+target_link_libraries(url_parts PRIVATE skyr::skyr-url)
 ```
 
 ### Output
