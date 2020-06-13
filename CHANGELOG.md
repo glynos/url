@@ -1,8 +1,24 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [1.11.0] - 2020-06-13
+
+### Added
+
+- Fixes to `ascii_to_domain` with better (but not perfect) domain name validation
+
+### Changed
+
+- API changes to host parsing and domain name accessors
+- API changes to percent encoding
+
+### Fixed
+
+- Installation of targets when JSON is disabled
 
 ## [1.10.0] - 2020-06-04
 
