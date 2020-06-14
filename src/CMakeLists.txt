@@ -127,7 +127,7 @@ target_compile_options(
         $<$<AND:$<OR:${gnu},${clang}>,${warnings_as_errors}>:-Werror>
         $<$<AND:$<OR:${gnu},${clang}>,${no_exceptions}>:-fno-exceptions>
         $<$<AND:$<OR:${gnu},${clang}>,${no_rtti}>:-fno-rtti>
-        $<$<AND:$<OR:${gnu},${clang}>,$<CONFIG:MinSizeRel>>:-flto>
+        $<$<AND:$<OR:${gnu},${clang}>,$<OR:$<CONFIG:MinSizeRel>,$<CONFIG:Release>>>:-flto>
 
         $<${libcxx}:-stdlib=libc++>
 
