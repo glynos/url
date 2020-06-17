@@ -42,6 +42,18 @@ class CodePointRange(object):
         self.status = status
         self.mapped = int(mapped, 16) if mapped else None
 
+    @property
+    def is_mapped(self):
+        return self.status in ('mapped', 'disallowed_STD3_mapped')
+
+    @property
+    def is_valid(self):
+        return self.status == 'valid'
+
+    @property
+    def can_be_16_bit(self):
+        return self.range[0] <= 0xffff and self.mapped is not None and self.mapped <= 0xffff
+
 
 def squeeze(code_points):
     code_points_copy = [code_points[0]]
@@ -64,9 +76,13 @@ def main():
                 code_points.append(CodePointRange(
                     code_point[0], code_point[1], code_point[2] if len(code_point) > 2 else None))
 
-        mapped_code_points = [
-            entry for entry in code_points if entry.status in ('mapped', 'disallowed_STD3_mapped')]
-        code_points = squeeze(code_points)
+        # Store code point mappings as std::char16_t if they can, otherwise store them as std::char32_t
+        mapped_code_points_16, mapped_code_points_32 = [], []
+        for code_point in filter(lambda cp: cp.is_mapped, code_points):
+            (mapped_code_points_32, mapped_code_points_16)[code_point.can_be_16_bit].append(code_point)
+
+        # Squeeze code points to reduce table size, and remove all valid code points as they will be handled by default
+        code_points = [code_point for code_point in code_points if not code_point.is_valid]
 
         template = jinja2.Template(
             """// Auto-generated.
@@ -82,7 +98,7 @@ def main():
 
 namespace skyr {
 inline namespace v1 {
-namespace domain {
+namespace idna {
 namespace {
 struct code_point_range {
   char32_t first;
@@ -95,45 +111,70 @@ constexpr static auto statuses = std::array<code_point_range, {{ entries|length 
 {% endfor %}{% raw %}}}{% endraw %};
 }  // namespace
 
-auto map_idna_status(char32_t code_point) -> idna_status {
+auto code_point_status(char32_t code_point) -> idna_status {
   constexpr static auto less = [] (const auto &range, auto code_point) {
     return range.last < code_point;
   };
 
   auto first = std::begin(statuses), last = std::end(statuses);
   auto it = std::lower_bound(first, last, code_point, less);
-  assert(it != last);
-  return it->status;
+  return (it == last) || !((code_point >= (*it).first) && (code_point <= (*it).last)) ? idna_status::valid : it->status;
 }
 
 namespace {
-struct mapped_code_point {
+struct mapped_16_code_point {
+  char16_t code_point;
+  char16_t mapped;
+};
+
+constexpr static auto mapped_16 = std::array<mapped_16_code_point, {{ mapped_entries_16|length }}>{% raw %}{{{% endraw %}
+{% for code_point in mapped_entries_16 %}  { U'\\x{{ '%04x' % code_point.range[0] }}', U'\\x{{ '%04x' % code_point.mapped }}' },
+{% endfor %}{% raw %}}}{% endraw %};
+
+auto map_code_point_16(char16_t code_point) -> char16_t {
+  constexpr static auto less = [](const auto &lhs, auto rhs) {
+    return lhs.code_point < rhs;
+  };
+
+  auto first = std::begin(mapped_16), last = std::end(mapped_16);
+  auto it = std::lower_bound(first, last, code_point, less);
+  return (it != last) ? it->mapped : code_point;
+}
+
+struct mapped_32_code_point {
   char32_t code_point;
   char32_t mapped;
 };
 
-constexpr static auto mapped = std::array<mapped_code_point, {{ mapped_entries|length }}>{% raw %}{{{% endraw %}
-{% for code_point in mapped_entries %}{% if code_point.status in ('mapped', 'disallowed_STD3_mapped') %}  { U'\\x{{ '%04x' % code_point.range[0] }}', U'\\x{{ '%04x' % code_point.mapped }}' },
-{% endif %}{% endfor %}{% raw %}}}{% endraw %};
+constexpr static auto mapped_32 = std::array<mapped_32_code_point, {{ mapped_entries_32|length }}>{% raw %}{{{% endraw %}
+{% for code_point in mapped_entries_32 %}  { U'\\x{{ '%04x' % code_point.range[0] }}', U'\\x{{ '%04x' % code_point.mapped }}' },
+{% endfor %}{% raw %}}}{% endraw %};
 }  // namespace
 
-auto map_idna_code_point(char32_t code_point) -> char32_t {
-  constexpr static auto less = [](const auto &mapped, auto code_point) {
-    return mapped.code_point < code_point;
+auto map_code_point(char32_t code_point) -> char32_t {
+  constexpr static auto less = [](const auto &lhs, auto rhs) {
+    return lhs.code_point < rhs;
   };
+  
+  if (code_point <= U'\\xffff') {
+    return static_cast<char32_t>(map_code_point_16(static_cast<char16_t>(code_point)));
+  }
 
-  auto first = std::begin(mapped), last = std::end(mapped);
+  auto first = std::begin(mapped_32), last = std::end(mapped_32);
   auto it = std::lower_bound(first, last, code_point, less);
   return (it != last) ? it->mapped : code_point;
 }
-}  // namespace domain
+}  // namespace idna
 }  // namespace v1
 }  // namespace skyr
+
 """)
 
         template.stream(
             entries=code_points,
-            mapped_entries=mapped_code_points).dump(output_file)
+            mapped_entries_16=mapped_code_points_16,
+            mapped_entries_32=mapped_code_points_32
+        ).dump(output_file)
 
 
 if __name__ == '__main__':
