@@ -8,13 +8,11 @@
 
 #include <cassert>
 #include <iterator>
-#include <optional>
 #include <type_traits>
 #include <tl/expected.hpp>
 #include <skyr/v1/unicode/core.hpp>
 #include <skyr/v1/unicode/errors.hpp>
-#include <skyr/v1/unicode/ranges/transforms/u32_transform.hpp>
-#include <skyr/v1/unicode/ranges/views/u8_view.hpp>
+#include <skyr/v1/unicode/code_points/u16.hpp>
 #include <skyr/v1/unicode/ranges/sentinel.hpp>
 #include <skyr/v1/unicode/traits/range_iterator.hpp>
 #include <skyr/v1/unicode/traits/range_value.hpp>
@@ -46,12 +44,10 @@ class u16_range_iterator {
   ///
   using size_type = std::size_t;
 
-  /// \brief Constructor
-  u16_range_iterator() = default;
   ///
   /// \param first
   /// \param last
-  explicit u16_range_iterator(
+  explicit constexpr u16_range_iterator(
       U16Iterator first,
       U16Iterator last)
       : it_(first)
@@ -59,7 +55,7 @@ class u16_range_iterator {
 
   ///
   /// \return
-  auto operator ++ (int) noexcept -> u16_range_iterator {
+  constexpr auto operator ++ (int) noexcept -> u16_range_iterator {
     auto result = *this;
     increment();
     return result;
@@ -67,72 +63,56 @@ class u16_range_iterator {
 
   ///
   /// \return
-  auto operator ++ () noexcept -> u16_range_iterator & {
+  constexpr auto operator ++ () noexcept -> u16_range_iterator & {
     increment();
     return *this;
   }
 
   ///
   /// \return
-  auto operator * () const noexcept -> const_reference {
-    assert(it_);
-    auto value = mask16(*it_.value());
+  [[nodiscard]] constexpr auto operator * () const noexcept -> const_reference {
+    assert(it_ != last_);
+
+    auto value = mask16(static_cast<std::uint16_t>(*it_));
     if (is_lead_surrogate(value)) {
-      auto next_it = it_.value();
+      auto next_it = it_;
       ++next_it;
-      auto trail_value = mask16(*next_it);
+      auto trail_value = mask16(static_cast<std::uint16_t>(*next_it));
       if (!is_trail_surrogate(trail_value)) {
         return tl::make_unexpected(unicode_errc::invalid_code_point);
       }
 
-      return u16_code_point(value, trail_value);
+      return u16_code_point(static_cast<char16_t>(value), static_cast<char16_t>(trail_value));
     } else if (is_trail_surrogate(value)) {
       return tl::make_unexpected(unicode_errc::invalid_code_point);
     } else {
-      return u16_code_point(value);
+      return u16_code_point(static_cast<char16_t>(value));
     }
   }
 
   ///
-  /// \param other
+  /// \param sentinel
   /// \return
-  auto operator == (const u16_range_iterator &other) const noexcept {
-    return it_ == other.it_;
-  }
-
-  ///
-  /// \param other
-  /// \return
-  auto operator != (const u16_range_iterator &other) const noexcept {
-    return !(*this == other);
+  [[nodiscard]] constexpr auto operator == ([[maybe_unused]] sentinel sentinel) const noexcept {
+    return it_ == last_;
   }
 
   ///
   /// \param sentinel
   /// \return
-  [[maybe_unused]] auto operator == ([[maybe_unused]] sentinel sentinel) const noexcept {
-    return !it_;
-  }
-
-  ///
-  /// \param sentinel
-  /// \return
-  [[maybe_unused]] auto operator != ([[maybe_unused]] sentinel sentinel) const noexcept {
+  [[nodiscard]] constexpr auto operator != ([[maybe_unused]] sentinel sentinel) const noexcept {
     return !(*this == sentinel);
   }
 
  private:
 
-  void increment() {
-    assert(it_);
-    auto value = mask16(*it_.value());
-    std::advance(it_.value(), is_lead_surrogate(value)? 2 : 1);
-    if (it_ == last_) {
-      it_ = std::nullopt;
-    }
+  constexpr void increment() {
+    assert(it_ != last_);
+    auto step = is_lead_surrogate(static_cast<char16_t>(mask16(static_cast<std::uint16_t>(*it_)))) ? 2u : 1u;
+    std::advance(it_, step);
   }
 
-  std::optional<U16Iterator> it_, last_;
+  U16Iterator it_, last_;
 
 };
 
@@ -159,47 +139,38 @@ class view_u16_range {
   using size_type = std::size_t;
 
   ///
-  constexpr view_u16_range() = default;
-
-  ///
   /// \param range
   explicit constexpr view_u16_range(U16Range range)
       : range_(std::move(range)) {}
 
   ///
   /// \return
-  [[nodiscard]] constexpr auto begin() const noexcept {
-    return iterator_type(std::begin(range_), std::end(range_));
-  }
-
-  ///
-  /// \return
-  [[nodiscard]] constexpr auto end() const noexcept {
-    return iterator_type();
-  }
-
-  ///
-  /// \return
   [[nodiscard]] constexpr auto cbegin() const noexcept {
-    return begin();
+    return iterator_type(std::cbegin(range_), std::cend(range_));
   }
 
   ///
   /// \return
   [[nodiscard]] constexpr auto cend() const noexcept {
-    return end();
+    return sentinel{};
+  }
+
+  ///
+  /// \return
+  [[nodiscard]] constexpr auto begin() const noexcept {
+    return cbegin();
+  }
+
+  ///
+  /// \return
+  [[nodiscard]] constexpr auto end() const noexcept {
+    return cend();
   }
 
   ///
   /// \return
   [[nodiscard]] constexpr auto empty() const noexcept {
     return begin() == end();
-  }
-
-  ///
-  /// \return
-  [[nodiscard]] constexpr auto size() const noexcept {
-    return static_cast<size_type>(end() - begin());
   }
 
  private:
@@ -215,7 +186,7 @@ namespace views {
 /// \param range
 /// \return
 template <typename U16Range>
-inline auto as_u16(const U16Range &range) {
+constexpr inline auto as_u16(const U16Range &range) {
   static_assert(sizeof(traits::range_value_t<U16Range>) >= 2);
   return view_u16_range{range};
 }

@@ -7,12 +7,10 @@
 #define SKYR_V1_UNICODE_RANGES_TRANSFORMS_U32_TRANSFORM_HPP
 
 #include <iterator>
-#include <optional>
 #include <type_traits>
 #include <tl/expected.hpp>
 #include <skyr/v1/unicode/core.hpp>
 #include <skyr/v1/unicode/errors.hpp>
-#include <skyr/v1/unicode/ranges/views/u8_view.hpp>
 #include <skyr/v1/unicode/ranges/sentinel.hpp>
 #include <skyr/v1/unicode/traits/range_iterator.hpp>
 
@@ -43,16 +41,13 @@ class u32_transform_iterator {
   using size_type = std::size_t;
 
   ///
-  constexpr u32_transform_iterator() = default;
-
-  ///
   /// \param it
   explicit constexpr u32_transform_iterator(CodePointIterator it)
       : it_(it) {}
 
   ///
   /// \return
-  auto operator ++ (int) noexcept -> u32_transform_iterator {
+  constexpr auto operator ++ (int) noexcept -> u32_transform_iterator {
     auto result = *this;
     ++it_;
     return result;
@@ -60,30 +55,24 @@ class u32_transform_iterator {
 
   ///
   /// \return
-  auto operator ++ () noexcept -> u32_transform_iterator & {
+  constexpr auto operator ++ () noexcept -> u32_transform_iterator & {
     ++it_;
     return *this;
   }
 
   ///
   /// \return
-  [[nodiscard]] auto operator*() const noexcept -> const_reference {
-    constexpr static auto to_u32 = [](auto code_point) { return u32_value(code_point); };
+  [[nodiscard]] constexpr auto operator*() const noexcept -> const_reference {
+    constexpr auto to_u32 = [](auto code_point) { return u32_value(code_point); };
     return (*it_).and_then(to_u32);
   }
 
-  ///
-  /// \param other
-  /// \return
-  constexpr auto operator == (const u32_transform_iterator &other) const noexcept {
-    return it_ == other.it_;
+  [[nodiscard]] constexpr auto operator == (sentinel sentinel) const noexcept {
+    return (it_ == sentinel);
   }
 
-  ///
-  /// \param other
-  /// \return
-  constexpr auto operator != (const u32_transform_iterator &other) const noexcept {
-    return !(*this == other);
+  [[nodiscard]] constexpr auto operator != (sentinel sentinel) const noexcept {
+    return !(*this == sentinel);
   }
 
  private:
@@ -115,47 +104,38 @@ class transform_u32_range {
   using size_type = std::size_t;
 
   ///
-  constexpr transform_u32_range() = default;
-
-  ///
   /// \param range
   explicit constexpr transform_u32_range(CodePointRange &&range)
       : range_(std::forward<CodePointRange>(range)) {}
 
   ///
   /// \return
-  [[nodiscard]] constexpr auto begin() const noexcept {
-    return const_iterator(range_.begin());
-  }
-
-  ///
-  /// \return
-  [[nodiscard]] constexpr auto end() const noexcept {
-    return const_iterator(range_.end());
-  }
-
-  ///
-  /// \return
   [[nodiscard]] constexpr auto cbegin() const noexcept {
-    return begin();
+    return const_iterator(std::cbegin(range_));
   }
 
   ///
   /// \return
   [[nodiscard]] constexpr auto cend() const noexcept {
-    return end();
+    return sentinel{};
+  }
+
+  ///
+  /// \return
+  [[nodiscard]] constexpr auto begin() const noexcept {
+    return cbegin();
+  }
+
+  ///
+  /// \return
+  [[nodiscard]] constexpr auto end() const noexcept {
+    return cend();
   }
 
   ///
   /// \return
   [[nodiscard]] constexpr auto empty() const noexcept {
     return range_.empty();
-  }
-
-  ///
-  /// \return
-  [[nodiscard]] constexpr auto size() const noexcept -> size_type {
-    return range_.size();
   }
 
  private:
@@ -202,13 +182,16 @@ static constexpr transform_u32_range_fn to_u32;
 template <class Output, class CodePointRange>
 auto as(transform_u32_range<CodePointRange> &&range) -> tl::expected<Output, unicode_errc> {
   auto result = Output{};
-  for (auto &&code_point : range) {
+
+  for (auto it = std::cbegin(range); it != std::cend(range); ++it) {
+    auto code_point = *it;
     auto u32_code_point = u32_value(code_point);
     if (!u32_code_point) {
       return tl::make_unexpected(u32_code_point.error());
     }
     result.push_back(u32_code_point.value());
   }
+
   return result;
 }
 }  // namespace unicode

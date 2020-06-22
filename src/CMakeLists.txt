@@ -36,7 +36,6 @@ target_sources(skyr-url
 
         ${PROJECT_BINARY_DIR}/include/skyr/version.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/config.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/v1/ranges/string_element_range.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode/errors.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode/core.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode/traits/iterator_value.hpp
@@ -48,11 +47,8 @@ target_sources(skyr-url
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode/ranges/transforms/u8_transform.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode/ranges/transforms/u16_transform.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode/ranges/transforms/u32_transform.hpp
+        ${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode/ranges/sentinel.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode/details/to_u8.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/v1/string/ascii.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/v1/string/join.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/v1/string/split.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/v1/string/locale.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/string/starts_with.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/domain/errors.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/domain/domain.hpp
@@ -60,13 +56,11 @@ target_sources(skyr-url
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/network/ipv4_address.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/network/ipv6_address.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/percent_encoding/errors.hpp
+        ${PROJECT_SOURCE_DIR}/include/skyr/v1/percent_encoding/sentinel.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/percent_encoding/percent_decode_range.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/v1/percent_encoding/percent_encode_range.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/percent_encoding/percent_encoded_char.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/percent_encoding/percent_decode.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/percent_encoding/percent_encode.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/v1/ranges/string_element_range.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/v1/query/query_parameter_range.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/core/url_record.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/core/host.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/core/parse.hpp
@@ -83,7 +77,6 @@ target_sources(skyr-url
         ${PROJECT_SOURCE_DIR}/include/skyr/network/ipv6_address.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/percent_encoding/percent_decode.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/percent_encoding/percent_encode.hpp
-        ${PROJECT_SOURCE_DIR}/include/skyr/query/query_parameter_range.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/core/url_record.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/core/host.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/core/parse.hpp
@@ -137,12 +130,14 @@ target_compile_options(
         $<$<AND:${msvc},${warnings_as_errors}>:/WX>
         $<$<AND:${msvc},$<NOT:${no_exceptions}>>:/EHsc>
         $<$<AND:${msvc},${no_rtti}>:/GR->
+        $<${msvc}:/permissive->
 )
 
 target_link_libraries(
         skyr-url
         PUBLIC
         tl::expected
+        range-v3
         PRIVATE
         $<${libcxx}:c++>
 )
