@@ -29,6 +29,7 @@ target_sources(skyr-url
         v1/domain/domain.cpp
         v1/domain/idna.hpp
         v1/domain/idna.cpp
+        v1/domain/idna_code_point_map_iterator.hpp
         v1/domain/punycode.hpp
         v1/domain/punycode.cpp
         v1/url/url.cpp
@@ -50,6 +51,7 @@ target_sources(skyr-url
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode/ranges/sentinel.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/unicode/details/to_u8.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/string/starts_with.hpp
+        ${PROJECT_SOURCE_DIR}/include/skyr/v1/containers/static_vector.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/domain/errors.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/domain/domain.hpp
         ${PROJECT_SOURCE_DIR}/include/skyr/v1/platform/endianness.hpp
