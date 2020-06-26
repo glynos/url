@@ -6,8 +6,6 @@
 #include <string>
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
-#include <skyr/v1/unicode/ranges/views/u8_view.hpp>
-#include <skyr/v1/unicode/ranges/transforms/u32_transform.hpp>
 #include "../../src/v1/domain/punycode.hpp"
 
 
@@ -15,43 +13,48 @@ TEST_CASE("encode_test", "[punycode]") {
   using namespace std::string_literals;
 
   auto domain = GENERATE(
-      std::make_pair("你好你好"s, "6qqa088eba"s),
-      std::make_pair("你"s, "6qq"s),
-      std::make_pair("好"s, "5us"s),
-      std::make_pair("你好"s, "6qq79v"s),
-      std::make_pair("你好你"s, "6qqa088e"s),
-      std::make_pair("點看"s, "c1yn36f"s),
-      std::make_pair("faß"s, "fa-hia"s),
-      std::make_pair("☃"s, "n3h"s),
-      std::make_pair("bücher"s, "bcher-kva"s),
-      std::make_pair("ü"s, "tda"s),
-      std::make_pair("⌘"s, "bih"s),
-      std::make_pair("ñ"s, "ida"s),
-      std::make_pair("☃"s, "n3h"s),
-      std::make_pair("उदाहरण"s, "p1b6ci4b4b3a"s),
-      std::make_pair("परीक्षा"s, "11b5bs3a9aj6g"s),
-      std::make_pair("glyn"s, "glyn-"s)
+      std::make_pair(U"\x4F60\x597D\x4F60\x597D"s, "6qqa088eba"s),
+      std::make_pair(U"\x4F60"s, "6qq"s),
+      std::make_pair(U"\x597D"s, "5us"s),
+      std::make_pair(U"\x4F60\x597D"s, "6qq79v"s),
+      std::make_pair(U"\x4F60\x597D\x4F60"s, "6qqa088e"s),
+      std::make_pair(U"\x9EDE\x770B"s, "c1yn36f"s),
+      std::make_pair(U"fa\x00DF"s, "fa-hia"s),
+      std::make_pair(U"\x2603"s, "n3h"s),
+      std::make_pair(U"b\x00FC\x0063her"s, "bcher-kva"s),
+      std::make_pair(U"\x00FC"s, "tda"s),
+      std::make_pair(U"\x2318"s, "bih"s),
+      std::make_pair(U"\x00F1"s, "ida"s),
+      std::make_pair(U"\x2603"s, "n3h"s),
+      std::make_pair(U"\x0909\x0926\x093E\x0939\x0930\x0923"s, "p1b6ci4b4b3a"s),
+      std::make_pair(U"\x092A\x0930\x0940\x0915\x094D\x0937\x093E"s, "11b5bs3a9aj6g"s),
+      std::make_pair(U"glyn"s, "glyn-"s)
   );
 
   SECTION("encode_set") {
     const auto &[input, expected] = domain;
-    auto encoded = skyr::punycode_encode(input);
-    REQUIRE(encoded);
-    CHECK(expected == encoded.value());
+    auto encoded = std::string{};
+    auto result = skyr::punycode_encode(input, &encoded);
+    REQUIRE(result);
+    CHECK(expected == encoded);
   }
 
   SECTION("decode_set") {
     const auto &[expected, input] = domain;
-    auto decoded = skyr::punycode_decode(input);
-    REQUIRE(decoded);
-    CHECK(expected == decoded.value());
+    auto decoded = std::u32string{};
+    auto result = skyr::punycode_decode(std::string_view(input), &decoded);
+    REQUIRE(result);
+    CHECK(expected == decoded);
   }
 }
 
 TEST_CASE("special_strings") {
+  using namespace std::string_view_literals;
+
   SECTION("U+FFFD") {
-    auto decoded = skyr::punycode_decode("zn7c");
-    REQUIRE(decoded);
-    CHECK("\xef\xbf\xbd" == decoded.value());
+    auto decoded = std::u32string{};
+    auto result = skyr::punycode_decode("zn7c"sv, &decoded);
+    REQUIRE(result);
+    CHECK(U"\xfffd" == decoded);
   }
 }
