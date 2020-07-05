@@ -5,8 +5,7 @@
 [![License](
     https://img.shields.io/badge/license-boost-blue.svg "License")](
     https://github.com/cpp-netlib/url/blob/master/LICENSE_1_0.txt)
-![GitHub Actions Status](https://github.com/cpp-netlib/url/workflows/skyr-url%20CI/badge.svg?branch=main)](
-    https://github.com/cpp-netlib/url/actions)
+![GitHub Actions Status](https://github.com/cpp-netlib/url/workflows/skyr-url%20CI/badge.svg?branch=main)
     
 ## Notice
 
@@ -202,7 +201,7 @@ The tests use [Catch2](https://github.com/catchorg/catch2),
 
 This library includes a modified implementation of [utfcpp](https://github.com/nemtrif/utfcpp).
 
-## Requirements
+## Platform support
 
 Look at the [GitHub Actions Status](https://github.com/cpp-netlib/url/actions)
 for all of the configurations for which this library is tested.
