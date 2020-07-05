@@ -5,7 +5,9 @@
 [![License](
     https://img.shields.io/badge/license-boost-blue.svg "License")](
     https://github.com/cpp-netlib/url/blob/master/LICENSE_1_0.txt)
-![GitHub Actions Status](https://github.com/cpp-netlib/url/workflows/skyr-url%20CI/badge.svg?branch=main)
+[![GitHub Actions Status](
+    https://github.com/cpp-netlib/url/workflows/skyr-url%20CI/badge.svg?branch=main)](
+    https://github.com/cpp-netlib/url/actions?query=workflow%3A%22skyr-url+CI%22)
     
 ## Notice
 
