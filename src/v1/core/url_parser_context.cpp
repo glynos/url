@@ -352,7 +352,7 @@ auto url_parser_context::parse_authority(char byte) -> tl::expected<url_parse_ac
   if (byte == '@') {
     *validation_error |= true;
     if (at_flag) {
-      buffer = "%40" + buffer;
+      buffer.insert(0, "%40");
     }
     at_flag = true;
 
@@ -669,7 +669,7 @@ auto url_parser_context::parse_path(char byte) -> tl::expected<url_parse_action,
         buffer[1] = ':';
       }
 
-      url.path.push_back(buffer);
+      url.path.emplace_back(std::cbegin(buffer), std::cend(buffer));
     }
 
     buffer.clear();

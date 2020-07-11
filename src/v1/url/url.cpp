@@ -174,12 +174,16 @@ auto url::ipv6_address() const -> std::optional<skyr::ipv6_address> {
 }
 
 auto url::domain() const -> std::optional<std::string> {
-  return url_.host? url_.host.value().domain() : std::nullopt;
+  return url_.host? url_.host.value().domain_name() : std::nullopt;
 }
 
 auto url::u8domain() const -> std::optional<std::string> {
   auto domain = this->domain();
-  return domain? std::make_optional(domain_to_u8(domain.value()).value()) : std::nullopt;
+  if (domain) {
+    auto u8_domain = std::string{};
+    return domain_to_u8(domain.value(), &u8_domain) ? std::make_optional(u8_domain) : std::nullopt;
+  }
+  return domain;
 }
 
 auto url::set_port(string_view port) -> std::error_code {
