@@ -52,6 +52,10 @@ class static_vector {
   /// Constructor
   constexpr static_vector() = default;
 
+  ~static_vector() {
+    clear();
+  }
+
   /// Gets the first const element in the vector
   /// \return a const T &
   /// \pre `size() > 0`
@@ -83,7 +87,7 @@ class static_vector {
   ///
   /// \param value
   /// \return
-  /// \pre `size() < `capacity()`
+  /// \pre `size() < capacity()`
   /// \post `size() > 0 && size() <= capacity()`
   constexpr auto push_back(const_reference value) noexcept -> reference {
     impl_[size_++] = value;
@@ -94,12 +98,12 @@ class static_vector {
   /// \tparam Args
   /// \param args
   /// \return
-  /// \pre `size() < `capacity()`
+  /// \pre `size() < capacity()`
   /// \post `size() > 0 && size() <= capacity()`
   template <class... Args>
   constexpr auto emplace_back(Args &&... args)
     noexcept(std::is_trivially_move_assignable_v<T>) -> reference {
-    impl_[size_++] = value_type{args...};
+    impl_[size_++] = value_type{std::forward<Args>(args)...};
     return impl_[size_ - 1];
   }
 
@@ -107,6 +111,7 @@ class static_vector {
   /// \pre `size() > 0`
   constexpr void pop_back() noexcept {
     --size_;
+    impl_[size_].~T();
   }
 
   ///
@@ -140,8 +145,11 @@ class static_vector {
   }
 
   ///
+  /// \post size() == 0
   constexpr void clear() noexcept {
-    size_ = 0;
+    while (size_) {
+      pop_back();
+    }
   }
 
   ///
