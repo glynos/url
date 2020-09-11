@@ -46,3 +46,14 @@ TEST_CASE("clear calls destructor", "[containers]") {
   vector.clear();
   CHECK(destructed);
 }
+
+TEST_CASE("destructor calls element destructors", "[containers]") {
+  auto destructed = false;
+
+  {
+    auto vector = skyr::static_vector<std::shared_ptr<test_destructor_call>, 8>{};
+    vector.emplace_back(std::make_shared<test_destructor_call>(&destructed));
+    CHECK_FALSE(destructed);
+  }
+  CHECK(destructed);
+}
