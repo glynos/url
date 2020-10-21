@@ -4,11 +4,11 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.17)
 
 project(
         skyr-url
-        VERSION 1.13.0
+        VERSION 2.0.0
         HOMEPAGE_URL https://cpp-netlib.github.io/url
         DESCRIPTION "A C++ library that implements the WhatWG URL specification"
         LANGUAGES CXX
@@ -25,9 +25,14 @@ option(skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
 option(skyr_BUILD_WITH_LLVM_LIBCXX "Instruct Clang to use LLVM's implementation of C++ standard library" OFF)
 option(skyr_ENABLE_FILESYSTEM_FUNCTIONS "Enable functions to convert URL to std::filesystem::path" ON)
 option(skyr_ENABLE_JSON_FUNCTIONS "Enable functions to convert URL components to JSON" ON)
+option(skyr_BUILD_V2 "Build v2, which uses C++20 features" ON)
 
 set(CMAKE_VERBOSE_MAKEFILE true)
-set(CMAKE_CXX_STANDARD 17)
+if (skyr_BUILD_V2)
+    set(CMAKE_CXX_STANDARD 20)
+else()
+    set(CMAKE_CXX_STANDARD 17)
+endif()
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -67,16 +72,16 @@ endif()
 
 # Add an alias for projects that use skyr-url as a dependency
 if (NOT CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-    add_library(skyr::skyr-url ALIAS skyr-url)
+    add_library(skyr::skyr-url ALIAS skyr-url-v1)
     if (skyr_ENABLE_FILESYSTEM_FUNCTIONS)
-        add_library(skyr::skyr-filesystem ALIAS skyr-filesystem)
+        add_library(skyr::skyr-filesystem ALIAS skyr-filesystem-v1)
     endif()
     if (skyr_ENABLE_JSON_FUNCTIONS)
-        add_library(skyr::skyr-json ALIAS skyr-json)
+        add_library(skyr::skyr-json ALIAS skyr-json-v1)
     endif()
 endif()
 
-# Install
+## Install
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
@@ -90,12 +95,12 @@ write_basic_package_version_file(
         COMPATIBILITY SameMajorVersion
         ARCH_INDEPENDENT)
 
-set(skyr_TARGETS skyr-url)
+set(skyr_TARGETS skyr-url-v1)
 if (skyr_ENABLE_FILESYSTEM_FUNCTIONS)
-    list(APPEND skyr_TARGETS skyr-filesystem)
+    list(APPEND skyr_TARGETS skyr-filesystem-v1)
 endif()
 if (skyr_ENABLE_JSON_FUNCTIONS)
-    list(APPEND skyr_TARGETS skyr-json)
+    list(APPEND skyr_TARGETS skyr-json-v1)
 endif()
 
 install(TARGETS ${skyr_TARGETS}
