@@ -15,9 +15,10 @@ namespace details {
 template <class intT>
 requires std::is_integral_v<intT> constexpr inline auto swap_endianness(intT v) noexcept -> intT {
   constexpr auto byte_count = sizeof(v);
-  std::array<unsigned char, byte_count> bytes{};
-  for (auto i = 0UL; i < byte_count; ++i) {
-    bytes[i] = static_cast<unsigned char>(v >> (i * 8));
+  constexpr auto bit_count = 8ul;
+  std::array<std::byte, byte_count> bytes{};
+  for (auto i = 0ul; i < byte_count; ++i) {
+    bytes[i] = static_cast<std::byte>(v >> (i * bit_count));
   }
   return *static_cast<const intT *>(static_cast<const void *>(bytes.data()));
 }
