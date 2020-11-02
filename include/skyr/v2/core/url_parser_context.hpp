@@ -205,11 +205,11 @@ class url_parser_context {
     input_it -= (buffer.size() + 1);
   }
 
-  std::string_view still_to_process() const noexcept {
+  [[nodiscard]] auto still_to_process() const noexcept -> std::string_view {
     return input.substr(std::distance(std::begin(input), input_it));
   }
 
-  bool remaining_starts_with(std::string_view chars) const noexcept {
+  [[nodiscard]] auto remaining_starts_with(std::string_view chars) const noexcept -> bool {
     return !still_to_process().empty() && still_to_process().substr(1).starts_with(chars);
   }
 
