@@ -25,12 +25,12 @@ requires std::is_integral_v<intT> constexpr inline auto swap_endianness(intT v) 
 }  // namespace details
 
 template <class intT>
-requires std::is_integral_v<intT> constexpr inline auto to_network_byte_order(intT v) noexcept {
+requires std::is_integral_v<intT> constexpr inline auto to_network_byte_order(intT v) noexcept -> intT {
   return (std::endian::big == std::endian::native) ? v : details::swap_endianness(v);  // NOLINT
 }
 
 template <class intT>
-requires std::is_integral_v<intT> constexpr inline auto from_network_byte_order(intT v) noexcept {
+requires std::is_integral_v<intT> constexpr inline auto from_network_byte_order(intT v) noexcept -> intT {
   return (std::endian::big == std::endian::native) ? v : details::swap_endianness(v);  // NOLINT
 }
 }  // namespace skyr::inline v2

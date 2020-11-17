@@ -6,6 +6,8 @@
 foreach (file_name
         parse_host_tests.cpp
         url_parse_tests.cpp
+        parse_path_tests.cpp
+        parse_query_tests.cpp
         url_serialize_tests.cpp
         )
     skyr_create_test(${file_name} ${PROJECT_BINARY_DIR}/tests/core test_name v2)
