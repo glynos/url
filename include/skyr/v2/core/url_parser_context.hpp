@@ -236,19 +236,10 @@ class url_parser_context {
       buffer.push_back(lower);
     } else if (byte == ':') {
       if (state_override) {
-        if (url.is_special() && !is_special(buffer)) {
-          return tl::make_unexpected(url_parse_errc::cannot_override_scheme);
-        }
-
-        if (!url.is_special() && is_special(buffer)) {
-          return tl::make_unexpected(url_parse_errc::cannot_override_scheme);
-        }
-
-        if ((url.includes_credentials() || url.port) && (buffer == "file")) {
-          return tl::make_unexpected(url_parse_errc::cannot_override_scheme);
-        }
-
-        if ((url.scheme == "file") && (!url.host || url.host.value().is_empty())) {
+        if ((url.is_special() && !is_special(buffer)) ||
+            (!url.is_special() && is_special(buffer)) ||
+            ((url.includes_credentials() || url.port) && (buffer == "file")) ||
+            ((url.scheme == "file") && (!url.host || url.host.value().is_empty()))) {
           return tl::make_unexpected(url_parse_errc::cannot_override_scheme);
         }
       }

@@ -32,19 +32,26 @@ struct query_parameter {
   query_parameter(std::string name, std::string value) : name(std::move(name)), value(std::move(value)) {}
 };
 
-
+///
+/// \param query
+/// \param validation_error
+/// \return
 inline auto parse_query(
-    std::string_view input, bool *validation_error) -> tl::expected<std::vector<query_parameter>, url_parse_errc> {
-  if (!input.empty() && (input.front() == '?')) {
-    input.remove_prefix(1);
+    std::string_view query, bool *validation_error) -> tl::expected<std::vector<query_parameter>, url_parse_errc> {
+  if (!query.empty() && (query.front() == '?')) {
+    query.remove_prefix(1);
   }
 
-  auto url = details::basic_parse(input, validation_error, nullptr, nullptr, url_parse_state::query);
+  auto url = details::basic_parse(query, validation_error, nullptr, nullptr, url_parse_state::query);
   if (url) {
-    static constexpr auto is_separator = [](auto &&c) { return c == '&' || c == ';'; };
+    static constexpr auto is_separator = [](auto c) { return c == '&' || c == ';'; };
 
     static constexpr auto to_nvp = [](auto &&param) -> query_parameter {
-      auto element = std::string_view(std::addressof(*ranges::begin(param)), ranges::distance(param));
+      if (ranges::empty(param)) {
+        return {};
+      }
+
+      auto element = std::string_view(std::addressof(*std::begin(param)), ranges::distance(param));
       auto delim = element.find_first_of('=');
       if (delim != std::string_view::npos) {
         return {std::string(element.substr(0, delim)), std::string(element.substr(delim + 1))};
@@ -55,7 +62,7 @@ inline auto parse_query(
 
     std::vector<query_parameter> parameters{};
     if (url.value().query) {
-      for (auto parameter :
+      for (auto &&parameter :
            url.value().query.value() | ranges::views::split_when(is_separator) | ranges::views::transform(to_nvp)) {
         parameters.emplace_back(parameter);
       }
@@ -65,10 +72,13 @@ inline auto parse_query(
   return tl::make_unexpected(url.error());
 }
 
+///
+/// \param query
+/// \return
 inline auto parse_query(
-    std::string_view input) -> tl::expected<std::vector<query_parameter>, url_parse_errc> {
+    std::string_view query) -> tl::expected<std::vector<query_parameter>, url_parse_errc> {
   [[maybe_unused]] bool validation_error = false;
-  return parse_query(input, &validation_error);
+  return parse_query(query, &validation_error);
 }
 }  // namespace skyr::inline v2
 

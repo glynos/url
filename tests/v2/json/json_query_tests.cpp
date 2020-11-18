@@ -9,7 +9,7 @@
 #include <vector>
 #include <skyr/v2/json/json.hpp>
 
-TEST_CASE("ipv6_address_tests", "[json.query]") {
+TEST_CASE("json_tests", "[json.query]") {
   using namespace std::string_literals;
 
   SECTION("decode_simple_query") {
@@ -32,11 +32,11 @@ TEST_CASE("ipv6_address_tests", "[json.query]") {
     CHECK(json["a"] == "\xcf\x80");
   }
 
-//  SECTION("decode_empty_query") {
-//    auto query = ""s;
-//    auto json = skyr::json::decode_query(query);
-//    CHECK(json.empty());
-//  }
+  SECTION("decode_empty_query") {
+    auto query = ""s;
+    auto json = skyr::json::decode_query(query);
+    CHECK(json.empty());
+  }
 
   SECTION("encode_simple_query") {
     auto json = nlohmann::json{ { "a", "b" }, { "c", "d" } };
