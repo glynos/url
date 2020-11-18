@@ -28,15 +28,18 @@ inline auto serialize_file_scheme(const url_record &url) -> std::string {
   return (!url.host && (url.scheme == "file")) ? "//" : "";
 }
 
-inline auto serialize_host(const url_record &url) -> std::string {
+inline auto serialize_authority(const url_record &url) -> std::string {
   return url.host
              ? fmt::format("//{}{}{}", serialize_credentials(url), url.host.value().serialize(), serialize_port(url))
              : serialize_file_scheme(url);
 }
 
+inline auto serialize_path(const std::vector<std::string> &path) -> std::string {
+  return fmt::format("/{}", path | ranges::views::join('/') | ranges::to<std::string>());
+}
+
 inline auto serialize_path(const url_record &url) -> std::string {
-  return url.cannot_be_a_base_url ? url.path.front()
-                                  : fmt::format("/{}", url.path | ranges::views::join('/') | ranges::to<std::string>());
+  return url.cannot_be_a_base_url ? url.path.front() : serialize_path(url.path);
 }
 
 inline auto serialize_query(const url_record &url) -> std::string {
@@ -54,7 +57,7 @@ inline auto serialize_fragment(const url_record &url) -> std::string {
 /// \param url A URL record
 /// \returns A serialized URL string, excluding the fragment
 inline auto serialize_excluding_fragment(const url_record &url) -> url_record::string_type {
-  return fmt::format("{}:{}{}{}", url.scheme, details::serialize_host(url), details::serialize_path(url),
+  return fmt::format("{}:{}{}{}", url.scheme, details::serialize_authority(url), details::serialize_path(url),
                      details::serialize_query(url));
 }
 

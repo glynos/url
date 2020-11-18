@@ -236,19 +236,10 @@ class url_parser_context {
       buffer.push_back(lower);
     } else if (byte == ':') {
       if (state_override) {
-        if (url.is_special() && !is_special(buffer)) {
-          return tl::make_unexpected(url_parse_errc::cannot_override_scheme);
-        }
-
-        if (!url.is_special() && is_special(buffer)) {
-          return tl::make_unexpected(url_parse_errc::cannot_override_scheme);
-        }
-
-        if ((url.includes_credentials() || url.port) && (buffer == "file")) {
-          return tl::make_unexpected(url_parse_errc::cannot_override_scheme);
-        }
-
-        if ((url.scheme == "file") && (!url.host || url.host.value().is_empty())) {
+        if ((url.is_special() && !is_special(buffer)) ||
+            (!url.is_special() && is_special(buffer)) ||
+            ((url.includes_credentials() || url.port) && (buffer == "file")) ||
+            ((url.scheme == "file") && (!url.host || url.host.value().is_empty()))) {
           return tl::make_unexpected(url_parse_errc::cannot_override_scheme);
         }
       }
@@ -895,11 +886,17 @@ class url_parser_context {
   }
 
   void pct_encode_and_append_to_query(char byte) {
+    if (!url.query) {
+      set_empty_query();
+    }
     auto pct_encoded = percent_encode_byte(std::byte(byte), percent_encoding::encode_set::none);
     url.query.value() += std::move(pct_encoded).to_string();
   }
 
   void append_to_query(char byte) {
+    if (!url.query) {
+      set_empty_query();
+    }
     url.query.value().push_back(byte);
   }
 
@@ -908,6 +905,9 @@ class url_parser_context {
   }
 
   void append_to_fragment(char byte) {
+    if (!url.fragment) {
+      set_empty_fragment();
+    }
     auto pct_encoded = percent_encode_byte(std::byte(byte), percent_encoding::encode_set::fragment);
     url.fragment.value() += pct_encoded.to_string();
   }

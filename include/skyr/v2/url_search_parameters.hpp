@@ -13,12 +13,8 @@
 #include <optional>
 #include <algorithm>
 #include <cassert>
-#include <range/v3/algorithm/sort.hpp>
-#include <range/v3/view/split_when.hpp>
-#include <range/v3/view/transform.hpp>
-#include <range/v3/algorithm/find_if.hpp>
-#include <range/v3/algorithm/remove_if.hpp>
-#include <range/v3/action/erase.hpp>
+#include <fmt/format.h>
+#include <skyr/v2/core/parse_query.hpp>
 #include <skyr/v2/percent_encoding/percent_encode.hpp>
 #include <skyr/v2/percent_encoding/percent_decode.hpp>
 
@@ -30,8 +26,8 @@ struct is_name {
   explicit is_name(std::string_view name) : name_(name) {
   }
 
-  auto operator()(const std::pair<std::string, std::string> &parameter) noexcept {
-    return name_ == parameter.first;
+  auto operator()(const query_parameter &parameter) noexcept {
+    return name_ == parameter.name;
   }
 
   std::string_view name_;
@@ -52,7 +48,7 @@ class url_search_parameters {
   using string_type = std::string;
 
   /// A key-value pair
-  using value_type = std::pair<string_type, string_type>;
+  using value_type = query_parameter;
 
   /// An iterator through the search parameters
   using const_iterator = std::vector<value_type>::const_iterator;
@@ -72,7 +68,11 @@ class url_search_parameters {
     initialize(query);
   }
 
-  ///
+  /// Constructor
+  /// \param parameters
+  explicit url_search_parameters(std::vector<query_parameter> parameters) : parameters_(std::move(parameters)) {}
+
+  /// Constructor
   /// \param parameters
   url_search_parameters(std::initializer_list<value_type> parameters) : parameters_(parameters) {}
 
@@ -87,7 +87,7 @@ class url_search_parameters {
   /// \param name The parameter name
   /// \param value The parameter value
   void append(std::string_view name, std::string_view value) {
-    parameters_.emplace_back(name, value);
+    parameters_.emplace_back(std::string(name), std::string(value));
     update();
   }
 
@@ -95,16 +95,18 @@ class url_search_parameters {
   ///
   /// \param name The name of the parameter to remove
   void remove(std::string_view name) {
-    auto it = ranges::remove_if(parameters_, details::is_name(name));
-    ranges::erase(parameters_, it, ranges::end(parameters_));
+    auto first = std::begin(parameters_), last = std::end(parameters_);
+    auto it = std::remove_if(first, last, details::is_name(name));
+    parameters_.erase(it, last);
     update();
   }
 
   /// \param name The search parameter name
   /// \returns The first search parameter value with the given name
   [[nodiscard]] auto get(std::string_view name) const -> std::optional<string_type> {
-    auto it = ranges::find_if(parameters_, details::is_name(name));
-    return (it != ranges::cend(parameters_)) ? std::make_optional(it->second) : std::nullopt;
+    auto first = std::cbegin(parameters_), last = std::cend(parameters_);
+    auto it = std::find_if(first, last, details::is_name(name));
+    return (it != last) ? it->value : std::nullopt;
   }
 
   /// \param name The search parameter name
@@ -114,7 +116,7 @@ class url_search_parameters {
     result.reserve(parameters_.size());
     for (auto [parameter_name, value] : parameters_) {
       if (parameter_name == name) {
-        result.emplace_back(value);
+        result.emplace_back(value.value_or(""));
       }
     }
     return result;
@@ -126,7 +128,8 @@ class url_search_parameters {
   /// \returns `true` if the value is in the search parameters,
   /// `false` otherwise.
   [[nodiscard]] auto contains(std::string_view name) const noexcept -> bool {
-    return ranges::find_if(parameters_, details::is_name(name)) != ranges::cend(parameters_);
+    auto first = std::cbegin(parameters_), last = std::cend(parameters_);
+    return std::find_if(first, last, details::is_name(name)) != last;
   }
 
   /// Sets a URL search parameter
@@ -134,15 +137,16 @@ class url_search_parameters {
   /// \param name The search parameter name
   /// \param value The search parameter value
   void set(std::string_view name, std::string_view value) {
-    auto it = ranges::find_if(parameters_, details::is_name(name));
-    if (it != ranges::end(parameters_)) {
-      it->second = value;
+    auto first = std::begin(parameters_), last = std::end(parameters_);
+    auto it = std::find_if(first, last, details::is_name(name));
+    if (it != last) {
+      it->value = value;
 
       ++it;
-      it = std::remove_if(it, ranges::end(parameters_), details::is_name(name));
-      ranges::erase(parameters_, it, ranges::end(parameters_));
+      it = std::remove_if(it, last, details::is_name(name));
+      ranges::erase(parameters_, it, last);
     } else {
-      parameters_.emplace_back(name, value);
+      append(name, value);
     }
     update();
   }
@@ -166,9 +170,10 @@ class url_search_parameters {
   /// assert(url.search() == "?key=e1f7bc78&q=%F0%9F%8F%B3%EF%B8%8F%E2%80%8D%F0%9F%8C%88");
   /// ```
   void sort() {
-    static constexpr auto less_name = [](const auto &lhs, const auto &rhs) { return lhs.first < rhs.first; };
+    static constexpr auto less_name = [](const auto &lhs, const auto &rhs) { return lhs.name < rhs.name; };
 
-    ranges::sort(parameters_, less_name);
+    auto first = std::begin(parameters_), last = std::end(parameters_);
+    std::sort(first, last, less_name);
     update();
   }
 
@@ -211,13 +216,14 @@ class url_search_parameters {
     bool start = true;
     for (const auto &[name, value] : parameters_) {
       if (start) {
+        result.append(percent_encode(name));
         start = false;
       } else {
-        result.append("&");
+        result.append(fmt::format("&{}", percent_encode(name)));
       }
-      result.append(percent_encode(name));
-      result.append("=");
-      result.append(percent_encode(value));
+      if (value) {
+        result.append(fmt::format("={}", percent_encode(value.value())));
+      }
     }
 
     return result;
@@ -227,26 +233,12 @@ class url_search_parameters {
   explicit url_search_parameters(url *url);
 
   void initialize(std::string_view query) {
-    if (!query.empty() && (query.front() == '?')) {
-      query.remove_prefix(1);
-    }
-
-    static constexpr auto is_separator = [](auto &&c) { return c == '&' || c == ';'; };
-
-    static constexpr auto to_nvp = [](auto &&param) -> std::pair<std::string_view, std::optional<std::string_view>> {
-      auto element = std::string_view(std::addressof(*ranges::begin(param)), ranges::distance(param));
-      auto delim = element.find_first_of("=");
-      if (delim != std::string_view::npos) {
-        return {element.substr(0, delim), element.substr(delim + 1)};
-      } else {
-        return {element, std::nullopt};
+    if (auto parameters = parse_query(query); parameters) {
+      for (auto [name, value] : parameters.value()) {
+        auto name_ = percent_decode(name).value_or(std::string(name));
+        auto value_ = value ? percent_decode(value.value()).value_or(std::string(value.value())) : std::string();
+        parameters_.emplace_back(name_, value_);
       }
-    };
-
-    for (auto [name, value] : query | ranges::views::split_when(is_separator) | ranges::views::transform(to_nvp)) {
-      auto name_ = percent_decode(name).value_or(std::string(name));
-      auto value_ = value ? percent_decode(value.value()).value_or(std::string(value.value())) : std::string();
-      parameters_.emplace_back(name_, value_);
     }
   }
 
