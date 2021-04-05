@@ -7,6 +7,7 @@
 #include <catch2/catch.hpp>
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>
+#include <skyr/v1/percent_encoding/percent_encode.hpp>
 #include <skyr/v1/percent_encoding/percent_encoded_char.hpp>
 
 TEST_CASE("encode fragment", "[percent_encoding]") {
@@ -60,5 +61,39 @@ TEST_CASE("encode_tests", "[percent_encoding]") {
           std::byte(i), skyr::percent_encoding::encode_set::c0_control);
       CHECK(fmt::format("%{:02X}", i) == encoded.to_string());
     }
+  }
+
+  SECTION("encode_0x25") {
+    auto encoded = skyr::percent_encoding::percent_encode_byte(
+        std::byte(0x25), skyr::percent_encoding::encode_set::any);
+    CHECK("%25" == encoded.to_string());
+  }
+
+  SECTION("encode_0x2b") {
+    auto encoded = skyr::percent_encoding::percent_encode_byte(
+        std::byte(0x2b), skyr::percent_encoding::encode_set::any);
+    CHECK("%2B" == encoded.to_string());
+  }
+}
+
+// https://url.spec.whatwg.org/#example-percent-encode-operations
+TEST_CASE("example_percent_encode_operations")
+{
+  SECTION("0x23")
+  {
+    auto encoded = skyr::percent_encode(R"(#)");
+    CHECK("%23" == encoded);
+  }
+
+  SECTION("0x7f")
+  {
+    auto encoded = skyr::percent_encode("\x7f");
+    CHECK("%7F" == encoded);
+  }
+
+  SECTION("0x7f")
+  {
+    auto encoded = skyr::percent_encode("\x7f");
+    CHECK("%7F" == encoded);
   }
 }

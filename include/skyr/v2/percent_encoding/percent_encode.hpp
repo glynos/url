@@ -14,17 +14,10 @@
 namespace skyr::inline v2 {
 /// Percent encodes the input
 /// \returns The percent encoded output when successful, an error otherwise.
-inline auto percent_encode(std::string_view input) {
-  using percent_encoding::percent_encoded_char;
-
-  static constexpr auto encode = [](auto byte) {
-    if ((byte == '\x2a') || (byte == '\x2d') || (byte == '\x2e') || ((byte >= '\x30') && (byte <= '\x39')) ||
-        ((byte >= '\x41') && (byte <= '\x5a')) || (byte == '\x5f') || ((byte >= '\x61') && (byte <= '\x7a'))) {
-      return percent_encoded_char(std::byte(byte), percent_encoded_char::no_encode());
-    } else if (byte == '\x20') {
-      return percent_encoded_char(std::byte('+'), percent_encoded_char::no_encode());
-    }
-    return percent_encoded_char(std::byte(byte));
+inline auto percent_encode_bytes(std::string_view input, percent_encoding::encode_set encodes) -> std::string {
+  static auto encode = [&encodes] (auto byte) {
+    using percent_encoding::percent_encode_byte;
+    return percent_encode_byte(std::byte(byte), encodes);
   };
 
   auto result = std::string{};
@@ -32,6 +25,10 @@ inline auto percent_encode(std::string_view input) {
     result += std::string(std::cbegin(encoded), std::cend(encoded));
   }
   return result;
+}
+
+inline auto percent_encode(std::string_view input) -> std::string {
+  return percent_encode_bytes(input, percent_encoding::encode_set::component);
 }
 }  // namespace skyr::inline v2
 
