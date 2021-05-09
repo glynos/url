@@ -208,13 +208,13 @@ struct percent_encoded_char {
 
   ///
   /// \return
-  [[nodiscard]] auto to_string() const & -> std::string {
+  [[nodiscard]] constexpr auto to_string() const & -> const std::string & {
     return impl_;
   }
 
   ///
   /// \return
-  [[nodiscard]] auto to_string() && noexcept -> std::string && {
+  [[nodiscard]] constexpr auto to_string() && noexcept -> std::string && {
     return std::move(impl_);
   }
 

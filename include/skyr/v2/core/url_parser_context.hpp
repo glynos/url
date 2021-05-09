@@ -27,7 +27,7 @@ using namespace std::string_literals;
 using namespace std::string_view_literals;
 
 namespace details {
-inline auto contains(std::string_view view, char element) noexcept {
+constexpr inline auto contains(std::string_view view, char element) noexcept {
   auto first = std::cbegin(view), last = std::cend(view);
   return last != std::find(first, last, element);
 }
@@ -38,7 +38,7 @@ inline auto port_number(std::string_view port) noexcept -> tl::expected<std::uin
   }
 
   const char *port_first = port.data();
-  char *port_last = nullptr;
+  char *port_last = nullptr; // NOLINT
   auto port_value = std::strtoul(port_first, &port_last, 10);
 
   if (port_first == port_last) {
@@ -55,7 +55,7 @@ inline auto is_url_code_point(char byte) noexcept {
   return std::isalnum(byte, std::locale::classic()) || contains("!$&'()*+,-./:;=?@_~"sv, byte);
 }
 
-inline auto is_windows_drive_letter(std::string_view segment) noexcept {
+constexpr inline auto is_windows_drive_letter(std::string_view segment) noexcept {
   if (segment.size() < 2) {
     return false;
   }
@@ -73,11 +73,11 @@ inline auto is_windows_drive_letter(std::string_view segment) noexcept {
   return result;
 }
 
-inline auto is_single_dot_path_segment(std::string_view segment) noexcept {
+constexpr inline auto is_single_dot_path_segment(std::string_view segment) noexcept {
   return (segment == ".") || (segment == "%2e") || (segment == "%2E");
 }
 
-inline auto is_double_dot_path_segment(std::string_view segment) noexcept {
+constexpr inline auto is_double_dot_path_segment(std::string_view segment) noexcept {
   return (segment == "..") || (segment == "%2e.") || (segment == ".%2e") || (segment == "%2e%2e") ||
          (segment == "%2E.") || (segment == ".%2E") || (segment == "%2E%2E") || (segment == "%2E%2e") ||
          (segment == "%2e%2E");
