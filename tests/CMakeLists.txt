@@ -24,6 +24,7 @@ endfunction()
 if (skyr_BUILD_V1)
     add_subdirectory(v1)
 endif()
+
 if (skyr_BUILD_V2)
     add_subdirectory(v2)
 endif()

@@ -877,7 +877,9 @@ class url_parser_context {
   }
 
   void clear_query() {
-    url.query = std::nullopt;
+    if (url.query) {
+      url.query->clear();
+    }
   }
 
   void set_empty_query() {
