@@ -3,13 +3,25 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+
+set(full_warnings $<BOOL:${skyr_FULL_WARNINGS}>)
+set(warnings_as_errors $<BOOL:${skyr_WARNINGS_AS_ERRORS}>)
+set(no_exceptions $<BOOL:${skyr_BUILD_WITHOUT_EXCEPTIONS}>)
+set(no_rtti $<BOOL:${skyr_BUILD_WITHOUT_RTTI}>)
+
+set(gnu $<CXX_COMPILER_ID:GNU>)
+set(clang $<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>)
+set(libcxx $<AND:${clang},$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>)
+set(msvc $<CXX_COMPILER_ID:MSVC>)
+set(clang_with_gnu_stdlib $<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<BOOL:${WIN32}>>,$<NOT:$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>>)
+
 function(skyr_create_test file_name output_dir test_name version)
     skyr_remove_extension(${file_name} base)
     set(test ${base}-${version})
     add_executable(${test})
     target_sources(${test} PRIVATE ${base}.cpp)
     if (skyr_BUILD_V3)
-        target_compile_definitions(${test} PRIVATE SEQUENTIAL_PROCESSING=0)
+        target_compile_definitions(${test} PRIVATE $<${msvc}:SEQUENTIAL_PROCESSING=0>)
     endif()
     target_compile_options(${test} PRIVATE $<${libcxx}:-stdlib=libc++>)
     add_dependencies(${test} skyr-url-${version})

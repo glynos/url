@@ -75,6 +75,7 @@ set(msvc $<CXX_COMPILER_ID:MSVC>)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_subdirectory(src)
+add_subdirectory(modules)
 
 # Testing
 if (skyr_BUILD_TESTS)

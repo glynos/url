@@ -17,7 +17,3 @@ endif()
 if (skyr_BUILD_V2)
     add_subdirectory(v2)
 endif()
-
-if (skyr_BUILD_V3)
-    add_subdirectory(v3)
-endif()
