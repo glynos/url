@@ -10,8 +10,8 @@ function(skyr_create_test file_name output_dir test_name version)
     target_sources(${test} PRIVATE ${base}.cpp)
     if (skyr_BUILD_V3)
         target_compile_definitions(${test} PRIVATE SEQUENTIAL_PROCESSING=0)
-        target_compile_options(${test} PRIVATE $<${libcxx}:-stdlib=libc++> $<$<CXX_COMPILER_ID:MSVC>: /permissive- /Z7 /MT /MP /Bt+>)
     endif()
+    target_compile_options(${test} PRIVATE $<${libcxx}:-stdlib=libc++>)
     add_dependencies(${test} skyr-url-${version})
     target_link_libraries(
             ${test}
