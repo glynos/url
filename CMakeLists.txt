@@ -33,13 +33,17 @@ option(skyr_ENABLE_FILESYSTEM_FUNCTIONS "Enable functions to convert URL to std:
 option(skyr_ENABLE_JSON_FUNCTIONS "Enable functions to convert URL components to JSON" ON)
 option(skyr_BUILD_V1 "Build v1, which will eventually become deprecated" ON)
 option(skyr_BUILD_V2 "Build v2, which uses C++20 features" ON)
+option(skyr_BUILD_V3 "Build v3, which uses C++20 features and modules" OFF)
 
 if (skyr_IS_TOP_LEVEL_PROJECT)
     set(CMAKE_VERBOSE_MAKEFILE true)
     set(CMAKE_CXX_STANDARD 17)
     if (skyr_BUILD_V2)
         set(CMAKE_CXX_STANDARD 20)
-        set(CMAKE_CXX_SYSROOT_FLAG_CODE "list(APPEND CMAKE_CXX_SOURCE_FILE_EXTENSIONS ipp)")
+    endif()
+    if (skyr_BUILD_V3)
+        set(CMAKE_CXX_STANDARD 20)
+        set(CMAKE_CXX_SYSROOT_FLAG_CODE "list(APPEND CMAKE_CXX_SOURCE_FILE_EXTENSIONS ixx)")
     endif()
     set(CMAKE_CXX_EXTENSIONS OFF)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -68,6 +72,8 @@ set(libcxx $<AND:${clang},$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>)
 set(clang_with_gnu_stdlib $<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<BOOL:${WIN32}>>,$<NOT:$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>>)
 set(msvc $<CXX_COMPILER_ID:MSVC>)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+git add 
 add_subdirectory(src)
 
 # Testing
