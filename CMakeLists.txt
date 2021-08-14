@@ -73,7 +73,7 @@ set(clang_with_gnu_stdlib $<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<BOOL:${WIN32}>>
 set(msvc $<CXX_COMPILER_ID:MSVC>)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-git add 
+
 add_subdirectory(src)
 
 # Testing
