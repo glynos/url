@@ -382,7 +382,7 @@ jobs:
               -D skyr_BUILD_DOCS=OFF
               -D skyr_BUILD_EXAMPLES=OFF
               -D skyr_BUILD_V2=${BUILD_V2}
-              -D skyr_BUILD_V2=${BUILD_V3}
+              -D skyr_BUILD_V3=${BUILD_V3}
               -D CMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
               -D CMAKE_TOOLCHAIN_FILE=$ENV{GITHUB_WORKSPACE}/vcpkg/scripts/buildsystems/vcpkg.cmake
               -D CMAKE_INSTALL_PREFIX=$ENV{GITHUB_WORKSPACE}/install
