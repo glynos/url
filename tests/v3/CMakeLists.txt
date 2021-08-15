@@ -13,3 +13,4 @@ set(libcxx $<AND:${clang},$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>)
 
 add_subdirectory(containers)
 add_subdirectory(network)
+add_subdirectory(percent_encoding)

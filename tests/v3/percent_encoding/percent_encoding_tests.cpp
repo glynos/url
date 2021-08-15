@@ -7,7 +7,7 @@
 #include <catch2/catch.hpp>
 #define FMT_HEADER_ONLY
 #include <fmt/format.h>
-#include <skyr/v2/percent_encoding/percent_encode.hpp>
+import skyr.v3.percent_encoding.percent_encode;
 
 
 TEST_CASE("encode fragment", "[percent_encoding]") {
