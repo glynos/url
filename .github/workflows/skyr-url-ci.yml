@@ -173,6 +173,24 @@ jobs:
             cxx_standard: 20,
           }
 
+          # MSVC 2022 (Preview)
+          - {
+            name: "Windows MSVC 2022 Preview Debug (C++20)", artifact: "Windows-MSVC.tar.xz",
+            os: windows-2022,
+            build_type: Debug,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            cxx_standard: 20,
+          }
+          - {
+            name: "Windows MSVC 2022 Preview Release (C++20)", artifact: "Windows-MSVC.tar.xz",
+            os: windows-2022,
+            build_type: RelWithDebInfo,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            cxx_standard: 20,
+          }
+
     steps:
       - uses: actions/checkout@v1
 
@@ -351,8 +369,10 @@ jobs:
           endif()
           set(ENV{PATH} "$ENV{GITHUB_WORKSPACE}${path_separator}$ENV{PATH}")
 
+          set(BUILD_V1 ON)
           set(BUILD_V2 OFF)
-          if ("${{ matrix.config.name }}" STREQUAL "Windows MSVC 2019 Debug (C++20)" OR
+          if (
+              "${{ matrix.config.name }}" STREQUAL "Windows MSVC 2019 Debug (C++20)" OR
               "${{ matrix.config.name }}" STREQUAL "Windows MSVC 2019 Release (C++20)" OR
               "${{ matrix.config.name }}" STREQUAL "Linux GCC 11 Debug (C++20)" OR
               "${{ matrix.config.name }}" STREQUAL "Linux GCC 11 Release (C++20)" OR
@@ -365,9 +385,10 @@ jobs:
           endif()
 
           set(BUILD_V3 OFF)
-          if ("${{ matrix.config.name }}" STREQUAL "Windows MSVC 2019 Debug (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Windows MSVC 2019 Release (C++20)"
+          if ("${{ matrix.config.name }}" STREQUAL "Windows MSVC Preview 2022 Debug (C++20)" OR
+              "${{ matrix.config.name }}" STREQUAL "Windows MSVC Preview 2022 Release (C++20)"
           )
+            set(BUILD_V1 OFF)
             set(BUILD_V3 ON)
           endif()
 
@@ -381,6 +402,7 @@ jobs:
               -D skyr_BUILD_TESTS=ON
               -D skyr_BUILD_DOCS=OFF
               -D skyr_BUILD_EXAMPLES=OFF
+              -D skyr_BUILD_V1=${BUILD_V1}
               -D skyr_BUILD_V2=${BUILD_V2}
               -D skyr_BUILD_V3=${BUILD_V3}
               -D CMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
