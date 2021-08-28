@@ -4,8 +4,8 @@ name: skyr-url CI
 on: [ push, pull_request ]
 
 env:
-  CMAKE_VERSION: 3.17.3
-  NINJA_VERSION: 1.9.0
+  CMAKE_VERSION: 3.21.2
+  NINJA_VERSION: 1.10.2
 
 jobs:
   build:
