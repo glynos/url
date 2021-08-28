@@ -385,8 +385,8 @@ jobs:
           endif()
 
           set(BUILD_V3 OFF)
-          if ("${{ matrix.config.name }}" STREQUAL "Windows MSVC Preview 2022 Debug (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Windows MSVC Preview 2022 Release (C++20)"
+          if ("${{ matrix.config.name }}" STREQUAL "Windows MSVC 2022 Preview Debug (C++20)" OR
+              "${{ matrix.config.name }}" STREQUAL "Windows MSVC 2022 Preview Release (C++20)"
           )
             set(BUILD_V1 OFF)
             set(BUILD_V3 ON)
