@@ -1,4 +1,4 @@
-# Copyright (c) Glyn Matthews 2019-20.
+# Copyright (c) Glyn Matthews 2019-21.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -10,5 +10,6 @@ foreach (
     target_sources(${test_name} PRIVATE
             ${PROJECT_SOURCE_DIR}/modules/skyr/v3/domain/idna_tables.ixx
             ${PROJECT_SOURCE_DIR}/modules/skyr/v3/domain/idna_status.ixx
+            ${PROJECT_SOURCE_DIR}/modules/skyr/v3/domain/idna.ixx
             )
 endforeach ()

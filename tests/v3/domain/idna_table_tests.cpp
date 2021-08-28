@@ -6,7 +6,7 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 import skyr.v3.domain.idna_status;
-import skyr.v3.domain.idna_tables;
+import skyr.v3.domain.idna;
 
 
 struct parameter {
@@ -26,6 +26,6 @@ TEST_CASE("IDNA character values", "[idna]") {
   SECTION("code_point_set") {
     const auto [value, status] = code_point;
     INFO("0x" << std::hex << static_cast<std::uint32_t>(value) << ", " << static_cast<int>(status));
-//    REQUIRE(status == skyr::idna::code_point_status(value));
+    REQUIRE(status == skyr::idna::code_point_status(value));
   }
 }

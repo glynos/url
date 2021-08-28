@@ -11,14 +11,8 @@ module;
 #include <optional>
 #include <cmath>
 #include <locale>
+#include <format>
 #include <tl/expected.hpp>
-#include <range/v3/algorithm/find_if.hpp>
-#include <range/v3/view/split.hpp>
-#include <range/v3/view/transform.hpp>
-#include <range/v3/view/drop_last.hpp>
-#include <fmt/format.h>
-
-export module skyr.v3.network.ipv4;
 
 import skyr.v3.platform.endianness;
 import skyr.v3.containers.static_vector;
@@ -51,6 +45,8 @@ namespace skyr::inline v3::details {
     return number;
   }
 }  // namespace skyr::inline v3::details
+
+export module skyr.v3.network.ipv4;
 
 export {
   namespace skyr::inline v3 {
@@ -90,7 +86,7 @@ export {
         auto output = ""s;
         auto n = address_;
         for (auto i = 1U; i <= 4U; ++i) {
-          output = fmt::format("{}{}{}", separator(i), n % 256, output);
+          output = std::format("{}{}{}", separator(i), n % 256, output);
           n >>= 8;
         }
         return output;
@@ -104,18 +100,24 @@ export {
         -> tl::expected<ipv4_address, ipv4_address_errc> {
       using namespace std::string_view_literals;
 
-      constexpr auto to_string_view = [](auto &&part) {
-        return std::string_view(std::addressof(*std::begin(part)), ranges::distance(part));
-      };
-
       auto parts = static_vector<std::string_view, 8>{};
-      for (auto &&part : input | ranges::views::split('.') | ranges::views::transform(to_string_view)) {
+      auto in_first = std::cbegin(input), in_last = std::cend(input);
+      auto in_it = in_first, in_it_last = in_first;
+      while (in_it != in_last) {
         if (parts.size() == parts.max_size()) {
           *validation_error |= true;
           return tl::make_unexpected(ipv4_address_errc::too_many_segments);
         }
-        parts.emplace_back(part);
+
+        if (*in_it == '.') {
+          parts.push_back(std::string_view(std::addressof(*in_it_last), std::distance(in_it_last, in_it)));
+          ++in_it;
+          in_it_last = in_it;
+        } else {
+          ++in_it;
+        }
       }
+      parts.push_back(std::string_view(std::addressof(*in_it_last), std::distance(in_it_last, in_it)));
 
       if (parts.back().empty()) {
         *validation_error |= true;
@@ -148,13 +150,14 @@ export {
 
       constexpr auto greater_than_255 = [](auto number) { return number > 255; };
 
-      if (ranges::cend(numbers) != ranges::find_if(numbers, greater_than_255)) {
+      auto first = numbers.begin(), last = numbers.end();
+      if (last != std::find_if(first, last, greater_than_255)) {
         *validation_error |= true;
       }
 
-      auto numbers_last_but_one = ranges::cend(numbers);
+      auto numbers_last_but_one = numbers.end();
       --numbers_last_but_one;
-      if (numbers_last_but_one != ranges::find_if(numbers | ranges::views::drop_last(1), greater_than_255)) {
+      if (numbers_last_but_one != std::find_if(first, numbers_last_but_one, greater_than_255)) {
         *validation_error |= true;
         return tl::make_unexpected(ipv4_address_errc::overflow);
       }

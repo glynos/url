@@ -13,28 +13,25 @@ module;
 #include <algorithm>
 #include <iterator>
 #include <locale>
+#include <format>
 #include <tl/expected.hpp>
-#include <range/v3/algorithm/stable_sort.hpp>
-#include <fmt/format.h>
-
-export module skyr.v3.network.ipv6;
 
 import skyr.v3.platform.endianness;
 import skyr.v3.containers.static_vector;
 import skyr.v3.network.ipv6_address_errc;
 
-namespace skyr::inline v3::details {
-  template <class intT, class charT>
-  constexpr inline auto hex_to_dec(charT byte) noexcept {
-    assert(std::isxdigit(byte, std::locale::classic()));
+template <class intT, class charT>
+constexpr inline auto hex_to_dec(charT byte) noexcept {
+  assert(std::isxdigit(byte, std::locale::classic()));
 
-    if (std::isdigit(byte, std::locale::classic())) {
-      return static_cast<intT>(byte - '0');
-    }
-
-    return static_cast<intT>(std::tolower(byte, std::locale::classic()) - 'a' + 10);
+  if (std::isdigit(byte, std::locale::classic())) {
+    return static_cast<intT>(byte - '0');
   }
-}  // namespace skyr::inline v3::details
+
+  return static_cast<intT>(std::tolower(byte, std::locale::classic()) - 'a' + 10);
+}
+
+export module skyr.v3.network.ipv6;
 
 export {
   namespace skyr::inline v3 {
@@ -80,7 +77,7 @@ export {
         auto it = first;
         while (true) {
           if (*it == 0) {
-            auto index = ranges::distance(first, it);
+            auto index = std::distance(first, it);
 
             if (!in_sequence) {
               sequences.emplace_back(index, 1);
@@ -110,7 +107,8 @@ export {
         if (!sequences.empty()) {
           constexpr static auto greater = [](const auto &lhs, const auto &rhs) -> bool { return lhs.second > rhs.second; };
 
-          ranges::stable_sort(sequences, greater);
+          auto seq_first = sequences.begin(), seq_last = sequences.end();
+          std::stable_sort(seq_first, seq_last, greater);
           compress = sequences.front().first;
         }
 
@@ -131,7 +129,7 @@ export {
 
           constexpr auto separator = [](auto i) { return (i != 7) ? ":"sv : ""sv; };
 
-          output += fmt::format("{:x}{}", address_[i], separator(i));  // NOLINT
+          output += std::format("{:x}{}", address_[i], separator(i));  // NOLINT
         }
 
         return output;
@@ -153,7 +151,7 @@ export {
       auto it = first;
 
       if (input.starts_with("::"sv)) {
-        ranges::advance(it, 2);
+        std::advance(it, 2);
         ++piece_index;
         compress = piece_index;
       } else if (input.empty() || input.starts_with(":"sv)) {
@@ -183,7 +181,7 @@ export {
         auto length = 0;
 
         while ((it != last) && ((length < 4) && std::isxdigit(*it, std::locale::classic()))) {
-          value = value * 0x10 + details::hex_to_dec<decltype(value)>(*it);
+          value = value * 0x10 + hex_to_dec<decltype(value)>(*it);
           ++it;
           ++length;
         }
@@ -194,7 +192,7 @@ export {
             return tl::make_unexpected(ipv6_address_errc::empty_ipv4_segment);
           }
 
-          ranges::advance(it, -length);
+          std::advance(it, -length);
 
           if (piece_index > 6) {
             *validation_error |= true;

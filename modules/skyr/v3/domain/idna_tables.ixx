@@ -8,12 +8,13 @@ module;
 #include <algorithm>
 #include <array>
 #include <iterator>
-#include <skyr/v2/domain/idna_status.hpp>
 
 export module skyr.v3.domain.idna_tables;
 
+import skyr.v3.domain.idna_status;
+
 export {
-  namespace skyr::inline v2::idna::details {
+  namespace skyr::inline v3::idna {
   struct code_point_range {
     char32_t first;
     char32_t last;
@@ -8069,5 +8070,5 @@ export {
       {U'\x2fa18', U'\x9efe'},  {U'\x2fa19', U'\x9f05'},  {U'\x2fa1a', U'\x9f0f'},  {U'\x2fa1b', U'\x9f16'},
       {U'\x2fa1c', U'\x9f3b'},  {U'\x2fa1d', U'\x2a600'},
   }};
-  }  // namespace skyr::inline v2::idna::details
+  }  // namespace skyr::inline v3::idna
 }
