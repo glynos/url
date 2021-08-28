@@ -9,7 +9,7 @@ module;
 #include <type_traits>
 #include <array>
 
-namespace skyr::inline v2 {
+namespace skyr::inline v3 {
   template <class intT>
   requires std::is_integral_v<intT> constexpr inline auto swap_endianness(intT v) noexcept -> intT {
     constexpr auto byte_count = sizeof(v);
@@ -20,12 +20,12 @@ namespace skyr::inline v2 {
     }
     return *static_cast<const intT *>(static_cast<const void *>(bytes.data()));
   }
-}  // namespace skyr::inline v2
+}  // namespace skyr::inline v3
 
 export module skyr.v3.platform.endianness;
 
 export {
-  namespace skyr::inline v2 {
+  namespace skyr::inline v3 {
     template <class intT>
       requires std::is_integral_v<intT> constexpr inline auto to_network_byte_order(intT v) noexcept -> intT {
       return (std::endian::big == std::endian::native) ? v : swap_endianness(v);  // NOLINT
@@ -35,5 +35,5 @@ export {
     requires std::is_integral_v<intT> constexpr inline auto from_network_byte_order(intT v) noexcept -> intT {
       return (std::endian::big == std::endian::native) ? v : swap_endianness(v);  // NOLINT
     }
-  }  // namespace skyr::inline v2
+  }  // namespace skyr::inline v3
 } // export
