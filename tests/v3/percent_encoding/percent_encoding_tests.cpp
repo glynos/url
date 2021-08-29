@@ -51,7 +51,7 @@ TEST_CASE("encode_tests", "[percent_encoding]") {
     for (auto i = 0u; i < 0x20u; ++i) {
       auto encoded = skyr::percent_encoding::percent_encode_byte(
           std::byte(i), skyr::percent_encoding::encode_set::c0_control);
-      CHECK(fmt::format("%{:02X}", i) == encoded.to_string());
+      CHECK(std::format("%{:02X}", i) == encoded.to_string());
     }
   }
 
@@ -59,7 +59,7 @@ TEST_CASE("encode_tests", "[percent_encoding]") {
     for (auto i = 0x7fu; i <= 0xffu; ++i) {
       auto encoded = skyr::percent_encoding::percent_encode_byte(
           std::byte(i), skyr::percent_encoding::encode_set::c0_control);
-      CHECK(fmt::format("%{:02X}", i) == encoded.to_string());
+      CHECK(std::format("%{:02X}", i) == encoded.to_string());
     }
   }
 

@@ -9,7 +9,7 @@ module;
 
 export module skyr.v3.domain.idna;
 
-import skyr.v3.domain.idna_status;
+export import skyr.v3.domain.idna_status;
 import skyr.v3.domain.idna_tables;
 
 export {

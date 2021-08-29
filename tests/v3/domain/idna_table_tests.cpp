@@ -5,7 +5,6 @@
 
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
-import skyr.v3.domain.idna_status;
 import skyr.v3.domain.idna;
 
 

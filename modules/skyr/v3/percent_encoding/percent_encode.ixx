@@ -12,9 +12,7 @@ module;
 #include <range/v3/view/transform.hpp>
 
 export module skyr.v3.percent_encoding.percent_encode;
-
-import tl.expected;
-import skyr.v3.percent_encoding.errors;
+export import skyr.v3.percent_encoding.percent_encode_errc;
 
 namespace skyr::inline v3::percent_encoding::details {
   ///
@@ -116,7 +114,7 @@ namespace skyr::inline v3::percent_encoding::details {
         (value == std::byte(0x2b)) ||
         (value == std::byte(0x2c));
   }
-}  // namespace skyr::inline v3::details
+}  // namespace skyr::inline v3::percent_encoding::details
 
 export {
   namespace skyr::inline v3::percent_encoding {
@@ -295,6 +293,9 @@ export {
       return result;
     }
 
+    ///
+    /// \param input
+    /// \return
     inline auto percent_encode(std::string_view input) -> std::string {
       return percent_encode_bytes(input, encode_set::component);
     }

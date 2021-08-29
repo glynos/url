@@ -9,20 +9,21 @@ module;
 #include <type_traits>
 #include <array>
 
-namespace skyr::inline v3 {
-  template <class intT>
-  requires std::is_integral_v<intT> constexpr inline auto swap_endianness(intT v) noexcept -> intT {
-    constexpr auto byte_count = sizeof(v);
-    constexpr auto bit_count = 8ul;
-    std::array<std::byte, byte_count> bytes{};
-    for (auto i = 0ul; i < byte_count; ++i) {
-      bytes[i] = static_cast<std::byte>(v >> (i * bit_count));
-    }
-    return *static_cast<const intT *>(static_cast<const void *>(bytes.data()));
-  }
-}  // namespace skyr::inline v3
-
 export module skyr.v3.platform.endianness;
+
+/// Not exported
+namespace skyr::inline v3 {
+template <class intT>
+requires std::is_integral_v<intT> constexpr inline auto swap_endianness(intT v) noexcept -> intT {
+  constexpr auto byte_count = sizeof(v);
+  constexpr auto bit_count = 8ul;
+  std::array<std::byte, byte_count> bytes{};
+  for (auto i = 0ul; i < byte_count; ++i) {
+    bytes[i] = static_cast<std::byte>(v >> (i * bit_count));
+  }
+  return *static_cast<const intT *>(static_cast<const void *>(bytes.data()));
+}
+}  // namespace skyr::inline v3
 
 export {
   namespace skyr::inline v3 {

@@ -173,23 +173,23 @@ jobs:
             cxx_standard: 20,
           }
 
-          # MSVC 2022 (Preview)
-          - {
-            name: "Windows MSVC 2022 Preview Debug (C++20)", artifact: "Windows-MSVC.tar.xz",
-            os: windows-2022,
-            build_type: Debug,
-            cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Auxiliary/Build/vcvars64.bat",
-            cxx_standard: 20,
-          }
-          - {
-            name: "Windows MSVC 2022 Preview Release (C++20)", artifact: "Windows-MSVC.tar.xz",
-            os: windows-2022,
-            build_type: RelWithDebInfo,
-            cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Auxiliary/Build/vcvars64.bat",
-            cxx_standard: 20,
-          }
+#          # MSVC 2022 (Preview)
+#          - {
+#            name: "Windows MSVC 2022 Preview Debug (C++20)", artifact: "Windows-MSVC.tar.xz",
+#            os: windows-2022,
+#            build_type: Debug,
+#            cc: "cl", cxx: "cl",
+#            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Auxiliary/Build/vcvars64.bat",
+#            cxx_standard: 20,
+#          }
+#          - {
+#            name: "Windows MSVC 2022 Preview Release (C++20)", artifact: "Windows-MSVC.tar.xz",
+#            os: windows-2022,
+#            build_type: RelWithDebInfo,
+#            cc: "cl", cxx: "cl",
+#            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Preview/VC/Auxiliary/Build/vcvars64.bat",
+#            cxx_standard: 20,
+#          }
 
     steps:
       - uses: actions/checkout@v1

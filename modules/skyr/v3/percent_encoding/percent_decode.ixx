@@ -8,12 +8,11 @@ module;
 #include <cstddef>
 #include <cassert>
 #include <string_view>
+#include <tl/expected.hpp>
 
 export module skyr.v3.percent_encoding.percent_decode;
-
-import tl.expected;
-import skyr.v3.percent_encoding.error;
-import skyr.v3.percent_encoding.sentinel;
+export import skyr.v3.percent_encoding.percent_encode_errc;
+export import skyr.v3.percent_encoding.sentinel;
 
 namespace skyr::inline v3::percent_encoding::details {
   constexpr inline auto alnum_to_hex(char value) noexcept -> tl::expected<std::byte, percent_encode_errc> {

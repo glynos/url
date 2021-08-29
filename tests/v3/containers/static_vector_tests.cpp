@@ -6,7 +6,7 @@
 #include <memory>
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
-import skyr.v3.containers.static_vector;
+import skyr.v3.containers;
 
 
 struct test_destructor_call {
@@ -18,9 +18,9 @@ struct test_destructor_call {
   }
 
   test_destructor_call(const test_destructor_call &) = delete;
-  test_destructor_call &operator=(const test_destructor_call &) = delete;
+  auto operator=(const test_destructor_call &) -> test_destructor_call & = delete;
   test_destructor_call(test_destructor_call &&) = delete;
-  test_destructor_call &operator=(test_destructor_call &&) = delete;
+  auto operator=(test_destructor_call &&) -> test_destructor_call & = delete;
 
   ~test_destructor_call() {
     *destructed = true;

@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 module;
-export module skyr.v3.percent_encoding.errors;
+export module skyr.v3.percent_encoding.percent_encode_errc;
 
 export {
   namespace skyr::inline v3::percent_encoding {

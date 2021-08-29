@@ -16,6 +16,8 @@ module;
 #include <format>
 #include <tl/expected.hpp>
 
+export module skyr.v3.network.ipv6;
+
 import skyr.v3.platform.endianness;
 import skyr.v3.containers.static_vector;
 import skyr.v3.network.ipv6_address_errc;
@@ -30,8 +32,6 @@ constexpr inline auto hex_to_dec(charT byte) noexcept {
 
   return static_cast<intT>(std::tolower(byte, std::locale::classic()) - 'a' + 10);
 }
-
-export module skyr.v3.network.ipv6;
 
 export {
   namespace skyr::inline v3 {

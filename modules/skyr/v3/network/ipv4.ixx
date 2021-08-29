@@ -14,6 +14,8 @@ module;
 #include <format>
 #include <tl/expected.hpp>
 
+export module skyr.v3.network.ipv4;
+
 import skyr.v3.platform.endianness;
 import skyr.v3.containers.static_vector;
 import skyr.v3.network.ipv4_address_errc;
@@ -45,8 +47,6 @@ namespace skyr::inline v3::details {
     return number;
   }
 }  // namespace skyr::inline v3::details
-
-export module skyr.v3.network.ipv4;
 
 export {
   namespace skyr::inline v3 {
