@@ -6,14 +6,6 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-project(
-        skyr-url
-        VERSION 2.0.0
-        HOMEPAGE_URL https://cpp-netlib.github.io/url
-        DESCRIPTION "A C++ library that implements the WhatWG URL specification"
-        LANGUAGES CXX
-)
-
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
     set(skyr_IS_TOP_LEVEL_PROJECT YES)
 else()
@@ -35,20 +27,28 @@ option(skyr_BUILD_V1 "Build v1, which will eventually become deprecated" ON)
 option(skyr_BUILD_V2 "Build v2, which uses C++20 features" ON)
 option(skyr_BUILD_V3 "Build v3, which uses C++20 features and modules" OFF)
 
-if (skyr_IS_TOP_LEVEL_PROJECT)
-    set(CMAKE_VERBOSE_MAKEFILE true)
-    set(CMAKE_CXX_STANDARD 17)
-    if (skyr_BUILD_V2)
-        set(CMAKE_CXX_STANDARD 20)
-    endif()
-    if (skyr_BUILD_V3)
-        set(CMAKE_CXX_STANDARD 20)
-        set(CMAKE_CXX_SYSROOT_FLAG_CODE "list(APPEND CMAKE_CXX_SOURCE_FILE_EXTENSIONS ixx)")
-    endif()
-    set(CMAKE_CXX_EXTENSIONS OFF)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_VERBOSE_MAKEFILE true)
+set(CMAKE_CXX_STANDARD 17)
+if (skyr_BUILD_V2 OR skyr_BUILD_V3)
+    set(CMAKE_CXX_STANDARD 20)
+endif()
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if (skyr_BUILD_V3)
+    # Required for CMake to know that a file with a .ixx extension is a C++ module
+    set(CMAKE_CXX_SYSROOT_FLAG_CODE "list(APPEND CMAKE_CXX_SOURCE_FILE_EXTENSIONS ixx)")
 endif()
 
+project(
+        skyr-url
+        VERSION 3.0.0
+        HOMEPAGE_URL https://cpp-netlib.github.io/url
+        DESCRIPTION "A C++ library that implements the WhatWG URL specification"
+        LANGUAGES CXX
+)
+
+# Interface dependencies
 find_package(tl-expected CONFIG REQUIRED)
 find_package(range-v3 CONFIG REQUIRED)
 
@@ -61,6 +61,7 @@ if (skyr_USE_STATIC_CRT AND ${CMAKE_CXX_COMPILER_ID} MATCHES MSVC)
     skyr_replace_dynamic_msvcrt_linker_flags()
 endif()
 
+# Generator expression conditions
 set(full_warnings $<BOOL:${skyr_FULL_WARNINGS}>)
 set(warnings_as_errors $<BOOL:${skyr_WARNINGS_AS_ERRORS}>)
 set(no_exceptions $<BOOL:${skyr_BUILD_WITHOUT_EXCEPTIONS}>)

@@ -10,10 +10,10 @@ module;
 
 export module skyr.v3.unicode.u8_string;
 
-import skyr.v3.concepts.url_concepts;
-import skyr.v3.unicode.unicode_errc;
-import skyr.v3.unicode.ranges.transforms.transform_u8;
-import skyr.v3.unicode.ranges.views.view_u16;
+export import skyr.v3.unicode.unicode_errc;
+export import skyr.v3.concepts.url_concepts;
+export import skyr.v3.unicode.ranges.transforms.transform_u8;
+export import skyr.v3.unicode.ranges.views.view_u16;
 
 export {
   namespace skyr::inline v3::unicode {

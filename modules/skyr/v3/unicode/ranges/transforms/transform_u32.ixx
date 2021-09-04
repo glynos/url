@@ -8,10 +8,6 @@ module;
 #include <iterator>
 #include <type_traits>
 #include <tl/expected.hpp>
-#include <skyr/v2/unicode/core.hpp>
-#include <skyr/v2/unicode/errors.hpp>
-#include <skyr/v2/unicode/ranges/sentinel.hpp>
-#include <skyr/v2/unicode/traits/range_iterator.hpp>
 
 export module skyr.v3.unicode.ranges.transforms.transform_u32;
 

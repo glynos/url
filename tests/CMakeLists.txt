@@ -3,47 +3,59 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+include(${PROJECT_SOURCE_DIR}/cmake/skyr-url-functions.cmake)
 
-set(full_warnings $<BOOL:${skyr_FULL_WARNINGS}>)
-set(warnings_as_errors $<BOOL:${skyr_WARNINGS_AS_ERRORS}>)
-set(no_exceptions $<BOOL:${skyr_BUILD_WITHOUT_EXCEPTIONS}>)
-set(no_rtti $<BOOL:${skyr_BUILD_WITHOUT_RTTI}>)
+# Test dependencies
+find_package(Catch2 CONFIG REQUIRED)
 
-set(gnu $<CXX_COMPILER_ID:GNU>)
-set(clang $<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>)
-set(libcxx $<AND:${clang},$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>)
-set(msvc $<CXX_COMPILER_ID:MSVC>)
-set(clang_with_gnu_stdlib $<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<BOOL:${WIN32}>>,$<NOT:$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>>)
+# Implementation dependencies
+if (${skyr_BUILD_V1} OR ${skyr_BUILD_V2})
+    find_package(fmt CONFIG REQUIRED)
+endif()
 
 function(skyr_create_test file_name output_dir test_name version)
     skyr_remove_extension(${file_name} base)
     set(test ${base}-${version})
     add_executable(${test})
     target_sources(${test} PRIVATE ${base}.cpp)
-    if (skyr_BUILD_V3)
-        target_compile_definitions(${test} PRIVATE $<${msvc}:SEQUENTIAL_PROCESSING=0>)
-    endif()
-    target_compile_options(${test} PRIVATE $<${libcxx}:-stdlib=libc++>)
+    target_compile_definitions(${test} PRIVATE $<$<AND:$<BOOL:${skyr_BUILD_V3}>,${msvc}>:SEQUENTIAL_PROCESSING=0>)
+    target_compile_options(${test} PRIVATE $<${libcxx}:-stdlib=libc++> $<$<AND:$<BOOL:${skyr_BUILD_V3}>,${msvc}>:/experimental:module>)
     add_dependencies(${test} skyr-url-${version})
     target_link_libraries(
             ${test}
             PRIVATE
             skyr-url-${version}
             Catch2::Catch2
-            fmt::fmt
+            $<$<OR:$<BOOL:${skyr_BUILD_V1}>,$<BOOL:${skyr_BUILD_V2}>>:fmt::fmt>
     )
     set_target_properties(
         ${test}
         PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${output_dir}
+        INTERPROCEDURAL_OPTIMIZATION $<BOOL:${skyr_BUILD_V3}>:ON>
     )
-    if (skyr_BUILD_V3)
-        set_target_properties(
-                ${test}
-                PROPERTIES
-                INTERPROCEDURAL_OPTIMIZATION ON
-        )
-    endif()
+    add_test(${test} ${output_dir}/${test})
+    set(test_name ${test} PARENT_SCOPE)
+endfunction()
+
+function(skyr_create_v3_test file_name output_dir test_name)
+    skyr_remove_extension(${file_name} base)
+    set(test ${base}-v3)
+    add_executable(${test})
+    target_sources(${test} PRIVATE ${base}.cpp)
+    target_compile_definitions(${test} PRIVATE $<$<AND:$<BOOL:${skyr_BUILD_V3}>,${msvc}>:SEQUENTIAL_PROCESSING=0>)
+    target_compile_options(${test} PRIVATE $<${libcxx}:-stdlib=libc++> $<$<AND:$<BOOL:${skyr_BUILD_V3}>,${msvc}>:/experimental:module>)
+    target_link_libraries(
+            ${test}
+            PRIVATE
+            Catch2::Catch2
+    )
+    set_target_properties(
+        ${test}
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${output_dir}
+        INTERPROCEDURAL_OPTIMIZATION ON
+    )
     add_test(${test} ${output_dir}/${test})
     set(test_name ${test} PARENT_SCOPE)
 endfunction()

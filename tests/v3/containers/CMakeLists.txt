@@ -6,10 +6,12 @@
 foreach (
         file_name
         static_vector_tests.cpp)
-    skyr_create_test(${file_name} ${PROJECT_BINARY_DIR}/tests/container test_name v3)
-#    target_compile_options(${test_name} PRIVATE $<${clang}:-fmodules>)
-    target_sources(${test_name} PRIVATE
-            ${PROJECT_SOURCE_DIR}/modules/skyr/v3/containers/static_vector.ixx
-            ${PROJECT_SOURCE_DIR}/modules/skyr/v3/containers.ixx
+    skyr_create_v3_test(${file_name} ${PROJECT_BINARY_DIR}/tests/container test_name)
+
+    add_dependencies(${test_name} skyr-containers-v3)
+    target_link_libraries(
+            ${test_name}
+            PRIVATE
+            skyr-containers-v3
     )
 endforeach ()
