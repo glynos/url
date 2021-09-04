@@ -5,10 +5,10 @@
 add_library(skyr-network-v3 STATIC)
 
 target_sources(skyr-network-v3 PRIVATE
-        ../../skyr/v3/network/ipv4_address_errc.ixx
-        ../../skyr/v3/network/ipv4.ixx
-        ../../skyr/v3/network/ipv6_address_errc.ixx
-        ../../skyr/v3/network/ipv6.ixx
+        ipv4_address_errc.ixx
+        ipv4.ixx
+        ipv6_address_errc.ixx
+        ipv6.ixx
 )
 
 target_link_libraries(

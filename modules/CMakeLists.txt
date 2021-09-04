@@ -4,5 +4,5 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 if (skyr_BUILD_V3)
-    add_subdirectory(v3)
+    add_subdirectory(skyr/v3)
 endif()

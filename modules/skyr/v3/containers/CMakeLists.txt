@@ -5,8 +5,7 @@
 add_library(skyr-containers-v3 STATIC)
 
 target_sources(skyr-containers-v3 PRIVATE
-        ../../skyr/v3/containers/static_vector.ixx
-        ../../skyr/v3/containers.ixx
+        static_vector.ixx
 )
 
 target_link_libraries(

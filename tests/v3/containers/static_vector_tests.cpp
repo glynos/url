@@ -6,7 +6,7 @@
 #include <memory>
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
-import skyr.v3.containers;
+import skyr.v3.containers.static_vector;
 
 
 struct test_destructor_call {

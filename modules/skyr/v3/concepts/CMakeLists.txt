@@ -5,7 +5,7 @@
 add_library(skyr-concepts-v3 STATIC)
 
 target_sources(skyr-concepts-v3 PRIVATE
-        ../../skyr/v3/concepts/url_concepts.ixx
+        url_concepts.ixx
 )
 
 target_link_libraries(
