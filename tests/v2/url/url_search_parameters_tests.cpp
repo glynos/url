@@ -1,12 +1,12 @@
-// Copyright 2017-19 Glyn Matthews.
+// Copyright 2017-21 Glyn Matthews.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
-#include <skyr/v1/url.hpp>
-#include <skyr/v1/url_search_parameters.hpp>
+#include <skyr/v2/url.hpp>
+#include <skyr/v2/url_search_parameters.hpp>
 
 TEST_CASE("url_search_parameters_test", "[url_search_parameters]") {
   SECTION("empty_query") {
@@ -22,8 +22,8 @@ TEST_CASE("url_search_parameters_test", "[url_search_parameters]") {
     CHECK("a=b" == parameters.to_string());
     auto it = parameters.begin();
     REQUIRE_FALSE(it == parameters.end());
-    CHECK("a" == it->first);
-    CHECK("b" == it->second);
+    CHECK("a" == it->name);
+    CHECK("b" == it->value.value());
     ++it;
     CHECK(it == parameters.end());
   }
@@ -33,8 +33,8 @@ TEST_CASE("url_search_parameters_test", "[url_search_parameters]") {
 
     auto it = parameters.begin();
     REQUIRE_FALSE(it == parameters.end());
-    CHECK("a" == it->first);
-    CHECK("b" == it->second);
+    CHECK("a" == it->name);
+    CHECK("b" == it->value.value());
     ++it;
     CHECK(it == parameters.end());
   }
@@ -44,12 +44,12 @@ TEST_CASE("url_search_parameters_test", "[url_search_parameters]") {
 
     auto it = parameters.begin();
     REQUIRE_FALSE(it == parameters.end());
-    CHECK("a" == it->first);
-    CHECK("b" == it->second);
+    CHECK("a" == it->name);
+    CHECK("b" == it->value.value());
     ++it;
     REQUIRE_FALSE(it == parameters.end());
-    CHECK("c" == it->first);
-    CHECK("d" == it->second);
+    CHECK("c" == it->name);
+    CHECK("d" == it->value.value());
     ++it;
     CHECK(it == parameters.end());
   }
@@ -59,12 +59,12 @@ TEST_CASE("url_search_parameters_test", "[url_search_parameters]") {
 
     auto it = parameters.begin();
     REQUIRE_FALSE(it == parameters.end());
-    CHECK("a" == it->first);
-    CHECK("b" == it->second);
+    CHECK("a" == it->name);
+    CHECK("b" == it->value.value());
     ++it;
     REQUIRE_FALSE(it == parameters.end());
-    CHECK("c" == it->first);
-    CHECK("d" == it->second);
+    CHECK("c" == it->name);
+    CHECK("d" == it->value.value());
     ++it;
     CHECK(it == parameters.end());
   }
@@ -75,12 +75,12 @@ TEST_CASE("url_search_parameters_test", "[url_search_parameters]") {
     CHECK("a=b&c=d" == parameters.to_string());
     auto it = parameters.begin();
     REQUIRE_FALSE(it == parameters.end());
-    CHECK("a" == it->first);
-    CHECK("b" == it->second);
+    CHECK("a" == it->name);
+    CHECK("b" == it->value.value());
     ++it;
     REQUIRE_FALSE(it == parameters.end());
-    CHECK("c" == it->first);
-    CHECK("d" == it->second);
+    CHECK("c" == it->name);
+    CHECK("d" == it->value.value());
     ++it;
     CHECK(it == parameters.end());
   }
@@ -91,8 +91,8 @@ TEST_CASE("url_search_parameters_test", "[url_search_parameters]") {
 
     auto it = parameters.begin();
     REQUIRE_FALSE(it == parameters.end());
-    CHECK("a" == it->first);
-    CHECK("b" == it->second);
+    CHECK("a" == it->name);
+    CHECK("b" == it->value.value());
     ++it;
     CHECK(it == parameters.end());
   }
@@ -104,11 +104,11 @@ TEST_CASE("url_search_parameters_test", "[url_search_parameters]") {
 
     auto it = parameters.begin();
     REQUIRE_FALSE(it == parameters.end());
-    CHECK("a" == it->first);
-    CHECK("b" == it->second);
+    CHECK("a" == it->name);
+    CHECK("b" == it->value.value());
     ++it;
-    CHECK("c" == it->first);
-    CHECK("d" == it->second);
+    CHECK("c" == it->name);
+    CHECK("d" == it->value.value());
     ++it;
     CHECK(it == parameters.end());
   }
@@ -292,10 +292,10 @@ TEST_CASE("url") {
 
     auto first = std::begin(url.search_parameters()), last = std::end(url.search_parameters());
     REQUIRE(first != last);
-    CHECK("key" == first->first);
+    CHECK("key" == first->name);
     ++first;
     REQUIRE(first != last);
-    CHECK("q" == first->first);
+    CHECK("q" == first->name);
     ++first;
     REQUIRE(first == last);
   }

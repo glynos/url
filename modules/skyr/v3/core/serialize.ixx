@@ -6,7 +6,6 @@
 module;
 
 #include <format>
-#include <range/v3/view/join.hpp>
 
 export module skyr.v3.core.serialize;
 
@@ -36,8 +35,11 @@ inline auto serialize_authority(const url_record &url) -> std::string {
 }
 
 inline auto serialize_path(const std::vector<std::string> &path) -> std::string {
-  // return std::format("/{}", path | ranges::views::join('/') | ranges::to<std::string>());
-  return std::string();
+  std::string result{};
+  for (auto &&element : path) {
+    result += std::format("/{}", element);
+  }
+  return result;
 }
 
 inline auto serialize_path(const url_record &url) -> std::string {

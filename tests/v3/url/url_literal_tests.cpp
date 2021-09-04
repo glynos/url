@@ -7,7 +7,7 @@
 #include <memory>
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
-#include <skyr/v2/url.hpp>
+import skyr.v3.url;
 
 using namespace skyr::literals;
 

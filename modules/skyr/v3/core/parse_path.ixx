@@ -11,7 +11,7 @@ module;
 
 export module skyr.v3.core.parse_path;
 
-import skyr.v3.core.parse;
+export import skyr.v3.core.parse;
 
 export {
   namespace skyr::inline v3 {
