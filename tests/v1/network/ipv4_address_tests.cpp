@@ -3,8 +3,7 @@
 // (See accompanying file LICENSE_1_0.txt of copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include <skyr/v1/network/ipv4_address.hpp>
 
 TEST_CASE("ipv4 addresses", "[ipv4]") {
