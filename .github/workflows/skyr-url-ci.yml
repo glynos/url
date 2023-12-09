@@ -4,7 +4,7 @@ name: skyr-url CI
 on: [ push, pull_request ]
 
 env:
-  CMAKE_VERSION: 3.18.6
+  CMAKE_VERSION: 3.21.7
   NINJA_VERSION: 1.11.0
 
 jobs:
@@ -80,14 +80,14 @@ jobs:
           # Clang-10
           - {
             name: "Linux Clang 10 Debug (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             build_type: Debug,
             cc: "clang-10", cxx: "clang++-10",
             cxx_standard: 20
           }
           - {
             name: "Linux Clang 10 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             build_type: RelWithDebInfo,
             cc: "clang-10", cxx: "clang++-10",
             cxx_standard: 20,
@@ -96,14 +96,14 @@ jobs:
           # Clang-11
           - {
             name: "Linux Clang 11 Debug (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             build_type: Debug,
             cc: "clang-11", cxx: "clang++-11",
             cxx_standard: 20,
           }
           - {
             name: "Linux Clang 11 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             build_type: RelWithDebInfo,
             cc: "clang-11", cxx: "clang++-11",
             cxx_standard: 20,
@@ -112,14 +112,14 @@ jobs:
           # Clang-12
           - {
             name: "Linux Clang 12 Debug (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             build_type: Debug,
             cc: "clang-12", cxx: "clang++-12",
             cxx_standard: 20,
           }
           - {
             name: "Linux Clang 12 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            os: ubuntu-20.04,
             build_type: RelWithDebInfo,
             cc: "clang-12", cxx: "clang++-12",
             cxx_standard: 20,
@@ -238,16 +238,16 @@ jobs:
 
           if ("${{ runner.os }}" STREQUAL "Windows")
             set(ninja_suffix "win.zip")
-            set(cmake_suffix "win64-x64.zip")
-            set(cmake_dir "cmake-${cmake_version}-win64-x64/bin")
+            set(cmake_suffix "windows-x86_64.zip")
+            set(cmake_dir "cmake-${cmake_version}-windows-x86_64/bin")
           elseif ("${{ runner.os }}" STREQUAL "Linux")
             set(ninja_suffix "linux.zip")
-            set(cmake_suffix "Linux-x86_64.tar.gz")
-            set(cmake_dir "cmake-${cmake_version}-Linux-x86_64/bin")
+            set(cmake_suffix "linux-x86_64.tar.gz")
+            set(cmake_dir "cmake-${cmake_version}-linux-x86_64/bin")
           elseif ("${{ runner.os }}" STREQUAL "macOS")
             set(ninja_suffix "mac.zip")
-            set(cmake_suffix "Darwin-x86_64.tar.gz")
-            set(cmake_dir "cmake-${cmake_version}-Darwin-x86_64/CMake.app/Contents/bin")
+            set(cmake_suffix "macos10.10-universal.tar.gz")
+            set(cmake_dir "cmake-${cmake_version}-macos10.10-universal/CMake.app/Contents/bin")
           endif()
 
           set(ninja_url "https://github.com/ninja-build/ninja/releases/download/v${ninja_version}/ninja-${ninja_suffix}")
@@ -266,6 +266,7 @@ jobs:
             COMMAND chmod +x ninja
             COMMAND chmod +x ${cmake_dir}/cmake
           )
+
 
       - name: Install GCC 7
         id: install_gcc_7
@@ -331,6 +332,7 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 11
+          sudo apt-get install -y libc++-11-dev libc++abi-11-dev
 
       - name: Install Clang 12
         id: install_clang_12
@@ -341,6 +343,7 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh 12
+          sudo apt-get install -y libc++-12-dev libc++abi-12-dev libunwind-12-dev
 
       - name: Install Clang 14
         id: install_clang_14
@@ -365,7 +368,7 @@ jobs:
           git checkout -b master origin/master
           export
           ./bootstrap-vcpkg.sh
-          ./vcpkg install tl-expected range-v3 catch2 nlohmann-json fmt
+          ./vcpkg install fmt
 
       - name: Install vcpkg (MacOS)
         id: vcpkg_macos
@@ -381,7 +384,7 @@ jobs:
           git checkout -b master origin/master
           export
           ./bootstrap-vcpkg.sh
-          ./vcpkg install tl-expected range-v3 catch2 nlohmann-json fmt
+          ./vcpkg install fmt
 
       - name: Install vcpkg (Windows)
         id: vcpkg_windows
@@ -391,8 +394,8 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git ${Env:GITHUB_WORKSPACE}\vcpkg
           cd ${Env:GITHUB_WORKSPACE}\vcpkg
           .\bootstrap-vcpkg.bat
-          vcpkg install tl-expected range-v3 catch2 nlohmann-json fmt --triplet x64-windows
-          vcpkg integrate install
+          vcpkg install fmt --triplet x64-windows
+          
 
       - name: Configure
         shell: cmake -P {0}
@@ -440,6 +443,27 @@ jobs:
             set(BUILD_V2 ON)
           endif()
 
+          set(USE_LLVM OFF)
+          if("${{ matrix.config.name }}" STREQUAL "macOS Clang Debug (C++17)" OR
+             "${{ matrix.config.name }}" STREQUAL "macOS Clang Release (C++17)" OR
+             "${{ matrix.config.name }}" STREQUAL "macOS Clang Debug (C++20)" OR
+             "${{ matrix.config.name }}" STREQUAL "macOS Clang Release (C++20)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 11 Debug (C++17)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 11 Release (C++17)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 12 Debug (C++17)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 12 Release (C++17)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 14 Debug (C++17)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 14 Release (C++17)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 11 Debug (C++20)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 11 Release (C++20)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 12 Debug (C++20)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 12 Release (C++20)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 14 Debug (C++20)" OR
+             "${{ matrix.config.name }}" STREQUAL "Linux Clang 14 Release (C++20)"
+          )
+            set(USE_LLVM ON)
+          endif()
+
           execute_process(
             COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/cmake
               -S .
@@ -451,8 +475,9 @@ jobs:
               -D skyr_BUILD_DOCS=OFF
               -D skyr_BUILD_EXAMPLES=OFF
               -D skyr_BUILD_V2=${BUILD_V2}
+              -D skyr_BUILD_WITH_LLVM_LIBCXX=${USE_LLVM}
+              -D SKY_VERBOSE_BUILD=ON
               -D CMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
-              -D CMAKE_TOOLCHAIN_FILE=$ENV{GITHUB_WORKSPACE}/vcpkg/scripts/buildsystems/vcpkg.cmake
               -D CMAKE_INSTALL_PREFIX=$ENV{GITHUB_WORKSPACE}/install
             RESULT_VARIABLE result
           )

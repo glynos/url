@@ -4,21 +4,25 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.21)
+
+get_directory_property(skyr_is_subproject PARENT_DIRECTORY)
+
+if(NOT skyr_is_subproject)
+    set(skyr_IS_TOP_LEVEL_PROJECT YES)
+else()
+    set(skyr_IS_TOP_LEVEL_PROJECT NO)
+endif()
 
 project(
         skyr-url
-        VERSION 2.0.0
+        VERSION 2.0.1
         HOMEPAGE_URL https://cpp-netlib.github.io/url
         DESCRIPTION "A C++ library that implements the WhatWG URL specification"
         LANGUAGES CXX
 )
 
-if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
-    set(skyr_IS_TOP_LEVEL_PROJECT YES)
-else()
-    set(skyr_IS_TOP_LEVEL_PROJECT NO)
-endif()
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 option(skyr_BUILD_TESTS "Build the URL tests." ON)
 option(skyr_BUILD_DOCS "Build the URL documentation." OFF)
@@ -35,23 +39,41 @@ option(skyr_BUILD_V1 "Build v1" ON)
 option(skyr_BUILD_V2 "Build v2, which uses C++20 features" OFF)
 
 if (skyr_IS_TOP_LEVEL_PROJECT)
-    set(CMAKE_VERBOSE_MAKEFILE true)
-    set(CMAKE_CXX_STANDARD 17)
-    if (skyr_BUILD_V2)
+    if(skyr_BUILD_V2)
         set(CMAKE_CXX_STANDARD 20)
+    else()
+        set(CMAKE_CXX_STANDARD 17)
     endif()
+
     set(CMAKE_CXX_EXTENSIONS OFF)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
-find_package(tl-expected CONFIG REQUIRED)
-find_package(range-v3 CONFIG REQUIRED)
+include(skyr-url-options)
+include(skyr-url-env)
+include(skyr-url-flags)
+
+include(cmake/CPM.cmake)
+CPMAddPackage(
+    NAME expected
+    GITHUB_REPOSITORY TartanLlama/expected
+    GIT_TAG v1.1.0
+    OPTIONS "EXPECTED_BUILD_TESTS OFF" #pulls is super old catch2
+)
+CPMAddPackage("gh:ericniebler/range-v3#0.12.0")
+CPMAddPackage("gh:fmtlib/fmt#10.1.1")
+
 
 if (skyr_ENABLE_JSON_FUNCTIONS)
-    find_package(nlohmann_json CONFIG REQUIRED)
+    CPMAddPackage(
+        NAME json
+        GITHUB_REPOSITORY nlohmann/json
+        GIT_TAG v3.11.3
+        OPTIONS "JSON_Install ON"    
+    )
 endif()
 
-if (skyr_USE_STATIC_CRT AND ${CMAKE_CXX_COMPILER_ID} MATCHES MSVC)
+if (skyr_USE_STATIC_CRT AND (SKY_CXX_COMPILER_CLANGCL OR SKY_CXX_COMPILER_MSVC))
     include(${PROJECT_SOURCE_DIR}/cmake/skyr-url-functions.cmake)
     skyr_replace_dynamic_msvcrt_linker_flags()
 endif()
@@ -61,30 +83,31 @@ set(warnings_as_errors $<BOOL:${skyr_WARNINGS_AS_ERRORS}>)
 set(no_exceptions $<BOOL:${skyr_BUILD_WITHOUT_EXCEPTIONS}>)
 set(no_rtti $<BOOL:${skyr_BUILD_WITHOUT_RTTI}>)
 
-set(gnu $<CXX_COMPILER_ID:GNU>)
-set(clang $<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>)
+set(gnu $<BOOL:${SKY_CXX_COMPILER_GCC}>)
+set(clang $<BOOL:${SKY_CXX_COMPILER_CLANG}>)
 set(libcxx $<AND:${clang},$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>)
-set(clang_with_gnu_stdlib $<AND:$<CXX_COMPILER_ID:Clang>,$<NOT:$<BOOL:${WIN32}>>,$<NOT:$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>>)
-set(msvc $<CXX_COMPILER_ID:MSVC>)
+set(clang_with_gnu_stdlib $<AND:${clang},$<NOT:$<BOOL:${skyr_BUILD_WITH_LLVM_LIBCXX}>>>)
+set(msvc $<BOOL:${SKY_CXX_COMPILER_MSVC}>)
 
 add_subdirectory(src)
 
 # Testing
 if (skyr_BUILD_TESTS)
-    message(STATUS "Configuring tests")
+    message(STATUS "[skyr-url] Configuring tests")
+    CPMAddPackage("gh:catchorg/Catch2@3.4.0")
     enable_testing()
     add_subdirectory(tests)
 endif()
 
 # Documentation
 if (skyr_BUILD_DOCS)
-    message(STATUS "Configuring documentation")
+    message(STATUS "[skyr-url] Configuring documentation")
     add_subdirectory(docs)
 endif()
 
 # Examples
 if (skyr_BUILD_EXAMPLES)
-    message(STATUS "Configuring examples")
+    message(STATUS "[skyr-url] Configuring examples")
     add_subdirectory(examples)
 endif()
 

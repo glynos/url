@@ -8,7 +8,7 @@
 [![GitHub Actions Status](
     https://github.com/cpp-netlib/url/workflows/skyr-url%20CI/badge.svg?branch=main)](
     https://github.com/cpp-netlib/url/actions?query=workflow%3A%22skyr-url+CI%22)
-    
+
 ## Notice
 
 I've changed the name of the default branch from `master` to `main`. Please make future

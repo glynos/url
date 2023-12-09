@@ -3,7 +3,7 @@
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-include(${PROJECT_SOURCE_DIR}/cmake/skyr-url-functions.cmake)
+include(skyr-url-functions)
 
 configure_file(
         version.hpp.in

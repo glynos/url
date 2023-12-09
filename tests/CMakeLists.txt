@@ -1,4 +1,6 @@
 function(skyr_create_test file_name output_dir test_name version)
+    CPMAddPackage("gh:fmtlib/fmt#10.1.1")
+    CPMAddPackage("gh:catchorg/Catch2@3.4.0")
     skyr_remove_extension(${file_name} base)
     set(test ${base}-${version})
     add_executable(${test})
