@@ -1,0 +1,16 @@
+# Copyright (c) Glyn Matthews 2012-2020.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+# CMake target definitions for header-only library
+# Actual implementation is in include/skyr/
+
+include(${PROJECT_SOURCE_DIR}/cmake/skyr-url-functions.cmake)
+
+configure_file(
+        version.hpp.in
+        ${PROJECT_BINARY_DIR}/include/skyr/version.hpp
+)
+
+add_subdirectory(skyr)

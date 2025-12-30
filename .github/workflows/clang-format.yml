@@ -1,0 +1,32 @@
+name: clang-format Check
+
+on: [push, pull_request]
+
+jobs:
+  formatting-check:
+    name: Formatting Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 21
+          sudo apt-get install -y clang-format-21
+
+      - name: Run clang-format
+        run: |
+          find include tests -name '*.hpp' -o -name '*.cpp' | xargs clang-format-21 --dry-run --Werror
+
+      - name: Formatting check passed
+        if: success()
+        run: echo "✓ All files are properly formatted"
+
+      - name: Formatting check failed
+        if: failure()
+        run: |
+          echo "✗ Some files need formatting. Run 'clang-format -i <files>' to fix."
+          echo "Or run: find include tests -name '*.hpp' -o -name '*.cpp' | xargs clang-format -i"
+          exit 1

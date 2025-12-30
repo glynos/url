@@ -15,212 +15,200 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          # GCC-10
+          # GCC-13 (C++23)
           - {
-            name: "Linux GCC 10 Debug (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            name: "Linux GCC 13 Debug (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: Debug,
-            cc: "gcc-10", cxx: "g++-10",
-            cxx_standard: 17
+            cc: "gcc-13", cxx: "g++-13",
+            cxx_standard: 23
           }
           - {
-            name: "Linux GCC 10 Release (C++17)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            name: "Linux GCC 13 Release (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: RelWithDebInfo,
-            cc: "gcc-10", cxx: "g++-10",
-            cxx_standard: 17
-          }
-          - {
-            name: "Linux GCC 10 Debug (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: Debug,
-            cc: "gcc-10", cxx: "g++-10",
-            cxx_standard: 20,
-          }
-          - {
-            name: "Linux GCC 10 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
-            build_type: RelWithDebInfo,
-            cc: "gcc-10", cxx: "g++-10",
-            cxx_standard: 20,
+            cc: "gcc-13", cxx: "g++-13",
+            cxx_standard: 23
           }
 
-          # GCC-11
+          # GCC-14 (C++23)
           - {
-            name: "Linux GCC 11 Debug (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            name: "Linux GCC 14 Debug (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: Debug,
-            cc: "gcc-11", cxx: "g++-11",
-            cxx_standard: 20,
+            cc: "gcc-14", cxx: "g++-14",
+            cxx_standard: 23
           }
           - {
-            name: "Linux GCC 11 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            name: "Linux GCC 14 Release (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: RelWithDebInfo,
-            cc: "gcc-11", cxx: "g++-11",
-            cxx_standard: 20,
+            cc: "gcc-14", cxx: "g++-14",
+            cxx_standard: 23
           }
 
-#          # GCC-12
-#          - {
-#            name: "Linux GCC 12 Debug (C++20)", artifact: "Linux.tar.xz",
-#            os: ubuntu-latest,
-#            build_type: Debug,
-#            cc: "gcc-12", cxx: "g++-12",
-#            cxx_standard: 20,
-#          }
-#          - {
-#            name: "Linux GCC 12 Release (C++20)", artifact: "Linux.tar.xz",
-#            os: ubuntu-latest,
-#            build_type: RelWithDebInfo,
-#            cc: "gcc-12", cxx: "g++-12",
-#            cxx_standard: 20,
-#          }
-
-          # Clang-10
+          # Clang-18 (C++23)
           - {
-            name: "Linux Clang 10 Debug (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-20.04,
+            name: "Linux Clang 18 Debug (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: Debug,
-            cc: "clang-10", cxx: "clang++-10",
-            cxx_standard: 20
+            cc: "clang-18", cxx: "clang++-18",
+            cxx_standard: 23
           }
           - {
-            name: "Linux Clang 10 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-20.04,
+            name: "Linux Clang 18 Release (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: RelWithDebInfo,
-            cc: "clang-10", cxx: "clang++-10",
-            cxx_standard: 20,
+            cc: "clang-18", cxx: "clang++-18",
+            cxx_standard: 23
           }
 
-          # Clang-11
+          # Clang-19 (C++23)
           - {
-            name: "Linux Clang 11 Debug (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-20.04,
+            name: "Linux Clang 19 Debug (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: Debug,
-            cc: "clang-11", cxx: "clang++-11",
-            cxx_standard: 20,
+            cc: "clang-19", cxx: "clang++-19",
+            cxx_standard: 23
           }
           - {
-            name: "Linux Clang 11 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-20.04,
+            name: "Linux Clang 19 Release (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: RelWithDebInfo,
-            cc: "clang-11", cxx: "clang++-11",
-            cxx_standard: 20,
+            cc: "clang-19", cxx: "clang++-19",
+            cxx_standard: 23
           }
 
-          # Clang-12
+          # Clang-20 (C++23)
           - {
-            name: "Linux Clang 12 Debug (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-20.04,
+            name: "Linux Clang 20 Debug (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: Debug,
-            cc: "clang-12", cxx: "clang++-12",
-            cxx_standard: 20,
+            cc: "clang-20", cxx: "clang++-20",
+            cxx_standard: 23
           }
           - {
-            name: "Linux Clang 12 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-20.04,
+            name: "Linux Clang 20 Release (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: RelWithDebInfo,
-            cc: "clang-12", cxx: "clang++-12",
-            cxx_standard: 20,
+            cc: "clang-20", cxx: "clang++-20",
+            cxx_standard: 23
           }
 
-          # Clang-14
+          # Clang-21 (C++23)
           - {
-            name: "Linux Clang 14 Debug (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            name: "Linux Clang 21 Debug (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: Debug,
-            cc: "clang-14", cxx: "clang++-14",
-            cxx_standard: 20,
+            cc: "clang-21", cxx: "clang++-21",
+            cxx_standard: 23
           }
           - {
-            name: "Linux Clang 14 Release (C++20)", artifact: "Linux.tar.xz",
-            os: ubuntu-latest,
+            name: "Linux Clang 21 Release (C++23)", artifact: "Linux.tar.xz",
+            os: ubuntu-24.04,
             build_type: RelWithDebInfo,
-            cc: "clang-14", cxx: "clang++-14",
-            cxx_standard: 20,
+            cc: "clang-21", cxx: "clang++-21",
+            cxx_standard: 23
           }
 
-          # AppleClang
+          # macOS Clang-18 (C++23)
           - {
-            name: "macOS Clang Debug (C++17)", artifact: "macOS.tar.xz",
+            name: "macOS Clang 18 Debug (C++23)", artifact: "macOS.tar.xz",
             os: macos-latest,
             build_type: Debug,
-            cc: "clang", cxx: "clang++",
-            cxx_standard: 17
+            cc: "clang-18", cxx: "clang++-18",
+            cxx_standard: 23
           }
           - {
-            name: "macOS Clang Release (C++17)", artifact: "macOS.tar.xz",
+            name: "macOS Clang 18 Release (C++23)", artifact: "macOS.tar.xz",
             os: macos-latest,
             build_type: RelWithDebInfo,
-            cc: "clang", cxx: "clang++",
-            cxx_standard: 17,
-          }
-          - {
-            name: "macOS Clang Debug (C++20)", artifact: "macOS.tar.xz",
-            os: macos-latest,
-            build_type: Debug,
-            cc: "clang", cxx: "clang++",
-            cxx_standard: 20
-          }
-          - {
-            name: "macOS Clang Release (C++20)", artifact: "macOS.tar.xz",
-            os: macos-latest,
-            build_type: RelWithDebInfo,
-            cc: "clang", cxx: "clang++",
-            cxx_standard: 20,
+            cc: "clang-18", cxx: "clang++-18",
+            cxx_standard: 23
           }
 
-          # MSVC 2019
+          # macOS Clang-19 (C++23)
           - {
-            name: "Windows MSVC 2019 Debug (C++17)", artifact: "Windows-MSVC.tar.xz",
-            os: windows-latest,
+            name: "macOS Clang 19 Debug (C++23)", artifact: "macOS.tar.xz",
+            os: macos-latest,
             build_type: Debug,
-            cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            cxx_standard: 17,
+            cc: "clang-19", cxx: "clang++-19",
+            cxx_standard: 23
           }
           - {
-            name: "Windows MSVC 2019 Release (C++17)", artifact: "Windows-MSVC.tar.xz",
-            os: windows-latest,
+            name: "macOS Clang 19 Release (C++23)", artifact: "macOS.tar.xz",
+            os: macos-latest,
             build_type: RelWithDebInfo,
-            cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            cxx_standard: 17,
-          }
-          - {
-            name: "Windows MSVC 2019 Debug (C++20)", artifact: "Windows-MSVC.tar.xz",
-            os: windows-latest,
-            build_type: Debug,
-            cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            cxx_standard: 20,
-          }
-          - {
-            name: "Windows MSVC 2019 Release (C++20)", artifact: "Windows-MSVC.tar.xz",
-            os: windows-latest,
-            build_type: RelWithDebInfo,
-            cc: "cl", cxx: "cl",
-            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            cxx_standard: 20,
+            cc: "clang-19", cxx: "clang++-19",
+            cxx_standard: 23
           }
 
-          # MSVC 2022
+          # macOS Clang-20 (C++23)
           - {
-            name: "Windows MSVC 2022 Debug (C++20)", artifact: "Windows-MSVC.tar.xz",
+            name: "macOS Clang 20 Debug (C++23)", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: Debug,
+            cc: "clang-20", cxx: "clang++-20",
+            cxx_standard: 23
+          }
+          - {
+            name: "macOS Clang 20 Release (C++23)", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-20", cxx: "clang++-20",
+            cxx_standard: 23
+          }
+
+          # macOS Clang-21 (C++23)
+          - {
+            name: "macOS Clang 21 Debug (C++23)", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: Debug,
+            cc: "clang-21", cxx: "clang++-21",
+            cxx_standard: 23
+          }
+          - {
+            name: "macOS Clang 21 Release (C++23)", artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: RelWithDebInfo,
+            cc: "clang-21", cxx: "clang++-21",
+            cxx_standard: 23
+          }
+
+          # MSVC 2022 (Visual Studio 2022, C++23)
+          - {
+            name: "Windows MSVC 2022 Debug (C++23)", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
             build_type: Debug,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            cxx_standard: 20,
+            cxx_standard: 23
           }
           - {
-            name: "Windows MSVC 2022 Release (C++20)", artifact: "Windows-MSVC.tar.xz",
+            name: "Windows MSVC 2022 Release (C++23)", artifact: "Windows-MSVC.tar.xz",
             os: windows-latest,
             build_type: RelWithDebInfo,
             cc: "cl", cxx: "cl",
             environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
-            cxx_standard: 20,
+            cxx_standard: 23
+          }
+
+          # MSVC 2026 (Visual Studio 2026, C++23)
+          - {
+            name: "Windows MSVC 2026 Debug (C++23)", artifact: "Windows-MSVC.tar.xz",
+            os: windows-latest,
+            build_type: Debug,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files/Microsoft Visual Studio/2026/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            cxx_standard: 23
+          }
+          - {
+            name: "Windows MSVC 2026 Release (C++23)", artifact: "Windows-MSVC.tar.xz",
+            os: windows-latest,
+            build_type: RelWithDebInfo,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files/Microsoft Visual Studio/2026/Enterprise/VC/Auxiliary/Build/vcvars64.bat",
+            cxx_standard: 23
           }
 
     steps:
@@ -267,93 +255,30 @@ jobs:
             COMMAND chmod +x ${cmake_dir}/cmake
           )
 
+      # GCC 13-14 and Clang 18 are pre-installed on ubuntu-24.04
+      # Clang 19-21 need to be installed from LLVM repository
 
-      - name: Install GCC 7
-        id: install_gcc_7
-        if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'g++-7' )
+      - name: Install Clang and libc++ (C++23 support)
+        id: install_clang
+        if: startsWith(matrix.config.os, 'ubuntu') && contains(matrix.config.cxx, 'clang++')
         shell: bash
-        working-directory: ${{ env.HOME }}
         run: |
+          # Extract version number from compiler name (e.g., clang++-19 -> 19)
+          CLANG_VERSION=$(echo "${{ matrix.config.cxx }}" | grep -oP '\d+')
+
+          # Add LLVM repository for newer versions
+          if [[ "$CLANG_VERSION" != "18" ]]; then
+            wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+            sudo add-apt-repository -y "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-${CLANG_VERSION} main"
+          fi
+
           sudo apt-get update
-          sudo apt-get -y install g++-7
 
-      - name: Install GCC 8
-        id: install_gcc_8
-        if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'g++-8' )
-        shell: bash
-        working-directory: ${{ env.HOME }}
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install g++-8
-
-      - name: Install GCC 11
-        id: install_gcc_11
-        if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'g++-11' )
-        shell: bash
-        working-directory: ${{ env.HOME }}
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install g++-11
-
-#      - name: Install GCC 12
-#        id: install_gcc_12
-#        if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'g++-12' )
-#        shell: bash
-#        working-directory: ${{ env.HOME }}
-#        run: |
-#          sudo apt-get update
-#          sudo apt-get -y install g++-12
-
-      - name: Install Clang 8
-        id: install_clang_8
-        if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-8' )
-        shell: bash
-        working-directory: ${{ env.HOME }}
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install clang-8
-
-      - name: Install Clang 10
-        id: install_clang_10
-        if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-10' )
-        shell: bash
-        working-directory: ${{ env.HOME }}
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 10
-
-      - name: Install Clang 11
-        id: install_clang_11
-        if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-11' )
-        shell: bash
-        working-directory: ${{ env.HOME }}
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 11
-          sudo apt-get install -y libc++-11-dev libc++abi-11-dev
-
-      - name: Install Clang 12
-        id: install_clang_12
-        if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-12' )
-        shell: bash
-        working-directory: ${{ env.HOME }}
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 12
-          sudo apt-get install -y libc++-12-dev libc++abi-12-dev libunwind-12-dev
-
-      - name: Install Clang 14
-        id: install_clang_14
-        if: startsWith(matrix.config.os, 'ubuntu') && ( matrix.config.cxx == 'clang++-14' )
-        shell: bash
-        working-directory: ${{ env.HOME }}
-        run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 14
+          # Install Clang and libc++ for the specific version
+          sudo apt-get -y install \
+            clang-${CLANG_VERSION} \
+            libc++-${CLANG_VERSION}-dev \
+            libc++abi-${CLANG_VERSION}-dev
 
       - name: Install vcpkg (Linux)
         id: vcpkg_linux
@@ -368,7 +293,36 @@ jobs:
           git checkout -b master origin/master
           export
           ./bootstrap-vcpkg.sh
-          ./vcpkg install fmt
+
+          # For Clang builds, use custom triplet with libc++ and set compiler
+          if [[ "${{ matrix.config.cxx }}" == clang++* ]]; then
+            export CC=${{ matrix.config.cc }}
+            export CXX=${{ matrix.config.cxx }}
+            ./vcpkg install catch2 uni-algo nlohmann-json \
+              --triplet x64-linux-libcxx \
+              --overlay-triplets=${GITHUB_WORKSPACE}/cmake/vcpkg-triplets
+          else
+            ./vcpkg install catch2 uni-algo nlohmann-json
+          fi
+
+      - name: Install LLVM Clang on macOS
+        id: install_clang_macos
+        if: startsWith(matrix.config.os, 'macos') && contains(matrix.config.cxx, 'clang++')
+        shell: bash
+        run: |
+          # Extract version number from compiler name (e.g., clang++-19 -> 19)
+          CLANG_VERSION=$(echo "${{ matrix.config.cxx }}" | grep -oE '[0-9]+')
+
+          # Install LLVM from Homebrew
+          brew install llvm@${CLANG_VERSION}
+
+          # Create symlinks for versioned clang binaries
+          LLVM_PREFIX=$(brew --prefix llvm@${CLANG_VERSION})
+          sudo ln -sf ${LLVM_PREFIX}/bin/clang /usr/local/bin/clang-${CLANG_VERSION}
+          sudo ln -sf ${LLVM_PREFIX}/bin/clang++ /usr/local/bin/clang++-${CLANG_VERSION}
+
+          # Add LLVM to PATH for this build
+          echo "${LLVM_PREFIX}/bin" >> $GITHUB_PATH
 
       - name: Install vcpkg (MacOS)
         id: vcpkg_macos
@@ -384,7 +338,7 @@ jobs:
           git checkout -b master origin/master
           export
           ./bootstrap-vcpkg.sh
-          ./vcpkg install fmt
+          ./vcpkg install catch2 uni-algo nlohmann-json
 
       - name: Install vcpkg (Windows)
         id: vcpkg_windows
@@ -394,7 +348,7 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git ${Env:GITHUB_WORKSPACE}\vcpkg
           cd ${Env:GITHUB_WORKSPACE}\vcpkg
           .\bootstrap-vcpkg.bat
-          vcpkg install fmt --triplet x64-windows
+          vcpkg install catch2 uni-algo nlohmann-json --triplet x64-windows
           
 
       - name: Configure
@@ -424,63 +378,54 @@ jobs:
           endif()
           set(ENV{PATH} "$ENV{GITHUB_WORKSPACE}${path_separator}$ENV{PATH}")
 
-          set(BUILD_V2 OFF)
-          if ("${{ matrix.config.name }}" STREQUAL "Windows MSVC 2019 Debug (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Windows MSVC 2019 Release (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Windows MSVC 2022 Debug (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Windows MSVC 2022 Release (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Linux GCC 11 Debug (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Linux GCC 11 Release (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Linux GCC 12 Debug (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Linux GCC 12 Release (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Linux Clang 11 Debug (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Linux Clang 11 Release (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Linux Clang 12 Debug (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Linux Clang 12 Release (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Linux Clang 14 Debug (C++20)" OR
-              "${{ matrix.config.name }}" STREQUAL "Linux Clang 14 Release (C++20)"
-          )
-            set(BUILD_V2 ON)
-          endif()
-
+          # Use libc++ for Linux Clang builds (needed for std::expected in C++23)
+          # vcpkg is configured to build with libc++ for Clang as well
           set(USE_LLVM OFF)
-          if("${{ matrix.config.name }}" STREQUAL "macOS Clang Debug (C++17)" OR
-             "${{ matrix.config.name }}" STREQUAL "macOS Clang Release (C++17)" OR
-             "${{ matrix.config.name }}" STREQUAL "macOS Clang Debug (C++20)" OR
-             "${{ matrix.config.name }}" STREQUAL "macOS Clang Release (C++20)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 11 Debug (C++17)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 11 Release (C++17)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 12 Debug (C++17)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 12 Release (C++17)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 14 Debug (C++17)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 14 Release (C++17)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 11 Debug (C++20)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 11 Release (C++20)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 12 Debug (C++20)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 12 Release (C++20)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 14 Debug (C++20)" OR
-             "${{ matrix.config.name }}" STREQUAL "Linux Clang 14 Release (C++20)"
-          )
+          set(VCPKG_TARGET_TRIPLET "")
+          set(VCPKG_OVERLAY_TRIPLETS_ARG "")
+          if ("${{ runner.os }}" STREQUAL "Linux" AND "${{ matrix.config.cxx }}" MATCHES "clang")
             set(USE_LLVM ON)
+            set(VCPKG_TARGET_TRIPLET "x64-linux-libcxx")
+            set(VCPKG_OVERLAY_TRIPLETS_ARG "-D VCPKG_OVERLAY_TRIPLETS=$ENV{GITHUB_WORKSPACE}/cmake/vcpkg-triplets")
           endif()
 
-          execute_process(
-            COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/cmake
-              -S .
-              -B build
-              -G Ninja
-              -D CMAKE_CXX_STANDARD:STRING=${{ matrix.config.cxx_standard }}
-              -D skyr_WARNINGS_AS_ERRORS=OFF
-              -D skyr_BUILD_TESTS=ON
-              -D skyr_BUILD_DOCS=OFF
-              -D skyr_BUILD_EXAMPLES=OFF
-              -D skyr_BUILD_V2=${BUILD_V2}
-              -D skyr_BUILD_WITH_LLVM_LIBCXX=${USE_LLVM}
-              -D SKY_VERBOSE_BUILD=ON
-              -D CMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
-              -D CMAKE_INSTALL_PREFIX=$ENV{GITHUB_WORKSPACE}/install
-            RESULT_VARIABLE result
-          )
+          if (VCPKG_TARGET_TRIPLET)
+            execute_process(
+              COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/cmake
+                -S .
+                -B build
+                -G Ninja
+                -D CMAKE_CXX_STANDARD:STRING=${{ matrix.config.cxx_standard }}
+                -D skyr_WARNINGS_AS_ERRORS=OFF
+                -D skyr_BUILD_TESTS=ON
+                -D skyr_BUILD_DOCS=OFF
+                -D skyr_BUILD_EXAMPLES=OFF
+                -D skyr_BUILD_WITH_LLVM_LIBCXX=${USE_LLVM}
+                -D CMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
+                -D CMAKE_INSTALL_PREFIX=$ENV{GITHUB_WORKSPACE}/install
+                -D CMAKE_TOOLCHAIN_FILE=$ENV{GITHUB_WORKSPACE}/vcpkg/scripts/buildsystems/vcpkg.cmake
+                -D VCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}
+                ${VCPKG_OVERLAY_TRIPLETS_ARG}
+              RESULT_VARIABLE result
+            )
+          else()
+            execute_process(
+              COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/cmake
+                -S .
+                -B build
+                -G Ninja
+                -D CMAKE_CXX_STANDARD:STRING=${{ matrix.config.cxx_standard }}
+                -D skyr_WARNINGS_AS_ERRORS=OFF
+                -D skyr_BUILD_TESTS=ON
+                -D skyr_BUILD_DOCS=OFF
+                -D skyr_BUILD_EXAMPLES=OFF
+                -D skyr_BUILD_WITH_LLVM_LIBCXX=${USE_LLVM}
+                -D CMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
+                -D CMAKE_INSTALL_PREFIX=$ENV{GITHUB_WORKSPACE}/install
+                -D CMAKE_TOOLCHAIN_FILE=$ENV{GITHUB_WORKSPACE}/vcpkg/scripts/buildsystems/vcpkg.cmake
+              RESULT_VARIABLE result
+            )
+          endif()
           if (NOT result EQUAL 0)
             message(FATAL_ERROR "Bad exit status")
           endif()
