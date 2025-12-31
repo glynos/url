@@ -13,11 +13,6 @@
 [![WhatWG URL](https://img.shields.io/badge/spec-WhatWG%20URL-orange.svg)](https://url.spec.whatwg.org/)
 [![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg)](https://github.com/cpp-netlib/url#platform-support)
 
-## Notice
-
-I've changed the name of the default branch from `master` to `main`. Please make future
-PRs to the `main` branch on the [cpp-netlib repo](https://github.com/cpp-netlib/url).
-
 ## Introduction
 
 This library provides:
