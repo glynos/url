@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2025-12-31
+
+### Changed
+
+- Library is header-only
+- Library is available for the C++ 2023 standard
+- Only standard library dependencies, except if using JSON encoding
+
+### Fixed
+
+- A number of parsing and percent encoding fixes (see tests)
+
 ## [1.13.0] - 2020-09-12
 
 ### Changed
