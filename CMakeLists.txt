@@ -28,6 +28,7 @@ option(skyr_BUILD_TESTS "Build the URL tests." ON)
 option(skyr_BUILD_WPT "Build Web Platform Tests runner (report-only, not unit tests)." OFF)
 option(skyr_BUILD_DOCS "Build the URL documentation." OFF)
 option(skyr_BUILD_EXAMPLES "Build the URL examples." OFF)
+option(skyr_BUILD_BENCHMARKS "Build performance benchmarks." OFF)
 option(skyr_FULL_WARNINGS "Build the library with all warnings turned on." ON)
 option(skyr_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(skyr_BUILD_WITHOUT_EXCEPTIONS "Build without exceptions." OFF)
@@ -106,6 +107,12 @@ endif()
 if (skyr_BUILD_EXAMPLES)
     message(STATUS "[skyr-url] Configuring examples")
     add_subdirectory(examples)
+endif()
+
+# Benchmarks
+if (skyr_BUILD_BENCHMARKS)
+    message(STATUS "[skyr-url] Configuring benchmarks")
+    add_subdirectory(benchmark)
 endif()
 
 ## Install
