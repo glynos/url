@@ -36,6 +36,7 @@ option(skyr_USE_STATIC_CRT "Use static C Runtime library (/MT or MTd)." ON)
 option(skyr_BUILD_WITH_LLVM_LIBCXX "Instruct Clang to use LLVM's implementation of C++ standard library" OFF)
 option(skyr_ENABLE_FILESYSTEM_FUNCTIONS "Enable functions to convert URL to std::filesystem::path" ON)
 option(skyr_ENABLE_JSON_FUNCTIONS "Enable functions to convert URL components to JSON" ON)
+option(skyr_ENABLE_SANITIZERS "Enable sanitizers (address, undefined, etc.) for tests and examples" OFF)
 option(skyr_CXX_STANDARD_LIBRARY "Path to non-system C++ standard library" "")
 
 if (skyr_IS_TOP_LEVEL_PROJECT)
@@ -74,6 +75,7 @@ set(full_warnings $<BOOL:${skyr_FULL_WARNINGS}>)
 set(warnings_as_errors $<BOOL:${skyr_WARNINGS_AS_ERRORS}>)
 set(no_exceptions $<BOOL:${skyr_BUILD_WITHOUT_EXCEPTIONS}>)
 set(no_rtti $<BOOL:${skyr_BUILD_WITHOUT_RTTI}>)
+set(enable_sanitizers $<BOOL:${skyr_ENABLE_SANITIZERS}>)
 
 set(gnu $<CXX_COMPILER_ID:GNU>)
 set(clang $<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>)
@@ -90,6 +92,15 @@ if (skyr_BUILD_TESTS)
     find_package(Catch2 3 CONFIG REQUIRED)
     enable_testing()
     add_subdirectory(tests)
+endif()
+
+# Sanitizer tests (independent, no Catch2 needed)
+if (skyr_ENABLE_SANITIZERS)
+    message(STATUS "[skyr-url] Configuring sanitizer tests")
+    if (NOT skyr_BUILD_TESTS)
+        enable_testing()  # Only call this if not already enabled
+    endif()
+    add_subdirectory(tests/sanitizers)
 endif()
 
 # Documentation

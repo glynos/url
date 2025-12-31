@@ -1,0 +1,208 @@
+name: Sanitizer Tests
+
+# Run on main branch pushes, pull requests, and manual trigger
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CMAKE_VERSION: 3.21.7
+  NINJA_VERSION: 1.11.0
+
+jobs:
+  sanitizers:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          # GCC 14 with AddressSanitizer + UndefinedBehaviorSanitizer
+          - {
+            name: "Linux GCC 14 + ASan + UBSan",
+            os: ubuntu-24.04,
+            build_type: RelWithDebInfo,
+            cc: "gcc-14", cxx: "g++-14",
+            cxx_standard: 23
+          }
+
+          # Clang 18 with AddressSanitizer + UndefinedBehaviorSanitizer
+          - {
+            name: "Linux Clang 18 + ASan + UBSan (libc++)",
+            os: ubuntu-24.04,
+            build_type: RelWithDebInfo,
+            cc: "clang-18", cxx: "clang++-18",
+            cxx_standard: 23,
+            use_libcxx: true
+          }
+
+          # Clang 21 with AddressSanitizer + UndefinedBehaviorSanitizer
+          - {
+            name: "Linux Clang 21 + ASan + UBSan (libc++)",
+            os: ubuntu-24.04,
+            build_type: RelWithDebInfo,
+            cc: "clang-21", cxx: "clang++-21",
+            cxx_standard: 23,
+            use_libcxx: true
+          }
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Download Ninja and CMake
+        id: cmake_and_ninja
+        shell: cmake -P {0}
+        run: |
+          set(cmake_version $ENV{CMAKE_VERSION})
+          set(ninja_version $ENV{NINJA_VERSION})
+
+          message(STATUS "Using host CMake version: ${CMAKE_VERSION}")
+
+          set(ninja_suffix "linux.zip")
+          set(cmake_suffix "linux-x86_64.tar.gz")
+          set(cmake_dir "cmake-${cmake_version}-linux-x86_64/bin")
+
+          set(ninja_url "https://github.com/ninja-build/ninja/releases/download/v${ninja_version}/ninja-${ninja_suffix}")
+          file(DOWNLOAD "${ninja_url}" ./ninja.zip SHOW_PROGRESS)
+          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./ninja.zip)
+
+          set(cmake_url "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/cmake-${cmake_version}-${cmake_suffix}")
+          file(DOWNLOAD "${cmake_url}" ./cmake.zip SHOW_PROGRESS)
+          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./cmake.zip)
+
+          # Save the path for other steps
+          file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/${cmake_dir}" cmake_dir)
+          message("::set-output name=cmake_dir::${cmake_dir}")
+
+          execute_process(
+            COMMAND chmod +x ninja
+            COMMAND chmod +x ${cmake_dir}/cmake
+          )
+
+      - name: Install Clang and libc++ (C++23 support)
+        id: install_clang
+        if: contains(matrix.config.cxx, 'clang++')
+        shell: bash
+        run: |
+          # Extract version number from compiler name (e.g., clang++-21 -> 21)
+          CLANG_VERSION=$(echo "${{ matrix.config.cxx }}" | grep -oP '\d+')
+
+          # Add LLVM repository for newer versions (18 is pre-installed)
+          if [[ "$CLANG_VERSION" != "18" ]]; then
+            wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+            sudo add-apt-repository -y "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-${CLANG_VERSION} main"
+          fi
+
+          sudo apt-get update
+
+          # Install Clang and libc++ for the specific version
+          sudo apt-get -y install \
+            clang-${CLANG_VERSION} \
+            libc++-${CLANG_VERSION}-dev \
+            libc++abi-${CLANG_VERSION}-dev
+
+      - name: Install vcpkg
+        id: vcpkg
+        shell: bash
+        run: |
+          mkdir -p ${GITHUB_WORKSPACE}/vcpkg
+          cd ${GITHUB_WORKSPACE}/vcpkg
+          git init
+          git remote add origin https://github.com/microsoft/vcpkg.git
+          git fetch origin master
+          git checkout -b master origin/master
+          ./bootstrap-vcpkg.sh
+
+          # For Clang builds, use custom triplet with libc++ and set compiler
+          if [[ "${{ matrix.config.use_libcxx }}" == "true" ]]; then
+            export CC=${{ matrix.config.cc }}
+            export CXX=${{ matrix.config.cxx }}
+            ./vcpkg install uni-algo \
+              --triplet x64-linux-libcxx \
+              --overlay-triplets=${GITHUB_WORKSPACE}/cmake/vcpkg-triplets
+          else
+            ./vcpkg install uni-algo
+          fi
+
+      - name: Configure
+        shell: cmake -P {0}
+        run: |
+          set(ENV{CC} ${{ matrix.config.cc }})
+          set(ENV{CXX} ${{ matrix.config.cxx }})
+
+          file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/ninja" ninja_program)
+
+          # Determine triplet for vcpkg
+          if ("${{ matrix.config.use_libcxx }}" STREQUAL "true")
+            set(vcpkg_triplet "x64-linux-libcxx")
+            set(use_libcxx ON)
+          else()
+            set(vcpkg_triplet "x64-linux")
+            set(use_libcxx OFF)
+          endif()
+
+          execute_process(
+            COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/cmake
+              -S .
+              -B build
+              -D CMAKE_BUILD_TYPE=${{ matrix.config.build_type }}
+              -G Ninja
+              -D CMAKE_MAKE_PROGRAM=${ninja_program}
+              -D CMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
+              -D VCPKG_TARGET_TRIPLET=${vcpkg_triplet}
+              -D skyr_BUILD_TESTS=OFF
+              -D skyr_BUILD_EXAMPLES=OFF
+              -D skyr_ENABLE_SANITIZERS=ON
+              -D skyr_BUILD_WITH_LLVM_LIBCXX=${use_libcxx}
+              -D skyr_WARNINGS_AS_ERRORS=OFF
+            RESULT_VARIABLE result
+          )
+          if (NOT result EQUAL 0)
+            message(FATAL_ERROR "Bad exit status")
+          endif()
+
+      - name: Build
+        shell: cmake -P {0}
+        run: |
+          set(ENV{NINJA_STATUS} "[%f/%t %o/sec] ")
+
+          file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
+          set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
+          set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
+          set(ENV{CCACHE_COMPRESS} "true")
+          set(ENV{CCACHE_COMPRESSLEVEL} "6")
+          set(ENV{CCACHE_MAXSIZE} "400M")
+
+          execute_process(
+            COMMAND ${{ steps.cmake_and_ninja.outputs.cmake_dir }}/cmake --build build --target url_sanitizer_tests
+            RESULT_VARIABLE result
+          )
+          if (NOT result EQUAL 0)
+            message(FATAL_ERROR "Build failed")
+          endif()
+
+      - name: Run Sanitizer Tests
+        shell: bash
+        run: |
+          echo "========================================"
+          echo "Running AddressSanitizer + UBSan Tests"
+          echo "========================================"
+
+          # Set sanitizer options for comprehensive checking
+          # alloc_dealloc_mismatch=0: Suppress false positive from libc++ exception handling
+          export ASAN_OPTIONS=detect_leaks=1:check_initialization_order=1:strict_init_order=1:detect_stack_use_after_return=1:alloc_dealloc_mismatch=0:verbosity=0
+          export UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=0
+
+          # Run the sanitizer test
+          ./build/tests/sanitizers/url_sanitizer_tests
+
+          TEST_RESULT=$?
+
+          if [ $TEST_RESULT -eq 0 ]; then
+            echo "✓ All sanitizer tests passed - no memory safety issues detected!"
+          else
+            echo "✗ Sanitizer tests failed or detected issues"
+            exit 1
+          fi
