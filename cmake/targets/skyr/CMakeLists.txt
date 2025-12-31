@@ -10,7 +10,6 @@ target_compile_features(skyr-url INTERFACE cxx_std_23)
 target_link_libraries(
         skyr-url
         INTERFACE
-        uni-algo::uni-algo
         $<${libcxx}:c++>
         $<${libcxx}:c++abi>
 )

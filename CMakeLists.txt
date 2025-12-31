@@ -50,13 +50,6 @@ if (skyr_IS_TOP_LEVEL_PROJECT)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
-# C++23 standard library provides std::expected, std::format, std::ranges
-# Only external dependency is uni-algo for Unicode processing
-find_package(uni-algo CONFIG)
-if (NOT uni-algo_FOUND)
-    message(WARNING "uni-algo not found. Install with: vcpkg install uni-algo")
-endif()
-
 if (skyr_ENABLE_JSON_FUNCTIONS)
     find_package(nlohmann_json CONFIG)
     if (NOT nlohmann_json_FOUND)

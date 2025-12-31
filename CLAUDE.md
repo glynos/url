@@ -21,11 +21,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `std::expected<T, E>` for error handling (replaces `tl::expected`)
 - `std::format` for string formatting (replaces `fmt::format`)
 - `std::ranges` for range-based algorithms and views (replaces `range-v3`)
-- `uni-algo` library for Unicode processing
+- Custom Unicode/IDNA implementation (header-only)
 
 **Key Advantages**:
 - **Header-only** - just include and use, no linking required
-- **Minimal external dependencies** - only requires `uni-algo` for Unicode support
+- **Zero external dependencies** - completely self-contained for core URL parsing
 
 ## Building
 
@@ -35,17 +35,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - C++23-compliant compiler (GCC 13+, Clang 16+, MSVC 2022 17.6+)
 
 **Optional** (automatically disabled with warnings if not found):
-- `uni-algo` for full Unicode/IDNA processing
 - `catch2` for tests
 - `nlohmann-json` for JSON functionality
 
 To install optional dependencies:
 ```bash
 cd ${VCPKG_ROOT}
-./vcpkg install uni-algo catch2 nlohmann-json
+./vcpkg install catch2 nlohmann-json
 ```
 
-**Note**: The library will work for basic URL parsing even without dependencies, but IDNA/Punycode (internationalized domain names) require `uni-algo`.
+**Note**: The library is completely self-contained with zero external dependencies. Unicode/IDNA/Punycode support is built-in via custom header-only implementation.
 
 ### Configure and Build
 
@@ -279,11 +278,10 @@ Aliases for compatibility:
 ## Key Dependencies
 
 - **C++23 standard library**: `std::expected`, `std::format`, `std::ranges`
-- **uni-algo**: Unicode algorithms and IDNA processing
 - **nlohmann-json** (optional): JSON serialization
-- **Catch2** (tests): Testing framework
+- **Catch2** (optional, tests only): Testing framework
 
-**Key advantage**: Minimal external dependencies - only requires `uni-algo` for Unicode support. All other modern C++ features (`expected`, `format`, `ranges`) are provided by the standard library!
+**Key advantage**: Zero external dependencies for core URL parsing! All modern C++ features (`expected`, `format`, `ranges`) and Unicode/IDNA support are either from the standard library or custom header-only implementations.
 
 ## Code Quality Tools
 

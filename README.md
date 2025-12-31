@@ -32,13 +32,13 @@ This library provides:
 * **`std::expected`** for error handling (no external dependency needed!)
 * **`std::format`** for string formatting
 * **`std::ranges`** for functional-style operations
-* Minimal external dependencies - only `uni-algo` required for Unicode/IDNA support
+* **Zero external dependencies** - Unicode/IDNA/Punycode support built-in
 
 ## Using the library
 
 This project requires:
 * A **C++23 compliant compiler** (GCC 13+, Clang 16+, MSVC 2022 17.6+)
-* **uni-algo** library (optional but recommended for full IDNA support)
+* **No external dependencies** for core URL parsing
 
 ### ``vcpkg``
 
@@ -62,7 +62,7 @@ call to ``bootstrap-vcpkg.sh`` with ``bootstrap-vcpkg.bat``.
 
 ### Installing dependencies using `vcpkg`
 
-Using `vcpkg`, install the library dependencies:
+Using `vcpkg`, install the optional test dependencies:
 
 ```bash
 > cd ${VCPKG_ROOT}
@@ -71,10 +71,10 @@ Using `vcpkg`, install the library dependencies:
 > git fetch origin master
 > git checkout -b master origin/master
 > ./bootstrap-vcpkg.sh
-> ./vcpkg install uni-algo catch2 nlohmann-json
+> ./vcpkg install catch2 nlohmann-json
 ```
 
-**Note**: Only `uni-algo` is required for the library itself. `catch2` and `nlohmann-json` are only needed for tests and JSON functionality.
+**Note**: The library has zero dependencies. `catch2` and `nlohmann-json` are only needed for tests and optional JSON functionality.
 
 ### Building the project with `CMake` and `Ninja`
 
@@ -209,16 +209,12 @@ This library leverages **C++23 standard library features**:
 * **`std::format`** (C++23) - String formatting
 * **`std::ranges`** (C++20/23) - Range algorithms and views
 
-**External dependencies**:
-* [uni-algo](https://github.com/uni-algo/uni-algo) - Unicode algorithms and IDNA processing (optional but recommended)
+**Core library**: **Zero external dependencies!**
+* Unicode/IDNA/Punycode support via custom header-only implementation
 
 **Test dependencies** (optional):
 * [Catch2](https://github.com/catchorg/catch2) - Testing framework
 * [nlohmann-json](https://github.com/nlohmann/json) - JSON support (for optional JSON features)
-
-## Acknowledgements
-
-This library includes Unicode processing support from [uni-algo](https://github.com/uni-algo/uni-algo).
 
 ## Platform support
 
