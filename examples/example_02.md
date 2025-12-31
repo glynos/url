@@ -32,7 +32,7 @@ use the following set up:
 cmake_minimum_required(VERSION 3.14)
 project(example_02)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 
 find_package(tl-expected CONFIG REQUIRED)
 find_package(skyr-url CONFIG REQUIRED)
