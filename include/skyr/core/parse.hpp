@@ -6,32 +6,35 @@
 #ifndef SKYR_CORE_PARSE_HPP
 #define SKYR_CORE_PARSE_HPP
 
-#include <system_error>
-#include <optional>
 #include <expected>
-#include <skyr/core/url_record.hpp>
-#include <skyr/core/errors.hpp>
+#include <optional>
+#include <system_error>
+
 #include <skyr/core/check_input.hpp>
+#include <skyr/core/errors.hpp>
 #include <skyr/core/url_parser_context.hpp>
+#include <skyr/core/url_record.hpp>
 
 namespace skyr {
 namespace details {
 inline auto basic_parse(std::string_view input, bool* validation_error, const url_record* base, const url_record* url,
                         std::optional<url_parse_state> state_override) -> std::expected<url_record, url_parse_errc> {
-  constexpr auto is_tab_or_newline = [](auto byte) { return (byte == '\t') || (byte == '\r') || (byte == '\n'); };
+  // Remove leading/trailing C0 controls and spaces, and remove all tabs/newlines
+  // according to WhatWG spec - this applies to ALL input including setters
+  std::string cleaned_input;
+  std::string_view input_view;
 
-  if (url == nullptr) {
+  if (!state_override.has_value()) {
     input = remove_leading_c0_control_or_space(input, validation_error);
     input = remove_trailing_c0_control_or_space(input, validation_error);
   }
 
-  auto context = url_parser_context(input, validation_error, base, url, state_override);
-  while (true) {
-    // remove tabs and new lines
-    while (!context.is_eof() && is_tab_or_newline(context.next_byte())) {
-      context.increment();
-    }
+  // Always remove tabs and newlines from input (even for setters)
+  cleaned_input = remove_tabs_and_newlines(input, validation_error);
+  input_view = cleaned_input;
 
+  auto context = url_parser_context(input_view, validation_error, base, url, state_override);
+  while (true) {
     auto action = context.parse_next();
     if (!action) {
       return std::unexpected(action.error());

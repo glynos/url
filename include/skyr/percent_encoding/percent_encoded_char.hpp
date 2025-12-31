@@ -6,9 +6,9 @@
 #ifndef SKYR_PERCENT_ENCODING_PERCENT_ENCODED_CHAR_HPP
 #define SKYR_PERCENT_ENCODING_PERCENT_ENCODED_CHAR_HPP
 
-#include <string>
-#include <locale>
 #include <cstddef>
+#include <locale>
+#include <string>
 
 namespace skyr {
 namespace percent_encoding {
@@ -62,8 +62,8 @@ inline constexpr auto is_special_query_byte(std::byte value) {
 /// \param value
 /// \return
 inline constexpr auto is_path_byte(std::byte value) {
-  return is_query_byte(value) || (value == std::byte(0x3f)) || (value == std::byte(0x60)) ||
-         (value == std::byte(0x7b)) || (value == std::byte(0x7d));
+  return is_query_byte(value) || (value == std::byte(0x3f)) || (value == std::byte(0x5e)) ||
+         (value == std::byte(0x60)) || (value == std::byte(0x7b)) || (value == std::byte(0x7d));
 }
 
 ///

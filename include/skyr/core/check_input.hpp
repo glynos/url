@@ -6,10 +6,10 @@
 #ifndef SKYR_CORE_CHECK_INPUT_HPP
 #define SKYR_CORE_CHECK_INPUT_HPP
 
-#include <locale>
-#include <string>
 #include <algorithm>
 #include <iterator>
+#include <locale>
+#include <string>
 
 namespace skyr {
 constexpr static auto is_c0_control_or_space = [](auto byte) {
@@ -30,6 +30,23 @@ constexpr inline auto remove_trailing_c0_control_or_space(std::string_view input
   *validation_error |= (it != first);
   input.remove_suffix(std::distance(first, it));
   return input;
+}
+
+constexpr static auto is_tab_or_newline = [](auto byte) { return (byte == '\t') || (byte == '\r') || (byte == '\n'); };
+
+inline auto remove_tabs_and_newlines(std::string_view input, bool* validation_error) -> std::string {
+  std::string result;
+  result.reserve(input.size());
+
+  for (auto byte : input) {
+    if (is_tab_or_newline(byte)) {
+      *validation_error = true;
+    } else {
+      result.push_back(byte);
+    }
+  }
+
+  return result;
 }
 }  // namespace skyr
 

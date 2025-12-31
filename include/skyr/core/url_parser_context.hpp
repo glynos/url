@@ -6,20 +6,21 @@
 #ifndef SKYR_CORE_URL_PARSER_CONTEXT_HPP
 #define SKYR_CORE_URL_PARSER_CONTEXT_HPP
 
+#include <array>
 #include <cassert>
-#include <string_view>
-#include <optional>
+#include <expected>
 #include <iterator>
 #include <limits>
-#include <array>
 #include <locale>
-#include <expected>
-#include <skyr/domain/domain.hpp>
-#include <skyr/core/schemes.hpp>
-#include <skyr/core/host.hpp>
+#include <optional>
+#include <string_view>
+
 #include <skyr/core/errors.hpp>
-#include <skyr/core/url_record.hpp>
+#include <skyr/core/host.hpp>
+#include <skyr/core/schemes.hpp>
 #include <skyr/core/url_parse_state.hpp>
+#include <skyr/core/url_record.hpp>
+#include <skyr/domain/domain.hpp>
 #include <skyr/percent_encoding/percent_encoded_char.hpp>
 
 namespace skyr {
@@ -412,12 +413,26 @@ class url_parser_context {
     if (byte == '@') {
       *validation_error |= true;
       if (at_flag) {
-        buffer.insert(0, "%40");
+        // Subsequent @ characters
+        // If we already have a password (from first @ segment containing ':'),
+        // append to password. Otherwise, parse normally as username:password.
+        if (!url.password.empty()) {
+          url.password += "%40";
+          for (auto c : buffer) {
+            auto pct_encoded = percent_encode_byte(std::byte(c), percent_encoding::encode_set::userinfo);
+            url.password += pct_encoded.to_string();
+          }
+          buffer.clear();
+        } else {
+          buffer.insert(0, "%40");
+          set_credentials_from_buffer();
+          buffer.clear();
+        }
+      } else {
+        at_flag = true;
+        set_credentials_from_buffer();
+        buffer.clear();
       }
-      at_flag = true;
-
-      set_credentials_from_buffer();
-      buffer.clear();
     } else if (((is_eof()) || (byte == '/') || (byte == '?') || (byte == '#')) ||
                (url.is_special() && (byte == '\\'))) {
       if (at_flag && buffer.empty()) {
@@ -673,7 +688,10 @@ class url_parser_context {
         add_empty_path_element();
       } else if (!details::is_single_dot_path_segment(buffer)) {
         if ((url.scheme == "file") && url.path.empty() && details::is_windows_drive_letter(buffer)) {
-          if (!url.host || !url.host.value().is_empty()) {
+          // For file URLs with Windows drive letters, the host should be empty
+          // UNLESS it was inherited from a file base URL (per WPT test expectations)
+          bool inherited_from_file_base = (base && base->scheme == "file");
+          if (!inherited_from_file_base && (!url.host || !url.host.value().is_empty())) {
             *validation_error |= true;
             set_empty_host();
           }
@@ -715,9 +733,11 @@ class url_parser_context {
 
   auto parse_cannot_be_a_base_url(char byte) -> std::expected<url_parse_action, url_parse_errc> {
     if (byte == '?') {
+      encode_trailing_spaces_in_path0();
       set_empty_query();
       state = url_parse_state::query;
     } else if (byte == '#') {
+      encode_trailing_spaces_in_path0();
       set_empty_fragment();
       state = url_parse_state::fragment;
     } else {
@@ -870,6 +890,18 @@ class url_parser_context {
   void append_to_path0(char byte) {
     auto pct_encoded = percent_encode_byte(std::byte(byte), percent_encoding::encode_set::c0_control);
     url.path[0] += pct_encoded.to_string();
+  }
+
+  void encode_trailing_spaces_in_path0() {
+    if (url.path.empty()) {
+      return;
+    }
+    auto& path = url.path[0];
+    // Only encode the LAST space if it's trailing
+    if (!path.empty() && path.back() == ' ') {
+      path.pop_back();
+      path += "%20";
+    }
   }
 
   void clear_query() {
