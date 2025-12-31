@@ -3,7 +3,7 @@
 ## Status
 
 [![License](https://img.shields.io/badge/license-Boost-blue.svg)](https://github.com/cpp-netlib/url/blob/master/LICENSE_1_0.txt)
-[![CI](https://github.com/cpp-netlib/url/workflows/skyr-url%20CI/badge.svg?branch=main)](https://github.com/cpp-netlib/url/actions?query=workflow%3A%22skyr-url+CI%22)
+[![CI](https://github.com/cpp-netlib/url/actions/workflows/skyr-url-ci.yml/badge.svg)](https://github.com/cpp-netlib/url/actions/workflows/skyr-url-ci.yml)
 [![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
 [![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/cpp-netlib/url/releases)
 [![vcpkg](https://img.shields.io/badge/vcpkg-available-brightgreen.svg)](https://vcpkg.io/en/package/skyr-url)
