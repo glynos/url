@@ -21,11 +21,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `std::expected<T, E>` for error handling (replaces `tl::expected`)
 - `std::format` for string formatting (replaces `fmt::format`)
 - `std::ranges` for range-based algorithms and views (replaces `range-v3`)
-- `uni-algo` library for Unicode processing
+- Custom Unicode/IDNA implementation (header-only)
 
 **Key Advantages**:
 - **Header-only** - just include and use, no linking required
-- **Minimal external dependencies** - only requires `uni-algo` for Unicode support
+- **Zero external dependencies** - completely self-contained for core URL parsing
 
 ## Building
 
@@ -35,17 +35,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - C++23-compliant compiler (GCC 13+, Clang 16+, MSVC 2022 17.6+)
 
 **Optional** (automatically disabled with warnings if not found):
-- `uni-algo` for full Unicode/IDNA processing
 - `catch2` for tests
 - `nlohmann-json` for JSON functionality
 
 To install optional dependencies:
 ```bash
 cd ${VCPKG_ROOT}
-./vcpkg install uni-algo catch2 nlohmann-json
+./vcpkg install catch2 nlohmann-json
 ```
 
-**Note**: The library will work for basic URL parsing even without dependencies, but IDNA/Punycode (internationalized domain names) require `uni-algo`.
+**Note**: The library is completely self-contained with zero external dependencies. Unicode/IDNA/Punycode support is built-in via custom header-only implementation.
 
 ### Configure and Build
 
@@ -64,6 +63,7 @@ cmake --build _build
 Key build options:
 - `skyr_BUILD_TESTS` (ON): Build tests
 - `skyr_BUILD_WPT` (OFF): Build Web Platform Tests runner
+- `skyr_BUILD_BENCHMARKS` (OFF): Build performance benchmarks
 - `skyr_ENABLE_FILESYSTEM_FUNCTIONS` (ON): Enable filesystem::path conversion
 - `skyr_ENABLE_JSON_FUNCTIONS` (ON): Enable JSON serialization
 - `skyr_BUILD_WITHOUT_EXCEPTIONS` (OFF): Build without exceptions
@@ -222,6 +222,159 @@ Test data comes from the official WPT repository:
 
 This ensures compliance testing against the latest WhatWG URL specification test cases.
 
+## Benchmarks
+
+**Performance benchmarks** measure runtime URL parsing speed to identify optimization opportunities and track performance regressions.
+
+### Philosophy
+
+- **Measure, don't guess** - Profile before optimizing
+- **Real-world scenarios** - Tests diverse URL patterns (ASCII, IDN, IPv6, percent-encoded, etc.)
+- **Actionable metrics** - Reports average µs/URL and throughput (URLs/second)
+- **Optional** - Not required for normal development (disabled by default)
+
+### Building Benchmarks
+
+```bash
+cmake \
+  -B _build \
+  -G "Ninja" \
+  -Dskyr_BUILD_BENCHMARKS=ON \
+  .
+cmake --build _build --target url_parsing_bench
+```
+
+### Running Benchmarks
+
+```bash
+# Default: 10,000 iterations × 34 URLs = 340,000 parses
+./_build/benchmark/url_parsing_bench
+
+# Custom iteration count (100,000 iterations)
+./_build/benchmark/url_parsing_bench 100000
+
+# Quick test (1,000 iterations)
+./_build/benchmark/url_parsing_bench 1000
+```
+
+### Example Output
+
+```
+=================================================
+URL Parsing Benchmark Results
+=================================================
+
+Configuration:
+  Test URLs:     34 unique patterns
+  Iterations:    10000
+  Total URLs:    340000
+
+Results:
+  Total time:    820 ms
+  Successful:    330000 (97.1%)
+  Failed:        10000 (2.9%)
+
+Performance:
+  Average:       2.412 µs/URL
+  Throughput:    414634 URLs/second
+
+=================================================
+```
+
+### Interpreting Results
+
+**Good performance (on modern hardware):**
+- Average: < 5 µs/URL
+- Throughput: > 200,000 URLs/second
+
+**Investigate if:**
+- Average: > 10 µs/URL
+- Throughput: < 100,000 URLs/second
+
+### Profiling
+
+To find actual performance bottlenecks, use profiling tools:
+
+**macOS (Instruments - requires Xcode):**
+```bash
+# First, install Xcode from App Store or https://developer.apple.com/download/
+# Verify: xctrace version
+
+cmake -B _build -G Ninja -Dskyr_BUILD_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build _build --target url_parsing_bench
+
+# Profile with xctrace (modern replacement for 'instruments' command)
+xctrace record --template 'Time Profiler' \
+  --output /tmp/url_bench.trace \
+  --launch ./_build/benchmark/url_parsing_bench 50000
+
+# Open results in Instruments GUI
+open /tmp/url_bench.trace
+```
+
+**macOS (sample - built-in, no Xcode needed):**
+```bash
+cmake -B _build -G Ninja -Dskyr_BUILD_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build _build --target url_parsing_bench
+sample url_parsing_bench 10 -file /tmp/profile.txt &
+./_build/benchmark/url_parsing_bench 50000
+open /tmp/profile.txt
+```
+
+**Linux (perf):**
+```bash
+cmake -B _build -G Ninja -Dskyr_BUILD_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build _build --target url_parsing_bench
+perf record -g ./_build/benchmark/url_parsing_bench 50000
+perf report
+```
+
+**All platforms (Valgrind):**
+```bash
+cmake -B _build -G Ninja -Dskyr_BUILD_BENCHMARKS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build _build --target url_parsing_bench
+valgrind --tool=callgrind ./_build/benchmark/url_parsing_bench 1000
+qcachegrind callgrind.out  # macOS: brew install qcachegrind
+                           # Linux: kcachegrind
+```
+
+### Test Coverage
+
+The benchmark tests 34 diverse URL patterns:
+- Simple ASCII URLs (http, https, ftp)
+- URLs with query parameters and fragments
+- URLs with authentication (user:pass@host)
+- URLs with non-default ports
+- Internationalized domain names (IDN): `http://example.إختبار/`, `https://münchen.de/`
+- Unicode in paths: `http://example.com/π`, `https://example.org/文档/`
+- Percent-encoded URLs: `http://example.com/path%20with%20spaces`
+- Complex real-world URLs (Google search, GitHub, Wikipedia)
+- IPv4 addresses: `http://192.168.1.1/`, `https://127.0.0.1:8443/`
+- IPv6 addresses: `http://[::1]/`, `https://[2001:db8::1]/`
+- Edge cases: file://, data:, mailto:
+
+### Performance Expectations
+
+**Typical results on modern hardware (Apple M1/M2, Intel i7+, AMD Ryzen):**
+- Average: 2-4 µs/URL
+- Throughput: 250,000 - 500,000 URLs/second
+
+**Why this is fast enough:**
+- Most applications parse URLs once per request
+- A typical HTTP request takes 10-100ms
+- URL parsing is < 0.01% of total request time
+- Bottleneck is almost never URL parsing
+
+### Before Adding Dependencies
+
+Before adding external libraries like simdutf for "faster UTF conversion":
+
+1. **Profile first** - Use profiling tools to find real bottlenecks
+2. **Measure UTF time** - Is UTF conversion > 10% of runtime?
+3. **Consider trade-offs** - Zero dependencies vs marginal speedup
+
+The benchmark helps answer: "Is optimization worth the complexity?"
+
 ## Code Structure
 
 **Directory Layout**:
@@ -279,11 +432,10 @@ Aliases for compatibility:
 ## Key Dependencies
 
 - **C++23 standard library**: `std::expected`, `std::format`, `std::ranges`
-- **uni-algo**: Unicode algorithms and IDNA processing
 - **nlohmann-json** (optional): JSON serialization
-- **Catch2** (tests): Testing framework
+- **Catch2** (optional, tests only): Testing framework
 
-**Key advantage**: Minimal external dependencies - only requires `uni-algo` for Unicode support. All other modern C++ features (`expected`, `format`, `ranges`) are provided by the standard library!
+**Key advantage**: Zero external dependencies for core URL parsing! All modern C++ features (`expected`, `format`, `ranges`) and Unicode/IDNA support are either from the standard library or custom header-only implementations.
 
 ## Code Quality Tools
 

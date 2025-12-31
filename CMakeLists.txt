@@ -28,6 +28,7 @@ option(skyr_BUILD_TESTS "Build the URL tests." ON)
 option(skyr_BUILD_WPT "Build Web Platform Tests runner (report-only, not unit tests)." OFF)
 option(skyr_BUILD_DOCS "Build the URL documentation." OFF)
 option(skyr_BUILD_EXAMPLES "Build the URL examples." OFF)
+option(skyr_BUILD_BENCHMARKS "Build performance benchmarks." OFF)
 option(skyr_FULL_WARNINGS "Build the library with all warnings turned on." ON)
 option(skyr_WARNINGS_AS_ERRORS "Treat warnings as errors." ON)
 option(skyr_BUILD_WITHOUT_EXCEPTIONS "Build without exceptions." OFF)
@@ -48,13 +49,6 @@ if (skyr_IS_TOP_LEVEL_PROJECT)
     endif()
     set(CMAKE_CXX_EXTENSIONS OFF)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
-endif()
-
-# C++23 standard library provides std::expected, std::format, std::ranges
-# Only external dependency is uni-algo for Unicode processing
-find_package(uni-algo CONFIG)
-if (NOT uni-algo_FOUND)
-    message(WARNING "uni-algo not found. Install with: vcpkg install uni-algo")
 endif()
 
 if (skyr_ENABLE_JSON_FUNCTIONS)
@@ -113,6 +107,12 @@ endif()
 if (skyr_BUILD_EXAMPLES)
     message(STATUS "[skyr-url] Configuring examples")
     add_subdirectory(examples)
+endif()
+
+# Benchmarks
+if (skyr_BUILD_BENCHMARKS)
+    message(STATUS "[skyr-url] Configuring benchmarks")
+    add_subdirectory(benchmark)
 endif()
 
 ## Install
