@@ -23,3 +23,4 @@ endfunction()
 
 add_subdirectory(skyr)
 add_subdirectory(wpt)
+add_subdirectory(sanitizers)
