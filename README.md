@@ -216,17 +216,6 @@ This library leverages **C++23 standard library features**:
 * [Catch2](https://github.com/catchorg/catch2) - Testing framework
 * [nlohmann-json](https://github.com/nlohmann/json) - JSON support (for optional JSON features)
 
-## Test Results
-
-The library passes **21 out of 22 test suites** with **240 out of 242 assertions** (99.2% pass rate):
-
-✅ All core functionality tests pass
-✅ Unicode, IDNA, and Punycode tests pass
-✅ Network (IPv4/IPv6) parsing tests pass
-✅ Percent encoding/decoding tests pass
-✅ URL parsing and serialization tests pass
-⚠️ 2 edge case assertions in dot-segment path normalization (minor regression)
-
 ## Acknowledgements
 
 This library includes Unicode processing support from [uni-algo](https://github.com/uni-algo/uni-algo).
