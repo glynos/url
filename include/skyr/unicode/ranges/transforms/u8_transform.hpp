@@ -205,7 +205,7 @@ class transform_u8_range {
   }
 
  private:
-  iterator_type first_;
+  iterator_type first_{};
 };
 
 ///

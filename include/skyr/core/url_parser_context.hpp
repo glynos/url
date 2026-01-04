@@ -101,12 +101,12 @@ class url_parser_context {
  private:
   url_record url;
   url_parse_state state;
-  std::string_view input;
-  std::string_view::const_iterator input_it;
+  std::string_view input{};
+  std::string_view::const_iterator input_it{};
   bool* validation_error;
   const url_record* base;
-  std::optional<url_parse_state> state_override;
-  std::string buffer;
+  std::optional<url_parse_state> state_override{};
+  std::string buffer{};
 
   bool at_flag;
   bool square_braces_flag;

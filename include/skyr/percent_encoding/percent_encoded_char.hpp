@@ -187,7 +187,7 @@ struct percent_encoded_char {
   }
 
  private:
-  impl_type impl_;
+  impl_type impl_{};
 };
 
 ///

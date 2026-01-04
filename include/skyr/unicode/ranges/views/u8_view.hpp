@@ -96,7 +96,7 @@ class u8_range_iterator {
   }
 
  private:
-  iterator_type it_;
+  iterator_type it_{};
 };
 
 ///
@@ -156,7 +156,7 @@ class view_u8_range {
   }
 
  private:
-  iterator_type it_;
+  iterator_type it_{};
 };
 
 namespace views {

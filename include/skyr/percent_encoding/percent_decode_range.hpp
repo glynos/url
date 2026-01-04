@@ -118,7 +118,7 @@ class percent_decode_iterator {
     remainder_.remove_prefix(step);
   }
 
-  std::string_view remainder_;
+  std::string_view remainder_{};
 };
 
 ///

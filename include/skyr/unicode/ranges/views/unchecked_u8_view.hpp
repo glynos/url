@@ -151,7 +151,7 @@ class view_unchecked_u8_range {
   }
 
  private:
-  iterator_type it_;
+  iterator_type it_{};
 };
 
 namespace views {
