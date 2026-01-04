@@ -16,16 +16,15 @@ Headers
 
 .. code-block:: c++
 
-    #include <skyr/domain/punycode.hpp>
-    #include <skyr/domain/domain.hpp>
+   #include <skyr/domain.hpp>
 
 Example
 -------
 
 .. code-block:: c++
 
-   #include <skyr/domain/domain.hpp>
-   #include <iostream>
+   #include <skyr/domain.hpp>
+   #include <print>
 
    int main() {
      using namespace std::string_literals;
@@ -33,19 +32,17 @@ Example
      auto domain = "उदाहरण.परीक्षा"s;
      auto encoded = skyr::domain::domain_to_ascii(domain);
      if (encoded) {
-       std::cout << encoded.value() << std::endl;
+       std::println(encoded.value());
      }
    }
 
 API
 ---
 
-Domain to ASCII
-^^^^^^^^^^^^^^^
+Domain Processing Functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. doxygenfunction:: skyr::domain_to_ascii(std::string_view, bool)
-
-.. doxygenfunction:: skyr::domain_to_unicode(std::string_view, bool)
+The library provides the following domain processing functions. See the header files for detailed documentation of all overloads.
 
 Error codes
 ^^^^^^^^^^^
