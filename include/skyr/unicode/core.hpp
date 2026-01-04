@@ -21,7 +21,7 @@ namespace skyr::unicode {
 template <class uintT>
 constexpr auto mask8(uintT value) {
   static_assert(std::is_unsigned_v<uintT>, "unsigned integral types only");
-  return static_cast<uintT>(0xffu & value);
+  return static_cast<uintT>(0xffu & value);  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 }
 
 ///
@@ -30,14 +30,14 @@ constexpr auto mask8(uintT value) {
 template <class uintT>
 constexpr auto mask16(uintT value) {
   static_assert(std::is_unsigned_v<uintT>, "unsigned integral types only");
-  return static_cast<uintT>(0xffffu & value);
+  return static_cast<uintT>(0xffffu & value);  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 }
 
 ///
 /// \param octet
 /// \return
 constexpr auto is_trail(uint8_t octet) {
-  return ((mask8(octet) >> 6u) == 0x2u);
+  return ((mask8(octet) >> 6u) == 0x2u);  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
 }
 
 ///
@@ -73,13 +73,13 @@ constexpr auto is_valid_code_point(char32_t code_point) {
 /// \return 1, 2, 3 or 4
 constexpr auto sequence_length(uint8_t lead_value) {
   auto lead = mask8(lead_value);
-  if (lead < 0x80u) {
+  if (lead < 0x80u) {  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     return 1;
-  } else if ((lead >> 5u) == 0x6u) {
+  } else if ((lead >> 5u) == 0x6u) {  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     return 2;
-  } else if ((lead >> 4u) == 0xeu) {
+  } else if ((lead >> 4u) == 0xeu) {  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     return 3;
-  } else if ((lead >> 3u) == 0x1eu) {
+  } else if ((lead >> 3u) == 0x1eu) {  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
     return 4;
   }
   return 0;

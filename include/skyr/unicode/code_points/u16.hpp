@@ -27,7 +27,8 @@ class u16_code_point_t {
   }
 
   constexpr u16_code_point_t(char16_t lead_value, char16_t trail_value)
-      : code_point_((lead_value << 10U) + trail_value + constants::surrogates::offset) {
+      : code_point_((lead_value << 10U) + trail_value +
+                    constants::surrogates::offset) {  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
   }
 
   ///
@@ -39,14 +40,18 @@ class u16_code_point_t {
   ///
   /// \return
   [[nodiscard]] auto lead_value() const {
-    return is_surrogate_pair() ? static_cast<char16_t>((code_point_ >> 10U) + constants::surrogates::lead_offset)
-                               : static_cast<char16_t>(code_point_);
+    return is_surrogate_pair()
+               ? static_cast<char16_t>(
+                     (code_point_ >> 10U) +
+                     constants::surrogates::lead_offset)  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+               : static_cast<char16_t>(code_point_);
   }
 
   ///
   /// \return
   [[nodiscard]] constexpr auto trail_value() const {
-    return is_surrogate_pair() ? static_cast<char16_t>((code_point_ & 0x3ffU) + constants::surrogates::trail_min) : 0;
+    return is_surrogate_pair() ? static_cast<char16_t>((code_point_ & 0x3ffU) + constants::surrogates::trail_min)
+                               : 0;  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
   }
 
   [[nodiscard]] constexpr auto u32_value() const noexcept -> std::expected<char32_t, unicode_errc> {

@@ -41,7 +41,7 @@ constexpr auto adapt(uint32_t delta, uint32_t numpoints, bool firsttime) -> std:
     delta /= base - tmin;
     k += base;
   }
-  return k + (base - tmin + 1ul) * delta / (delta + skew);
+  return k + ((base - tmin + 1ul) * delta / (delta + skew));
 }
 }  // namespace punycode
 
@@ -54,7 +54,7 @@ constexpr auto adapt(uint32_t delta, uint32_t numpoints, bool firsttime) -> std:
 inline auto punycode_encode(std::u32string_view input, std::string* output) -> std::expected<void, domain_errc> {
   using namespace punycode::constants;
 
-  constexpr auto is_ascii_value = [](auto c) { return c < 0x80; };
+  constexpr auto is_ascii_value = [](auto c) { return c < 0x80; };  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
   constexpr auto to_char = [](auto c) { return static_cast<char>(c); };
 
   // encode_digit(d,flag) returns the basic code point whose value
@@ -62,8 +62,10 @@ inline auto punycode_encode(std::u32string_view input, std::string* output) -> s
   // the range 0 to base-1.  The lowercase form is used unless flag is
   // nonzero, in which case the uppercase form is used.  The behavior
   // is undefined if flag is nonzero and digit d has no uppercase form.
-  constexpr auto encode_digit = [](std::uint32_t d, std::uint32_t flag) -> char {
-    return d + 0x16ul + (0x4bul * (d < 0x1aul)) - ((flag != 0ul) << 0x5ul);
+  constexpr auto encode_digit = [](const std::uint32_t d, const std::uint32_t flag) -> char {
+    return static_cast<char>(d + 0x16ul + (0x4bul * (d < 0x1aul)) -
+                             ((flag != 0ul) << 0x5ul)  // NOLINT(cppcoreguidelines-avoid-magic-numbers)
+    );
     //  0..25 map to ASCII a..z or A..Z
     // 26..35 map to ASCII 0..9
   };
