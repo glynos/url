@@ -81,11 +81,11 @@ class ipv4_address {
 
 namespace details {
 /// Computes 256^exp efficiently using bit shifts (256 = 2^8, so 256^n = 2^(8n))
-constexpr inline auto pow256(unsigned int exp) noexcept -> std::uint64_t {
+constexpr auto pow256(unsigned int exp) noexcept -> std::uint64_t {
   return 1ULL << (exp * 8);
 }
 
-constexpr inline auto parse_ipv4_number(std::string_view input, bool* validation_error)
+constexpr auto parse_ipv4_number(std::string_view input, bool* validation_error)
     -> std::expected<std::uint64_t, ipv4_address_errc> {
   auto base = 10;
 
@@ -116,7 +116,7 @@ constexpr inline auto parse_ipv4_number(std::string_view input, bool* validation
 /// \param input An input string
 /// \param validation_error Optional pointer to a bool that will be set if a validation error occurs
 /// \returns An `ipv4_address` object or an error
-constexpr inline auto parse_ipv4_address(std::string_view input, bool* validation_error)
+constexpr auto parse_ipv4_address(std::string_view input, bool* validation_error)
     -> std::expected<ipv4_address, ipv4_address_errc> {
   using namespace std::string_view_literals;
 

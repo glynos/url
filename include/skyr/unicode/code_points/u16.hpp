@@ -60,14 +60,14 @@ class u16_code_point_t {
 ///
 /// \param code_point
 /// \return
-inline constexpr auto u16_code_point(char32_t code_point) {
+constexpr auto u16_code_point(char32_t code_point) {
   return u16_code_point_t(code_point);
 }
 
 ///
 /// \param code_point
 /// \return
-inline constexpr auto u16_code_point(char16_t code_point) {
+constexpr auto u16_code_point(char16_t code_point) {
   return u16_code_point_t(code_point);
 }
 
@@ -75,7 +75,7 @@ inline constexpr auto u16_code_point(char16_t code_point) {
 /// \param lead_code_unit
 /// \param trail_code_unit
 /// \return
-inline constexpr auto u16_code_point(char16_t lead_code_unit, char16_t trail_code_unit) {
+constexpr auto u16_code_point(char16_t lead_code_unit, char16_t trail_code_unit) {
   return u16_code_point_t(lead_code_unit, trail_code_unit);
 }
 }  // namespace skyr::unicode

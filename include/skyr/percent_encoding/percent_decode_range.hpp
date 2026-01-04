@@ -17,7 +17,7 @@
 namespace skyr {
 namespace percent_encoding {
 namespace details {
-constexpr inline auto alnum_to_hex(char value) noexcept -> std::expected<std::byte, percent_encode_errc> {
+constexpr auto alnum_to_hex(char value) noexcept -> std::expected<std::byte, percent_encode_errc> {
   if ((value >= '0') && (value <= '9')) {
     return static_cast<std::byte>(value - '0');
   }

@@ -21,10 +21,9 @@
 #include <skyr/unicode/ranges/views/u8_view.hpp>
 
 namespace skyr {
-constexpr inline auto validate_label(std::u32string_view label, [[maybe_unused]] bool use_std3_ascii_rules,
-                                     bool check_hyphens, [[maybe_unused]] bool check_bidi,
-                                     [[maybe_unused]] bool check_joiners, bool transitional_processing)
-    -> std::expected<void, domain_errc> {
+constexpr auto validate_label(std::u32string_view label, [[maybe_unused]] bool use_std3_ascii_rules, bool check_hyphens,
+                              [[maybe_unused]] bool check_bidi, [[maybe_unused]] bool check_joiners,
+                              bool transitional_processing) -> std::expected<void, domain_errc> {
   /// https://www.unicode.org/reports/tr46/#Validity_Criteria;
 
   if (check_hyphens) {

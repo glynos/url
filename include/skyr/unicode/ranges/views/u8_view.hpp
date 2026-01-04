@@ -165,7 +165,7 @@ namespace views {
 /// \param range
 /// \return
 template <typename OctetRange>
-constexpr inline auto as_u8(const OctetRange& range) {
+constexpr auto as_u8(const OctetRange& range) {
   static_assert(sizeof(traits::range_value_t<OctetRange>) >= 1);
   return view_u8_range{range};
 }

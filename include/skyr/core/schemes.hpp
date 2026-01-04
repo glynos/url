@@ -13,14 +13,14 @@
 namespace skyr {
 /// \param scheme
 /// \returns
-constexpr inline auto is_special(std::string_view scheme) noexcept -> bool {
+constexpr auto is_special(std::string_view scheme) noexcept -> bool {
   return (scheme == "file") || (scheme == "ftp") || (scheme == "http") || (scheme == "https") || (scheme == "ws") ||
          (scheme == "wss");
 }
 
 /// \param scheme
 /// \returns
-constexpr inline auto default_port(std::string_view scheme) noexcept -> std::optional<std::uint16_t> {
+constexpr auto default_port(std::string_view scheme) noexcept -> std::optional<std::uint16_t> {
   if (scheme == "ftp") {
     return 21;
   } else if ((scheme == "http") || (scheme == "ws")) {

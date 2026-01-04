@@ -30,7 +30,7 @@ constexpr auto initial_n = 0x80ul;
 constexpr auto delimiter = 0x2dul;
 }  // namespace constants
 
-constexpr inline auto adapt(uint32_t delta, uint32_t numpoints, bool firsttime) -> std::uint32_t {
+constexpr auto adapt(uint32_t delta, uint32_t numpoints, bool firsttime) -> std::uint32_t {
   using namespace constants;
 
   delta = firsttime ? delta / damp : delta >> 1ul;
@@ -154,7 +154,7 @@ inline auto punycode_encode(std::u32string_view input, std::string* output) -> s
 /// \param output The output UTF-32 string to store the decoded result
 /// \returns The decoded UTF-8 domain, or an error
 template <class StringView>
-constexpr inline auto punycode_decode(StringView input, std::u32string* output) -> std::expected<void, domain_errc> {
+constexpr auto punycode_decode(StringView input, std::u32string* output) -> std::expected<void, domain_errc> {
   using namespace punycode::constants;
 
   // decode_digit(cp) returns the numeric value of a basic code

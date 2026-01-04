@@ -160,7 +160,7 @@ namespace views {
 /// \param range
 /// \return
 template <typename OctetRange>
-[[maybe_unused]] constexpr inline auto unchecked_u8(const OctetRange& range) {
+[[maybe_unused]] constexpr auto unchecked_u8(const OctetRange& range) {
   return view_unchecked_u8_range{range};
 }
 }  // namespace views

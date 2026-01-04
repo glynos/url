@@ -145,7 +145,7 @@ class ipv6_address {
 
 namespace details {
 template <class intT, class charT>
-constexpr inline auto hex_to_dec(charT byte) noexcept {
+constexpr auto hex_to_dec(charT byte) noexcept {
   assert(std::isxdigit(byte, std::locale::classic()));
 
   if (std::isdigit(byte, std::locale::classic())) {
@@ -160,7 +160,7 @@ constexpr inline auto hex_to_dec(charT byte) noexcept {
 /// \param input An input string
 /// \param validation_error Optional pointer to a bool that will be set if a validation error occurs
 /// \returns An `ipv6_address` object or an error
-constexpr inline auto parse_ipv6_address(std::string_view input, bool* validation_error)
+constexpr auto parse_ipv6_address(std::string_view input, bool* validation_error)
     -> std::expected<ipv6_address, ipv6_address_errc> {
   using namespace std::string_view_literals;
 
